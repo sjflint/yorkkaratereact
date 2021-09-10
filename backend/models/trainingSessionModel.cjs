@@ -1,0 +1,34 @@
+const mongoose = require("mongoose");
+
+const trainingSessionSchema = mongoose.Schema(
+  {
+    name: { type: String, required: true, unique: true },
+    location: { type: String, required: true },
+    minGradeLevel: { type: Number, required: true },
+    maxGradeLevel: { type: Number, required: true },
+    juniorSession: { type: Boolean, required: true },
+    times: { type: String, required: true },
+    capacity: { type: Number, required: true },
+    numberBooked: { type: Number, required: true, default: 0 },
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Member",
+      },
+    ],
+  },
+  {
+    timestamp: true,
+  }
+);
+
+const TrainingSessions = mongoose.model(
+  "TrainingSession",
+  trainingSessionSchema
+);
+
+const TrainingSession = (module.exports = mongoose.model(
+  "TrainingSession",
+  trainingSessionSchema
+));

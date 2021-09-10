@@ -1,0 +1,96 @@
+import { useEffect } from "react";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { listMyOrders } from "../../actions/orderActions";
+import dojoImg from "../../img/dojo.jpeg";
+import Loader from "../Loader";
+import Message from "../Message";
+
+const MemberOrders = () => {
+  const dispatch = useDispatch();
+
+  const myOrderList = useSelector((state) => state.myOrderList);
+  const { loading, error, orders } = myOrderList;
+
+  useEffect(() => {
+    dispatch(listMyOrders());
+  }, [dispatch]);
+
+  const formatDate = (date) => {
+    let newDate = new Date(date);
+    const getDay = newDate.getDate();
+    const getMonth = newDate.getMonth();
+    const getYear = newDate.getFullYear();
+    newDate = `${getDay}/${getMonth}/${getYear}`;
+    return newDate;
+  };
+
+  return (
+    <>
+      <img src={dojoImg} alt="dojo" />
+      <h2 className="border-bottom border-warning mt-2 text-warning">Orders</h2>
+      {loading ? (
+        <Loader variant="warning" />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : orders.length === 0 ? (
+        <h5 className="text-warning">No Orders to show</h5>
+      ) : (
+        <>
+          {orders.map((order) => (
+            <Card key={order._id} className="my-2">
+              <Card.Header>
+                <h5 className="text-center">Order #: {order._id}</h5>
+
+                <Row>
+                  <Col>
+                    Order Placed: <br /> {formatDate(order.createdAt)}
+                  </Col>
+                  <Col>
+                    Total Amount: <br /> £{order.totalPrice.toFixed(2)}
+                  </Col>
+                  <Col className="align-self-center">
+                    <Link to={`/order/${order._id}`}>
+                      <p>View Details</p>
+                    </Link>
+                  </Col>
+                  <Col>
+                    Payment Status: <br />{" "}
+                    {order.isPaid ? (
+                      "Paid"
+                    ) : (
+                      <Link to={`/order/${order._id}`}>Not Paid</Link>
+                    )}
+                  </Col>
+                </Row>
+              </Card.Header>
+              <Card.Body>
+                {order.orderItems.map((item) => (
+                  <Row className="my-2" key={item._id}>
+                    <Col xs={2}>
+                      <img src={item.image} alt={item.name} />
+                    </Col>
+                    <Col xs={4}>
+                      <Link to={`/products/${item.product}`}>
+                        {item.name} <br />
+                        {item.print}
+                      </Link>
+                    </Col>
+                    <Col>
+                      <Link to={`/products/${item.product}`}>
+                        <Button variant="warning">View Item</Button>
+                      </Link>
+                    </Col>
+                  </Row>
+                ))}
+              </Card.Body>
+            </Card>
+          ))}
+        </>
+      )}
+    </>
+  );
+};
+
+export default MemberOrders;

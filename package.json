@@ -1,0 +1,45 @@
+{
+  "name": "yorkkarate",
+  "version": "1.0.0",
+  "description": "York Karate Website",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
+  },
+  "author": "Simon Flint",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^5.0.2",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "express-fileupload": "^1.2.1",
+    "formik": "^2.2.9",
+    "gocardless-nodejs": "^1.4.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.10",
+    "mongoose": "^5.13.3",
+    "multer": "^2.0.0-rc.2",
+    "react-bootstrap": "^2.0.0-beta.4",
+    "react-helmet": "^6.1.0",
+    "sharp": "^0.28.3",
+    "yup": "^0.32.9",
+    "yup-phone": "^1.2.19"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.12"
+  }
+}

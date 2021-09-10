@@ -1,0 +1,34 @@
+import {
+  EVENT_LIST_REQUEST,
+  EVENT_LIST_SUCCESS,
+  EVENT_LIST_FAIL,
+  EVENT_DISPLAY_REQUEST,
+  EVENT_DISPLAY_SUCCESS,
+  EVENT_DISPLAY_FAIL,
+} from "../constants/eventConstants";
+
+export const eventListReducer = (state = { events: [] }, action) => {
+  switch (action.type) {
+    case EVENT_LIST_REQUEST:
+      return { loadingEvents: true, events: [] };
+    case EVENT_LIST_SUCCESS:
+      return { loadingEvents: false, events: action.payload };
+    case EVENT_LIST_FAIL:
+      return { loadingEvents: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const displayEventReducer = (state = { event: {} }, action) => {
+  switch (action.type) {
+    case EVENT_DISPLAY_REQUEST:
+      return { loadingEvent: true, ...state };
+    case EVENT_DISPLAY_SUCCESS:
+      return { loadingEvent: false, event: action.payload };
+    case EVENT_DISPLAY_FAIL:
+      return { loadingEvent: false, error: action.payload };
+    default:
+      return state;
+  }
+};

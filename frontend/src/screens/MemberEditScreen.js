@@ -1,0 +1,493 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { editMember, getMemberDetails } from "../actions/memberActions";
+import * as Yup from "yup";
+import { Col, Container, Row, Button, Modal, ListGroup } from "react-bootstrap";
+import { Form, Formik } from "formik";
+import FormikControl from "../components/FormComponents/FormikControl";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+import { EDIT_MEMBER_RESET } from "../constants/memberConstants";
+import MemberTrainingSessions from "../components/MemberTrainingSessions";
+import { listMemberClasses } from "../actions/trainingSessionActions";
+import { Link } from "react-router-dom";
+import ProfileImg from "../components/ProfileComponents/ProfileImg";
+
+const MemberEditScreen = ({ match }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [gradingDate, setGradingDate] = useState();
+  const [danGrade, setDanGrade] = useState();
+
+  const dispatch = useDispatch();
+
+  const memberId = match.params.id;
+
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { loading, error, member } = memberDetails;
+
+  const memberEdit = useSelector((state) => state.memberEdit);
+  const { success } = memberEdit;
+
+  const memberClassList = useSelector((state) => state.memberClassList);
+  const { loading: classListLoading, error: classListError } = memberClassList;
+
+  const adminOptions = [
+    {
+      key: "True",
+      value: "true",
+    },
+    { key: "False", value: "false" },
+  ];
+
+  let initialValues;
+  let numberMarker;
+  let numberMarker2;
+
+  switch (danGrade) {
+    case 1:
+      numberMarker2 = "st";
+      break;
+    case 2:
+      numberMarker2 = "nd";
+      break;
+    case 3:
+      numberMarker2 = "rd";
+      break;
+    default:
+      numberMarker2 = "th";
+  }
+
+  if (member.dateOfBirth) {
+    switch (member.danGrade) {
+      case 1:
+        numberMarker = "st";
+        break;
+      case 2:
+        numberMarker = "nd";
+        break;
+      case 3:
+        numberMarker = "rd";
+        break;
+      default:
+        numberMarker = "th";
+    }
+    initialValues = {
+      kyuGrade: member.kyuGrade,
+      danGrade: member.danGrade,
+      isAdmin: member.isAdmin.toString(),
+      isShopAdmin: member.isShopAdmin.toString(),
+      isAuthor: member.isAuthor.toString(),
+      isInstructor: member.isInstructor.toString(),
+      firstName: member.firstName,
+      lastName: member.lastName,
+      dateOfBirth: member.dateOfBirth.substring(0, 10),
+      medicalDetails: member.medicalDetails,
+      addressLine1: member.addressLine1,
+      addressLine2: member.addressLine2,
+      addressLine3: member.addressLine3,
+      addressLine4: member.addressLine4,
+      postCode: member.postCode,
+      email: member.email,
+      phone: `0${member.phone}`,
+      emergencyContactName: member.emergencyContactName,
+      emergencyContactEmail: member.emergencyContactEmail,
+      emergencyContactPhone: `0${member.emergencyContactPhone}`,
+      danGradings: member.danGradings,
+    };
+  }
+
+  const validationSchema = Yup.object({
+    kyuGrade: Yup.number().required("Required").moreThan(-1).lessThan(17),
+    danGrade: Yup.number().required("Required").lessThan(11).moreThan(-1),
+    isAdmin: Yup.boolean().required("Required"),
+    isShopAdmin: Yup.boolean().required("Required"),
+    isAuthor: Yup.boolean().required("Required"),
+    isInstructor: Yup.boolean().required("Required"),
+    firstName: Yup.string().required("Required"),
+    lastName: Yup.string().required("Required"),
+    dateOfBirth: Yup.date().required("Required"),
+    addressLine1: Yup.string().required("Required"),
+    postCode: Yup.string().required("Required"),
+    email: Yup.string().required().email(),
+    phone: Yup.string().required("Required").phone("GB", true),
+    emergencyContactName: Yup.string()
+      .required("Required")
+      .notOneOf(
+        [Yup.ref("firstName"), null],
+        "Name cannot be the same as the member"
+      ),
+    emergencyContactEmail: Yup.string()
+      .required("Required")
+      .notOneOf(
+        [Yup.ref("email"), null],
+        "Email cannot be the same as the member"
+      ),
+    emergencyContactPhone: Yup.string()
+      .required("Required")
+      .phone("GB", true)
+      .notOneOf(
+        [Yup.ref("phone"), null],
+        "Phone number cannot be the same as the member"
+      ),
+  });
+
+  useEffect(() => {
+    dispatch(getMemberDetails(memberId));
+    dispatch(listMemberClasses(memberId));
+    dispatch({ type: EDIT_MEMBER_RESET });
+  }, [dispatch, memberId]);
+
+  const saveHandler = async (values) => {
+    values.memberId = memberId;
+    let numberMarker;
+    switch (danGrade) {
+      case 1:
+        numberMarker = "st";
+        break;
+      case 2:
+        numberMarker = "nd";
+        break;
+      case 3:
+        numberMarker = "rd";
+        break;
+      default:
+        numberMarker = "th";
+    }
+
+    if (gradingDate && danGrade) {
+      values.danGradings[
+        danGrade + numberMarker + " Dan"
+      ] = `${gradingDate.substring(8, 10)}/${gradingDate.substring(
+        5,
+        7
+      )}/${gradingDate.substring(0, 4)}`;
+      values.danGrade = danGrade;
+      values.kyuGrade = 0;
+    }
+
+    if (values.medicalDetails !== "") {
+      values.medicalStatus = true;
+    }
+
+    dispatch(editMember(values));
+  };
+
+  return (
+    <Container>
+      {loading ? (
+        <Loader variant="warning" />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <>
+          <Link className="btn btn-dark" to="/admin/listMembers">
+            <i className="fas fa-arrow-left"></i> Return
+          </Link>
+          <h3 className="text-center border-bottom border-warning pb-1">
+            Membership details for {member.firstName} {member.lastName}
+          </h3>
+
+          <div className="max-width-300 mx-auto mb-3">
+            <ProfileImg />
+          </div>
+          {initialValues ? (
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={saveHandler}
+            >
+              {({ values }) => (
+                <Form>
+                  <h5>Personal Details</h5>
+                  <Row className="pb-4 border-bottom border-warning">
+                    <Col>
+                      <FormikControl
+                        control="input"
+                        label="First Name"
+                        type="text"
+                        name="firstName"
+                      />
+
+                      <FormikControl
+                        control="input"
+                        label="Last Name"
+                        type="text"
+                        name="lastName"
+                      />
+                      <FormikControl
+                        control="input"
+                        label="Email"
+                        type="text"
+                        name="email"
+                        placeholder="Please enter your Email"
+                      />
+
+                      <FormikControl
+                        control="input"
+                        label="Phone Number"
+                        type="text"
+                        name="phone"
+                        placeholder="Please enter your phone number"
+                      />
+                      <FormikControl
+                        control="input"
+                        type="date"
+                        label="Date of Birth"
+                        name="dateOfBirth"
+                      />
+                      <FormikControl
+                        control="input"
+                        as="textarea"
+                        label="Medical Details"
+                        name="medicalDetails"
+                        placeholder="Provide any important medical information here"
+                      />
+                    </Col>
+
+                    <Col>
+                      <FormikControl
+                        control="input"
+                        type="text"
+                        label="Address"
+                        name="addressLine1"
+                        placeholder="Address number/name"
+                        margin="mb-0"
+                      />
+
+                      <FormikControl
+                        control="input"
+                        type="text"
+                        name="addressLine2"
+                        placeholder="Street"
+                        margin="mb-0"
+                      />
+                      <FormikControl
+                        control="input"
+                        type="text"
+                        name="addressLine3"
+                        placeholder="Village/Town/District"
+                        margin="mb-0"
+                      />
+                      <FormikControl
+                        control="input"
+                        type="text"
+                        name="addressLine4"
+                        placeholder="City"
+                        margin="mb-0"
+                      />
+                      <FormikControl
+                        control="input"
+                        type="text"
+                        name="postCode"
+                        placeholder="Postcode"
+                      />
+                    </Col>
+                  </Row>
+
+                  <div className="py-4 border-bottom border-warning">
+                    <h5>Emergency Contact Details</h5>
+                    <FormikControl
+                      control="input"
+                      label="Name of emergency contact"
+                      type="text"
+                      name="emergencyContactName"
+                      placeholder="Please enter their name"
+                    />
+
+                    <FormikControl
+                      control="input"
+                      label="Email of emergency contact"
+                      type="text"
+                      name="emergencyContactEmail"
+                      placeholder="Please enter their email"
+                    />
+
+                    <FormikControl
+                      control="input"
+                      label="Number of emergency contact"
+                      type="text"
+                      name="emergencyContactPhone"
+                      placeholder="Please enter their number"
+                    />
+                  </div>
+                  <div className="py-4 border-bottom border-warning">
+                    <h5>Membership Status</h5>
+                    <Row>
+                      <Col md={5}>
+                        <div className="border border-warning p-2">
+                          <FormikControl
+                            control="input"
+                            label="Kyu Grade"
+                            type="number"
+                            name="kyuGrade"
+                          />
+                        </div>
+                      </Col>
+                      <Col md={2} className="align-self-center">
+                        <h3 className="text-center">Or</h3>
+                        <p className="text-center">
+                          If not a kyu grade, enter 0 for the kyu grade value
+                        </p>
+                      </Col>
+                      <Col md={5}>
+                        <div className="border border-warning p-2">
+                          <h5 className="text-center">
+                            Current Dan Grade:{" "}
+                            {`${member.danGrade}${numberMarker} Dan`}
+                          </h5>
+                          {danGrade && gradingDate ? (
+                            <ListGroup>
+                              <ListGroup.Item
+                                variant="success"
+                                className="text-center strong"
+                              >
+                                Dan Grade set to{" "}
+                                {`${danGrade}${numberMarker2} Dan`}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          ) : (
+                            <h5
+                              className="btn btn-block btn-primary"
+                              onClick={() => setShowModal(true)}
+                            >
+                              Add Dan grading
+                            </h5>
+                          )}
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row className="mt-2">
+                      <Col md={3}>
+                        <div className="border border-warning p-1">
+                          <FormikControl
+                            control="radio"
+                            label="Is this user an Admin?"
+                            name="isAdmin"
+                            options={adminOptions}
+                          />
+                        </div>
+                      </Col>
+                      <Col md={3}>
+                        <div className="border border-warning p-1">
+                          <FormikControl
+                            control="radio"
+                            label="Is this user a Shop Admin?"
+                            name="isShopAdmin"
+                            options={adminOptions}
+                          />
+                        </div>
+                      </Col>
+                      <Col md={3}>
+                        <div className="border border-warning p-1">
+                          <FormikControl
+                            control="radio"
+                            label="Is this user an Instructor?"
+                            name="isInstructor"
+                            options={adminOptions}
+                          />
+                        </div>
+                      </Col>
+                      <Col md={3}>
+                        <div className="border border-warning p-1">
+                          <FormikControl
+                            control="radio"
+                            label="Is this user an Author?"
+                            name="isAuthor"
+                            options={adminOptions}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div className="py-4 border-bottom border-warning">
+                    <h5>Classes</h5>
+                    {classListLoading ? (
+                      <Loader />
+                    ) : classListError ? (
+                      <Message>{error}</Message>
+                    ) : (
+                      <MemberTrainingSessions />
+                    )}
+                  </div>
+                  <Row className="mt-2">
+                    <Col>
+                      {success ? (
+                        <Button className="btn btn-success btn-block" disabled>
+                          Updated
+                        </Button>
+                      ) : (
+                        <Button
+                          type="submit"
+                          className="btn btn-warning btn-block"
+                        >
+                          Update
+                        </Button>
+                      )}
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            <>
+              <h5 className="text-center text-warning">
+                Error loading details. Please don't use the refresh button.
+              </h5>
+              <Link
+                className="btn btn-block btn-warning my-3"
+                to="/admin/listMembers"
+              >
+                Return to Member List
+              </Link>
+            </>
+          )}
+        </>
+      )}
+      <Modal
+        size="sm"
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        aria-labelledby="title-sm"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="title-sm">
+            Please enter the date the member passed their grading
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <div className="form-group">
+              <input
+                type="date"
+                className="form-control"
+                value={gradingDate}
+                onChange={(e) => setGradingDate(e.target.value)}
+              />
+            </div>
+          </form>
+          <Button
+            className="mr-2"
+            variant="secondary"
+            onClick={() => {
+              setShowModal(false);
+              setGradingDate();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="warning"
+            onClick={() => {
+              setShowModal(false);
+              setDanGrade(member.danGrade + 1);
+            }}
+          >
+            Add grading date
+          </Button>
+        </Modal.Body>
+      </Modal>
+    </Container>
+  );
+};
+
+export default MemberEditScreen;
