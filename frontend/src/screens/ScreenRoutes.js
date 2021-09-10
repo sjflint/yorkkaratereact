@@ -32,6 +32,7 @@ import MembershipCancelledScreen from "./MembershipCancelledScreen";
 import AdminScreen from "./AdminScreen";
 import ListMembersScreen from "./ListMembersScreen";
 import MemberEditScreen from "./MemberEditScreen";
+import ListEventsScreen from "./ListEventsScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -75,6 +76,7 @@ const ScreenRoutes = () => {
       <Route path="/profile" component={ProfileScreen} />
       <Route path="/admin" component={AdminScreen} exact />
       <Route path="/admin/listmembers" component={ListMembersScreen} />
+      <Route path="/admin/listevents" component={ListEventsScreen} />
       <Route path="/admin/members/:id/edit" component={MemberEditScreen} />
     </>
   );
