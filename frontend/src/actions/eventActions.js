@@ -6,6 +6,12 @@ import {
   EVENT_DISPLAY_REQUEST,
   EVENT_DISPLAY_SUCCESS,
   EVENT_DISPLAY_FAIL,
+  EVENT_DELETE_REQUEST,
+  EVENT_DELETE_SUCCESS,
+  EVENT_DELETE_FAIL,
+  EVENT_CREATE_REQUEST,
+  EVENT_CREATE_SUCCESS,
+  EVENT_CREATE_FAIL,
 } from "../constants/eventConstants";
 
 export const listEvents = () => async (dispatch) => {
@@ -42,6 +48,71 @@ export const listEvent = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: EVENT_DISPLAY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteEvent = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: EVENT_DELETE_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/events/${id}`, config);
+
+    dispatch({
+      type: EVENT_DELETE_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: EVENT_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const createEvent = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: EVENT_CREATE_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/events`, values, config);
+
+    dispatch({
+      type: EVENT_CREATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: EVENT_CREATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

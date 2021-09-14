@@ -76,7 +76,7 @@ const ScreenRoutes = () => {
       <Route path="/profile" component={ProfileScreen} />
       <Route path="/admin" component={AdminScreen} exact />
       <Route path="/admin/listmembers" component={ListMembersScreen} />
-      <Route path="/admin/listevents" component={ListEventsScreen} />
+      <Route path="/admin/editevents" component={ListEventsScreen} />
       <Route path="/admin/members/:id/edit" component={MemberEditScreen} />
     </>
   );

@@ -34,7 +34,12 @@ import {
   trainingSessionReducer,
 } from "./reducers/trainingSessionReducer";
 import { basketReducer } from "./reducers/basketReducers";
-import { eventListReducer, displayEventReducer } from "./reducers/eventReducer";
+import {
+  eventListReducer,
+  displayEventReducer,
+  eventDeleteReducer,
+  eventCreateReducer,
+} from "./reducers/eventReducer";
 import {
   orderCreateReducer,
   orderDetailsReducer,
@@ -73,6 +78,8 @@ const reducer = combineReducers({
   displayProduct: displayProductReducer,
   basket: basketReducer,
   eventList: eventListReducer,
+  eventDelete: eventDeleteReducer,
+  eventCreate: eventCreateReducer,
   displayEvent: displayEventReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,

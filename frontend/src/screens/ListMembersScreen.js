@@ -75,9 +75,18 @@ const ListMembersScreen = ({ history }) => {
             <tbody>
               {memberList.map((member) => (
                 <tr key={member._id}>
-                  <td>
-                    {member.firstName} {member.lastName}
-                  </td>
+                  {member.ddMandate === "Cancelled" ? (
+                    <td>
+                      {member.firstName} {member.lastName}
+                    </td>
+                  ) : (
+                    <Link to={`/admin/members/${member._id}/edit`}>
+                      <td>
+                        {member.firstName} {member.lastName}
+                      </td>
+                    </Link>
+                  )}
+
                   <td>
                     <a href={`mailto:${member.email}`}> {member.email}</a>
                   </td>
