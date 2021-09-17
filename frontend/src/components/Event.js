@@ -4,9 +4,9 @@ import FormatDate from "./FormatDate";
 
 const Event = ({ event }) => {
   return (
-    <Card className=" my-2 rounded">
+    <Card className=" mb-2 rounded h-100">
       <Link to={`/event/${event._id}`}>
-        <Card.Img src={event.image} variant="top" />
+        <Card.Img src={event.image} variant="top" style={{ height: "300px" }} />
       </Link>
       <Card.Body>
         <Link to={`/event/${event._id}`}>

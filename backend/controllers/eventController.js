@@ -43,7 +43,7 @@ const deleteEvent = asyncHandler(async (req, res) => {
 // @access Private/Admin
 const createEvent = asyncHandler(async (req, res) => {
   const event = new Event({
-    image: "/img/default-profile.jpg",
+    image: req.body.image,
     title: req.body.title,
     author: req.body.author,
     dateOfEvent: req.body.dateOfEvent,
@@ -60,18 +60,16 @@ const createEvent = asyncHandler(async (req, res) => {
 // @route PUT /api/events/:id
 // @access Private/Admin
 const updateEvent = asyncHandler(async (req, res) => {
-  const event = await Event.findById(req.params.id);
-
-  const { title, author, dateOfEvent, location, description } = req.body;
+  const event = await Event.findById(req.body.id);
 
   if (event) {
-    event.image = image;
-    event.title = title;
-    event.author = author;
-    event.dateOfEvent = dateOfEvent;
-    event.location = location;
-    event.description = description;
-    event.register = register;
+    event.image = req.body.image;
+    event.title = req.body.title;
+    event.author = req.body.author;
+    event.dateOfEvent = req.body.dateOfEvent;
+    event.location = req.body.location;
+    event.description = req.body.description;
+    event.register = req.body.register;
 
     const updatedEvent = await event.save();
     res.status(201).json(updatedEvent);

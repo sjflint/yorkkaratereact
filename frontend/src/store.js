@@ -39,6 +39,7 @@ import {
   displayEventReducer,
   eventDeleteReducer,
   eventCreateReducer,
+  eventUpdateReducer,
 } from "./reducers/eventReducer";
 import {
   orderCreateReducer,
@@ -80,6 +81,7 @@ const reducer = combineReducers({
   eventList: eventListReducer,
   eventDelete: eventDeleteReducer,
   eventCreate: eventCreateReducer,
+  eventUpdate: eventUpdateReducer,
   displayEvent: displayEventReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,

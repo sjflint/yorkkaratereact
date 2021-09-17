@@ -11,6 +11,9 @@ const Header = () => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { error } = memberDetails;
+
   const logoutHandler = () => {
     dispatch(logout());
   };
@@ -19,10 +22,15 @@ const Header = () => {
     if (memberInfo) {
       dispatch(getMemberDetails("profile"));
     }
-  }, [dispatch, memberInfo]);
+  }, [dispatch, memberInfo, error]);
+
+  const loginErrorHandler = () => {
+    dispatch(logout());
+  };
 
   return (
     <header className="mb-4 bg-primary">
+      {error && loginErrorHandler()}
       <Navbar bg="primary" variant="dark" expand="md">
         <Container className="w-80">
           <LinkContainer to="/">

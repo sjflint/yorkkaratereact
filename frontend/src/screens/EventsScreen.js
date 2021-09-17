@@ -32,7 +32,7 @@ const EventsScreen = () => {
         ) : (
           <Row>
             {events.map((event) => (
-              <Col md={6} key={event._id}>
+              <Col md={6} key={event._id} className="mb-4">
                 <Event event={event} />
               </Col>
             ))}

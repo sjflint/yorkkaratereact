@@ -53,6 +53,15 @@ input[type="file"] {
   cursor: pointer;
 }
 
+.event-image {
+  aspect-ratio: 16 / 9;
+}
+
+/* mouse hover */
+.mouse-hover-pointer:hover {
+  cursor: pointer;
+}
+
 /* Showcase */
 #showcase {
   position: relative;
