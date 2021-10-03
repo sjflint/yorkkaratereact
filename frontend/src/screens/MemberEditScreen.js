@@ -11,7 +11,8 @@ import { EDIT_MEMBER_RESET } from "../constants/memberConstants";
 import MemberTrainingSessions from "../components/MemberTrainingSessions";
 import { listMemberClasses } from "../actions/trainingSessionActions";
 import { Link } from "react-router-dom";
-import ProfileImg from "../components/ProfileComponents/ProfileImg";
+
+import UploadImage from "../components/uploadImage";
 
 const MemberEditScreen = ({ match }) => {
   const [showModal, setShowModal] = useState(false);
@@ -188,8 +189,20 @@ const MemberEditScreen = ({ match }) => {
           </h3>
 
           <div className="max-width-300 mx-auto mb-3">
-            <ProfileImg />
+            <UploadImage
+              img={member.profileImg}
+              type={"Profile"}
+              id={member._id}
+            />
+            <small className="text-center">
+              Recommended aspect ratio: 1:1. Image will be cropped to fit <br />
+              Please consider that this image might be displayed across the
+              public website, as well as being displayed to grading examinars.
+              <br /> The image should depict the member and be of a suitable
+              nature.
+            </small>
           </div>
+
           {initialValues ? (
             <Formik
               initialValues={initialValues}

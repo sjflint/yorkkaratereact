@@ -2,7 +2,10 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
+  articleCreateReducer,
+  articleDeleteReducer,
   articleListReducer,
+  articleUpdateReducer,
   displayArticleReducer,
 } from "./reducers/articleReducers";
 import {
@@ -15,7 +18,6 @@ import {
   blackBeltListReducer,
   listMembersReducer,
   memberDetailsReducer,
-  updateProfileImgReducer,
   updateProfileReducer,
   updatePasswordReducer,
   memberDeleteReducer,
@@ -53,9 +55,13 @@ import {
   updateDirectDebitReducer,
   updateSubscriptionReducer,
 } from "./reducers/directDebitReducers";
+import { uploadImgReducer } from "./reducers/uploadImageReducer";
 
 const reducer = combineReducers({
   articleList: articleListReducer,
+  articleDelete: articleDeleteReducer,
+  articleCreate: articleCreateReducer,
+  articleUpdate: articleUpdateReducer,
   displayArticle: displayArticleReducer,
   trainingVideoList: trainingVideoListReducer,
   displayTrainingVideo: displayTrainingVideoReducer,
@@ -65,7 +71,6 @@ const reducer = combineReducers({
   listMembers: listMembersReducer,
   memberDelete: memberDeleteReducer,
   memberEdit: memberEditReducer,
-  updateProfileImg: updateProfileImgReducer,
   updateProfile: updateProfileReducer,
   updatePassword: updatePasswordReducer,
   trainingSession: trainingSessionReducer,
@@ -91,6 +96,7 @@ const reducer = combineReducers({
   cancelDirectDebit: cancelDirectDebitReducer,
   updateSubscription: updateSubscriptionReducer,
   createDDPayment: createDDPaymentReducer,
+  uploadImg: uploadImgReducer,
 });
 
 const memberInfoFromStorage = localStorage.getItem("memberInfo")

@@ -7,6 +7,8 @@ import eventsImg from "../img/events.png";
 import financialImg from "../img/financial.png";
 import emailImg from "../img/email.png";
 import timetableImg from "../img/timetable.png";
+import productsImg from "../img/products.png";
+import articlesImg from "../img/articles.png";
 
 const AdminScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -41,7 +43,7 @@ const AdminScreen = ({ history }) => {
                 <Card.Footer>
                   <LinkContainer to="/admin/listMembers">
                     <Button variant="secondary" className="btn-block">
-                      List Members
+                      Members
                     </Button>
                   </LinkContainer>
                 </Card.Footer>
@@ -56,7 +58,7 @@ const AdminScreen = ({ history }) => {
                 <Card.Footer>
                   <LinkContainer to="/admin/editevents">
                     <Button variant="secondary" className="btn-block">
-                      Edit Events
+                      Events
                     </Button>
                   </LinkContainer>
                 </Card.Footer>
@@ -79,7 +81,7 @@ const AdminScreen = ({ history }) => {
                 </Card.Footer>
               </Card>
             </CardGroup>
-            <CardGroup>
+            <CardGroup className="mb-3">
               <Card>
                 <Card.Img variant="top" src={emailImg} className="p-5" />
                 <Card.Body>
@@ -111,11 +113,58 @@ const AdminScreen = ({ history }) => {
                   </LinkContainer>
                 </Card.Footer>
               </Card>
-              <Card></Card>
+              <Card>
+                <Card.Img variant="top" src={productsImg} className="p-5" />
+                <Card.Body>
+                  <Card.Title>Product details</Card.Title>
+                  <Card.Text>View and edit products</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <LinkContainer to="/admin/edittimetable">
+                    <Button variant="secondary" className="btn-block" disabled>
+                      Products
+                    </Button>
+                  </LinkContainer>
+                </Card.Footer>
+              </Card>
+            </CardGroup>
+            <CardGroup>
+              <Card>
+                <Card.Img variant="top" src={productsImg} className="p-5" />
+                <Card.Body>
+                  <Card.Title>View Orders</Card.Title>
+                  <Card.Text>View and edit orders</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <LinkContainer to="/admin/edittimetable">
+                    <Button variant="secondary" className="btn-block" disabled>
+                      Orders
+                    </Button>
+                  </LinkContainer>
+                </Card.Footer>
+              </Card>
+              <Card>
+                <Card.Img variant="top" src={articlesImg} className="p-5" />
+                <Card.Body>
+                  <Card.Title>View Articles</Card.Title>
+                  <Card.Text>Create and edit articles</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <LinkContainer to="/author/editarticles">
+                    <Button variant="secondary" className="btn-block">
+                      Articles
+                    </Button>
+                  </LinkContainer>
+                </Card.Footer>
+              </Card>
+              <Card>Syllabus - edit and upload videos.</Card>
+            </CardGroup>
+            <CardGroup>
+              <Card>Lesson Plans - view and edit</Card>
+              <Card>Gradings???</Card>
             </CardGroup>
           </>
         )}
-        <p>Other admin type things here</p>
       </Row>
     </Container>
   );

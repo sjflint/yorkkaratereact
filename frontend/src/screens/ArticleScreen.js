@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Image, ListGroup, Container } from "react-bootstrap";
-import Article from "../components/Article";
+import ArticleSidebar from "../components/ArticleSidebar";
 import FormatDate from "../components/FormatDate";
 import { listArticle } from "../actions/articleActions";
 import { listArticles } from "../actions/articleActions";
@@ -26,10 +26,12 @@ const ArticleScreen = ({ match }) => {
   const articleId = article._id;
   const moreArticles = articles.filter((article) => article._id !== articleId);
 
+  const paragraphs = article.body;
+
   return (
     <Container>
       <Row>
-        <Col md={8}>
+        <Col md={8} className="mb-2">
           {loadingArticle ? (
             <Loader variant="warning" />
           ) : errorArticle ? (
@@ -49,11 +51,15 @@ const ArticleScreen = ({ match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-dark">
                   <p className="text-white">{article.leader}</p>
-                  <p>{article.body}</p>
+
+                  {paragraphs &&
+                    paragraphs.map((paragraph) => (
+                      <p key={`${paragraph}${Math.random()}`} className="mb-2">
+                        {paragraph}
+                        <br />
+                      </p>
+                    ))}
                 </ListGroup.Item>
-                <Link className="btn btn-primary my-3" to="/news">
-                  Return to news articles
-                </Link>
               </ListGroup>
             </div>
           )}
@@ -69,11 +75,11 @@ const ArticleScreen = ({ match }) => {
           ) : (
             <div>
               {moreArticles.slice(0, 3).map((article) => (
-                <Article article={article} key={article._id} />
+                <ArticleSidebar article={article} key={article._id} />
               ))}
             </div>
           )}
-          <Link className="btn btn-block btn-primary my-3" to="/news">
+          <Link className="btn btn-block btn-warning my-3" to="/news">
             Read more news articles
           </Link>
         </Col>

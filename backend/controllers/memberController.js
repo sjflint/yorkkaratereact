@@ -24,6 +24,9 @@ const authMember = asyncHandler(async (req, res) => {
       firstName: member.firstName,
       email: member.email,
       isAdmin: member.isAdmin,
+      isAuthor: member.isAuthor,
+      isShopAdmin: member.isShopAdmin,
+      isInstructor: member.isInstructor,
       token: generateToken(member._id),
     });
   } else {
@@ -158,48 +161,6 @@ const getMemberPaymentDetails = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
-
-// // @desc POST member profileImg
-// // @route POST /api/members/profileimg
-// // @access Private
-// const pipeline = promisify(stream.pipeline);
-// const postProfileImg = asyncHandler(async (req, res) => {
-//   const {
-//     file,
-//     body: { name },
-//   } = req;
-
-//   const id = req.body.memberId;
-
-//   const member = await Member.findById(id);
-
-//   if (member) {
-//     if (
-//       file.detectedFileExtension === ".jpg" ||
-//       (file.detectedFileExtension === ".png" && file.size < 100000)
-//     ) {
-//       const fileName = `profileImg-${member.name}${file.detectedFileExtension}`;
-//       await pipeline(
-//         file.stream,
-//         fs.createWriteStream(`./frontend/public/img/${fileName}`)
-//       );
-//       const profileImg = `/img/${fileName}`;
-//       console.log(profileImg);
-//       await Member.findOneAndUpdate(
-//         { _id: member._id },
-//         { profileImg: profileImg },
-//         { new: true }
-//       );
-//       res.json(fileName);
-//     } else {
-//       res.status(422);
-//       throw new Error("invalid file type");
-//     }
-//   } else {
-//     res.status(404);
-//     throw new Error("member not found");
-//   }
-// });
 
 // @desc Update profile
 // @route POST /api/members/updateProfile

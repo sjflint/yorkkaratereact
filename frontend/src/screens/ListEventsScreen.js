@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { Container, Table, Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +16,9 @@ import * as Yup from "yup";
 
 import { Formik, Form } from "formik";
 import FormikControl from "../components/FormComponents/FormikControl";
-import eventPlaceholder from "../img/eventplaceholder.jpg";
+import imagePlaceholder from "../img/defaultplaceholder.jpg";
+
+import UploadImage from "../components/uploadImage";
 
 const ListEventsScreen = ({ history, match }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -25,9 +26,12 @@ const ListEventsScreen = ({ history, match }) => {
   const [editModal, setEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [updateId, setUpdateId] = useState();
-  const [uploading, setUploading] = useState(false);
+  const [editDescription, setEditDescription] = useState(false);
   const [image, setImage] = useState();
-  const [uploadError, setUploadError] = useState(false);
+
+  const childToParent = (childData) => {
+    setImage(childData);
+  };
 
   const dispatch = useDispatch();
 
@@ -84,19 +88,25 @@ const ListEventsScreen = ({ history, match }) => {
 
   const createEventHandler = (values) => {
     values.image = image;
+    values.description = values.description.split("\n");
     dispatch(createEvent(values));
     setCreateModal(false);
   };
 
   const editEventHandler = async (values) => {
     values.id = updateId;
-    values.image = image;
-    dispatch(updateEvent(values));
 
+    if (editDescription === false) {
+      values.description = event.description;
+    } else {
+      values.description = values.description.split("\n");
+    }
+
+    dispatch(updateEvent(values));
+    setEditDescription(false);
     setEditModal(false);
   };
 
-  // Form data to create Event
   let initialValues;
   if (member) {
     initialValues = {
@@ -106,10 +116,23 @@ const ListEventsScreen = ({ history, match }) => {
       dateOfEvent: "",
       location: "",
       description: "",
-      register: "/event",
+      register: "",
       todaysDate: new Date(),
     };
   }
+
+  // Dropdown options for register
+  const dropdownOptions = [
+    { key: "Please select a method to register", value: "" },
+    { key: "Grading", value: `/grading?` },
+    { key: "Squad Selection", value: "/squadselection?" },
+    { key: "Email York Karate", value: "mailto:info@yorkkarate.net" },
+    {
+      key: "Email Welfare Committee",
+      value: "mailto:committee@yorkkarate.net",
+    },
+  ];
+
   const validationSchema = Yup.object({
     image: Yup.string(),
     title: Yup.string().required("Required"),
@@ -119,49 +142,49 @@ const ListEventsScreen = ({ history, match }) => {
       .required("Required")
       .min(Yup.ref("todaysDate"), "Date of event must be in the future"),
     location: Yup.string().required("Required"),
-    description: Yup.string().required("Required"),
+    // description: Yup.string().required("Required"),
+    register: Yup.string().required("Required"),
   });
 
   let editInitialValues = {};
-  if (event) {
+  let paragraphs;
+
+  if (event.title !== undefined) {
+    const eventDate = new Date(event.dateOfEvent);
+    let year;
+    let month;
+    let day;
+    if (eventDate.getFullYear() < 10) {
+      year = `0${eventDate.getFullYear()}`;
+    } else {
+      year = eventDate.getFullYear();
+    }
+    if (eventDate.getMonth() < 9) {
+      month = `0${eventDate.getMonth() + 1}`;
+    } else {
+      month = eventDate.getMonth() + 1;
+    }
+    if (eventDate.getDate() < 10) {
+      day = `0${eventDate.getDate()}`;
+    } else {
+      day = eventDate.getDate();
+    }
+
+    paragraphs = event.description;
+
+    const eventDescription = paragraphs.join("\n");
+
     editInitialValues = {
-      image: event.image,
       title: event.title,
       author: event.author,
-      dateOfEvent: new Date(event.dateOfEvent).toLocaleDateString(),
+      dateOfEvent: `${year}-${month}-${day}`,
       todaysDate: new Date(),
       location: event.location,
-      description: event.description,
+      description: eventDescription,
       register: event.register,
       dateCreated: event.dateCreated,
     };
   }
-
-  const uploadEventImage = async (e) => {
-    setUploadError(false);
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("image", file);
-    setUploading(true);
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-
-      const { data } = await axios.post("/api/upload", formData, config);
-
-      setImage(data);
-      setUploading(false);
-      setUploadError(false);
-    } catch (error) {
-      console.error(error);
-      setUploading(false);
-      setUploadError(true);
-    }
-  };
 
   return (
     <Container fluid="lg">
@@ -173,9 +196,7 @@ const ListEventsScreen = ({ history, match }) => {
       {loadingCreate && <Loader variant="warning" />}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {eventError && <Message variant="danger">{eventError}</Message>}
-      {successUpdate && (
-        <Message variant="success">Event successfully updated</Message>
-      )}
+
       {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
       {loading ? (
         <Loader variant="warning" />
@@ -204,19 +225,24 @@ const ListEventsScreen = ({ history, match }) => {
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
                       setUpdateId(event._id);
-                      setUploadError(false);
+
                       await dispatch(listEvent(event._id));
                       await setImage(event.image);
                       await setEditModal(true);
                     }}
                   >
-                    <img src={event.image} alt="event" width="10" height="40" />
+                    <img
+                      src={`${event.image}`}
+                      alt="event"
+                      width="10"
+                      height="40"
+                    />
                   </td>
                   <td
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
                       setUpdateId(event._id);
-                      setUploadError(false);
+
                       await dispatch(listEvent(event._id));
                       await setImage(event.image);
                       await setEditModal(true);
@@ -252,7 +278,7 @@ const ListEventsScreen = ({ history, match }) => {
                           className="btn btn-block m-0 p-0"
                           onClick={async () => {
                             setUpdateId(event._id);
-                            setUploadError(false);
+
                             await dispatch(listEvent(event._id));
                             await setImage(event.image);
                             await setEditModal(true);
@@ -273,11 +299,12 @@ const ListEventsScreen = ({ history, match }) => {
             </tbody>
           </Table>
 
-          <div>
+          <div className="text-center">
             <Button
+              className="btn-warning"
               onClick={() => {
                 setCreateModal(true);
-                setImage(eventPlaceholder);
+                setImage(imagePlaceholder);
               }}
             >
               <i className="fas fa-plus"></i> Create Event
@@ -309,18 +336,11 @@ const ListEventsScreen = ({ history, match }) => {
           <Modal.Title>Create a new event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={image} alt="" className="event-image" />
-          <label className="d-block btn-primary py-2 my-0 text-center custom-fileupload-button text-warning">
-            <input type="file" name="image" onChange={uploadEventImage} />
-            Add Event Image
-          </label>
-          {uploading && <Loader variant="warning" />}
-          {uploadError && (
-            <Message variant="danger">
-              File couldn't be uploaded. File must be png/jpg/jpeg and not be
-              more than 1MB in size
-            </Message>
-          )}
+          <UploadImage childToParent={childToParent} type="Event" />
+          <p className="text-center">
+            Recommended aspect ratio: 5:3. Image will be cropped to fit
+          </p>
+
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -356,8 +376,17 @@ const ListEventsScreen = ({ history, match }) => {
                   label="Please provide a description"
                   name="description"
                   placeholder="Please provide a description"
+                  rows="10"
                 />
-                <Button type="submit" className="btn-block">
+
+                <FormikControl
+                  control="select"
+                  label="Event Type / How to Register"
+                  name="register"
+                  options={dropdownOptions}
+                />
+
+                <Button type="submit" className="btn-block btn-warning">
                   Create
                 </Button>
               </Form>
@@ -371,23 +400,26 @@ const ListEventsScreen = ({ history, match }) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={editModal} onHide={() => setEditModal(false)}>
+      <Modal
+        show={editModal}
+        onHide={() => {
+          setEditModal(false);
+          setEditDescription(false);
+        }}
+      >
         <Modal.Header closeButton className="bg-secondary text-white">
           <Modal.Title>Edit event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={image} alt="" className="event-image" />
-          <label className="d-block btn-primary py-2 my-0 text-center custom-fileupload-button text-warning">
-            <input type="file" name="image" onChange={uploadEventImage} />
-            Change Event Image
-          </label>
-          {uploading && <Loader variant="warning" />}
-          {uploadError && (
-            <Message variant="danger">
-              File couldn't be uploaded. File must be png/jpg/jpeg and not be
-              more than 1MB in size
-            </Message>
+          {event && (
+            <>
+              <UploadImage img={event.image} type={"Event"} id={event._id} />
+              <p className="text-center">
+                Recommended aspect ratio: 5:3. Image will be cropped to fit
+              </p>
+            </>
           )}
+
           <Formik
             initialValues={editInitialValues}
             validationSchema={validationSchema}
@@ -397,7 +429,7 @@ const ListEventsScreen = ({ history, match }) => {
               <Form>
                 <FormikControl
                   control="input"
-                  label="title"
+                  label="Title"
                   type="text"
                   name="title"
                   placeholder="Event Title"
@@ -406,7 +438,7 @@ const ListEventsScreen = ({ history, match }) => {
                 <FormikControl
                   control="input"
                   label="Date of Event"
-                  type="text"
+                  type="date"
                   name="dateOfEvent"
                 />
                 <FormikControl
@@ -417,14 +449,50 @@ const ListEventsScreen = ({ history, match }) => {
                   placeholder="Location Address and Post Code"
                 />
 
-                <FormikControl
-                  control="input"
-                  as="textarea"
-                  label="Please provide a description"
-                  name="description"
-                  placeholder="Please provide a description"
-                />
-                <Button type="submit" className="btn-block">
+                <h3>Description</h3>
+
+                {!editDescription && (
+                  <>
+                    {paragraphs &&
+                      paragraphs.map((paragraph) => (
+                        <p
+                          key={`${paragraph}${Math.random()}`}
+                          className="mb-2 "
+                        >
+                          {paragraph}
+                          <br />
+                        </p>
+                      ))}
+
+                    <Button
+                      onClick={() => setEditDescription(true)}
+                      className="mb-4 btn-sm"
+                    >
+                      Edit Description?
+                    </Button>
+                  </>
+                )}
+                {editDescription && (
+                  <>
+                    <FormikControl
+                      control="input"
+                      as="textarea"
+                      label="Please provide a description"
+                      name="description"
+                      placeholder="Please enter a new description..."
+                      rows="10"
+                    />
+                    <Button
+                      onClick={() => setEditDescription(false)}
+                      variant="danger"
+                      className="mb-2 btn-sm"
+                    >
+                      Cancel Edit Description?
+                    </Button>
+                  </>
+                )}
+
+                <Button type="submit" className="btn-block btn-warning">
                   Update
                 </Button>
               </Form>
@@ -432,7 +500,13 @@ const ListEventsScreen = ({ history, match }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setEditModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setEditModal(false);
+              setEditDescription(false);
+            }}
+          >
             Cancel
           </Button>
         </Modal.Footer>

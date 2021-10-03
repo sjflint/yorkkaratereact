@@ -49,7 +49,7 @@ const createEvent = asyncHandler(async (req, res) => {
     dateOfEvent: req.body.dateOfEvent,
     location: req.body.location,
     description: req.body.description,
-    register: "/event",
+    register: req.body.register,
   });
 
   const createdEvent = await event.save();
@@ -63,7 +63,6 @@ const updateEvent = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.body.id);
 
   if (event) {
-    event.image = req.body.image;
     event.title = req.body.title;
     event.author = req.body.author;
     event.dateOfEvent = req.body.dateOfEvent;

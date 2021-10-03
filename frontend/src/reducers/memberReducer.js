@@ -27,9 +27,6 @@ import {
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
   UPDATE_PROFILE_FAIL,
-  UPDATE_PROFILE_IMG_FAIL,
-  UPDATE_PROFILE_IMG_REQUEST,
-  UPDATE_PROFILE_IMG_SUCCESS,
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
 } from "../constants/memberConstants";
@@ -82,19 +79,6 @@ export const blackBeltListReducer = (state = { blackBelts: [] }, action) => {
     case BLACKBELT_LIST_SUCCESS:
       return { loading: false, blackBelts: action.payload };
     case BLACKBELT_LIST_FAIL:
-      return { loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
-
-export const updateProfileImgReducer = (state = {}, action) => {
-  switch (action.type) {
-    case UPDATE_PROFILE_IMG_REQUEST:
-      return { loading: true };
-    case UPDATE_PROFILE_IMG_SUCCESS:
-      return { loading: false, success: true };
-    case UPDATE_PROFILE_IMG_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

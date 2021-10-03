@@ -24,10 +24,12 @@ const EventScreen = ({ match }) => {
   }, [dispatch, match]);
 
   const eventId = event._id;
+  const paragraphs = event.description;
+
   const moreEvents = events.filter((event) => event._id !== eventId);
 
   return (
-    <Container>
+    <Container fluid="lg">
       <Row>
         <Col md={8}>
           {loadingEvent ? (
@@ -48,26 +50,36 @@ const EventScreen = ({ match }) => {
                 <ListGroup.Item>Event added by: {event.author}</ListGroup.Item>
                 {event.register && (
                   <ListGroup.Item>
-                    <Link to={event.register}>
+                    <a href={event.register} target="_blank" rel="noreferrer">
                       <Button variant="warning" className="btn-block">
                         Register
                       </Button>
-                    </Link>
+                    </a>
                   </ListGroup.Item>
                 )}
                 <ListGroup.Item className="bg-dark">
                   <h5>Event Description</h5>
-                  <p>{event.description}</p>
+                  {paragraphs &&
+                    paragraphs.map((paragraph) => (
+                      <p key={`${paragraph}${Math.random()}`} className="mb-0 ">
+                        {paragraph}
+                        <br />
+                      </p>
+                    ))}
                 </ListGroup.Item>
-                <Link className="btn btn-primary my-3" to="/events">
-                  Return to event listings
-                </Link>
+                <div className="mt-2 mb-5 border-bottom border-warning">
+                  <Link className="btn btn-primary mb-5 btn-block" to="/events">
+                    Return to event listings
+                  </Link>
+                </div>
               </ListGroup>
             </div>
           )}
         </Col>
         <Col md={4} className="bg-primary mb-2">
-          <h5 className="text-center text-white pt-2">More events</h5>
+          <h5 className="text-center text-white p-2 bg-secondary">
+            More events
+          </h5>
           {loadingEvents ? (
             <Loader variant="warning" />
           ) : errorEvents ? (
@@ -81,7 +93,8 @@ const EventScreen = ({ match }) => {
               ))}
             </div>
           )}
-          <Link className="btn btn-block btn-primary my-3" to="/events">
+
+          <Link className="btn btn-block btn-primary" to="/events">
             Return to event listings
           </Link>
         </Col>

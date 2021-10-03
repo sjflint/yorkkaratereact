@@ -33,6 +33,7 @@ import AdminScreen from "./AdminScreen";
 import ListMembersScreen from "./ListMembersScreen";
 import MemberEditScreen from "./MemberEditScreen";
 import ListEventsScreen from "./ListEventsScreen";
+import ListArticlesScreen from "./ListArticlesScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -78,6 +79,7 @@ const ScreenRoutes = () => {
       <Route path="/admin/listmembers" component={ListMembersScreen} />
       <Route path="/admin/editevents" component={ListEventsScreen} />
       <Route path="/admin/members/:id/edit" component={MemberEditScreen} />
+      <Route path="/author/editarticles" component={ListArticlesScreen} />
     </>
   );
 };

@@ -38,4 +38,13 @@ const admin = (req, res, next) => {
   }
 };
 
-export { protect, admin };
+const author = (req, res, next) => {
+  if (req.member.isAuthor) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorised as an author");
+  }
+};
+
+export { protect, admin, author };

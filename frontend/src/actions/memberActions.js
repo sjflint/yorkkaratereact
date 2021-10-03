@@ -27,9 +27,6 @@ import {
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
   UPDATE_PROFILE_FAIL,
-  UPDATE_PROFILE_IMG_FAIL,
-  UPDATE_PROFILE_IMG_REQUEST,
-  UPDATE_PROFILE_IMG_SUCCESS,
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
 } from "../constants/memberConstants";
@@ -225,49 +222,6 @@ export const deleteMember = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: MEMBER_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
-export const uploadProfileImg = (uploadFile) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: UPDATE_PROFILE_IMG_REQUEST,
-    });
-
-    const {
-      memberLogin: { memberInfo },
-    } = getState();
-
-    const formData = new FormData();
-    formData.append("title", "image");
-    formData.append("image", uploadFile);
-    formData.append("memberId", memberInfo._id);
-
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${memberInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(
-      "/api/members/profileimg",
-      formData,
-      config
-    );
-
-    dispatch({
-      type: UPDATE_PROFILE_IMG_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: UPDATE_PROFILE_IMG_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

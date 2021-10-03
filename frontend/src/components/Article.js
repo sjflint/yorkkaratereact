@@ -1,28 +1,38 @@
 import { Link } from "react-router-dom";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import FormatDate from "./FormatDate";
 
 const Article = ({ article }) => {
   return (
-    <Card className="my-3 p-3 rounded">
-      <Link to={`/article/${article._id}`}>
-        <Card.Img src={article.image} variant="top" />
-      </Link>
-      <Card.Body>
+    <Row className="p-2 rounded h-100 bg-primary">
+      <Col md="5">
         <Link to={`/article/${article._id}`}>
-          <Card.Title as="div">
-            <strong>{article.title}</strong>
-          </Card.Title>
+          <img src={article.image} alt="article" className="mb-2" />
         </Link>
-        <Card.Text as="div">
-          <div className="my-3">{article.leader}</div>
-          <div className="text-white">{article.author}</div>
-          <small className="text-white">
-            <FormatDate date={article.dateCreated} />
-          </small>
-        </Card.Text>
-      </Card.Body>
-    </Card>
+      </Col>
+      <Col md="7">
+        <Link to={`/article/${article._id}`}>
+          <Card className="h-100">
+            <Card.Body>
+              <Card.Title>
+                <h5>
+                  <strong>{article.title}</strong>
+                </h5>
+              </Card.Title>
+
+              <div className="my-3">{article.leader}</div>
+            </Card.Body>
+            <Card.Footer>
+              <div className="text-white">Author: {article.author}</div>
+              <div className="text-white">Category: {article.category}</div>
+              <small className="text-white">
+                <FormatDate date={article.dateCreated} />
+              </small>
+            </Card.Footer>
+          </Card>
+        </Link>
+      </Col>
+    </Row>
   );
 };
 

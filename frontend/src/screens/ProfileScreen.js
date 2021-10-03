@@ -7,14 +7,16 @@ import MemberOrders from "../components/ProfileComponents/MemberOrders";
 import MemberClasses from "../components/ProfileComponents/MemberClasses";
 import MemberPayment from "../components/ProfileComponents/MemberPayments";
 import MemberVideos from "../components/ProfileComponents/MemberVideos";
-import ProfileImg from "../components/ProfileComponents/ProfileImg";
+
 import MemberEvents from "../components/ProfileComponents/MemberEvents";
 import ImgDDSuccess from "../img/ddsuccess.png";
+import UploadImage from "../components/uploadImage";
 
 const ProfileScreen = ({ history, match }) => {
   const search = useLocation().search;
   // Check for dd success
   const [ddModal, setDDModal] = useState(false);
+  const [profileImgModal, setProfileImgModal] = useState(false);
   const ddSuccess = new URLSearchParams(search).get("dd");
 
   const dispatch = useDispatch();
@@ -61,7 +63,18 @@ const ProfileScreen = ({ history, match }) => {
           <Row>
             <Col sm={3} xs={4} className="py-1">
               <Nav variant="tabs" className="flex-column">
-                <ProfileImg />
+                {member && (
+                  <>
+                    <img src={member.profileImg} alt="" className="rounded-0" />
+                    <Button
+                      className="mb-2 btn-warning rounded-0"
+                      onClick={() => setProfileImgModal(true)}
+                    >
+                      Change Profile Picture
+                    </Button>
+                  </>
+                )}
+
                 <Nav.Item
                   onMouseOver={() => setPage("first")}
                   onClick={changeUrl}
@@ -208,6 +221,44 @@ const ProfileScreen = ({ history, match }) => {
             variant="secondary"
             onClick={(e) => {
               setDDModal(false);
+            }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Profile Image Modal */}
+      <Modal
+        show={profileImgModal}
+        onHide={(e) => {
+          setProfileImgModal(false);
+          window.location.reload();
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Change Profile Image</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <UploadImage
+            img={member.profileImg}
+            type={"Profile"}
+            id={member._id}
+          />
+          <small className="text-center">
+            Recommended aspect ratio: 1:1. Image will be cropped to fit <br />
+            Please consider that this image might be displayed across the public
+            website, as well as being displayed to grading examinars.
+            <br /> The image should depict the member and be of a suitable
+            nature.
+          </small>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={(e) => {
+              setProfileImgModal(false);
+              window.location.reload();
             }}
           >
             Close

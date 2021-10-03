@@ -80,11 +80,11 @@ const ListMembersScreen = ({ history }) => {
                       {member.firstName} {member.lastName}
                     </td>
                   ) : (
-                    <Link to={`/admin/members/${member._id}/edit`}>
-                      <td>
+                    <td>
+                      <Link to={`/admin/members/${member._id}/edit`}>
                         {member.firstName} {member.lastName}
-                      </td>
-                    </Link>
+                      </Link>
+                    </td>
                   )}
 
                   <td>
