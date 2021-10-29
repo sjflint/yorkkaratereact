@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Modal } from "react-bootstrap";
+import { Container, Table, Button, Modal, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -28,9 +28,16 @@ const ListArticlesScreen = ({ history, match }) => {
   const [updateId, setUpdateId] = useState();
   const [editBody, setEditBody] = useState(false);
   const [image, setImage] = useState();
+  const [multiImage, setMultiImage] = useState([]);
 
-  const childToParent = (childData) => {
-    setImage(childData);
+  const singleImageData = (singleImage) => {
+    setImage(singleImage);
+
+    const image = {
+      original: singleImage,
+      thumbnail: singleImage,
+    };
+    setMultiImage((multiImage) => [...multiImage, image]);
   };
 
   const dispatch = useDispatch();
@@ -88,13 +95,15 @@ const ListArticlesScreen = ({ history, match }) => {
 
   const createHandler = (values) => {
     values.image = image;
+    values.carouselImages = multiImage;
     values.body = values.body.split("\n");
+    console.log(values);
     dispatch(createArticle(values));
     setCreateModal(false);
   };
 
   const editHandler = async (values) => {
-    console.log("code running");
+    values.carouselImages = multiImage;
     values.id = updateId;
 
     if (editBody === false) {
@@ -116,7 +125,9 @@ const ListArticlesScreen = ({ history, match }) => {
       body: "",
       category: "",
       image: "",
+      carouselImages: "",
       author: `${member.nameFirst} ${member.nameSecond}`,
+      authorImg: member.profileImg,
     };
   }
 
@@ -137,6 +148,7 @@ const ListArticlesScreen = ({ history, match }) => {
     title: Yup.string().required("Required"),
     leader: Yup.string().max(150).required("Required"),
     author: Yup.string(),
+    authorImg: Yup.string(),
 
     category: Yup.string().required("Required"),
   });
@@ -155,6 +167,7 @@ const ListArticlesScreen = ({ history, match }) => {
       body: articleBody,
       category: article.category,
       author: article.author,
+      authorImg: article.authorImg,
       dateCreated: article.dateCreated,
     };
   }
@@ -201,6 +214,7 @@ const ListArticlesScreen = ({ history, match }) => {
 
                       await dispatch(listArticle(article._id));
                       await setImage(article.image);
+                      await setMultiImage(article.carouselImages);
                       await setEditModal(true);
                     }}
                   >
@@ -218,6 +232,7 @@ const ListArticlesScreen = ({ history, match }) => {
 
                       await dispatch(listArticle(article._id));
                       await setImage(article.image);
+                      await setMultiImage(article.carouselImages);
                       await setEditModal(true);
                     }}
                   >
@@ -254,6 +269,7 @@ const ListArticlesScreen = ({ history, match }) => {
 
                             await dispatch(listArticle(article._id));
                             await setImage(article.image);
+                            await setMultiImage(article.carouselImages);
                             await setEditModal(true);
                           }}
                         >
@@ -273,15 +289,15 @@ const ListArticlesScreen = ({ history, match }) => {
           </Table>
 
           <div className="text-center">
-            <Button
-              className="btn-warning"
+            <button
+              className="btn-default btn"
               onClick={() => {
                 setCreateModal(true);
                 setImage(imagePlaceholder);
               }}
             >
               <i className="fas fa-plus"></i> Write Article
-            </Button>
+            </button>
           </div>
         </>
       )}
@@ -309,10 +325,47 @@ const ListArticlesScreen = ({ history, match }) => {
           <Modal.Title>Write a new article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UploadImage childToParent={childToParent} type="Article" />
+          <img src={`${image}`} alt="" />
+          <UploadImage
+            singleImageData={singleImageData}
+            type="Article"
+            buttonText="Add Image"
+          />
           <p className="text-center">
             Recommended aspect ratio: 5:3. Image will be cropped to fit
           </p>
+          <div className="bg-warning p-2 mb-2">
+            <h5 className="text-center text-white">
+              Uploaded Images for the article
+            </h5>
+            <Row>
+              {multiImage && multiImage.length === 0 ? (
+                <Col>
+                  <p className="text-center text-white">
+                    No images currently uploaded
+                  </p>
+                </Col>
+              ) : (
+                multiImage.map((image, index) => (
+                  <Col key={index}>
+                    <img src={`${image.original}`} alt="article" />
+                    <Button
+                      onClick={async () => {
+                        const images = multiImage;
+                        images.splice(index, 1);
+                        setMultiImage(images);
+                        await setCreateModal(false);
+                        await setCreateModal(true);
+                      }}
+                      className="btn btn-block btn-sm btn-secondary"
+                    >
+                      Remove Image
+                    </Button>
+                  </Col>
+                ))
+              )}
+            </Row>
+          </div>
 
           <Formik
             initialValues={initialValues}
@@ -353,9 +406,9 @@ const ListArticlesScreen = ({ history, match }) => {
                   options={dropdownOptions}
                 />
 
-                <Button type="submit" className="btn-block btn-warning">
+                <button type="submit" className="btn-block btn-default btn">
                   Create
-                </Button>
+                </button>
               </Form>
             )}
           </Formik>
@@ -380,14 +433,48 @@ const ListArticlesScreen = ({ history, match }) => {
         <Modal.Body>
           {article && (
             <>
+              <img src={`${image}`} alt="" />
               <UploadImage
-                img={article.image}
+                singleImageData={singleImageData}
                 type={"Article"}
-                id={article._id}
+                buttonText="Add another image"
               />
               <p className="text-center">
                 Recommended aspect ratio: 5:3. Image will be cropped to fit
               </p>
+
+              <div className="bg-warning p-2 mb-2">
+                <h5 className="text-center text-white">
+                  Uploaded Images for the article
+                </h5>
+                <Row>
+                  {multiImage.length === 0 ? (
+                    <Col>
+                      <p className="text-center text-white">
+                        No images currently uploaded
+                      </p>
+                    </Col>
+                  ) : (
+                    multiImage.map((image, index) => (
+                      <Col key={index}>
+                        <img src={`${image.original}`} alt="article" />
+                        <Button
+                          onClick={async () => {
+                            const images = multiImage;
+                            images.splice(index, 1);
+                            setMultiImage(images);
+                            await setEditModal(false);
+                            await setEditModal(true);
+                          }}
+                          className="btn btn-block btn-sm btn-secondary"
+                        >
+                          Remove Image
+                        </Button>
+                      </Col>
+                    ))
+                  )}
+                </Row>
+              </div>
             </>
           )}
 

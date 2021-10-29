@@ -7,10 +7,26 @@ import { updateSubscription } from "./ddController.cjs";
 // @route GET /api/trainingSessions
 // @access Public
 const getTrainingSessions = asyncHandler(async (req, res) => {
-  const trainingSessions = await TrainingSession.find({}).sort({
-    _id: 1,
-  });
+  const trainingSessions = await TrainingSession.find({})
+    .populate("participants", "id firstName lastName email phone")
+    .sort({
+      _id: 1,
+    });
   res.json(trainingSessions);
+});
+
+// @desc Fetch single training session
+// @route GET /api/trainingSessions/:id
+// @access Public
+const getTrainingSessionById = asyncHandler(async (req, res) => {
+  const trainingSession = await TrainingSession.findById(req.params.id);
+
+  if (trainingSession) {
+    res.json(trainingSession);
+  } else {
+    res.status(404);
+    throw new Error("Event not found");
+  }
 });
 
 // @desc Get logged in user classes
@@ -167,6 +183,75 @@ const getMemberTrainingSessions = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete training session
+// @route DELETE /api/trainingsessions/:id
+// @access Private/Admin
+const deleteTimetableSession = asyncHandler(async (req, res) => {
+  const trainingSession = await TrainingSession.findById(req.params.id);
+
+  if (trainingSession.participants.length > 0) {
+    res.status(404);
+    throw new Error(
+      "Training session not deleted as participants are registered"
+    );
+  } else if (trainingSession) {
+    await trainingSession.remove();
+    res.json({ message: "Training Session removed" });
+  } else {
+    res.status(404);
+    throw new Error("Training Session not found");
+  }
+});
+
+// @desc Create training session
+// @route POST /api/trainingsessions
+// @access Private/Admin
+const createTimetableSession = asyncHandler(async (req, res) => {
+  const trainingSession = {
+    name: req.body.name,
+    location: req.body.location,
+    minGradeLevel: Number(req.body.minGradeLevel),
+    maxGradeLevel: Number(req.body.maxGradeLevel),
+    juniorSession: req.body.juniorSession,
+    times: req.body.times,
+    capacity: req.body.capacity,
+    numberBooked: 0,
+    participants: [],
+  };
+
+  console.log(trainingSession);
+
+  await TrainingSession.create(trainingSession);
+
+  // await trainingSession.save();
+
+  res.status(201).json(trainingSession);
+});
+
+// @desc Update training session
+// @route PUT /api/trainingsessions/:id
+// @access Private/Admin
+const updateTimetableSession = asyncHandler(async (req, res) => {
+  const trainingSession = await TrainingSession.findById(req.body.id);
+
+  if (trainingSession) {
+    trainingSession.name = req.body.name;
+    trainingSession.location = req.body.location;
+    trainingSession.minGradeLevel = Number(req.body.minGradeLevel);
+    trainingSession.maxGradeLevel = Number(req.body.maxGradeLevel);
+    trainingSession.juniorSession = req.body.juniorSession;
+    trainingSession.times = req.body.times;
+    trainingSession.capacity = Number(req.body.capacity);
+
+    const updatedTrainingSession = await trainingSession.save();
+    console.log(updatedTrainingSession);
+    res.status(201).json(updatedTrainingSession);
+  } else {
+    res.status(404);
+    throw new Error("Training Session not found");
+  }
+});
+
 export {
   getTrainingSessions,
   getMyTrainingSessions,
@@ -174,4 +259,8 @@ export {
   deleteTrainingSession,
   switchTrainingSession,
   getMemberTrainingSessions,
+  deleteTimetableSession,
+  updateTimetableSession,
+  createTimetableSession,
+  getTrainingSessionById,
 };

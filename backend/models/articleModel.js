@@ -7,7 +7,9 @@ const articleSchema = mongoose.Schema(
     body: { type: Array, required: true },
     category: { type: String, required: true },
     image: { type: String },
+    carouselImages: { type: Array },
     author: { type: String, required: true },
+    authorImg: { type: String, required: true },
     dateCreated: { type: Date, default: Date.now },
   },
   {

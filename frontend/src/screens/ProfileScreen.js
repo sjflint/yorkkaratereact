@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button, Col, Container, Modal, Nav, Row, Tab } from "react-bootstrap";
 import MemberDetails from "../components/ProfileComponents/MemberDetails";
 import MemberOrders from "../components/ProfileComponents/MemberOrders";
 import MemberClasses from "../components/ProfileComponents/MemberClasses";
 import MemberPayment from "../components/ProfileComponents/MemberPayments";
 import MemberVideos from "../components/ProfileComponents/MemberVideos";
-
 import MemberEvents from "../components/ProfileComponents/MemberEvents";
 import ImgDDSuccess from "../img/ddsuccess.png";
 import UploadImage from "../components/uploadImage";
@@ -66,12 +65,12 @@ const ProfileScreen = ({ history, match }) => {
                 {member && (
                   <>
                     <img src={member.profileImg} alt="" className="rounded-0" />
-                    <Button
-                      className="mb-2 btn-warning rounded-0"
+                    <Link
+                      className="mb-2 btn btn-default rounded-0"
                       onClick={() => setProfileImgModal(true)}
                     >
                       Change Profile Picture
-                    </Button>
+                    </Link>
                   </>
                 )}
 

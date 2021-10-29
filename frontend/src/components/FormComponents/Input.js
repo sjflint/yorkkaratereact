@@ -6,6 +6,7 @@ const Input = ({ label, name, placeholder, margin, ...rest }) => {
   return (
     <FormGroup className={margin}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
+
       <Field
         id={name}
         name={name}
@@ -13,6 +14,7 @@ const Input = ({ label, name, placeholder, margin, ...rest }) => {
         placeholder={placeholder}
         className="form-control"
       />
+
       <ErrorMessage name={name} component={TextError} />
     </FormGroup>
   );

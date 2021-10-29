@@ -8,6 +8,7 @@ import { listArticle } from "../actions/articleActions";
 import { listArticles } from "../actions/articleActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import ReactImageGallery from "react-image-gallery";
 
 const ArticleScreen = ({ match }) => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const ArticleScreen = ({ match }) => {
   const moreArticles = articles.filter((article) => article._id !== articleId);
 
   const paragraphs = article.body;
+  const images = article.carouselImages;
 
   return (
     <Container>
@@ -44,11 +46,34 @@ const ArticleScreen = ({ match }) => {
               <ListGroup>
                 <h3 className="p-2">{article.title}</h3>
                 <ListGroup.Item className="bg-primary">
-                  <FormatDate date={article.dateCreated} />
-                  <br></br>Author: {article.author}
-                  <br></br>
-                  Category: {article.category}
+                  <Row className="align-items-center">
+                    <Col xs={3} sm={2} className="p-0">
+                      <Image
+                        src={article.authorImg}
+                        alt={article.author}
+                        className="rounded-circle"
+                      />
+                    </Col>
+                    <Col>
+                      <FormatDate date={article.dateCreated} />
+                      <br />
+                      Category: {article.category}
+                      <br />
+                      Author: {article.author}
+                    </Col>
+                  </Row>
                 </ListGroup.Item>
+
+                <ListGroup.Item className="text-center text-warning">
+                  {article.carouselImages === undefined ? (
+                    <Loader />
+                  ) : article.carouselImages.length === 0 ? (
+                    "No additional images for this article"
+                  ) : (
+                    <ReactImageGallery items={images} />
+                  )}
+                </ListGroup.Item>
+
                 <ListGroup.Item className="bg-dark">
                   <p className="text-white">{article.leader}</p>
 
@@ -79,7 +104,7 @@ const ArticleScreen = ({ match }) => {
               ))}
             </div>
           )}
-          <Link className="btn btn-block btn-warning my-3" to="/news">
+          <Link className="btn btn-block btn-default my-3" to="/news">
             Read more news articles
           </Link>
         </Col>

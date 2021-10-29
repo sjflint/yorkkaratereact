@@ -5,6 +5,17 @@ import {
   TRAINING_VIDEO_DISPLAY_REQUEST,
   TRAINING_VIDEO_DISPLAY_SUCCESS,
   TRAINING_VIDEO_DISPLAY_FAIL,
+  TRAINING_VIDEO_DELETE_REQUEST,
+  TRAINING_VIDEO_DELETE_SUCCESS,
+  TRAINING_VIDEO_DELETE_FAIL,
+  TRAINING_VIDEO_CREATE_REQUEST,
+  TRAINING_VIDEO_CREATE_SUCCESS,
+  TRAINING_VIDEO_CREATE_FAIL,
+  TRAINING_VIDEO_CREATE_RESET,
+  TRAINING_VIDEO_UPDATE_REQUEST,
+  TRAINING_VIDEO_UPDATE_SUCCESS,
+  TRAINING_VIDEO_UPDATE_FAIL,
+  TRAINING_VIDEO_UPDATE_RESET,
 } from "../constants/trainingVideoConstants";
 
 export const trainingVideoListReducer = (
@@ -31,6 +42,53 @@ export const displayTrainingVideoReducer = (state = { video: {} }, action) => {
       return { loadingTrainingVideo: false, video: action.payload };
     case TRAINING_VIDEO_DISPLAY_FAIL:
       return { loadingTrainingVideo: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const trainingVideoDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_VIDEO_DELETE_REQUEST:
+      return { loading: true };
+    case TRAINING_VIDEO_DELETE_SUCCESS:
+      return { loadingTrainingVideo: false, success: true };
+    case TRAINING_VIDEO_DELETE_FAIL:
+      return { loadingTrainingVideo: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const trainingVideoCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_VIDEO_CREATE_REQUEST:
+      return { loading: true };
+    case TRAINING_VIDEO_CREATE_SUCCESS:
+      return {
+        loadingTrainingVideo: false,
+        success: true,
+        trainingVideo: action.payload,
+      };
+    case TRAINING_VIDEO_CREATE_FAIL:
+      return { loadingTrainingVideo: false, error: action.payload };
+    case TRAINING_VIDEO_CREATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const trainingVideoUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_VIDEO_UPDATE_REQUEST:
+      return { loading: true };
+    case TRAINING_VIDEO_UPDATE_SUCCESS:
+      return { loading: false, success: true, trainingVideo: action.payload };
+    case TRAINING_VIDEO_UPDATE_FAIL:
+      return { loadingTrainingVideo: false, error: action.payload };
+    case TRAINING_VIDEO_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

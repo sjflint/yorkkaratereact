@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const trainingSessionSchema = mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     location: { type: String, required: true },
     minGradeLevel: { type: Number, required: true },
     maxGradeLevel: { type: Number, required: true },
@@ -13,7 +13,6 @@ const trainingSessionSchema = mongoose.Schema(
     participants: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: "Member",
       },
     ],

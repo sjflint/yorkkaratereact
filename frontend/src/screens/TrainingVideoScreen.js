@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { getMemberDetails } from "../actions/memberActions";
 import {
   listTrainingVideo,
@@ -8,9 +9,10 @@ import {
 } from "../actions/TrainingVideoActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import Video from "../components/Video";
 
 const TrainingVideoScreen = ({ match }) => {
+  const [volume, setVolume] = useState("stop");
+
   const dispatch = useDispatch();
 
   const displayTrainingVideo = useSelector(
@@ -34,7 +36,8 @@ const TrainingVideoScreen = ({ match }) => {
 
   const playAudio = () => {
     const audioEl = document.getElementById("soundFile");
-    console.log("playing audio");
+    setVolume("play");
+
     audioEl.play();
   };
 
@@ -87,7 +90,7 @@ const TrainingVideoScreen = ({ match }) => {
   return (
     <Container fluid="lg">
       <Row>
-        <Col lg={8}>
+        <Col md={7} lg={7}>
           {loadingTrainingVideo ? (
             <Loader variant="warning" />
           ) : errorTrainingVideo ? (
@@ -96,22 +99,52 @@ const TrainingVideoScreen = ({ match }) => {
             </Message>
           ) : (
             <>
-              <Video poster={video.img} mp4={video.video} />
-              <h4 className="text-white mt-3">{video.title}</h4>
-              <small>
-                Category - {video.category}
-                <br />
-                Kyu grade level - {video.grade && video.grade[0]}
-              </small>
-              <br />
-              <div className="btn btn-light mt-2" onClick={playAudio}>
-                <i className="fas fa-volume-up"> Pronunciation</i>
+              <div>
+                <iframe
+                  src={video.video}
+                  width="100%"
+                  height="400"
+                  allow="autoplay"
+                ></iframe>
               </div>
-              <audio src={video.soundFile} id="soundFile"></audio>
+              <div className="bg-primary px-3 py-1 text-white">
+                <h4 className="text-white">{video.title}</h4>
+                <small>
+                  Category <br /> {video.category}
+                  <br />
+                  Kyu grade level -{" "}
+                  {video.grade && video.grade.map((grade) => `${grade}, `)}
+                </small>
+              </div>
+              {volume === "stop" ? (
+                <>
+                  <div className="btn btn-light mt-2" onClick={playAudio}>
+                    <i className="fa-solid fa-play" style={{ color: "green" }}>
+                      {" "}
+                    </i>{" "}
+                    Pronunciation
+                  </div>
+                </>
+              ) : (
+                <div className="btn btn-light mt-2" onClick={playAudio}>
+                  <i
+                    className="fa-solid fa-volume-high"
+                    style={{ color: "green" }}
+                  >
+                    {" "}
+                  </i>{" "}
+                  Pronunciation
+                </div>
+              )}
+              <audio
+                src={video.soundFile}
+                id="soundFile"
+                onEnded={() => setVolume("stop")}
+              ></audio>
             </>
           )}
         </Col>
-        <Col lg={4} className="mt-2">
+        <Col md={5} lg={5} className="mt-2">
           {loadingTrainingVideos ? (
             <Loader variant="warning" />
           ) : errorTrainingVideos ? (
@@ -120,26 +153,32 @@ const TrainingVideoScreen = ({ match }) => {
             </Message>
           ) : (
             <>
+              {member.nameFirst && (
+                <h5 className="text-warning border-bottom border-warning">
+                  Recommended Videos for {member.nameFirst}
+                </h5>
+              )}
+
               {filteredVideos.map((trainingVideo) => (
-                <div
-                  sm={12}
-                  md={6}
-                  key={trainingVideo._id}
-                  className="p-1 text-center text-white"
-                >
-                  <a href={`/trainingVideos/${trainingVideo._id}`}>
-                    <Row>
-                      <Col sm={4}>
-                        <img src={trainingVideo.img} alt="" />
-                      </Col>
-                      <Col className="d-flex justiify-content-center">
-                        <p className="text-left align-self-center">
-                          {trainingVideo.title}
-                        </p>
-                      </Col>
-                    </Row>
-                  </a>
-                </div>
+                <Row className="mb-3 no-gutters">
+                  <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
+                    <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                      <img src={trainingVideo.img} alt="" />
+                    </Link>
+                  </Col>
+
+                  <Col className="ml-2">
+                    <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                      <h5 className="mb-1 text-white">{trainingVideo.title}</h5>
+                    </Link>
+                    <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                      <small>
+                        <span className="text-white">Category</span> <br />{" "}
+                        {trainingVideo.category} <br />
+                      </small>
+                    </Link>
+                  </Col>
+                </Row>
               ))}
             </>
           )}

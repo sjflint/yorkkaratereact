@@ -15,7 +15,7 @@
   "author": "Simon Flint",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -34,6 +34,7 @@
     "multer": "^1.4.3",
     "react-bootstrap": "^2.0.0-beta.4",
     "react-helmet": "^6.1.0",
+    "react-image-gallery": "^1.2.7",
     "sharp": "^0.28.3",
     "yup": "^0.32.9",
     "yup-phone": "^1.2.19"

@@ -107,11 +107,11 @@ router.post("/", upload.single("image"), async (req, res) => {
       if (req.body.id !== "newUpload") {
         await Product.findOneAndUpdate(
           { _id: req.body.id },
-          { image: `${req.file.destination}product${req.file.filename}` },
+          { image: `/${req.file.destination}product${req.file.filename}` },
           { new: true }
         );
       }
-      res.send(`${req.file.destination}product${req.file.filename}`);
+      res.send(`/${req.file.destination}product${req.file.filename}`);
       break;
 
     case "Article":

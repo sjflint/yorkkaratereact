@@ -64,7 +64,8 @@ const MemberVideos = () => {
 
   let filteredVideos = [];
   let kihonVideos = [];
-  let kumiteVideos = [];
+  let kihonKumiteVideos = [];
+  let shobuKumiteVideos = [];
   let kataVideos = [];
 
   if (trainingVideos) {
@@ -77,11 +78,14 @@ const MemberVideos = () => {
   }
 
   filteredVideos.map((trainingVideo) => {
-    if (trainingVideo.category === "kihon") {
+    if (trainingVideo.category === "Kihon") {
       kihonVideos.push(trainingVideo);
     }
-    if (trainingVideo.category === "kumite") {
-      kumiteVideos.push(trainingVideo);
+    if (trainingVideo.category === "Kihon Kumite") {
+      kihonKumiteVideos.push(trainingVideo);
+    }
+    if (trainingVideo.category === "Shobu Kumite") {
+      shobuKumiteVideos.push(trainingVideo);
     }
 
     return filteredVideos;
@@ -91,7 +95,7 @@ const MemberVideos = () => {
     trainingVideos.map((trainingVideo) => {
       if (
         trainingVideo.grade.includes(nextGrade) &&
-        trainingVideo.category === "kata"
+        trainingVideo.category === "Kata"
       ) {
         kataVideos.push(trainingVideo);
       }
@@ -160,6 +164,7 @@ const MemberVideos = () => {
                     >
                       <a href={`/trainingVideos/${trainingVideo._id}`}>
                         <img src={trainingVideo.img} alt="" />
+
                         <p>{trainingVideo.title}</p>
                       </a>
                     </Col>
@@ -174,11 +179,38 @@ const MemberVideos = () => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h5 className="my-3 text-white">Kumite for {nextGrade}</h5>
-              <p>Kumite is very important blah blah blah</p>
+              <h5 className="my-3 text-white">Kihon Kumite for {nextGrade}</h5>
+              <p>Kihon Kumite is very important blah blah blah</p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
-                {kumiteVideos.length !== 0 ? (
-                  kumiteVideos.map((trainingVideo) => (
+                {kihonKumiteVideos.length !== 0 ? (
+                  kihonKumiteVideos.map((trainingVideo) => (
+                    <Col
+                      sm={12}
+                      md={6}
+                      key={trainingVideo._id}
+                      className="p-1 text-center text-white"
+                    >
+                      <a href={`/trainingVideos/${trainingVideo._id}`}>
+                        <img src={trainingVideo.img} alt="" />
+                        <p>{trainingVideo.title}</p>
+                      </a>
+                    </Col>
+                  ))
+                ) : (
+                  <Col>
+                    <h5 className="text-center mb-0 text-warning">
+                      No kumite videos at your current level
+                    </h5>
+                  </Col>
+                )}
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <h5 className="my-3 text-white">Shobu Kumite for {nextGrade}</h5>
+              <p>Shobu Kumite is very important blah blah blah</p>
+              <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
+                {shobuKumiteVideos.length !== 0 ? (
+                  shobuKumiteVideos.map((trainingVideo) => (
                     <Col
                       sm={12}
                       md={6}

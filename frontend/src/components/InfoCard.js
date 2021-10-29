@@ -1,5 +1,4 @@
-import { Card, Button } from "react-bootstrap";
-
+import { Card } from "react-bootstrap";
 const InfoCard = ({ title, text, link, image }) => {
   return (
     <Card>
@@ -9,11 +8,14 @@ const InfoCard = ({ title, text, link, image }) => {
         <Card.Text>{text}</Card.Text>
       </Card.Body>
       <Card.Footer>
-        <Button variant="warning" className="btn-block">
-          <a href={link} target="_blank" rel="noreferrer">
-            Visit Site
-          </a>
-        </Button>
+        <a
+          href={link}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-block btn btn-default"
+        >
+          Visit Site
+        </a>
       </Card.Footer>
     </Card>
   );

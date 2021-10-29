@@ -71,11 +71,12 @@ const ProductScreen = ({ history, match }) => {
                   <h4>{product.name}</h4>
                 </ListGroup.Item>
                 <ListGroup.Item variant="secondary">
-                  Price: £{product.price}.00
+                  {product.price && `Price: £${product.price.toFixed(2)}`}
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <p>{product.description}</p>
                 </ListGroup.Item>
+
                 {product.countInStock ? (
                   <ListGroup.Item variant="secondary">
                     <h5 className="py-2">Size</h5>

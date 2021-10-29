@@ -1,3 +1,26 @@
+.btn-default {
+  background-color: #f57231;
+  color: #fff;
+  border: #fe5c07;
+}
+
+.btn-default:hover {
+  background-color: #fe5c07;
+  color: #fff;
+}
+
+.text-warning {
+  color: #f57231 !important;
+}
+
+.bg-warning {
+  background-color: #f57231 !important;
+}
+
+.border-warning {
+  border-color: #fe5c07 !important;
+}
+
 img {
   width: 100%;
   border-radius: 5px;
@@ -99,6 +122,15 @@ input[type="file"] {
 
 .max-width-300 {
   max-width: 300px;
+}
+
+td {
+  height: 100%;
+  vertical-align: bottom;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 @media (max-width: 1100px) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Modal } from "react-bootstrap";
+import { Container, Table, Button, Modal, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -29,8 +29,8 @@ const ListEventsScreen = ({ history, match }) => {
   const [editDescription, setEditDescription] = useState(false);
   const [image, setImage] = useState();
 
-  const childToParent = (childData) => {
-    setImage(childData);
+  const singleImageData = (singleImage) => {
+    setImage(singleImage);
   };
 
   const dispatch = useDispatch();
@@ -221,7 +221,7 @@ const ListEventsScreen = ({ history, match }) => {
               {events.map((event) => (
                 <tr key={event._id}>
                   <td
-                    style={{ maxWidth: "40px" }}
+                    style={{ maxWidth: "80px" }}
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
                       setUpdateId(event._id);
@@ -231,12 +231,7 @@ const ListEventsScreen = ({ history, match }) => {
                       await setEditModal(true);
                     }}
                   >
-                    <img
-                      src={`${event.image}`}
-                      alt="event"
-                      width="10"
-                      height="40"
-                    />
+                    <img src={`${event.image}`} alt="event" max-width="80" />
                   </td>
                   <td
                     className="text-center align-middle mouse-hover-pointer"
@@ -254,44 +249,47 @@ const ListEventsScreen = ({ history, match }) => {
                   <td className="text-center align-middle">
                     {new Date(event.dateOfEvent).toLocaleDateString()}
                   </td>
-                  <td className="d-flex">
+                  <td className="align-middle">
                     {
-                      <>
-                        <Button
-                          variant="light"
-                          className="btn btn-block p-0 text-danger"
-                          onClick={() => {
-                            setDeleteModal(true);
-                            setDeleteId(event._id);
-                          }}
-                        >
-                          <i
-                            className="fas fa-trash"
-                            style={{ color: "red" }}
-                          ></i>{" "}
-                          <br />
-                          Delete
-                        </Button>
+                      <Row className="no-gutters">
+                        <Col>
+                          <Button
+                            variant="light"
+                            className="btn btn-block p-1 m-1 text-danger"
+                            onClick={() => {
+                              setDeleteModal(true);
+                              setDeleteId(event._id);
+                            }}
+                          >
+                            <i
+                              className="fas fa-trash"
+                              style={{ color: "red" }}
+                            ></i>{" "}
+                            <br />
+                            Delete
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button
+                            variant="light"
+                            className="btn btn-block p-1 m-1"
+                            onClick={async () => {
+                              setUpdateId(event._id);
 
-                        <Button
-                          variant="light"
-                          className="btn btn-block m-0 p-0"
-                          onClick={async () => {
-                            setUpdateId(event._id);
-
-                            await dispatch(listEvent(event._id));
-                            await setImage(event.image);
-                            await setEditModal(true);
-                          }}
-                        >
-                          <i
-                            className="fas fa-edit"
-                            style={{ color: "green" }}
-                          ></i>{" "}
-                          <br />
-                          Edit
-                        </Button>
-                      </>
+                              await dispatch(listEvent(event._id));
+                              await setImage(event.image);
+                              await setEditModal(true);
+                            }}
+                          >
+                            <i
+                              className="fas fa-edit"
+                              style={{ color: "green" }}
+                            ></i>{" "}
+                            <br />
+                            Edit
+                          </Button>
+                        </Col>
+                      </Row>
                     }
                   </td>
                 </tr>
@@ -336,7 +334,8 @@ const ListEventsScreen = ({ history, match }) => {
           <Modal.Title>Create a new event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UploadImage childToParent={childToParent} type="Event" />
+          <img src={`${image}`} alt="" />
+          <UploadImage singleImageData={singleImageData} type="Event" />
           <p className="text-center">
             Recommended aspect ratio: 5:3. Image will be cropped to fit
           </p>
@@ -413,7 +412,13 @@ const ListEventsScreen = ({ history, match }) => {
         <Modal.Body>
           {event && (
             <>
-              <UploadImage img={event.image} type={"Event"} id={event._id} />
+              <img src={`${image}`} alt="" />
+              <UploadImage
+                img={event.image}
+                type={"Event"}
+                id={event._id}
+                singleImageData={singleImageData}
+              />
               <p className="text-center">
                 Recommended aspect ratio: 5:3. Image will be cropped to fit
               </p>

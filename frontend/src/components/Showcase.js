@@ -6,7 +6,7 @@ const Showcase = () => {
       <div id="showcase">
         <Link
           to="/contact"
-          className="btn btn-warning btn-lg center-el px-5"
+          className="btn btn-default btn-lg center-el px-5"
           id="join-now-btn"
         >
           Contact Us

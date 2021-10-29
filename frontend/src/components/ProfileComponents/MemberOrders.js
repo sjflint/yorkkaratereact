@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { listMyOrders } from "../../actions/orderActions";
@@ -26,6 +26,11 @@ const MemberOrders = () => {
     return newDate;
   };
 
+  let filteredOrders;
+  if (orders) {
+    filteredOrders = orders.filter((order) => order.isPaid === true);
+  }
+
   return (
     <>
       <img src={dojoImg} alt="dojo" />
@@ -38,11 +43,9 @@ const MemberOrders = () => {
         <h5 className="text-warning">No Orders to show</h5>
       ) : (
         <>
-          {orders.map((order) => (
+          {filteredOrders.map((order) => (
             <Card key={order._id} className="my-2">
               <Card.Header>
-                <h5 className="text-center">Order #: {order._id}</h5>
-
                 <Row>
                   <Col>
                     Order Placed: <br /> {formatDate(order.createdAt)}
@@ -52,7 +55,7 @@ const MemberOrders = () => {
                   </Col>
                   <Col className="align-self-center">
                     <Link to={`/order/${order._id}`}>
-                      <p>View Details</p>
+                      <button className="btn btn-primary">View Order</button>
                     </Link>
                   </Col>
                   <Col>
@@ -75,11 +78,6 @@ const MemberOrders = () => {
                       <Link to={`/products/${item.product}`}>
                         {item.name} <br />
                         {item.print}
-                      </Link>
-                    </Col>
-                    <Col>
-                      <Link to={`/products/${item.product}`}>
-                        <Button variant="warning">View Item</Button>
                       </Link>
                     </Col>
                   </Row>

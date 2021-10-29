@@ -12,7 +12,7 @@ import { UPLOAD_IMG_CLEAR } from "../constants/uploadImageConstants";
 // -Product
 // -Article
 
-const UploadImage = ({ img, type, id, childToParent }) => {
+const UploadImage = ({ img, type, id, singleImageData, buttonText }) => {
   if (!id) {
     id = "newUpload";
   }
@@ -37,9 +37,10 @@ const UploadImage = ({ img, type, id, childToParent }) => {
   useEffect(() => {
     if (image) {
       setUploadedImage(image);
-      if (childToParent) {
-        childToParent(image);
+      if (singleImageData) {
+        singleImageData(image);
       }
+
       dispatch({ type: UPLOAD_IMG_CLEAR });
     } else if (uploadedImage) {
     } else if (img) {
@@ -47,14 +48,13 @@ const UploadImage = ({ img, type, id, childToParent }) => {
     } else {
       setUploadedImage(defaultPlaceholder);
     }
-  }, [dispatch, img, image, uploadedImage, childToParent]);
+  }, [dispatch, img, image, uploadedImage, singleImageData]);
 
   return (
     <>
-      <img src={`${uploadedImage}`} alt="" />
       <label className="d-block btn-secondary py-2 my-1 text-center custom-fileupload-button">
         <input type="file" name="image" onChange={onChange} />
-        Change Image
+        {buttonText ? buttonText : "Change Image"}
       </label>
       {loading && <Loader variant="warning" />}
       {error && (

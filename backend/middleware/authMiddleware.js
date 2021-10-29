@@ -47,4 +47,22 @@ const author = (req, res, next) => {
   }
 };
 
-export { protect, admin, author };
+const shopAdmin = (req, res, next) => {
+  if (req.member.isShopAdmin) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorised as a Shop Admin");
+  }
+};
+
+const instructor = (req, res, next) => {
+  if (req.member.isInstructor) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorised as an instructor");
+  }
+};
+
+export { protect, admin, author, shopAdmin, instructor };

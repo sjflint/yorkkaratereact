@@ -23,8 +23,10 @@ const MemberTrainingSessions = () => {
 
   const [sessionToDelete, setSessionToDelete] = useState({});
 
-  const trainingSession = useSelector((state) => state.trainingSession);
-  const { trainingSessions } = trainingSession;
+  const trainingSessionsList = useSelector(
+    (state) => state.trainingSessionsList
+  );
+  const { trainingSessions } = trainingSessionsList;
 
   const memberClassList = useSelector((state) => state.memberClassList);
   const {

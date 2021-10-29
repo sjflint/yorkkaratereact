@@ -34,6 +34,10 @@ import ListMembersScreen from "./ListMembersScreen";
 import MemberEditScreen from "./MemberEditScreen";
 import ListEventsScreen from "./ListEventsScreen";
 import ListArticlesScreen from "./ListArticlesScreen";
+import ListProductsScreen from "./ListProductsScreen";
+import ListOrdersScreen from "./listOrdersScreen";
+import ListClassesScreen from "./ListClassesScreen";
+import ListSyllabusScreen from "./ListSyllabusScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -74,12 +78,16 @@ const ScreenRoutes = () => {
       <Route path="/payment" component={PaymentScreen} />
       <Route path="/placeorder" component={PlaceOrderScreen} />
       <Route path="/order/:id" component={OrderScreen} />
+      <Route path="/shopAdmin/editorders" component={ListOrdersScreen} />
       <Route path="/profile" component={ProfileScreen} />
       <Route path="/admin" component={AdminScreen} exact />
       <Route path="/admin/listmembers" component={ListMembersScreen} />
       <Route path="/admin/editevents" component={ListEventsScreen} />
       <Route path="/admin/members/:id/edit" component={MemberEditScreen} />
       <Route path="/author/editarticles" component={ListArticlesScreen} />
+      <Route path="/shopadmin/editproducts" component={ListProductsScreen} />
+      <Route path="/admin/editclasses" component={ListClassesScreen} />
+      <Route path="/instructor/editsyllabus" component={ListSyllabusScreen} />
     </>
   );
 };

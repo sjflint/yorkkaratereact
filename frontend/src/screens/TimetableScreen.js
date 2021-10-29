@@ -21,17 +21,17 @@ import ImgArchHol from "../img/archbishoptrimmed.jpg";
 import ImgStrensall from "../img/strensalltrimmed.jpg";
 
 const TimetableScreen = () => {
-  const trainingSession = useSelector((state) => state.trainingSession);
-  const { loading, error, trainingSessions } = trainingSession;
+  const trainingSessionsList = useSelector(
+    (state) => state.trainingSessionsList
+  );
+  const { loading, error, trainingSessions } = trainingSessionsList;
 
   const dispatch = useDispatch();
   const [ageGroup, setAgeGroup] = useState("under9");
   const [grade, setGrade] = useState(16);
-  const [ability, setAbility] = useState("Not Specified");
-  const [classList, setClassList] = useState(trainingSessions);
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [classList, setClassList] = useState("");
+
   const [showKyu, setShowKyu] = useState(false);
   const handleCloseKyu = () => setShowKyu(false);
   const handleShowKyu = () => setShowKyu(true);
@@ -45,36 +45,34 @@ const TimetableScreen = () => {
   };
 
   const handleGrade = (e) => {
-    setGrade(e.target.value);
-  };
-
-  const showModel = (level) => {
-    const classLevel = trainingSessions.filter(
-      (trainingSessions) =>
-        trainingSessions.name.split(" ")[1] ===
-        level.charAt(0).toUpperCase() + level.slice(1)
-    );
-    setClassList(classLevel);
-    setAbility(level);
-    handleShow();
+    setGrade(Number(e.target.value));
   };
 
   const onSubmit = (e) => {
-    if (ageGroup === "under9" && grade > 9) {
-      showModel("Junior");
-    } else if (grade > 8) {
-      showModel("Novice");
-    } else if (grade > 4) {
-      showModel("Intermediate");
-    } else {
-      showModel("Advanced");
-    }
     e.preventDefault();
+    console.log(ageGroup);
+    console.log(grade);
+    if (ageGroup === "under9" && grade >= 11) {
+      const filteredClass = trainingSessions.filter(
+        (trainingSession) => trainingSession.juniorSession === true
+      );
+      setClassList(filteredClass);
+      setShow(true);
+    } else {
+      const filteredClass = trainingSessions.filter(
+        (trainingSession) =>
+          trainingSession.minGradeLevel >= grade &&
+          trainingSession.maxGradeLevel <= grade &&
+          trainingSession.juniorSession === false
+      );
+      setClassList(filteredClass);
+      setShow(true);
+    }
   };
 
   return (
     <>
-      <Container>
+      <Container fluid="lg">
         <h3 className="text-center border-bottom border-warning pb-1">
           Timetable
         </h3>
@@ -204,32 +202,33 @@ const TimetableScreen = () => {
         )}
       </Container>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton className="text-white bg-secondary">
           <Modal.Title className="text-center">
-            Your ability level is {ability}
+            Your ability level is
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
           <h5>The classes that are most suitable for you are:</h5>
-          {classList.map((session) => (
-            <Card className="mb-2" key={session._id}>
-              <Card.Body className="bg-light text-primary">
-                <Card.Title>{session.name} Class</Card.Title>
-                <Card.Subtitle className="text-muted">
-                  {session.times}
-                </Card.Subtitle>
-                <Card.Text>{session.location}</Card.Text>
-              </Card.Body>
-              <Card.Footer className="bg-light text-primary">
-                Number of places available:{" "}
-                {session.capacity - session.numberBooked}
-              </Card.Footer>
-            </Card>
-          ))}
+          {classList &&
+            classList.map((session) => (
+              <Card className="mb-2" key={session._id}>
+                <Card.Body className="bg-light text-primary">
+                  <Card.Title>{session.name} Class</Card.Title>
+                  <Card.Subtitle className="text-muted">
+                    {session.times}
+                  </Card.Subtitle>
+                  <Card.Text>{session.location}</Card.Text>
+                </Card.Body>
+                <Card.Footer className="bg-light text-primary">
+                  Number of places available:{" "}
+                  {session.capacity - session.numberBooked}
+                </Card.Footer>
+              </Card>
+            ))}
         </Modal.Body>
         <Modal.Footer className="bg-light text-primary">
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={() => setShow(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
 

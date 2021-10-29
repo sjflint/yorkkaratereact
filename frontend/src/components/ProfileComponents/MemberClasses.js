@@ -25,8 +25,10 @@ const MemberClasses = () => {
 
   const [sessionToDelete, setSessionToDelete] = useState({});
 
-  const trainingSession = useSelector((state) => state.trainingSession);
-  const { trainingSessions } = trainingSession;
+  const trainingSessionsList = useSelector(
+    (state) => state.trainingSessionsList
+  );
+  const { trainingSessions } = trainingSessionsList;
 
   const myClassList = useSelector((state) => state.myClassList);
   const {
@@ -59,8 +61,8 @@ const MemberClasses = () => {
   let filteredSessions = trainingSessions;
   if (sessions) {
     sessions.forEach((session) => {
-      filteredSessions = filteredSessions.filter((trainingSession) => {
-        if (trainingSession._id === session._id) {
+      filteredSessions = filteredSessions.filter((trainingSessions) => {
+        if (trainingSessions._id === session._id) {
           return false;
         } else {
           return true;
@@ -70,13 +72,13 @@ const MemberClasses = () => {
   }
 
   if (filteredSessions && member) {
-    filteredSessions = filteredSessions.filter((trainingSession) => {
+    filteredSessions = filteredSessions.filter((trainingSessions) => {
       if (member.age < 9) {
-        return trainingSession.juniorSession === true;
+        return trainingSessions.juniorSession === true;
       } else if (
-        member.kyuGrade <= trainingSession.minGradeLevel &&
-        member.kyuGrade >= trainingSession.maxGradeLevel &&
-        trainingSession.juniorSession === false
+        member.kyuGrade <= trainingSessions.minGradeLevel &&
+        member.kyuGrade >= trainingSessions.maxGradeLevel &&
+        trainingSessions.juniorSession === false
       ) {
         return true;
       } else {

@@ -3,9 +3,20 @@ const router = express.Router();
 import {
   getTrainingVideos,
   getTrainingVideoById,
+  createTrainingVideo,
+  deleteTrainingVideo,
+  updateTrainingVideo,
 } from "../controllers/trainingVideoController.js";
+import { protect, instructor } from "../middleware/authMiddleware.js";
 
-router.route("/").get(getTrainingVideos);
-router.route("/:id").get(getTrainingVideoById);
+router
+  .route("/")
+  .get(getTrainingVideos)
+  .post(protect, instructor, createTrainingVideo);
+router
+  .route("/:id")
+  .get(getTrainingVideoById)
+  .delete(protect, instructor, deleteTrainingVideo)
+  .put(protect, instructor, updateTrainingVideo);
 
 export default router;

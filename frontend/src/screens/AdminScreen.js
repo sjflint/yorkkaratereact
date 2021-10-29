@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Card, Container, Row, Button, CardGroup } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
+
 import { useSelector } from "react-redux";
 import membersImg from "../img/members.png";
 import eventsImg from "../img/events.png";
@@ -9,6 +9,11 @@ import emailImg from "../img/email.png";
 import timetableImg from "../img/timetable.png";
 import productsImg from "../img/products.png";
 import articlesImg from "../img/articles.png";
+import ordersImg from "../img/orders.png";
+import syllabusImg from "../img/syllabus.png";
+import lessonplanImg from "../img/lessonplan.png";
+import gradingImg from "../img/grading.png";
+import { Link } from "react-router-dom";
 
 const AdminScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -23,149 +28,156 @@ const AdminScreen = ({ history }) => {
   }, [history, memberInfo]);
 
   return (
-    <Container>
+    <Container fluid="md">
       <h3 className="text-center border-bottom border-warning pb-1">
         Administration Panel
       </h3>
       <h5 className="my-3">
         Hello {memberInfo.firstName}. What do you need to do today?
       </h5>
-      <Row>
-        {memberInfo.isAdmin && (
-          <>
-            <CardGroup className="mb-3">
-              <Card>
-                <Card.Img variant="top" src={membersImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>Member Details</Card.Title>
-                  <Card.Text>View all members and edit details</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/listMembers">
-                    <Button variant="secondary" className="btn-block">
-                      Members
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
 
-              <Card>
-                <Card.Img variant="top" src={eventsImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>Edit Events</Card.Title>
-                  <Card.Text>Create and Edit event listings</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/editevents">
-                    <Button variant="secondary" className="btn-block">
-                      Events
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
+      {memberInfo.isAdmin && (
+        <>
+          <h5 className="text-white mb-2 border-bottom border-warning">
+            Admin
+          </h5>
 
-              <Card>
-                <Card.Img variant="top" src={financialImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>Financial Summary</Card.Title>
-                  <Card.Text>
-                    View a current financial summary of York Karate
-                  </Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/financialsummary">
-                    <Button variant="secondary" className="btn-block" disabled>
-                      Financial
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
-            </CardGroup>
-            <CardGroup className="mb-3">
-              <Card>
-                <Card.Img variant="top" src={emailImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>Contact Members</Card.Title>
-                  <Card.Text>
-                    Send emails or texts to individuals or groups
-                  </Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/emailmembers">
-                    <Button variant="secondary" className="btn-block" disabled>
-                      Contact
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
+          <Row className="mb-3 no-gutters">
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/admin/listMembers">
+                <Card>
+                  <Card.Img variant="top" src={membersImg} className="p-3" />
+                  <Card.Footer className="text-center">Members</Card.Footer>
+                </Card>
+              </Link>
+            </Col>
 
-              <Card>
-                <Card.Img variant="top" src={timetableImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>Timetable details</Card.Title>
-                  <Card.Text>View class numbers or edit timetable</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/edittimetable">
-                    <Button variant="secondary" className="btn-block" disabled>
-                      Timetable
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
-              <Card>
-                <Card.Img variant="top" src={productsImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>Product details</Card.Title>
-                  <Card.Text>View and edit products</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/edittimetable">
-                    <Button variant="secondary" className="btn-block" disabled>
-                      Products
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
-            </CardGroup>
-            <CardGroup>
-              <Card>
-                <Card.Img variant="top" src={productsImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>View Orders</Card.Title>
-                  <Card.Text>View and edit orders</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/admin/edittimetable">
-                    <Button variant="secondary" className="btn-block" disabled>
-                      Orders
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
-              <Card>
-                <Card.Img variant="top" src={articlesImg} className="p-5" />
-                <Card.Body>
-                  <Card.Title>View Articles</Card.Title>
-                  <Card.Text>Create and edit articles</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <LinkContainer to="/author/editarticles">
-                    <Button variant="secondary" className="btn-block">
-                      Articles
-                    </Button>
-                  </LinkContainer>
-                </Card.Footer>
-              </Card>
-              <Card>Syllabus - edit and upload videos.</Card>
-            </CardGroup>
-            <CardGroup>
-              <Card>Lesson Plans - view and edit</Card>
-              <Card>Gradings???</Card>
-            </CardGroup>
-          </>
-        )}
-      </Row>
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/admin/editevents">
+                <Card>
+                  <Card.Img variant="top" src={eventsImg} className="p-3" />
+                  <Card.Footer className="text-center">Events</Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/admin/financialsummary">
+                <Card>
+                  <Card.Img variant="top" src={financialImg} className="p-3" />
+                  <Card.Footer className="text-center">
+                    Financial (Incomplete)
+                  </Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/admin/emailmembers">
+                <Card>
+                  <Card.Img variant="top" src={emailImg} className="p-3" />
+                  <Card.Footer className="text-center">
+                    Contact (Incomplete)
+                  </Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/admin/editclasses">
+                <Card>
+                  <Card.Img variant="top" src={timetableImg} className="p-3" />
+                  <Card.Footer className="text-center">
+                    Classes / Timetable
+                  </Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+          </Row>
+
+          <h5 className="text-white mb-2 border-bottom border-warning">
+            Shop Admin
+          </h5>
+          <Row className="mb-3 no-gutters">
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/shopadmin/editproducts">
+                <Card>
+                  <Card.Img variant="top" src={productsImg} className="p-3" />
+                  <Card.Footer className="text-center">Products</Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/shopadmin/editorders">
+                <Card>
+                  <Card.Img variant="top" src={ordersImg} className="p-3" />
+                  <Card.Footer className="text-center">Orders</Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2"></Col>
+            <Col xs={6} sm={3} className="mb-2"></Col>
+          </Row>
+
+          <h5 className="text-white mb-2 border-bottom border-warning">
+            Author
+          </h5>
+          <Row className="mb-3 no-gutters">
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/author/editarticles">
+                <Card>
+                  <Card.Img variant="top" src={articlesImg} className="p-3" />
+                  <Card.Footer className="text-center">Articles</Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+            <Col xs={6} sm={3} className="mb-2"></Col>
+            <Col xs={6} sm={3} className="mb-2"></Col>
+            <Col xs={6} sm={3} className="mb-2"></Col>
+          </Row>
+
+          <h5 className="text-white mb-2 border-bottom border-warning">
+            Instructor
+          </h5>
+          <Row className="mb-3 no-gutters">
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/instructor/editsyllabus">
+                <Card>
+                  <Card.Img variant="top" src={syllabusImg} className="p-3" />
+                  <Card.Footer className="text-center">
+                    Syllabus (Incomplete)
+                  </Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/instructor/editlessonplans">
+                <Card>
+                  <Card.Img variant="top" src={lessonplanImg} className="p-3" />
+                  <Card.Footer className="text-center">
+                    Lesson Plans (Incomplete)
+                  </Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3} className="mb-2">
+              <Link to="/instructor/editgradings">
+                <Card>
+                  <Card.Img variant="top" src={gradingImg} className="p-3" />
+                  <Card.Footer className="text-center">
+                    Gradings (Incomplete)
+                  </Card.Footer>
+                </Card>
+              </Link>
+            </Col>
+            <Col xs={6} sm={3} className="mb-2"></Col>
+          </Row>
+        </>
+      )}
     </Container>
   );
 };

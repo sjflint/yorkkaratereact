@@ -18,6 +18,18 @@ import {
   MEMBER_CLASS_LIST_REQUEST,
   MEMBER_CLASS_LIST_SUCCESS,
   MEMBER_CLASS_LIST_FAIL,
+  TRAINING_SESSION_DELETE_REQUEST,
+  TRAINING_SESSION_DELETE_SUCCESS,
+  TRAINING_SESSION_DELETE_FAIL,
+  TRAINING_SESSION_CREATE_REQUEST,
+  TRAINING_SESSION_CREATE_SUCCESS,
+  TRAINING_SESSION_CREATE_FAIL,
+  TRAINING_SESSION_UPDATE_REQUEST,
+  TRAINING_SESSION_UPDATE_SUCCESS,
+  TRAINING_SESSION_UPDATE_FAIL,
+  TRAINING_SESSION_ID_REQUEST,
+  TRAINING_SESSION_ID_SUCCESS,
+  TRAINING_SESSION_ID_FAIL,
 } from "../constants/trainingSessionConstants";
 
 export const listTrainingSessions = () => async (dispatch) => {
@@ -33,6 +45,27 @@ export const listTrainingSessions = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: TRAINING_SESSION_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const trainingSessionById = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: TRAINING_SESSION_ID_REQUEST });
+
+    const { data } = await axios.get(`/api/trainingSessions/${id}`);
+
+    dispatch({
+      type: TRAINING_SESSION_ID_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TRAINING_SESSION_ID_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -216,6 +249,108 @@ export const switchMyClass = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: SWITCH_CLASS_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteTrainingSession = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: TRAINING_SESSION_DELETE_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/trainingsessions/${id}`, config);
+
+    dispatch({
+      type: TRAINING_SESSION_DELETE_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: TRAINING_SESSION_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const createTrainingSession = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: TRAINING_SESSION_CREATE_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/trainingSessions`, values, config);
+
+    dispatch({
+      type: TRAINING_SESSION_CREATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TRAINING_SESSION_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateTrainingSession = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: TRAINING_SESSION_UPDATE_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/trainingsessions/:id`,
+      values,
+      config
+    );
+
+    dispatch({
+      type: TRAINING_SESSION_UPDATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TRAINING_SESSION_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

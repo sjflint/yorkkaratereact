@@ -17,7 +17,9 @@ const Product = ({ product }) => {
           <div className="my-3">{product.description}</div>
         </Card.Text>
       </Card.Body>
-      <Card.Footer className="text-white">£{product.price}.00</Card.Footer>
+      <Card.Footer className="text-white">
+        £{product.price.toFixed(2)}
+      </Card.Footer>
     </Card>
   );
 };

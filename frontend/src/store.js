@@ -11,6 +11,9 @@ import {
 import {
   trainingVideoListReducer,
   displayTrainingVideoReducer,
+  trainingVideoDeleteReducer,
+  trainingVideoCreateReducer,
+  trainingVideoUpdateReducer,
 } from "./reducers/trainingVideoReducers";
 import {
   memberLoginReducer,
@@ -26,14 +29,21 @@ import {
 import {
   productListReducer,
   displayProductReducer,
+  productDeleteReducer,
+  productCreateReducer,
+  productUpdateReducer,
 } from "./reducers/productReducer";
 import {
   AddClassListReducer,
   deleteClassListReducer,
+  listTrainingSessionsReducer,
   memberClassListReducer,
   myClassListReducer,
   switchClassListReducer,
-  trainingSessionReducer,
+  trainingSessionByIdReducer,
+  trainingSessionCreateReducer,
+  trainingSessionDeleteReducer,
+  trainingSessionUpdateReducer,
 } from "./reducers/trainingSessionReducer";
 import { basketReducer } from "./reducers/basketReducers";
 import {
@@ -48,6 +58,8 @@ import {
   orderDetailsReducer,
   orderPayReducer,
   myOrderListReducer,
+  orderListReducer,
+  orderDeliverReducer,
 } from "./reducers/orderReducers";
 import {
   cancelDirectDebitReducer,
@@ -65,6 +77,9 @@ const reducer = combineReducers({
   displayArticle: displayArticleReducer,
   trainingVideoList: trainingVideoListReducer,
   displayTrainingVideo: displayTrainingVideoReducer,
+  trainingVideoDelete: trainingVideoDeleteReducer,
+  trainingVideoCreate: trainingVideoCreateReducer,
+  trainingVideoUpdate: trainingVideoUpdateReducer,
   memberLogin: memberLoginReducer,
   memberRegister: memberRegisterReducer,
   memberDetails: memberDetailsReducer,
@@ -73,7 +88,11 @@ const reducer = combineReducers({
   memberEdit: memberEditReducer,
   updateProfile: updateProfileReducer,
   updatePassword: updatePasswordReducer,
-  trainingSession: trainingSessionReducer,
+  trainingSessionsList: listTrainingSessionsReducer,
+  trainingSessionByID: trainingSessionByIdReducer,
+  trainingSessionDelete: trainingSessionDeleteReducer,
+  trainingSessionCreate: trainingSessionCreateReducer,
+  trainingSessionUpdate: trainingSessionUpdateReducer,
   myClassList: myClassListReducer,
   memberClassList: memberClassListReducer,
   addClassList: AddClassListReducer,
@@ -83,6 +102,9 @@ const reducer = combineReducers({
   productList: productListReducer,
   displayProduct: displayProductReducer,
   basket: basketReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
   eventList: eventListReducer,
   eventDelete: eventDeleteReducer,
   eventCreate: eventCreateReducer,
@@ -91,7 +113,9 @@ const reducer = combineReducers({
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
+  orderDeliver: orderDeliverReducer,
   myOrderList: myOrderListReducer,
+  orderList: orderListReducer,
   updateDirectDebit: updateDirectDebitReducer,
   cancelDirectDebit: cancelDirectDebitReducer,
   updateSubscription: updateSubscriptionReducer,

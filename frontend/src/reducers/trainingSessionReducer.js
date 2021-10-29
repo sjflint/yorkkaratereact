@@ -17,9 +17,23 @@ import {
   MEMBER_CLASS_LIST_REQUEST,
   MEMBER_CLASS_LIST_SUCCESS,
   MEMBER_CLASS_LIST_FAIL,
+  TRAINING_SESSION_DELETE_REQUEST,
+  TRAINING_SESSION_DELETE_SUCCESS,
+  TRAINING_SESSION_DELETE_FAIL,
+  TRAINING_SESSION_CREATE_REQUEST,
+  TRAINING_SESSION_CREATE_SUCCESS,
+  TRAINING_SESSION_CREATE_FAIL,
+  TRAINING_SESSION_CREATE_RESET,
+  TRAINING_SESSION_UPDATE_REQUEST,
+  TRAINING_SESSION_UPDATE_SUCCESS,
+  TRAINING_SESSION_UPDATE_FAIL,
+  TRAINING_SESSION_UPDATE_RESET,
+  TRAINING_SESSION_ID_REQUEST,
+  TRAINING_SESSION_ID_SUCCESS,
+  TRAINING_SESSION_ID_FAIL,
 } from "../constants/trainingSessionConstants";
 
-export const trainingSessionReducer = (
+export const listTrainingSessionsReducer = (
   state = { trainingSessions: [] },
   action
 ) => {
@@ -29,6 +43,22 @@ export const trainingSessionReducer = (
     case TRAINING_SESSION_SUCCESS:
       return { loading: false, trainingSessions: action.payload };
     case TRAINING_SESSION_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const trainingSessionByIdReducer = (
+  state = { trainingSession: [] },
+  action
+) => {
+  switch (action.type) {
+    case TRAINING_SESSION_ID_REQUEST:
+      return { loading: true };
+    case TRAINING_SESSION_ID_SUCCESS:
+      return { loading: false, trainingSession: action.payload };
+    case TRAINING_SESSION_ID_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -140,6 +170,53 @@ export const switchClassListReducer = (state = { id: [] }, action) => {
         error: action.payload,
       };
 
+    default:
+      return state;
+  }
+};
+
+export const trainingSessionDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_SESSION_DELETE_REQUEST:
+      return { loading: true };
+    case TRAINING_SESSION_DELETE_SUCCESS:
+      return { loadingTrainingSession: false, success: true };
+    case TRAINING_SESSION_DELETE_FAIL:
+      return { loadingTrainingSession: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const trainingSessionCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_SESSION_CREATE_REQUEST:
+      return { loading: true };
+    case TRAINING_SESSION_CREATE_SUCCESS:
+      return {
+        loadingTrainingSession: false,
+        success: true,
+        trainingSession: action.payload,
+      };
+    case TRAINING_SESSION_CREATE_FAIL:
+      return { loadingTrainingSession: false, error: action.payload };
+    case TRAINING_SESSION_CREATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const trainingSessionUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_SESSION_UPDATE_REQUEST:
+      return { loading: true };
+    case TRAINING_SESSION_UPDATE_SUCCESS:
+      return { loading: false, success: true, trainingSession: action.payload };
+    case TRAINING_SESSION_UPDATE_FAIL:
+      return { loadingTrainingSession: false, error: action.payload };
+    case TRAINING_SESSION_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

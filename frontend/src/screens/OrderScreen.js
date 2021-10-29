@@ -6,8 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
-import { getOrderDetails, payOrder } from "../actions/orderActions";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from "../actions/orderActions";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/orderConstants";
 import { BASKET_CLEAR } from "../constants/BasketConstants";
 
 const OrderScreen = ({ match }) => {
@@ -20,8 +27,14 @@ const OrderScreen = ({ match }) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
+  const memberLogin = useSelector((state) => state.memberLogin);
+  const { memberInfo } = memberLogin;
+
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   useEffect(() => {
     const addPayPalScript = async () => {
@@ -36,8 +49,9 @@ const OrderScreen = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (!order || order._id !== orderId || successPay) {
+    if (!order || order._id !== orderId || successPay || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -46,7 +60,7 @@ const OrderScreen = ({ match }) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay]);
+  }, [dispatch, order, orderId, successPay, successDeliver]);
 
   const successPaymentHandler = async (paymentResult) => {
     await dispatch(payOrder(orderId, paymentResult));
@@ -54,6 +68,10 @@ const OrderScreen = ({ match }) => {
       localStorage.removeItem("basketItems");
       dispatch({ type: BASKET_CLEAR });
     }
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
@@ -65,15 +83,7 @@ const OrderScreen = ({ match }) => {
       <h3 className="border-bottom border-warning">
         Order Number: {order._id}
       </h3>
-      {!order.isPaid ? (
-        <ListGroup.Item variant="danger" className="mb-2">
-          <h5 className="text-dark">Payment Status: Not Paid</h5>
-        </ListGroup.Item>
-      ) : (
-        <ListGroup.Item variant="success" className="mb-2">
-          <h5 className="text-dark">Payment Status: Paid</h5>
-        </ListGroup.Item>
-      )}
+
       <Row>
         <Col sm={8}>
           <ListGroup.Item>
@@ -137,6 +147,40 @@ const OrderScreen = ({ match }) => {
               />
             </div>
           )}
+        </ListGroup.Item>
+      )}
+      {!order.isPaid ? (
+        <ListGroup.Item variant="danger" className="text-center">
+          <h5 className="text-dark">Payment Status: Not Paid</h5>
+        </ListGroup.Item>
+      ) : (
+        <ListGroup.Item className="text-center">
+          <h5>Payment Status: Paid</h5>
+        </ListGroup.Item>
+      )}
+      {order.isPaid &&
+        (!order.isDelivered ? (
+          <ListGroup.Item variant="danger" className="text-center">
+            <h5 className="text-dark">
+              Collection Status: Not ready for collection
+            </h5>
+          </ListGroup.Item>
+        ) : (
+          <ListGroup.Item className="text-center" variant="success">
+            <h5>Collection Status: Ready to be collected at your next class</h5>
+          </ListGroup.Item>
+        ))}
+
+      {loadingDeliver && <Loader variant="warning" />}
+      {memberInfo.isShopAdmin && order.isPaid && !order.isDelivered && (
+        <ListGroup.Item>
+          <button
+            type="button"
+            className="btn btn-block btn-default"
+            onClick={deliverHandler}
+          >
+            Mark As Ready For Collection
+          </button>
         </ListGroup.Item>
       )}
     </Container>

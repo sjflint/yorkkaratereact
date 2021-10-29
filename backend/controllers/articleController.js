@@ -48,8 +48,10 @@ const createArticle = asyncHandler(async (req, res) => {
     title: req.body.title,
     leader: req.body.leader,
     author: req.body.author,
+    authorImg: req.body.authorImg,
     category: req.body.category,
     body: req.body.body,
+    carouselImages: req.body.carouselImages,
   });
 
   const createdArticle = await article.save();
@@ -68,6 +70,7 @@ const updateArticle = asyncHandler(async (req, res) => {
       (article.author = req.body.author),
       (article.category = req.body.category),
       (article.body = req.body.body);
+    article.carouselImages = req.body.carouselImages;
 
     const updatedArticle = await article.save();
     res.status(201).json(updatedArticle);
