@@ -41,6 +41,8 @@ const authMember = asyncHandler(async (req, res) => {
 const registerMember = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
+  console.log(values);
+
   const memberExists = await Member.findOne({ name: values.name });
 
   if (memberExists) {

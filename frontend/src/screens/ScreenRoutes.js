@@ -38,6 +38,8 @@ import ListProductsScreen from "./ListProductsScreen";
 import ListOrdersScreen from "./listOrdersScreen";
 import ListClassesScreen from "./ListClassesScreen";
 import ListSyllabusScreen from "./ListSyllabusScreen";
+import ListLessonPlanScreen from "./ListLessonPlanScreen";
+import GradingRegistrationScreen from "./GradingRegistrationScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -88,6 +90,11 @@ const ScreenRoutes = () => {
       <Route path="/shopadmin/editproducts" component={ListProductsScreen} />
       <Route path="/admin/editclasses" component={ListClassesScreen} />
       <Route path="/instructor/editsyllabus" component={ListSyllabusScreen} />
+      <Route path="/grading/:id" component={GradingRegistrationScreen} />
+      <Route
+        path="/instructor/editlessonplans"
+        component={ListLessonPlanScreen}
+      />
     </>
   );
 };

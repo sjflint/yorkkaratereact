@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
-import logo from "../img/logo2021(white).png";
+import logo from "../img/logo2021.png";
 import { getMemberDetails, logout } from "../actions/memberActions";
 import { useEffect } from "react";
 
@@ -34,7 +34,7 @@ const Header = () => {
       <Navbar bg="primary" variant="dark" expand="md">
         <Container className="w-80">
           <LinkContainer to="/">
-            <Navbar.Brand className="text-center">
+            <Navbar.Brand className="text-center p-0">
               <img src={logo} alt="logo" id="img-logo" />
             </Navbar.Brand>
           </LinkContainer>

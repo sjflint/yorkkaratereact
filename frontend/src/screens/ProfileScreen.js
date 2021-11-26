@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Button, Col, Container, Modal, Nav, Row, Tab } from "react-bootstrap";
 import MemberDetails from "../components/ProfileComponents/MemberDetails";
 import MemberOrders from "../components/ProfileComponents/MemberOrders";
@@ -30,6 +30,11 @@ const ProfileScreen = ({ history, match }) => {
     if (!memberInfo) {
       history.push("/login");
     }
+
+    if (member.ddsuccess === false) {
+      history.push("/accountinactive");
+    }
+
     if (member.ddMandate === "cancelled") {
       history.push("/membershipcancelled");
     }
@@ -65,12 +70,12 @@ const ProfileScreen = ({ history, match }) => {
                 {member && (
                   <>
                     <img src={member.profileImg} alt="" className="rounded-0" />
-                    <Link
+                    <button
                       className="mb-2 btn btn-default rounded-0"
                       onClick={() => setProfileImgModal(true)}
                     >
                       Change Profile Picture
-                    </Link>
+                    </button>
                   </>
                 )}
 

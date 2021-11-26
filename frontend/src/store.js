@@ -68,6 +68,13 @@ import {
   updateSubscriptionReducer,
 } from "./reducers/directDebitReducers";
 import { uploadImgReducer } from "./reducers/uploadImageReducer";
+import {
+  displayLessonPlanReducer,
+  lessonPlanCreateReducer,
+  lessonPlanDeleteReducer,
+  lessonPlanListReducer,
+  lessonPlanUpdateReducer,
+} from "./reducers/lessonPlanReducer";
 
 const reducer = combineReducers({
   articleList: articleListReducer,
@@ -80,6 +87,11 @@ const reducer = combineReducers({
   trainingVideoDelete: trainingVideoDeleteReducer,
   trainingVideoCreate: trainingVideoCreateReducer,
   trainingVideoUpdate: trainingVideoUpdateReducer,
+  lessonPlanList: lessonPlanListReducer,
+  displayLessonPlan: displayLessonPlanReducer,
+  lessonPlanDelete: lessonPlanDeleteReducer,
+  lessonPlanCreate: lessonPlanCreateReducer,
+  lessonPlanUpdate: lessonPlanUpdateReducer,
   memberLogin: memberLoginReducer,
   memberRegister: memberRegisterReducer,
   memberDetails: memberDetailsReducer,

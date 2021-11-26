@@ -42,7 +42,6 @@ const deleteTrainingVideo = asyncHandler(async (req, res) => {
 // @route POST /api/trainingVideos
 // @access Private/Instructor
 const createTrainingVideo = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const trainingVideo = new TrainingVideo({
     grade: req.body.grade,
     title: req.body.title,

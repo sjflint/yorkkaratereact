@@ -4,9 +4,20 @@
   border: #fe5c07;
 }
 
+.btn-white {
+  background-color: #fff;
+  color: #000;
+  border: #fe5c07;
+}
+
 .btn-default:hover {
   background-color: #fe5c07;
   color: #fff;
+}
+
+.btn-white:hover {
+  background-color: #ccc;
+  color: #000;
 }
 
 .text-warning {
@@ -35,7 +46,7 @@ a:hover {
 }
 
 #img-logo {
-  max-width: 130px;
+  max-width: 300px;
   border-radius: 0px;
 }
 

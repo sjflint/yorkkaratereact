@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const trainingVideoSchema = mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String, required: true, unique: true },
   img: { type: String, required: true },
   video: { type: String, required: true },
   soundFile: { type: String, required: true },

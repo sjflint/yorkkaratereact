@@ -8,6 +8,7 @@ import {
   Col,
   Card,
   FormControl,
+  ListGroup,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -29,6 +30,18 @@ import advancedImg from "../img/advanced.png";
 import * as Yup from "yup";
 import FormikControl from "../components/FormComponents/FormikControl";
 import { Formik, Form } from "formik";
+import {
+  juniorBeginner,
+  juniorWhite,
+  juniorOrange,
+  juniorAdvanced,
+  noviceL1,
+  noviceL2,
+  intermediateL1,
+  intermediateL2,
+  advancedL1,
+  advancedL2,
+} from "../clubVariables/gradeLevelSplit";
 
 const ListSyllabusScreen = ({ history, match }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -36,8 +49,11 @@ const ListSyllabusScreen = ({ history, match }) => {
   const [editModal, setEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [updateId, setUpdateId] = useState();
-  const [level, setLevel] = useState("All Levels");
-  const [grade, setGrade] = useState("All Grades");
+  const [syllabusLevel, setSyllabusLevel] = useState(juniorBeginner);
+  const [syllabusModal, setSyllabusModal] = useState(false);
+  const [grade, setGrade] = useState("");
+  const [videoModal, setVideoModal] = useState(false);
+  const [videoModalId, setVideoModalId] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -50,7 +66,7 @@ const ListSyllabusScreen = ({ history, match }) => {
   const displayTrainingVideo = useSelector(
     (state) => state.displayTrainingVideo
   );
-  const { error: trainingVideoError, trainingVideo } = displayTrainingVideo;
+  const { error: trainingVideoError, video } = displayTrainingVideo;
 
   const trainingVideoDelete = useSelector((state) => state.trainingVideoDelete);
   const {
@@ -98,7 +114,6 @@ const ListSyllabusScreen = ({ history, match }) => {
 
   const editTrainingVideoHandler = async (values) => {
     values.id = updateId;
-
     dispatch(updateTrainingVideo(values));
     setEditModal(false);
   };
@@ -123,66 +138,28 @@ const ListSyllabusScreen = ({ history, match }) => {
     { key: "Shobu Kumite", value: "Shobu Kumite" },
     { key: "Kata", value: "Kata" },
   ];
-  // Dropdown options for grade
-  let dropdownOptions = [];
 
-  if (level === "Junior Level Only") {
-    dropdownOptions = [
-      { key: "Please select a grade", value: "" },
-      { key: "16th kyu", value: 16 },
-      { key: "15th kyu", value: 15 },
-      { key: "14th kyu", value: 14 },
-      { key: "13th kyu", value: 13 },
-      { key: "12th kyu", value: 12 },
-      { key: "11th kyu", value: 11 },
-      { key: "10th kyu", value: 10 },
-    ];
-  } else if (level === "Novice Level Only") {
-    dropdownOptions = [
-      { key: "Please select a grade", value: "" },
-      { key: "9th kyu", value: 9 },
-      { key: "8th kyu", value: 8 },
-      { key: "7th kyu", value: 7 },
-      { key: "6th kyu", value: 6 },
-    ];
-  } else if (level === "Intermediate Level Only") {
-    dropdownOptions = [
-      { key: "Please select a grade", value: "" },
-      { key: "5th kyu", value: 5 },
-      { key: "4th kyu", value: 4 },
-      { key: "3rd kyu", value: 3 },
-      { key: "2nd kyu", value: 2 },
-      { key: "1st kyu", value: 1 },
-    ];
-  } else if (level === "Advanced Level Only") {
-    dropdownOptions = [
-      { key: "Please select a grade", value: "" },
-      { key: "1st dan", value: -1 },
-      { key: "2nd dan", value: -2 },
-    ];
-  } else {
-    dropdownOptions = [
-      { key: "Please select a grade", value: "" },
-      { key: "16th kyu", value: 16 },
-      { key: "15th kyu", value: 15 },
-      { key: "14th kyu", value: 14 },
-      { key: "13th kyu", value: 13 },
-      { key: "12th kyu", value: 12 },
-      { key: "11th kyu", value: 11 },
-      { key: "10th kyu", value: 10 },
-      { key: "9th kyu", value: 9 },
-      { key: "8th kyu", value: 8 },
-      { key: "7th kyu", value: 7 },
-      { key: "6th kyu", value: 6 },
-      { key: "5th kyu", value: 5 },
-      { key: "4th kyu", value: 4 },
-      { key: "3rd kyu", value: 3 },
-      { key: "2nd kyu", value: 2 },
-      { key: "1st kyu", value: 1 },
-      { key: "1st dan", value: -1 },
-      { key: "2nd dan", value: -2 },
-    ];
-  }
+  // Dropdown options for grade
+  const dropdownOptions = [
+    { key: "Show All Grades", value: "" },
+    { key: "15th kyu", value: "15th kyu" },
+    { key: "14th kyu", value: "14th kyu" },
+    { key: "13th kyu", value: "13th kyu" },
+    { key: "12th kyu", value: "12th kyu" },
+    { key: "11th kyu", value: "11th kyu" },
+    { key: "10th kyu", value: "10th kyu" },
+    { key: "9th kyu", value: "9th kyu" },
+    { key: "8th kyu", value: "8th kyu" },
+    { key: "7th kyu", value: "7th kyu" },
+    { key: "6th kyu", value: "6th kyu" },
+    { key: "5th kyu", value: "5th kyu" },
+    { key: "4th kyu", value: "4th kyu" },
+    { key: "3rd kyu", value: "3rd kyu" },
+    { key: "2nd kyu", value: "2nd kyu" },
+    { key: "1st kyu", value: "1st kyu" },
+    { key: "1st dan", value: "1st dan" },
+    { key: "2nd dan", value: "2nd dan" },
+  ];
 
   // Grade Options
   const gradeOptions = [
@@ -216,26 +193,80 @@ const ListSyllabusScreen = ({ history, match }) => {
 
   let editInitialValues = {};
 
-  if (trainingVideo) {
-    initialValues = {
-      grade: trainingVideo.grade,
-      title: trainingVideo.title,
-      img: trainingVideo.img,
-      video: trainingVideo.video,
-      soundFile: trainingVideo.soundFile,
-      category: trainingVideo.category,
+  if (video) {
+    editInitialValues = {
+      grade: video.grade,
+      title: video.title,
+      img: video.img,
+      video: video.video,
+      soundFile: video.soundFile,
+      category: video.category,
     };
   }
 
-  const gradeHandler = (e) => {
-    setGrade(e.target.value);
-  };
+  // filter by a single grade
+  let filteredVideos;
+  if (grade !== "") {
+    filteredVideos = trainingVideos.filter((video) =>
+      video.grade.includes(grade)
+    );
+  } else {
+    filteredVideos = trainingVideos;
+  }
+
+  // filter by level
+  let syllabusVideos = trainingVideos;
+  let arrayOfSyllabusVideos = [];
+  syllabusLevel.map((grade) => {
+    syllabusVideos = trainingVideos.filter((video) =>
+      video.grade.includes(grade)
+    );
+    return (arrayOfSyllabusVideos = syllabusVideos.concat(
+      arrayOfSyllabusVideos
+    ));
+  });
+
+  let newSyllabusVideos = new Set(arrayOfSyllabusVideos);
+  newSyllabusVideos = [...newSyllabusVideos];
+
+  // filter by kata/kihon kumite/shobu kumite/kata
+  let kihonVideos = [];
+  let kihonKumiteVideos = [];
+  let shobuKumiteVideos = [];
+  let kataVideos = [];
+  newSyllabusVideos.map((video) => {
+    if (video.category === "Kihon") {
+      return kihonVideos.push(video);
+    }
+    if (video.category === "Kihon Kumite") {
+      return kihonKumiteVideos.push(video);
+    }
+    if (video.category === "Shobu Kumite") {
+      return shobuKumiteVideos.push(video);
+    }
+    if (video.category === "Kata") {
+      return kataVideos.push(video);
+    } else {
+      return null;
+    }
+  });
 
   return (
     <Container fluid="lg">
-      <Link className="btn btn-dark" to="/admin">
-        <i className="fas fa-arrow-left"></i> Return
-      </Link>
+      <div className="d-flex justify-content-between align-items-center border-bottom border-warning pb-1 mb-2">
+        <Link className="btn btn-dark" to="/admin">
+          <i className="fas fa-arrow-left"></i> Return
+        </Link>
+        <h3 className="text-center pb-0 mb-0">Syllabus</h3>
+        <button
+          className="btn-dark btn"
+          onClick={() => {
+            setCreateModal(true);
+          }}
+        >
+          <i className="fas fa-plus"></i> Create Training Video
+        </button>
+      </div>
       {loadingDelete && <Loader variant="warning" />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loadingCreate && <Loader variant="warning" />}
@@ -251,94 +282,131 @@ const ListSyllabusScreen = ({ history, match }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <h3 className="text-center border-bottom border-warning pb-1">
-            Syllabus
-          </h3>
-          <Row className="text-center">
-            <Col>
-              <Card>
+          <Row className="text-center no-gutters mb-2">
+            <Col xs={6} sm={3}>
+              <Card className="h-100">
                 <Card.Img variant="top" src={juniorImg} />
                 <Card.Body>
-                  <Card.Title>Juniors</Card.Title>
-                  <Button onClick={() => setLevel("Junior Level Only")}>
-                    View Syllabus
-                  </Button>
+                  <Card.Title>Junior</Card.Title>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(juniorBeginner);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    15th kyu
+                  </button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(juniorWhite);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    14th & 13th kyu
+                  </button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(juniorOrange);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    12th & 11th kyu
+                  </button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(juniorAdvanced);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    10th kyu
+                  </button>
                 </Card.Body>
               </Card>
             </Col>
-            <Col>
-              <Card>
+            <Col xs={6} sm={3}>
+              <Card className="h-100">
                 <Card.Img variant="top" src={noviceImg} />
                 <Card.Body>
                   <Card.Title>Novice</Card.Title>
-                  <Button onClick={() => setLevel("Novice Level Only")}>
-                    View Syllabus
-                  </Button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(noviceL1);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    Novice - Level 1
+                  </button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(noviceL2);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    Novice - Level 2
+                  </button>
                 </Card.Body>
               </Card>
             </Col>
 
-            <Col>
-              <Card>
+            <Col xs={6} sm={3}>
+              <Card className="h-100">
                 <Card.Img variant="top" src={intermediateImg} />
                 <Card.Body>
                   <Card.Title>Intermediate</Card.Title>
-                  <Button onClick={() => setLevel("Intermediate Level Only")}>
-                    View Syllabus
-                  </Button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(intermediateL1);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    Intermediate Level 1
+                  </button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(intermediateL2);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    Intermediate Level 2
+                  </button>
                 </Card.Body>
               </Card>
             </Col>
-            <Col>
-              <Card>
+            <Col xs={6} sm={3}>
+              <Card className="h-100">
                 <Card.Img variant="top" src={advancedImg} />
                 <Card.Body>
                   <Card.Title>Advanced</Card.Title>
-                  <Button onClick={() => setLevel("Advanced Level Only")}>
-                    View Syllabus
-                  </Button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(advancedL1);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    Advanced Level 1
+                  </button>
+                  <button
+                    className="bg-primary text-white m-1 btn btn-sm btn-block"
+                    onClick={() => {
+                      setSyllabusLevel(advancedL2);
+                      setSyllabusModal(true);
+                    }}
+                  >
+                    Advanced Level 2
+                  </button>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
-          <div className="d-flex align-items-center justify-content-around my-3">
-            <div className="text-center p-2 bg-primary">
-              <button
-                className="btn-default btn"
-                onClick={() => {
-                  setCreateModal(true);
-                }}
-              >
-                <i className="fas fa-plus"></i> Create Training Video
-              </button>
-            </div>
-            <div className="text-center d-flex align-items-center bg-primary p-1">
-              <h5 className="text-center my-3 text-warning">
-                {level} (
-                <a
-                  onClick={() => {
-                    setLevel("All Levels");
-                    setGrade("All Grades");
-                  }}
-                  className="text-link"
-                >
-                  reset
-                </a>
-                )
-              </h5>
-
-              <FormControl
-                as="select"
-                style={{ maxWidth: "200px" }}
-                className="mx-auto"
-                onChange={gradeHandler}
-              >
-                {dropdownOptions.map((option) => (
-                  <option value={option.value}>{option.key}</option>
-                ))}
-              </FormControl>
-            </div>
-          </div>
 
           <Table
             striped
@@ -349,16 +417,29 @@ const ListSyllabusScreen = ({ history, match }) => {
           >
             <thead>
               <tr className="text-center">
-                <th>Grade Level</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>View Video</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th className="d-flex align-items-center justify-content-around">
+                  <>Grade Level </>
+                  <FormControl
+                    as="select"
+                    size="sm"
+                    style={{ maxWidth: "200px" }}
+                    className="mt-1"
+                    onChange={(e) => setGrade(e.target.value)}
+                  >
+                    {dropdownOptions.map((option) => (
+                      <option value={option.value}>{option.key}</option>
+                    ))}
+                  </FormControl>
+                </th>
+                <th className="align-middle">Name</th>
+                <th className="align-middle">Category</th>
+                <th className="align-middle">View Video</th>
+                <th className="align-middle">Edit</th>
+                <th className="align-middle">Delete</th>
               </tr>
             </thead>
             <tbody>
-              {trainingVideos.map((trainingVideo) => (
+              {filteredVideos.map((trainingVideo) => (
                 <tr key={trainingVideo._id}>
                   <td className="align-middle">
                     {trainingVideo.grade.map((grade) => (
@@ -369,8 +450,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                   </td>
                   <td className="align-middle">{trainingVideo.title}</td>
                   <td className="align-middle">{trainingVideo.category}</td>
-                  <td>
-                    <Link to={`/trainingVideos/${trainingVideo._id}`}>
+                  <td className="align-middle">
+                    <a href={`/trainingVideos/${trainingVideo._id}`}>
                       <Button variant="light" className="btn btn-block p-1 m-1">
                         <i
                           className="fa-solid fa-eye"
@@ -379,17 +460,15 @@ const ListSyllabusScreen = ({ history, match }) => {
                         <br />
                         View
                       </Button>
-                    </Link>
+                    </a>
                   </td>
-                  <td>
+                  <td className="align-middle">
                     <Button
                       variant="light"
                       className="btn btn-block px-3 py-1 m-1"
                       onClick={async () => {
                         setUpdateId(trainingVideo._id);
-
                         await dispatch(listTrainingVideo(trainingVideo._id));
-
                         await setEditModal(true);
                       }}
                     >
@@ -452,6 +531,10 @@ const ListSyllabusScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
+                <small>
+                  Please note: The title must be unique and identify the
+                  training video
+                </small>
                 <FormikControl
                   control="input"
                   label="title"
@@ -503,130 +586,211 @@ const ListSyllabusScreen = ({ history, match }) => {
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setCreateModal(false)}>
-            Cancel
-          </Button>
-        </Modal.Footer>
       </Modal>
 
-      {/* <Modal
+      <Modal
         show={editModal}
         onHide={() => {
           setEditModal(false);
-          setEditDescription(false);
         }}
       >
         <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit event</Modal.Title>
+          <Modal.Title>Edit Training Video</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {event && (
-            <>
-              <img src={`${image}`} alt="" />
-              <UploadImage
-                img={event.image}
-                type={"Event"}
-                id={event._id}
-                singleImageData={singleImageData}
-              />
-              <p className="text-center">
-                Recommended aspect ratio: 5:3. Image will be cropped to fit
-              </p>
-            </>
-          )}
-
           <Formik
             initialValues={editInitialValues}
             validationSchema={validationSchema}
-            onSubmit={editEventHandler}
+            onSubmit={editTrainingVideoHandler}
           >
             {({ values }) => (
               <Form>
                 <FormikControl
                   control="input"
-                  label="Title"
+                  label="title"
                   type="text"
                   name="title"
-                  placeholder="Event Title"
+                  placeholder="Training Video Title"
                 />
 
                 <FormikControl
                   control="input"
-                  label="Date of Event"
-                  type="date"
-                  name="dateOfEvent"
-                />
-                <FormikControl
-                  control="input"
-                  label="Location"
+                  label="link to image"
                   type="text"
-                  name="location"
-                  placeholder="Location Address and Post Code"
+                  name="img"
+                  placeholder="Image ID number"
+                />
+                <FormikControl
+                  control="input"
+                  label="link to video"
+                  type="text"
+                  name="video"
+                  placeholder="Video Link"
+                />
+                <FormikControl
+                  control="input"
+                  label="link to sound"
+                  type="text"
+                  name="soundFile"
+                  placeholder="Sound ID number"
                 />
 
-                <h3>Description</h3>
+                <FormikControl
+                  control="select"
+                  label="Category"
+                  name="category"
+                  options={categoryOptions}
+                />
 
-                {!editDescription && (
-                  <>
-                    {paragraphs &&
-                      paragraphs.map((paragraph) => (
-                        <p
-                          key={`${paragraph}${Math.random()}`}
-                          className="mb-2 "
-                        >
-                          {paragraph}
-                          <br />
-                        </p>
-                      ))}
+                <FormikControl
+                  control="checkbox"
+                  label="Grade Level"
+                  name="grade"
+                  options={gradeOptions}
+                />
 
-                    <Button
-                      onClick={() => setEditDescription(true)}
-                      className="mb-4 btn-sm"
-                    >
-                      Edit Description?
-                    </Button>
-                  </>
-                )}
-                {editDescription && (
-                  <>
-                    <FormikControl
-                      control="input"
-                      as="textarea"
-                      label="Please provide a description"
-                      name="description"
-                      placeholder="Please enter a new description..."
-                      rows="10"
-                    />
-                    <Button
-                      onClick={() => setEditDescription(false)}
-                      variant="danger"
-                      className="mb-2 btn-sm"
-                    >
-                      Cancel Edit Description?
-                    </Button>
-                  </>
-                )}
-
-                <Button type="submit" className="btn-block btn-warning">
+                <button type="submit" className="btn btn-block btn-default">
                   Update
-                </Button>
+                </button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
+      </Modal>
+
+      <Modal show={syllabusModal} onHide={() => setSyllabusModal(false)}>
+        <Modal.Header closeButton className="bg-secondary text-white">
+          <Modal.Title>Syllabus</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {kihonVideos.length !== 0 && <h5 className="text-center">Kihon</h5>}
+          <ListGroup>
+            {kihonVideos &&
+              kihonVideos.map((video) => (
+                <ListGroup.Item
+                  variant="light"
+                  className="d-flex justify-content-between align-items-start text-dark"
+                >
+                  {video.title}
+                  <button
+                    className="btn-default"
+                    onClick={() => {
+                      setVideoModal(true);
+                      setVideoModalId(video.video);
+                    }}
+                  >
+                    View Video
+                  </button>
+                </ListGroup.Item>
+              ))}
+          </ListGroup>
+
+          {kihonKumiteVideos.length !== 0 && (
+            <h5 className="mt-3 text-center">Kihon Kumite</h5>
+          )}
+          <ListGroup>
+            {kihonKumiteVideos &&
+              kihonKumiteVideos.map((video) => (
+                <>
+                  {video.category === "Kihon Kumite" && (
+                    <ListGroup.Item
+                      variant="light"
+                      className="text-dark d-flex justify-content-between align-items-start"
+                    >
+                      {video.title}
+                      <button
+                        className="btn-default"
+                        onClick={() => {
+                          setVideoModal(true);
+                          setVideoModalId(video.video);
+                        }}
+                      >
+                        View Video
+                      </button>
+                    </ListGroup.Item>
+                  )}
+                </>
+              ))}
+          </ListGroup>
+
+          {shobuKumiteVideos.length !== 0 && (
+            <h5 className="mt-3 text-center">Shobu Kumite</h5>
+          )}
+          <ListGroup>
+            {shobuKumiteVideos &&
+              shobuKumiteVideos.map((video) => (
+                <>
+                  {video.category === "Shobu Kumite" && (
+                    <ListGroup.Item
+                      variant="light"
+                      className="text-dark d-flex justify-content-between align-items-start"
+                    >
+                      {video.title}
+                      <button
+                        className="btn-default"
+                        onClick={() => {
+                          setVideoModal(true);
+                          setVideoModalId(video.video);
+                        }}
+                      >
+                        View Video
+                      </button>
+                    </ListGroup.Item>
+                  )}
+                </>
+              ))}
+          </ListGroup>
+
+          {kataVideos.length !== 0 && (
+            <h5 className="mt-3 text-center">Kata</h5>
+          )}
+          <ListGroup>
+            {kataVideos &&
+              kataVideos.map((video) => (
+                <>
+                  {video.category === "Kata" && (
+                    <ListGroup.Item
+                      variant="light"
+                      className="text-dark d-flex justify-content-between align-items-start"
+                    >
+                      {video.title}
+                      <button
+                        className="btn-default"
+                        onClick={() => {
+                          setVideoModal(true);
+                          setVideoModalId(video.video);
+                        }}
+                      >
+                        View Video
+                      </button>
+                    </ListGroup.Item>
+                  )}
+                </>
+              ))}
+          </ListGroup>
+        </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setEditModal(false);
-              setEditDescription(false);
-            }}
-          >
-            Cancel
+          <Button variant="secondary" onClick={() => setSyllabusModal(false)}>
+            Close
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
+
+      <Modal show={videoModal} onHide={() => setVideoModal(false)}>
+        <Modal.Header
+          closeButton
+          className="text-white bg-light"
+        ></Modal.Header>
+        <div>
+          <iframe
+            src={videoModalId}
+            width="100%"
+            height="400"
+            allow="autoplay"
+            title={videoModalId}
+          ></iframe>
+        </div>
+      </Modal>
     </Container>
   );
 };

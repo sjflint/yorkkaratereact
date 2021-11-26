@@ -124,8 +124,8 @@ const ListEventsScreen = ({ history, match }) => {
   // Dropdown options for register
   const dropdownOptions = [
     { key: "Please select a method to register", value: "" },
-    { key: "Grading", value: `/grading?` },
-    { key: "Squad Selection", value: "/squadselection?" },
+    { key: "Grading", value: `/grading` },
+    { key: "Squad Selection", value: "/squadselection" },
     { key: "Email York Karate", value: "mailto:info@yorkkarate.net" },
     {
       key: "Email Welfare Committee",
@@ -188,9 +188,22 @@ const ListEventsScreen = ({ history, match }) => {
 
   return (
     <Container fluid="lg">
-      <Link className="btn btn-dark" to="/admin">
-        <i className="fas fa-arrow-left"></i> Return
-      </Link>
+      <div className="d-flex justify-content-between">
+        <Link className="btn btn-dark" to="/admin">
+          <i className="fas fa-arrow-left"></i> Return
+        </Link>
+        <div className="text-center">
+          <Button
+            className="btn-primary"
+            onClick={() => {
+              setCreateModal(true);
+              setImage(imagePlaceholder);
+            }}
+          >
+            <i className="fas fa-plus"></i> Create Event
+          </Button>
+        </div>
+      </div>
       {loadingDelete && <Loader variant="warning" />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loadingCreate && <Loader variant="warning" />}
@@ -296,18 +309,6 @@ const ListEventsScreen = ({ history, match }) => {
               ))}
             </tbody>
           </Table>
-
-          <div className="text-center">
-            <Button
-              className="btn-warning"
-              onClick={() => {
-                setCreateModal(true);
-                setImage(imagePlaceholder);
-              }}
-            >
-              <i className="fas fa-plus"></i> Create Event
-            </Button>
-          </div>
         </>
       )}
 

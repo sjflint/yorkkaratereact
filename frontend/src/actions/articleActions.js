@@ -92,7 +92,6 @@ export const deleteArticle = (id) => async (dispatch, getState) => {
 };
 
 export const createArticle = (values) => async (dispatch, getState) => {
-  console.log(values);
   try {
     dispatch({
       type: ARTICLE_CREATE_REQUEST,

@@ -15,6 +15,9 @@ import orderRoutes from "./routes/orderRoutes.js";
 import trainingVideosRoutes from "./routes/trainingVideosRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import lessonPlanRoutes from "./routes/lessonPlanRoutes.js";
+import gradingRoutes from "./routes/gradingRoutes.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -23,6 +26,7 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+app.use(cors()); //Delete this before production!!!
 
 app.get("/", (req, res) => {
   res.send("API is running...");
@@ -39,6 +43,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/lessonplans", lessonPlanRoutes);
+app.use("/api/grading", gradingRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

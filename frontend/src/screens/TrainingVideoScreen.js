@@ -105,6 +105,7 @@ const TrainingVideoScreen = ({ match }) => {
                   width="100%"
                   height="400"
                   allow="autoplay"
+                  title={video._id}
                 ></iframe>
               </div>
               <div className="bg-primary px-3 py-1 text-white">

@@ -2,7 +2,7 @@ import path from "path";
 import express from "express";
 import multer from "multer";
 import Member from "../models/memberModel.cjs";
-import Event from "../models/eventModel.js";
+import Event from "../models/eventModel.cjs";
 import Product from "../models/productModel.js";
 import Article from "../models/articleModel.js";
 import sharp from "sharp";

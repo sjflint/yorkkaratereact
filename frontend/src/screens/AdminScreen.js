@@ -146,9 +146,7 @@ const AdminScreen = ({ history }) => {
               <Link to="/instructor/editsyllabus">
                 <Card>
                   <Card.Img variant="top" src={syllabusImg} className="p-3" />
-                  <Card.Footer className="text-center">
-                    Syllabus (Incomplete)
-                  </Card.Footer>
+                  <Card.Footer className="text-center">Syllabus</Card.Footer>
                 </Card>
               </Link>
             </Col>
@@ -158,7 +156,7 @@ const AdminScreen = ({ history }) => {
                 <Card>
                   <Card.Img variant="top" src={lessonplanImg} className="p-3" />
                   <Card.Footer className="text-center">
-                    Lesson Plans (Incomplete)
+                    Lesson Plans
                   </Card.Footer>
                 </Card>
               </Link>

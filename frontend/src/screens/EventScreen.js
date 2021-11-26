@@ -48,7 +48,16 @@ const EventScreen = ({ match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item>Location: {event.location}</ListGroup.Item>
                 <ListGroup.Item>Event added by: {event.author}</ListGroup.Item>
-                {event.register && (
+                {event.register === "/grading" ||
+                event.register === "/squadselection" ? (
+                  <ListGroup.Item>
+                    <a href={`${event.register}/${event._id}`} rel="noreferrer">
+                      <Button variant="warning" className="btn-block">
+                        Register
+                      </Button>
+                    </a>
+                  </ListGroup.Item>
+                ) : (
                   <ListGroup.Item>
                     <a href={event.register} target="_blank" rel="noreferrer">
                       <Button variant="warning" className="btn-block">
