@@ -13,7 +13,6 @@ import { EVENT_CREATE_RESET } from "../constants/eventConstants";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import * as Yup from "yup";
-
 import { Formik, Form } from "formik";
 import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
@@ -66,20 +65,14 @@ const ListEventsScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch({ type: EVENT_CREATE_RESET });
-
-    if (!memberInfo.isAdmin) {
+    if (!memberInfo) {
       history.push("/login");
+    } else if (!member.isAdmin) {
+      history.push("/profile");
     } else {
       dispatch(listEvents());
     }
-  }, [
-    dispatch,
-    history,
-    memberInfo,
-    successDelete,
-    successCreate,
-    successUpdate,
-  ]);
+  }, [dispatch, history, member, successDelete, successCreate, successUpdate]);
 
   const deleteHandler = async () => {
     dispatch(deleteEvent(deleteId));
@@ -227,7 +220,7 @@ const ListEventsScreen = ({ history, match }) => {
                 <th></th>
                 <th>Title</th>
                 <th>Date of Event</th>
-                <th>Edit</th>
+                <th>View</th>
               </tr>
             </thead>
             <tbody>
@@ -413,6 +406,7 @@ const ListEventsScreen = ({ history, match }) => {
         <Modal.Body>
           {event && (
             <>
+              {console.log(event.image)}
               <img src={`${image}`} alt="" />
               <UploadImage
                 img={event.image}

@@ -10,7 +10,7 @@ const getTrainingSessions = asyncHandler(async (req, res) => {
   const trainingSessions = await TrainingSession.find({})
     .populate("participants", "id firstName lastName email phone")
     .sort({
-      _id: 1,
+      times: 1,
     });
   res.json(trainingSessions);
 });

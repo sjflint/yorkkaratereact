@@ -14,6 +14,10 @@ const ListMembersScreen = ({ history }) => {
   const dispatch = useDispatch();
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
+
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
   const activeMembers = [];
 
   const listMembers = useSelector((state) => state.listMembers);
@@ -30,13 +34,13 @@ const ListMembersScreen = ({ history }) => {
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push("/login");
-    } else if (!memberInfo.isAdmin) {
-      history.push("/");
+      history.push("/login?redirect=/profile");
+    } else if (!member.isAdmin) {
+      history.push("/profile");
     } else {
       dispatch(membersList());
     }
-  }, [dispatch, history, memberInfo]);
+  }, [dispatch, history, memberInfo, member]);
 
   const deleteHandler = async () => {
     dispatch(deleteMember(deleteId));

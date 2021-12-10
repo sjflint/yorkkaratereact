@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Event from "../components/Event";
@@ -17,9 +17,16 @@ const EventsScreen = () => {
     dispatch(listEvents());
   }, [dispatch]);
 
+  const today = Date.parse(new Date());
+
+  const filteredEvents = events.filter((event) => {
+    const eventDate = Date.parse(event.dateOfEvent);
+    return eventDate > today;
+  });
+
   return (
     <>
-      <Container>
+      <Container fluid="lg">
         <h3 className="text-center border-bottom border-warning pb-1">
           Upcoming Events
         </h3>
@@ -30,13 +37,12 @@ const EventsScreen = () => {
             {error}
           </Message>
         ) : (
-          <Row>
-            {events.map((event) => (
-              <Col md={6} key={event._id} className="mb-4">
-                <Event event={event} />
-              </Col>
-            ))}
-          </Row>
+          filteredEvents.map((event) => (
+            <div className="mb-2" key={event._id}>
+              {console.log(Date.parse(event.dateOfEvent))}
+              <Event event={event} />
+            </div>
+          ))
         )}
       </Container>
     </>

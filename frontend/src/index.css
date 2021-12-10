@@ -1,3 +1,14 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .btn-default {
   background-color: #f57231;
   color: #fff;
@@ -142,6 +153,15 @@ td {
 
 .pointer {
   cursor: pointer;
+}
+
+.light-link {
+  color: blue;
+}
+
+.light-link:hover {
+  color: blue;
+  text-decoration: underline;
 }
 
 @media (max-width: 1100px) {

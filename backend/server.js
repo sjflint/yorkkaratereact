@@ -18,6 +18,7 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import lessonPlanRoutes from "./routes/lessonPlanRoutes.js";
 import gradingRoutes from "./routes/gradingRoutes.js";
 import cors from "cors";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -27,6 +28,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cors()); //Delete this before production!!!
+
+mongoose.set("useFindAndModify", false);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

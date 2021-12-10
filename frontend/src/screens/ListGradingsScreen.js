@@ -1,0 +1,108 @@
+import { useState, useEffect } from "react";
+import { Container, Table, Button, Modal, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { listEvents, listEvent } from "../actions/eventActions";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+
+const ListGradingsScreen = ({ history }) => {
+  const dispatch = useDispatch();
+
+  const memberLogin = useSelector((state) => state.memberLogin);
+  const { memberInfo } = memberLogin;
+
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
+  const eventList = useSelector((state) => state.eventList);
+  const { loading, error, events } = eventList;
+
+  const displayEvent = useSelector((state) => state.displayEvent);
+  const { error: eventError, event } = displayEvent;
+
+  let filteredEvents = [];
+  if (events) {
+    filteredEvents = events.filter((event) => event.register === "/grading");
+  }
+
+  useEffect(() => {
+    if (!memberInfo) {
+      history.push(`/login`);
+    } else if (!member.isInstructor) {
+      history.push("/profile");
+    } else {
+      dispatch(listEvents());
+    }
+  }, [dispatch, history, memberInfo, member]);
+
+  return (
+    <Container fluid="lg">
+      <div className="d-flex justify-content-between">
+        <Link className="btn btn-dark" to="/admin">
+          <i className="fas fa-arrow-left"></i> Return
+        </Link>
+      </div>
+
+      {loading ? (
+        <Loader variant="warning" />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <>
+          <h3 className="text-center border-bottom border-warning pb-1">
+            Grading Courses
+          </h3>
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr className="text-center">
+                <th></th>
+                <th>Title</th>
+                <th>Date of Event</th>
+                <th>Number of Participants</th>
+                <th>View</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredEvents.map((event) => (
+                <tr key={event._id}>
+                  <td
+                    style={{ maxWidth: "80px" }}
+                    className="text-center align-middle"
+                  >
+                    <img
+                      src={event.image}
+                      alt="grading course"
+                      max-width="80"
+                    />
+                  </td>
+                  <td className="text-center align-middle">{event.title}</td>
+                  <td className="text-center align-middle">
+                    {new Date(event.dateOfEvent).toLocaleDateString()}
+                  </td>
+                  <td className="text-center align-middle">
+                    {event.participants.length}
+                  </td>
+                  <td className="text-center align-middle">
+                    <a href={`/gradingdetails/${event._id}`}>
+                      <Button variant="light" className="btn btn-block p-1 m-1">
+                        <i
+                          className="fa-solid fa-eye"
+                          style={{ color: "orange" }}
+                        ></i>{" "}
+                        <br />
+                        View Grading
+                      </Button>
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </>
+      )}
+    </Container>
+  );
+};
+
+export default ListGradingsScreen;

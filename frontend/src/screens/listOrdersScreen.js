@@ -16,18 +16,21 @@ const ListOrdersScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders } = orderList;
 
   useEffect(() => {
     if (!memberInfo) {
       history.push("/login");
-    } else if (!memberInfo.isShopAdmin) {
-      history.push("/");
+    } else if (!member.isShopAdmin) {
+      history.push("/profile");
     } else {
       dispatch(listOrders());
     }
-  }, [dispatch, history, memberInfo]);
+  }, [dispatch, history, memberInfo, member]);
 
   let filteredOrders = null;
   if (orders) {

@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Image, ListGroup, Modal } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Image,
+  ListGroup,
+  Modal,
+  Row,
+} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { listEvent } from "../actions/eventActions";
 import { getMemberDetails } from "../actions/memberActions";
@@ -8,10 +16,15 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import axios from "axios";
 import logo from "../img/logo2021.png";
+import jksLicense from "../img/jkslicense.png";
+import insideJksLicense from "../img/insidelicense.png";
+import { updateProfile } from "../actions/memberActions";
 
 const GradingRegistrationScreen = ({ history, match }) => {
   const [applicationError, setApplicationError] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [jksModal, setJksModal] = useState(false);
+  const [value, setValue] = useState("");
 
   const dispatch = useDispatch();
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -30,6 +43,12 @@ const GradingRegistrationScreen = ({ history, match }) => {
       dispatch(getMemberDetails(memberInfo._id));
     }
     dispatch(listEvent(match.params.id));
+
+    if (member.licenseNumber) {
+      setJksModal(false);
+    } else {
+      setJksModal(true);
+    }
   }, [dispatch, match, history, member, memberInfo]);
 
   let numberMarker;
@@ -96,6 +115,15 @@ const GradingRegistrationScreen = ({ history, match }) => {
     applicationSuccess = true;
   }
 
+  const updateLicenseNumber = async () => {
+    const values = {
+      memberId: member._id,
+      licenseNumber: value,
+    };
+    await dispatch(updateProfile(values));
+    await dispatch(getMemberDetails(memberInfo._id));
+  };
+
   return (
     <Container>
       {loadingEvent ? (
@@ -152,6 +180,13 @@ const GradingRegistrationScreen = ({ history, match }) => {
                   <ListGroup.Item variant="success" className="text-center">
                     You have applied for this grading course!
                   </ListGroup.Item>
+                ) : !member.licenseNumber ? (
+                  <ListGroup.Item variant="danger" className="text-center">
+                    <Button variant="danger" onClick={() => setJksModal(true)}>
+                      You are unable to register as we are missing your license
+                      number. Click here to add the license number.
+                    </Button>
+                  </ListGroup.Item>
                 ) : (
                   <ListGroup.Item>
                     <Button
@@ -198,6 +233,108 @@ const GradingRegistrationScreen = ({ history, match }) => {
           >
             Apply Now
           </button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={jksModal}
+        onHide={() => {
+          setJksModal(false);
+        }}
+      >
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title>Add JKS Number to your profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-light text-dark text-center">
+          <p className="text-center">
+            We are missing your JKS England License number.
+          </p>
+          <Row className="mb-4 pb-2 align-items-center border-bottom border-warning">
+            <Col>
+              <img src="/img/logojapan-1.png" alt="jks-logo" />
+            </Col>
+            <Col>
+              <ListGroup>
+                <ListGroup.Item variant="light">
+                  Apply for a JKS England license via their website:
+                </ListGroup.Item>
+                <ListGroup.Item variant="secondary">
+                  Visit:{" "}
+                  <a
+                    href="https://www.jksengland.com/members"
+                    target="_blank"
+                    className="light-link"
+                    rel="noreferrer"
+                  >
+                    www.jksengland.com
+                  </a>
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+          <Row className="mb-4 align-items-center pb-2 border-bottom border-warning">
+            <Col>
+              <img src={jksLicense} alt="jks-license-book" />
+            </Col>
+            <Col>
+              <ListGroup>
+                <ListGroup.Item variant="light">
+                  Wait for the postman...
+                </ListGroup.Item>
+                <ListGroup.Item variant="secondary">
+                  Your new license book will be sent to you through the post.
+                  Usually, this happens in 2 - 3 weeks.
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+          <Row className="mb-4 align-items-center pb-2 border-bottom border-warning">
+            <Col xs={6}>
+              <img src={insideJksLicense} alt="jks-license-book" />
+            </Col>
+            <Col xs={6}>
+              <ListGroup>
+                <ListGroup.Item variant="light">
+                  Find your license number near the front of the license book
+                  and enter it below.
+                </ListGroup.Item>
+                <ListGroup.Item variant="secondary">
+                  <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="License number"
+                    className="w-75 text-center"
+                  />
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          {value !== "" && value.length > 2 && value.length < 6 ? (
+            <button
+              className="btn btn-default"
+              onClick={(e) => {
+                updateLicenseNumber();
+                setJksModal(false);
+              }}
+            >
+              Save number
+            </button>
+          ) : (
+            <button className="btn btn-primary" disabled>
+              Save number
+            </button>
+          )}
+
+          <Button
+            variant="secondary"
+            onClick={(e) => {
+              setJksModal(false);
+            }}
+          >
+            Cancel
+          </Button>
         </Modal.Footer>
       </Modal>
     </Container>

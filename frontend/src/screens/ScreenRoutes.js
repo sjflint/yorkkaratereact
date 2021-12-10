@@ -40,6 +40,8 @@ import ListClassesScreen from "./ListClassesScreen";
 import ListSyllabusScreen from "./ListSyllabusScreen";
 import ListLessonPlanScreen from "./ListLessonPlanScreen";
 import GradingRegistrationScreen from "./GradingRegistrationScreen";
+import ListGradingsScreen from "./ListGradingsScreen";
+import GradingScreen from "./GradingScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -91,10 +93,12 @@ const ScreenRoutes = () => {
       <Route path="/admin/editclasses" component={ListClassesScreen} />
       <Route path="/instructor/editsyllabus" component={ListSyllabusScreen} />
       <Route path="/grading/:id" component={GradingRegistrationScreen} />
+      <Route path="/gradingdetails/:id" component={GradingScreen} />
       <Route
         path="/instructor/editlessonplans"
         component={ListLessonPlanScreen}
       />
+      <Route path="/instructor/editgradings" component={ListGradingsScreen} />
     </>
   );
 };

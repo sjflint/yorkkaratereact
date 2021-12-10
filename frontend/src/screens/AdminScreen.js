@@ -19,10 +19,13 @@ const AdminScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
   useEffect(() => {
-    if (!memberInfo) {
+    if (memberInfo === null) {
       history.push("/login");
-    } else if (!memberInfo.isAdmin) {
+    } else if (member && !member.isAdmin) {
       history.push("/");
     }
   }, [history, memberInfo]);
@@ -33,10 +36,11 @@ const AdminScreen = ({ history }) => {
         Administration Panel
       </h3>
       <h5 className="my-3">
-        Hello {memberInfo.firstName}. What do you need to do today?
+        Hello {member.isAdmin && memberInfo.firstName}. What do you need to do
+        today?
       </h5>
 
-      {memberInfo.isAdmin && (
+      {member.isAdmin && (
         <>
           <h5 className="text-white mb-2 border-bottom border-warning">
             Admin

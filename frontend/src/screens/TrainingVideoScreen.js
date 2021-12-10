@@ -114,7 +114,10 @@ const TrainingVideoScreen = ({ match }) => {
                   Category <br /> {video.category}
                   <br />
                   Kyu grade level -{" "}
-                  {video.grade && video.grade.map((grade) => `${grade}, `)}
+                  {video.grade &&
+                    video.grade.map((grade) => (
+                      <div key={grade}>{`${grade}, `}</div>
+                    ))}
                 </small>
               </div>
               {volume === "stop" ? (
@@ -161,7 +164,7 @@ const TrainingVideoScreen = ({ match }) => {
               )}
 
               {filteredVideos.map((trainingVideo) => (
-                <Row className="mb-3 no-gutters">
+                <Row className="mb-3 no-gutters" key={trainingVideo._id}>
                   <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
                     <Link to={`/trainingvideos/${trainingVideo._id}`}>
                       <img src={trainingVideo.img} alt="" />

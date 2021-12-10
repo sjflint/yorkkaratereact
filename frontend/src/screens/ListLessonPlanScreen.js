@@ -46,6 +46,9 @@ const ListLessonPlanScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
   const lessonPlanList = useSelector((state) => state.lessonPlanList);
   const { loading, error, lessonPlans } = lessonPlanList;
 
@@ -74,9 +77,10 @@ const ListLessonPlanScreen = ({ history }) => {
 
   useEffect(() => {
     dispatch({ type: LESSON_PLAN_CREATE_RESET });
-
-    if (!memberInfo.isInstructor) {
+    if (!memberInfo) {
       history.push("/login");
+    } else if (!member.isInstructor) {
+      history.push("/profile");
     } else {
       dispatch(listLessonPlans());
       dispatch(listTrainingVideos());
@@ -85,6 +89,7 @@ const ListLessonPlanScreen = ({ history }) => {
     dispatch,
     history,
     memberInfo,
+    member,
     successDelete,
     successCreate,
     successUpdate,

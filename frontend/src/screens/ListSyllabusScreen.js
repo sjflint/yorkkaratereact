@@ -60,6 +60,9 @@ const ListSyllabusScreen = ({ history, match }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
   const trainingVideoList = useSelector((state) => state.trainingVideoList);
   const { loading, error, trainingVideos } = trainingVideoList;
 
@@ -87,9 +90,10 @@ const ListSyllabusScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch({ type: TRAINING_VIDEO_CREATE_RESET });
-
-    if (!memberInfo.isInstructor) {
+    if (!memberInfo) {
       history.push("/login");
+    } else if (!member.isInstructor) {
+      history.push("/profile");
     } else {
       dispatch(listTrainingVideos());
     }
@@ -427,7 +431,9 @@ const ListSyllabusScreen = ({ history, match }) => {
                     onChange={(e) => setGrade(e.target.value)}
                   >
                     {dropdownOptions.map((option) => (
-                      <option value={option.value}>{option.key}</option>
+                      <option value={option.value} key={option.key}>
+                        {option.key}
+                      </option>
                     ))}
                   </FormControl>
                 </th>
@@ -443,9 +449,9 @@ const ListSyllabusScreen = ({ history, match }) => {
                 <tr key={trainingVideo._id}>
                   <td className="align-middle">
                     {trainingVideo.grade.map((grade) => (
-                      <>
+                      <div key={grade}>
                         <small>{grade}, </small>
-                      </>
+                      </div>
                     ))}
                   </td>
                   <td className="align-middle">{trainingVideo.title}</td>
@@ -670,6 +676,7 @@ const ListSyllabusScreen = ({ history, match }) => {
                 <ListGroup.Item
                   variant="light"
                   className="d-flex justify-content-between align-items-start text-dark"
+                  key={video._id}
                 >
                   {video.title}
                   <button
@@ -691,7 +698,7 @@ const ListSyllabusScreen = ({ history, match }) => {
           <ListGroup>
             {kihonKumiteVideos &&
               kihonKumiteVideos.map((video) => (
-                <>
+                <div key={video._id}>
                   {video.category === "Kihon Kumite" && (
                     <ListGroup.Item
                       variant="light"
@@ -709,7 +716,7 @@ const ListSyllabusScreen = ({ history, match }) => {
                       </button>
                     </ListGroup.Item>
                   )}
-                </>
+                </div>
               ))}
           </ListGroup>
 
@@ -719,7 +726,7 @@ const ListSyllabusScreen = ({ history, match }) => {
           <ListGroup>
             {shobuKumiteVideos &&
               shobuKumiteVideos.map((video) => (
-                <>
+                <div key={video._id}>
                   {video.category === "Shobu Kumite" && (
                     <ListGroup.Item
                       variant="light"
@@ -737,7 +744,7 @@ const ListSyllabusScreen = ({ history, match }) => {
                       </button>
                     </ListGroup.Item>
                   )}
-                </>
+                </div>
               ))}
           </ListGroup>
 
@@ -747,7 +754,7 @@ const ListSyllabusScreen = ({ history, match }) => {
           <ListGroup>
             {kataVideos &&
               kataVideos.map((video) => (
-                <>
+                <div key={video._id}>
                   {video.category === "Kata" && (
                     <ListGroup.Item
                       variant="light"
@@ -765,7 +772,7 @@ const ListSyllabusScreen = ({ history, match }) => {
                       </button>
                     </ListGroup.Item>
                   )}
-                </>
+                </div>
               ))}
           </ListGroup>
         </Modal.Body>

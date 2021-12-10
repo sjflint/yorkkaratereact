@@ -1,38 +1,40 @@
 import { Link } from "react-router-dom";
-import { Button, Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import FormatDate from "./FormatDate";
 
 const Event = ({ event }) => {
   return (
-    <Card className=" mb-2 rounded h-100">
-      <Link to={`/event/${event._id}`}>
-        <Card.Img src={event.image} variant="top" />
-      </Link>
-      <Card.Body>
+    <Row className="p-2 rounded h-100 bg-primary">
+      <Col md={5}>
         <Link to={`/event/${event._id}`}>
-          <Card.Title as="div">
-            <strong>{event.title}</strong>
-          </Card.Title>
+          <img src={event.image} className="mb-2" alt="event" />
         </Link>
-        <Card.Text as="div">
-          <div className="my-3">
-            Date of Event: <FormatDate date={event.dateOfEvent} />
-          </div>
-          <div className="text-white">Event added by: {event.author}</div>
-          <div className="text-white">Location: {event.location}</div>
-          <small className="text-white">
-            Date added: <FormatDate date={event.dateCreated} />
-          </small>
-        </Card.Text>
-      </Card.Body>
-      <Card.Footer>
+      </Col>
+      <Col md={7}>
         <Link to={`/event/${event._id}`}>
-          <Button variant="warning" className="btn-block">
-            Further Info
-          </Button>
+          <Card>
+            <Card.Body>
+              <Card.Title>
+                <strong>{event.title}</strong>
+              </Card.Title>
+
+              <Card.Text as="div">
+                <div className="my-3">
+                  Date of Event: <FormatDate date={event.dateOfEvent} />
+                </div>
+                <div className="text-white">Event added by: {event.author}</div>
+                <div className="text-white">Location: {event.location}</div>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          <Card.Footer>
+            <small className="text-white">
+              Date added: <FormatDate date={event.dateCreated} />
+            </small>
+          </Card.Footer>
         </Link>
-      </Card.Footer>
-    </Card>
+      </Col>
+    </Row>
   );
 };
 

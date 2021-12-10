@@ -38,6 +38,9 @@ const ListClassesScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
+
   const trainingSessionsList = useSelector(
     (state) => state.trainingSessionsList
   );
@@ -74,8 +77,10 @@ const ListClassesScreen = ({ history }) => {
   } = trainingSessionCreate;
 
   useEffect(() => {
-    if (!memberInfo || !memberInfo.isAdmin) {
-      history.push("/login?redirect=admin/editclasses");
+    if (!memberInfo) {
+      history.push("/login");
+    } else if (!memberInfo.isAdmin) {
+      history.push("/profile");
     } else {
       dispatch(listTrainingSessions());
     }
@@ -83,6 +88,7 @@ const ListClassesScreen = ({ history }) => {
     dispatch,
     history,
     memberInfo,
+    member,
     successDelete,
     successCreate,
     successUpdate,
@@ -232,6 +238,21 @@ const ListClassesScreen = ({ history }) => {
     { key: "Black Belts", value: 0 },
   ];
 
+  const sorter = {
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
+    Sunday: 7,
+  };
+  const filteredSessions = trainingSessions.sort(function (a, b) {
+    let day1 = a.name.split(" ")[0];
+    let day2 = b.name.split(" ")[0];
+    return sorter[day1] - sorter[day2];
+  });
+
   return (
     <>
       <Container fluid="lg">
@@ -267,7 +288,7 @@ const ListClassesScreen = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {trainingSessions.map((trainingSession) => (
+            {filteredSessions.map((trainingSession) => (
               <tr key={trainingSession._id}>
                 <td>{trainingSession.name}</td>
                 <td style={{ maxWidth: "100px" }}>

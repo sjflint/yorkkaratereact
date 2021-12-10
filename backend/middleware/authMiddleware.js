@@ -15,6 +15,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       req.member = await Member.findById(decoded.id).select("-password");
+
       next();
     } catch (error) {
       console.error(error);
@@ -30,6 +31,7 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 const admin = (req, res, next) => {
+  console.log(req.member);
   if (req.member.isAdmin) {
     next();
   } else {

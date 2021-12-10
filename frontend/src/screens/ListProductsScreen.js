@@ -78,9 +78,10 @@ const ListProductsScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
-
-    if (!memberInfo.isShopAdmin) {
+    if (!memberInfo) {
       history.push("/login");
+    } else if (!member.isShopAdmin) {
+      history.push("/profile");
     } else {
       dispatch(listProducts());
     }
@@ -615,7 +616,7 @@ const ListProductsScreen = ({ history, match }) => {
               </h5>
               <form onSubmit={updateStock}>
                 {Object.keys(product.countInStock).map((stock) => (
-                  <FormGroup>
+                  <FormGroup key={product._id}>
                     <FormLabel>{stock}</FormLabel>
 
                     <FormControl

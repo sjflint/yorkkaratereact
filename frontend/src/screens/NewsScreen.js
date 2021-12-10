@@ -31,7 +31,7 @@ const NewsScreen = () => {
         ) : (
           <>
             {articles.map((article) => (
-              <div sm={12} md={6} lg={4} key={article._id} className="mb-2">
+              <div key={article._id} className="mb-2">
                 <Article article={article} />
               </div>
             ))}

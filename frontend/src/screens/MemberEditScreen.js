@@ -14,23 +14,44 @@ import { Link } from "react-router-dom";
 
 import UploadImage from "../components/uploadImage";
 
-const MemberEditScreen = ({ match }) => {
+const MemberEditScreen = ({ match, history }) => {
   const [showModal, setShowModal] = useState(false);
   const [gradingDate, setGradingDate] = useState();
   const [danGrade, setDanGrade] = useState();
 
   const dispatch = useDispatch();
 
+  const singleImageData = (singleImage) => {
+    setImage(singleImage);
+  };
+
   const memberId = match.params.id;
+
+  const memberLogin = useSelector((state) => state.memberLogin);
+  const { memberInfo } = memberLogin;
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { loading, error, member } = memberDetails;
+
+  const [image, setImage] = useState(member.profileImg);
 
   const memberEdit = useSelector((state) => state.memberEdit);
   const { success } = memberEdit;
 
   const memberClassList = useSelector((state) => state.memberClassList);
   const { loading: classListLoading, error: classListError } = memberClassList;
+
+  useEffect(() => {
+    dispatch({ type: EDIT_MEMBER_RESET });
+    if (!memberInfo) {
+      history.push("/login");
+    } else if (!memberInfo.isAdmin) {
+      history.push("/profile");
+    }
+
+    dispatch(getMemberDetails(memberId));
+    dispatch(listMemberClasses(memberId));
+  }, [dispatch, memberInfo]);
 
   const adminOptions = [
     {
@@ -132,12 +153,6 @@ const MemberEditScreen = ({ match }) => {
       ),
   });
 
-  useEffect(() => {
-    dispatch(getMemberDetails(memberId));
-    dispatch(listMemberClasses(memberId));
-    dispatch({ type: EDIT_MEMBER_RESET });
-  }, [dispatch, memberId]);
-
   const saveHandler = async (values) => {
     values.memberId = memberId;
     let numberMarker;
@@ -170,7 +185,8 @@ const MemberEditScreen = ({ match }) => {
       values.medicalStatus = true;
     }
 
-    dispatch(editMember(values));
+    await dispatch(editMember(values));
+    setTimeout(() => history.push("/admin/listmembers"), 2000);
   };
 
   return (
@@ -189,10 +205,12 @@ const MemberEditScreen = ({ match }) => {
           </h3>
 
           <div className="max-width-300 mx-auto mb-3">
+            <img src={`${image}`} alt="" />
             <UploadImage
-              img={member.profileImg}
+              img={member.image}
               type={"Profile"}
               id={member._id}
+              singleImageData={singleImageData}
             />
             <small className="text-center">
               Recommended aspect ratio: 1:1. Image will be cropped to fit <br />

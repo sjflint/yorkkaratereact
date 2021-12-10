@@ -31,11 +31,11 @@ const BasketScreen = ({ match, location, history }) => {
   const { basketItems } = basket;
 
   useEffect(() => {
-    if (productId) {
+    if (match.params.id) {
       dispatch(addToBasket(productId, qty, size, print));
       history.push(`/basket`);
     }
-  }, [dispatch, productId, qty, size, print, history]);
+  }, [dispatch, productId, qty, size, print, history, match.params.id]);
 
   const removeFromBasketHandler = (id) => {
     dispatch(removeFromBasket(id));

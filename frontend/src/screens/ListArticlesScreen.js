@@ -73,9 +73,10 @@ const ListArticlesScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch({ type: ARTICLE_CREATE_RESET });
-
-    if (!memberInfo.isAuthor) {
+    if (!memberInfo) {
       history.push("/login");
+    } else if (!member.isAuthor) {
+      history.push("/profile");
     } else {
       dispatch(listArticles());
     }
@@ -83,6 +84,7 @@ const ListArticlesScreen = ({ history, match }) => {
     dispatch,
     history,
     memberInfo,
+    member,
     successDelete,
     successCreate,
     successUpdate,
@@ -332,7 +334,7 @@ const ListArticlesScreen = ({ history, match }) => {
             buttonText="Add Image"
           />
           <p className="text-center">
-            Recommended aspect ratio: 5:3. Image will be cropped to fit
+            Recommended aspect ratio: 3:2. Image will be cropped to fit
           </p>
           <div className="bg-warning p-2 mb-2">
             <h5 className="text-center text-white">
@@ -440,7 +442,7 @@ const ListArticlesScreen = ({ history, match }) => {
                 buttonText="Add another image"
               />
               <p className="text-center">
-                Recommended aspect ratio: 5:3. Image will be cropped to fit
+                Recommended aspect ratio: 3:2. Image will be cropped to fit
               </p>
 
               <div className="bg-warning p-2 mb-2">

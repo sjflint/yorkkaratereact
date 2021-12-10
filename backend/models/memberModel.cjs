@@ -37,6 +37,8 @@ const memberSchema = mongoose.Schema(
     ddMandate: { type: String },
     subscriptionId: { type: String },
     trainingFees: { type: Number },
+    licenseNumber: { type: Number },
+    token: { type: String },
     lastClassChange: { type: Date, required: true, default: new Date(2000, 0) },
     profileImg: {
       type: String,

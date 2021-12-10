@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Image, ListGroup, Container, Button } from "react-bootstrap";
-import Event from "../components/Event";
 import FormatDate from "../components/FormatDate";
 import { listEvent } from "../actions/eventActions";
 import { listEvents } from "../actions/eventActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import EventSidebar from "../components/EventSidebar";
 
 const EventScreen = ({ match }) => {
   const dispatch = useDispatch();
@@ -98,7 +98,7 @@ const EventScreen = ({ match }) => {
           ) : (
             <div>
               {moreEvents.slice(0, 3).map((event) => (
-                <Event event={event} key={event._id} />
+                <EventSidebar event={event} key={event._id} />
               ))}
             </div>
           )}

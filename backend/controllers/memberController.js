@@ -41,7 +41,7 @@ const authMember = asyncHandler(async (req, res) => {
 const registerMember = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
-  console.log(values);
+  // create jws token to store in db
 
   const memberExists = await Member.findOne({ name: values.name });
 
@@ -56,6 +56,9 @@ const registerMember = asyncHandler(async (req, res) => {
     const session_token = member.name + member.email;
 
     const ddRedirect = await createDirectDebit(member, session_token);
+
+    member.token = generateToken(member._id);
+    member.save();
 
     res.status(201).json({
       _id: member._id,
@@ -137,6 +140,7 @@ const getMemberProfile = asyncHandler(async (req, res) => {
       ddsuccess: member.ddsuccess,
       kyuGrade: member.kyuGrade,
       danGrade: member.danGrade,
+      licenseNumber: member.licenseNumber,
     });
   } else {
     res.status(404);
@@ -172,7 +176,18 @@ const updateProfile = asyncHandler(async (req, res) => {
 
   const member = await Member.findById(values.memberId);
 
-  if (member) {
+  console.log(values.licenseNumber);
+
+  if (member && values.licenseNumber) {
+    await Member.findOneAndUpdate(
+      { _id: member._id },
+      {
+        licenseNumber: values.licenseNumber,
+      },
+      { new: true }
+    );
+    res.json("JKS Number updated");
+  } else if (member) {
     await Member.findOneAndUpdate(
       { _id: member._id },
       {
@@ -287,7 +302,7 @@ const deleteMember = asyncHandler(async (req, res) => {
 // @route GET /api/members/:id/edit
 // @access Private/Admin
 const getMemberById = asyncHandler(async (req, res) => {
-  const member = await Member.findById(req.params.id).select("-password");
+  const member = await Member.findById(req.params.id);
 
   if (member) {
     res.json(member);

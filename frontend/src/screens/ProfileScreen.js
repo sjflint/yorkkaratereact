@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { Button, Col, Container, Modal, Nav, Row, Tab } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  ListGroup,
+  Modal,
+  Nav,
+  Row,
+  Tab,
+} from "react-bootstrap";
 import MemberDetails from "../components/ProfileComponents/MemberDetails";
 import MemberOrders from "../components/ProfileComponents/MemberOrders";
 import MemberClasses from "../components/ProfileComponents/MemberClasses";
@@ -10,12 +19,17 @@ import MemberVideos from "../components/ProfileComponents/MemberVideos";
 import MemberEvents from "../components/ProfileComponents/MemberEvents";
 import ImgDDSuccess from "../img/ddsuccess.png";
 import UploadImage from "../components/uploadImage";
+import jksLicense from "../img/jkslicense.png";
+import insideJksLicense from "../img/insidelicense.png";
+import { updateProfile } from "../actions/memberActions";
 
 const ProfileScreen = ({ history, match }) => {
   const search = useLocation().search;
   // Check for dd success
   const [ddModal, setDDModal] = useState(false);
   const [profileImgModal, setProfileImgModal] = useState(false);
+  const [jksModal, setJksModal] = useState(false);
+  const [value, setValue] = useState("");
   const ddSuccess = new URLSearchParams(search).get("dd");
 
   const dispatch = useDispatch();
@@ -25,6 +39,11 @@ const ProfileScreen = ({ history, match }) => {
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { member } = memberDetails;
+
+  const [image, setImage] = useState();
+  const singleImageData = (singleImage) => {
+    setImage(singleImage);
+  };
 
   useEffect(() => {
     if (!memberInfo) {
@@ -41,6 +60,11 @@ const ProfileScreen = ({ history, match }) => {
     if (window.location.pathname.includes("ddsuccess")) {
       setDDModal(true);
       history.push("/profile");
+    }
+    if (!member.licenseNumber) {
+      setJksModal(true);
+    } else {
+      setJksModal(false);
     }
   }, [dispatch, history, memberInfo, member, ddSuccess]);
 
@@ -60,6 +84,14 @@ const ProfileScreen = ({ history, match }) => {
     window.history.replaceState("", "", `?key=${page}`);
   };
 
+  const updateLicenseNumber = () => {
+    const values = {
+      memberId: member._id,
+      licenseNumber: value,
+    };
+    dispatch(updateProfile(values));
+  };
+
   return (
     <>
       <Container fluid="lg" id="profile-container">
@@ -72,7 +104,10 @@ const ProfileScreen = ({ history, match }) => {
                     <img src={member.profileImg} alt="" className="rounded-0" />
                     <button
                       className="mb-2 btn btn-default rounded-0"
-                      onClick={() => setProfileImgModal(true)}
+                      onClick={() => {
+                        setProfileImgModal(true);
+                        setImage(member.profileImg);
+                      }}
                     >
                       Change Profile Picture
                     </button>
@@ -185,6 +220,108 @@ const ProfileScreen = ({ history, match }) => {
         </Tab.Container>
       </Container>
 
+      <Modal
+        show={jksModal}
+        onHide={() => {
+          setJksModal(false);
+        }}
+      >
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title>Add JKS Number to your profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-light text-dark text-center">
+          <p className="text-center">
+            We are missing your JKS England License number.
+          </p>
+          <Row className="mb-4 pb-2 align-items-center border-bottom border-warning">
+            <Col>
+              <img src="/img/logojapan-1.png" alt="jks-logo" />
+            </Col>
+            <Col>
+              <ListGroup>
+                <ListGroup.Item variant="light">
+                  Apply for a JKS England license via their website:
+                </ListGroup.Item>
+                <ListGroup.Item variant="secondary">
+                  Visit:{" "}
+                  <a
+                    href="https://www.jksengland.com/members"
+                    target="_blank"
+                    className="light-link"
+                  >
+                    www.jksengland.com
+                  </a>
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+          <Row className="mb-4 align-items-center pb-2 border-bottom border-warning">
+            <Col>
+              <img src={jksLicense} alt="jks-license-book" />
+            </Col>
+            <Col>
+              <ListGroup>
+                <ListGroup.Item variant="light">
+                  Wait for the postman...
+                </ListGroup.Item>
+                <ListGroup.Item variant="secondary">
+                  Your new license book will be sent to you through the post.
+                  Usually, this happens in 2 - 3 weeks.
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+          <Row className="mb-4 align-items-center pb-2 border-bottom border-warning">
+            <Col xs={6}>
+              <img src={insideJksLicense} alt="jks-license-book" />
+            </Col>
+            <Col xs={6}>
+              <ListGroup>
+                <ListGroup.Item variant="light">
+                  Find your license number near the front of the license book
+                  and enter it below.
+                </ListGroup.Item>
+                <ListGroup.Item variant="secondary">
+                  <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="License number"
+                    className="w-75 text-center"
+                  />
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          {value !== "" && value.length > 2 && value.length < 6 ? (
+            <button
+              className="btn btn-default"
+              onClick={(e) => {
+                updateLicenseNumber();
+                setJksModal(false);
+              }}
+            >
+              Save number
+            </button>
+          ) : (
+            <button className="btn btn-primary" disabled>
+              Save number
+            </button>
+          )}
+
+          <Button
+            variant="secondary"
+            onClick={(e) => {
+              setJksModal(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {/* DD Modal */}
       <Modal
         show={ddModal}
@@ -244,11 +381,17 @@ const ProfileScreen = ({ history, match }) => {
           <Modal.Title>Change Profile Image</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UploadImage
-            img={member.profileImg}
-            type={"Profile"}
-            id={member._id}
-          />
+          {member._id && (
+            <>
+              <img src={`${image}`} alt="" />
+              <UploadImage
+                img={member.profileImg}
+                id={member._id}
+                singleImageData={singleImageData}
+                type={"Profile"}
+              />
+            </>
+          )}
           <small className="text-center">
             Recommended aspect ratio: 1:1. Image will be cropped to fit <br />
             Please consider that this image might be displayed across the public

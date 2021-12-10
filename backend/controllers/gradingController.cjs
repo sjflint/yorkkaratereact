@@ -60,6 +60,8 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               grade: member.kyuGrade,
               email: member.email,
               phone: member.phone,
+              dateOfBirth: member.dateOfBirth,
+              licenseNumber: member.licenseNumber,
             });
             await gradingCourse.save();
             res.send("grading application successful!");
@@ -75,6 +77,21 @@ const postGradingApplication = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get grading details
+// @route GET /api/grading/:id
+// @access Private/Instructor
+const getGradingDetails = asyncHandler(async (req, res) => {
+  const grading = await Event.findById(req.params.id);
+
+  if (grading) {
+    res.json(grading);
+  } else {
+    res.status(404);
+    throw Error("Grading not found");
+  }
+});
+
 module.exports = {
   postGradingApplication,
+  getGradingDetails,
 };
