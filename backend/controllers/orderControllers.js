@@ -83,6 +83,24 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Update order to ready for collection
+// @route PUT /api/orders/:id/deliver
+// @access Private/shopAdmin
+const updateOrderToFulfilled = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.isComplete = true;
+    order.completeAt = Date.now();
+
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
 // @desc Get logged in user orders
 // @route GET /api/orders/myorders
 // @access Private
@@ -90,7 +108,8 @@ const getMyOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ member: req.member._id }).sort({
     createdAt: -1,
   });
-  res.json(orders);
+  const sortedOrders = orders.filter((order) => order.isComplete === false);
+  res.json(sortedOrders);
 });
 
 // @desc Get all orders
@@ -102,7 +121,8 @@ const getOrders = asyncHandler(async (req, res) => {
     .sort({
       createdAt: -1,
     });
-  res.json(orders);
+  const sortedOrders = orders.filter((order) => order.isComplete === false);
+  res.json(sortedOrders);
 });
 
 export {
@@ -112,4 +132,5 @@ export {
   getMyOrders,
   getOrders,
   updateOrderToDelivered,
+  updateOrderToFulfilled,
 };

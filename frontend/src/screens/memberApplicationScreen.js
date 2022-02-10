@@ -6,36 +6,38 @@ import templeIMG from "../img/temple.jpg";
 const memberApplicationScreen = () => {
   return (
     <Container>
-      <h3 className="text-center border-bottom border-warning pb-1 mb-5">
+      <h3 className="text-center border-bottom border-warning pb-1 mb-3">
         Before you apply...
       </h3>
-      <Row className="no-gutters text-center">
-        <Col md={5}>
-          <img src={templeIMG} alt="" />
+      <Row className="no-gutters text-center bg-primary align-items-center p-3">
+        <Col sm={5}>
+          <img src={templeIMG} alt="" className="max-width-300" />
         </Col>
-        <Col md={7} className="d-flex">
+        <Col sm={7} className="d-flex">
           <Card className="text-white bg-primary flex-fill">
             <Card.Header>Our Trial offer!</Card.Header>
             <Card.Body>
               <Card.Title className="border-bottom border-warning">
-                Contact us for your two session free trial
+                Contact us for your free trial session
               </Card.Title>
               <Card.Text>
                 Don't pay for anything until you try the class first. Contact us
-                to book two completely free taster sessions. No commitment.
+                to book a completely free taster session. No commitment.
               </Card.Text>
-              <Link to={"/contact"} className="btn btn-warning btn-block">
-                Book Your Trial sessions
+              <Link to={"/contact"} className="btn btn-default btn-block">
+                Book Your Trial session
               </Link>
-              <Card.Title className="mt-2 border-bottom border-warning">
+              <Card.Title className="mt-4 border-bottom border-warning">
                 Fees
               </Card.Title>
-              <Card.Text className="text-left">
-                <li>£15.00 annual membership</li>
-                <li>£21.50 p/m to train once a week</li>
-                <li>+£3.00 p/m for each additional class per week</li>
+              <Card.Text>
+                <ul className="list-unstyled">
+                  <li>£15.00 annual membership</li>
+                  <li>£21.50 p/m to train once a week</li>
+                  <li>+ £3.00 p/m for each additional class per week</li>
+                </ul>
               </Card.Text>
-              <Link to={"/register"} className="btn btn-warning btn-block">
+              <Link to={"/register"} className="btn btn-default btn-block">
                 Proceed with application
               </Link>
             </Card.Body>

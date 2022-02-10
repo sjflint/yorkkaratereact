@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { listEvents } from "../../actions/eventActions";
 import Loader from "../Loader";
 import Message from "../Message";
@@ -33,13 +32,9 @@ const MemberEvents = () => {
             Your Events
           </h2>
 
-          <Row>
-            {events.map((event) => (
-              <Col md={6} key={event._id}>
-                <Event event={event} />
-              </Col>
-            ))}
-          </Row>
+          {events.map((event) => (
+            <Event event={event} key={event._id} />
+          ))}
         </>
       )}
     </>

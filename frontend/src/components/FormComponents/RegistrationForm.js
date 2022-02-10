@@ -91,7 +91,8 @@ const RegistrationForm = () => {
       .notOneOf(
         [Yup.ref("email"), null],
         "Email cannot be the same as the applicant"
-      ),
+      )
+      .email(),
     emergencyContactPhone: Yup.string()
       .required("Required")
       .phone("GB", true)
@@ -117,12 +118,11 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = (values) => {
-    values.name = (values.firstName + values.lastName).toLowerCase().trim();
-    values.firstName =
-      values.firstName.charAt(0).toUpperCase() + values.firstName.slice(1);
-    values.lastName =
-      values.lastName.charAt(0).toUpperCase() + values.lastName.slice(1);
-    dispatch(register({ ...values }));
+    values.firstName = values.firstName.toLowerCase();
+    values.lastName = values.lastName.toLowerCase();
+    values.email = values.email.toLowerCase();
+
+    dispatch(register(values));
   };
 
   return (
@@ -316,7 +316,7 @@ const RegistrationForm = () => {
               </Col>
             </Row>
 
-            <Button type="submit" variant="warning btn-block">
+            <Button type="submit" variant="default btn-block">
               Register
             </Button>
           </Form>

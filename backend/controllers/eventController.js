@@ -6,7 +6,15 @@ import Event from "../models/eventModel.cjs";
 // @access Public
 const getEvents = asyncHandler(async (req, res) => {
   const events = await Event.find({}).sort({ dateOfEvent: 1 });
-  res.json(events);
+
+  const today = Date.parse(new Date());
+
+  const filteredEvents = events.filter((event) => {
+    const eventDate = Date.parse(event.dateOfEvent);
+    return eventDate > today;
+  });
+
+  res.json(filteredEvents);
 });
 
 // @desc Fetch single event

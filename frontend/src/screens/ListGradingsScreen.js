@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { Container, Table, Button, Modal, Row, Col } from "react-bootstrap";
+import { useEffect } from "react";
+import { Container, Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { listEvents, listEvent } from "../actions/eventActions";
+import { listEvents } from "../actions/eventActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
@@ -18,8 +18,8 @@ const ListGradingsScreen = ({ history }) => {
   const eventList = useSelector((state) => state.eventList);
   const { loading, error, events } = eventList;
 
-  const displayEvent = useSelector((state) => state.displayEvent);
-  const { error: eventError, event } = displayEvent;
+  // const displayEvent = useSelector((state) => state.displayEvent);
+  // const { error: eventError, event } = displayEvent;
 
   let filteredEvents = [];
   if (events) {

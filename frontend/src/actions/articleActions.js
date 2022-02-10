@@ -17,26 +17,30 @@ import {
   ARTICLE_UPDATE_FAIL,
 } from "../constants/articleConstants";
 
-export const listArticles = () => async (dispatch) => {
-  try {
-    dispatch({ type: ARTICLE_LIST_REQUEST });
+export const listArticles =
+  (pageNumber = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ARTICLE_LIST_REQUEST });
 
-    const { data } = await axios.get("/api/articles");
+      const { data } = await axios.get(
+        `/api/articles?pageNumber=${pageNumber}`
+      );
 
-    dispatch({
-      type: ARTICLE_LIST_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ARTICLE_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: ARTICLE_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ARTICLE_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const listArticle = (id) => async (dispatch) => {
   try {

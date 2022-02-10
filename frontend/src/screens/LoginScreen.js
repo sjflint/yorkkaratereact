@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -8,7 +8,9 @@ import FormContainer from "../components/FormContainer";
 import { login } from "../actions/memberActions";
 
 const LoginScreen = ({ location, history }) => {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
@@ -26,7 +28,13 @@ const LoginScreen = ({ location, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(name.toLowerCase().split(" ").join(""), password));
+    const values = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    };
+    dispatch(login(values));
   };
 
   return (
@@ -36,16 +44,34 @@ const LoginScreen = ({ location, history }) => {
       {error && <Message variant="danger">Incorrect Login details</Message>}
       {loading && <Loader variant="warning" />}
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId="name">
-          <Form.Label>Username</Form.Label>
+        <Form.Group controlId="firstName" className="mb-3">
+          <Form.Label>First Name</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter username"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="password">
+        <Form.Group controlId="lastName" className="mb-3">
+          <Form.Label>Last Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId="email" className="mb-3">
+          <Form.Label>email</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId="password" className="mb-3">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
@@ -55,16 +81,16 @@ const LoginScreen = ({ location, history }) => {
           ></Form.Control>
         </Form.Group>
 
-        <Button type="submit" variant="primary">
-          Sign In
-        </Button>
-      </Form>
+        <div className="d-flex justify-content-around">
+          <Button type="submit" variant="primary" className="px-5">
+            Sign In
+          </Button>
 
-      <Row className="py-3">
-        <Col>
-          <Link to={"/reset-account"}>Forgotten username or password?</Link>
-        </Col>
-      </Row>
+          <Link to={"/reset-account"}>
+            <Button variant="warning">Forgotten password?</Button>
+          </Link>
+        </div>
+      </Form>
     </FormContainer>
   );
 };

@@ -17,6 +17,7 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import lessonPlanRoutes from "./routes/lessonPlanRoutes.js";
 import gradingRoutes from "./routes/gradingRoutes.js";
+import { goCardlessWebhook } from "./utils/goCardlessWebhook.cjs";
 import cors from "cors";
 import mongoose from "mongoose";
 
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
+app.use("/", goCardlessWebhook);
 app.use("/api/articles", articleRoutes);
 app.use("/api/trainingvideos", trainingVideosRoutes);
 app.use("/api/members", memberRoutes);

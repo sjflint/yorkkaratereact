@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getMemberDetails } from "../actions/memberActions";
@@ -99,52 +99,55 @@ const TrainingVideoScreen = ({ match }) => {
             </Message>
           ) : (
             <>
-              <div>
-                <iframe
-                  src={video.video}
-                  width="100%"
-                  height="400"
-                  allow="autoplay"
-                  title={video._id}
-                ></iframe>
-              </div>
-              <div className="bg-primary px-3 py-1 text-white">
-                <h4 className="text-white">{video.title}</h4>
-                <small>
-                  Category <br /> {video.category}
-                  <br />
-                  Kyu grade level -{" "}
-                  {video.grade &&
-                    video.grade.map((grade) => (
-                      <div key={grade}>{`${grade}, `}</div>
-                    ))}
-                </small>
-              </div>
-              {volume === "stop" ? (
-                <>
-                  <div className="btn btn-light mt-2" onClick={playAudio}>
-                    <i className="fa-solid fa-play" style={{ color: "green" }}>
-                      {" "}
-                    </i>{" "}
-                    Pronunciation
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <div>
+                    <iframe
+                      src={video.video}
+                      width="100%"
+                      height="400"
+                      allow="autoplay"
+                      title={video._id}
+                    ></iframe>
                   </div>
-                </>
-              ) : (
-                <div className="btn btn-light mt-2" onClick={playAudio}>
-                  <i
-                    className="fa-solid fa-volume-high"
-                    style={{ color: "green" }}
-                  >
-                    {" "}
-                  </i>{" "}
-                  Pronunciation
-                </div>
-              )}
-              <audio
-                src={video.soundFile}
-                id="soundFile"
-                onEnded={() => setVolume("stop")}
-              ></audio>
+                </ListGroup.Item>
+                <ListGroup.Item variant="primary">
+                  <h4>{video.title}</h4>
+                </ListGroup.Item>
+                <ListGroup.Item variant="primary">
+                  <p className="m-0">Category - {video.category}</p>
+                </ListGroup.Item>
+                <ListGroup.Item variant="primary">
+                  {volume === "stop" ? (
+                    <>
+                      <div className="btn btn-light mt-2" onClick={playAudio}>
+                        <i
+                          className="fa-solid fa-play"
+                          style={{ color: "green" }}
+                        >
+                          {" "}
+                        </i>{" "}
+                        Pronunciation
+                      </div>
+                    </>
+                  ) : (
+                    <div className="btn btn-light mt-2" onClick={playAudio}>
+                      <i
+                        className="fa-solid fa-volume-high"
+                        style={{ color: "green" }}
+                      >
+                        {" "}
+                      </i>{" "}
+                      Pronunciation
+                    </div>
+                  )}
+                  <audio
+                    src={video.soundFile}
+                    id="soundFile"
+                    onEnded={() => setVolume("stop")}
+                  ></audio>
+                </ListGroup.Item>
+              </ListGroup>
             </>
           )}
         </Col>
@@ -158,32 +161,36 @@ const TrainingVideoScreen = ({ match }) => {
           ) : (
             <>
               {member.nameFirst && (
-                <h5 className="text-warning border-bottom border-warning">
+                <h5 className="border-bottom border-warning text-center">
                   Recommended Videos for {member.nameFirst}
                 </h5>
               )}
 
-              {filteredVideos.map((trainingVideo) => (
-                <Row className="mb-3 no-gutters" key={trainingVideo._id}>
-                  <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
-                    <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                      <img src={trainingVideo.img} alt="" />
-                    </Link>
-                  </Col>
+              <ListGroup variant="flush">
+                {filteredVideos.map((trainingVideo) => (
+                  <ListGroup.Item key={trainingVideo._id} variant="primary">
+                    <Row className="no-gutters align-items-center">
+                      <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
+                        <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                          <img src={trainingVideo.img} alt="" />
+                        </Link>
+                      </Col>
 
-                  <Col className="ml-2">
-                    <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                      <h5 className="mb-1 text-white">{trainingVideo.title}</h5>
-                    </Link>
-                    <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                      <small>
-                        <span className="text-white">Category</span> <br />{" "}
-                        {trainingVideo.category} <br />
-                      </small>
-                    </Link>
-                  </Col>
-                </Row>
-              ))}
+                      <Col className="ml-2">
+                        <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                          <h5 className="mb-1">{trainingVideo.title}</h5>
+                        </Link>
+                        <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                          <small>
+                            <span>Category</span> <br />{" "}
+                            {trainingVideo.category} <br />
+                          </small>
+                        </Link>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
             </>
           )}
         </Col>

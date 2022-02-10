@@ -31,8 +31,10 @@ const changeDirectDebit = async (session_token) => {
   let redirectFlow = await client.redirectFlows.create({
     description: "Update Direct Debit",
     session_token: session_token,
-    success_redirect_url: "http://localhost:3000/completeupdatedd",
+    success_redirect_url: `http://localhost:3000/completeupdatedd?token=${session_token}`,
   });
+
+  console.log(redirectFlow.id);
 
   return redirectFlow.id;
 };

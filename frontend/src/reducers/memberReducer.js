@@ -23,6 +23,9 @@ import {
   MEMBER_REGISTER_FAIL,
   MEMBER_REGISTER_REQUEST,
   MEMBER_REGISTER_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
   UPDATE_PASSWORD_FAIL,
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
@@ -111,12 +114,30 @@ export const updatePasswordReducer = (state = {}, action) => {
   }
 };
 
+export const resetPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case RESET_PASSWORD_REQUEST:
+      return { loading: true };
+    case RESET_PASSWORD_SUCCESS:
+      return { loading: false, success: true };
+    case RESET_PASSWORD_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 export const listMembersReducer = (state = { memberList: [] }, action) => {
   switch (action.type) {
     case LIST_MEMBERS_REQUEST:
       return { loading: true };
     case LIST_MEMBERS_SUCCESS:
-      return { loading: false, memberList: action.payload };
+      return {
+        loading: false,
+        memberList: action.payload.members,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      };
     case LIST_MEMBERS_FAIL:
       return { loading: false, error: action.payload };
     case LIST_MEMBERS_RESET:

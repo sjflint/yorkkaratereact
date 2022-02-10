@@ -8,7 +8,7 @@ const BeltCard = ({ grade, beltColor }) => {
           src={`/img/belt-${beltColor}.jpg`}
           className="rounded-0"
         />
-        <Card.Body className="bg-light text-primary">
+        <Card.Body>
           <Card.Title>{beltColor}</Card.Title>
           <Card.Text>{grade}</Card.Text>
         </Card.Body>

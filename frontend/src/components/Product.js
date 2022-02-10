@@ -8,7 +8,7 @@ const Product = ({ product }) => {
         <Card.Img src={product.image} variant="top" className="rounded" />
       </Link>
       <Card.Body>
-        <Link to={`/products/${product._id}`}>
+        <Link to={`/products/${product._id}`} className="text-decoration-none">
           <Card.Title as="div" className="text-warning">
             <strong>{product.name}</strong>
           </Card.Title>
@@ -17,9 +17,7 @@ const Product = ({ product }) => {
           <div className="my-3">{product.description}</div>
         </Card.Text>
       </Card.Body>
-      <Card.Footer className="text-white">
-        £{product.price.toFixed(2)}
-      </Card.Footer>
+      <Card.Footer>£{product.price.toFixed(2)}</Card.Footer>
     </Card>
   );
 };

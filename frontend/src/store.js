@@ -25,6 +25,7 @@ import {
   updatePasswordReducer,
   memberDeleteReducer,
   memberEditReducer,
+  resetPasswordReducer,
 } from "./reducers/memberReducer";
 import {
   productListReducer,
@@ -60,6 +61,7 @@ import {
   myOrderListReducer,
   orderListReducer,
   orderDeliverReducer,
+  orderFulfilReducer,
 } from "./reducers/orderReducers";
 import {
   cancelDirectDebitReducer,
@@ -102,6 +104,7 @@ const reducer = combineReducers({
   memberEdit: memberEditReducer,
   updateProfile: updateProfileReducer,
   updatePassword: updatePasswordReducer,
+  resetPassword: resetPasswordReducer,
   trainingSessionsList: listTrainingSessionsReducer,
   trainingSessionByID: trainingSessionByIdReducer,
   trainingSessionDelete: trainingSessionDeleteReducer,
@@ -128,6 +131,7 @@ const reducer = combineReducers({
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
+  orderFulfil: orderFulfilReducer,
   myOrderList: myOrderListReducer,
   orderList: orderListReducer,
   updateDirectDebit: updateDirectDebitReducer,

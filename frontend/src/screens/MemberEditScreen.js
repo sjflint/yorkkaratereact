@@ -33,13 +33,13 @@ const MemberEditScreen = ({ match, history }) => {
   const memberDetails = useSelector((state) => state.memberDetails);
   const { loading, error, member } = memberDetails;
 
-  const [image, setImage] = useState(member.profileImg);
-
   const memberEdit = useSelector((state) => state.memberEdit);
   const { success } = memberEdit;
 
   const memberClassList = useSelector((state) => state.memberClassList);
   const { loading: classListLoading, error: classListError } = memberClassList;
+
+  const [image, setImage] = useState("no image");
 
   useEffect(() => {
     dispatch({ type: EDIT_MEMBER_RESET });
@@ -48,10 +48,10 @@ const MemberEditScreen = ({ match, history }) => {
     } else if (!memberInfo.isAdmin) {
       history.push("/profile");
     }
-
     dispatch(getMemberDetails(memberId));
     dispatch(listMemberClasses(memberId));
-  }, [dispatch, memberInfo]);
+    setImage(member.profileImg);
+  }, [dispatch, memberInfo, history, memberId, member.profileImg]);
 
   const adminOptions = [
     {
@@ -170,6 +170,19 @@ const MemberEditScreen = ({ match, history }) => {
         numberMarker = "th";
     }
 
+    if (member) {
+      console.log(member.kyuGrade);
+      if (member.kyuGrade > 10) {
+        values.gradeLevel = "Junior";
+      } else if (member.kyuGrade > 6) {
+        values.gradeLevel = "Novice";
+      } else if (member.kyuGrade > 1) {
+        values.gradeLevel = "Intermediate";
+      } else {
+        values.gradeLevel = "Advanced";
+      }
+    }
+
     if (gradingDate && danGrade) {
       values.danGradings[
         danGrade + numberMarker + " Dan"
@@ -186,6 +199,7 @@ const MemberEditScreen = ({ match, history }) => {
     }
 
     await dispatch(editMember(values));
+
     setTimeout(() => history.push("/admin/listmembers"), 2000);
   };
 
@@ -449,7 +463,8 @@ const MemberEditScreen = ({ match, history }) => {
                       ) : (
                         <Button
                           type="submit"
-                          className="btn btn-warning btn-block"
+                          variant="default"
+                          className="btn-block"
                         >
                           Update
                         </Button>
@@ -498,7 +513,7 @@ const MemberEditScreen = ({ match, history }) => {
           </form>
           <Button
             className="mr-2"
-            variant="secondary"
+            variant="default"
             onClick={() => {
               setShowModal(false);
               setGradingDate();
@@ -507,7 +522,7 @@ const MemberEditScreen = ({ match, history }) => {
             Cancel
           </Button>
           <Button
-            variant="warning"
+            variant="default"
             onClick={() => {
               setShowModal(false);
               setDanGrade(member.danGrade + 1);

@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Form, Button, Col, Card, ListGroup, Row } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Col,
+  Card,
+  ListGroup,
+  Row,
+  Container,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import FormSteps from "../components/FormSteps";
@@ -13,7 +21,7 @@ const PaymentScreen = ({ history }) => {
     history.push("/basket");
   }
 
-  const [paymentMethod, setPaymentMethod] = useState(basket.paymentMethod);
+  const [paymentMethod, setPaymentMethod] = useState("PayPal");
 
   const dispatch = useDispatch();
 
@@ -24,10 +32,10 @@ const PaymentScreen = ({ history }) => {
   };
 
   return (
-    <FormContainer>
-      <div className="border-bottom border-warning p-1 pb-3 mb-2 bg-secondary">
+    <Container>
+      <div className="border-bottom border-warning mb-2">
         <FormSteps step1 step2 />
-        <h3 className="text-center text-white">Select Payment Method</h3>
+        <h3 className="text-center">Select Payment Method</h3>
       </div>
       <Form onSubmit={submitHandler}>
         <Form.Group>
@@ -55,33 +63,27 @@ const PaymentScreen = ({ history }) => {
             </Col>
             <Col md={6} className="mb-3">
               <Card>
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
-                    <h5>
-                      Subtotal (
-                      {basketItems.reduce((acc, item) => acc + item.qty, 0)})
-                      items
-                    </h5>
-                    £
-                    {basketItems
-                      .reduce((acc, item) => acc + item.qty * item.price, 0)
-                      .toFixed(2)}
-                  </ListGroup.Item>
-                </ListGroup>
+                <ListGroup.Item variant="light">
+                  <h5>
+                    Subtotal <br /> (
+                    {basketItems.reduce((acc, item) => acc + item.qty, 0)})
+                    items
+                  </h5>
+                  £
+                  {basketItems
+                    .reduce((acc, item) => acc + item.qty * item.price, 0)
+                    .toFixed(2)}
+                </ListGroup.Item>
               </Card>
             </Col>
           </Row>
         </Form.Group>
 
-        <Button
-          type="submit"
-          variant="primary"
-          className="btn-block btn-warning"
-        >
+        <Button type="submit" variant="default" className="btn-block">
           Continue
         </Button>
       </Form>
-    </FormContainer>
+    </Container>
   );
 };
 

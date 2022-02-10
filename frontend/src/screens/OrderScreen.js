@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { Row, Col, ListGroup, Image, Container } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Container, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -10,12 +10,17 @@ import {
   getOrderDetails,
   payOrder,
   deliverOrder,
+  fulfilOrder,
 } from "../actions/orderActions";
 import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
+  ORDER_FULFIL_RESET,
 } from "../constants/orderConstants";
 import { BASKET_CLEAR } from "../constants/BasketConstants";
+import directDebitImg from "../../src/img/directdebit.jpg";
+import { createPayment } from "../actions/directDebitActions";
+import { CREATE_DD_PAYMENT_RESET } from "../constants/directDebitConstants";
 
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
@@ -36,6 +41,24 @@ const OrderScreen = ({ match }) => {
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
+  const orderFulfil = useSelector((state) => state.orderFulfil);
+  const { loading: loadingFulfil, success: successFulfil } = orderFulfil;
+
+  const createDDPayment = useSelector((state) => state.createDDPayment);
+  const { loading: loadingDDPayment, success: successDDPayment } =
+    createDDPayment;
+
+  const successPaymentHandler = useCallback(
+    async (paymentResult) => {
+      await dispatch(payOrder(orderId, paymentResult));
+      if (paymentResult.status === "COMPLETED") {
+        localStorage.removeItem("basketItems");
+        dispatch({ type: BASKET_CLEAR });
+      }
+    },
+    [dispatch, orderId]
+  );
+
   useEffect(() => {
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
@@ -49,9 +72,30 @@ const OrderScreen = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (!order || order._id !== orderId || successPay || successDeliver) {
+    if (successDDPayment) {
+      const paymentResult = {
+        _id: order._id,
+        status: "COMPLETED",
+        update_time: Date.now(),
+        payer: {
+          email_address: memberInfo.email,
+        },
+      };
+      successPaymentHandler(paymentResult);
+    }
+
+    if (
+      !order ||
+      order._id !== orderId ||
+      successPay ||
+      successDeliver ||
+      successFulfil ||
+      successDDPayment
+    ) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
+      dispatch({ type: ORDER_FULFIL_RESET });
+      dispatch({ type: CREATE_DD_PAYMENT_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -60,18 +104,34 @@ const OrderScreen = ({ match }) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay, successDeliver]);
+  }, [
+    dispatch,
+    order,
+    orderId,
+    successPay,
+    successDeliver,
+    successFulfil,
+    successDDPayment,
+    memberInfo.email,
+    successPaymentHandler,
+  ]);
 
-  const successPaymentHandler = async (paymentResult) => {
-    await dispatch(payOrder(orderId, paymentResult));
-    if (paymentResult.status === "COMPLETED") {
-      localStorage.removeItem("basketItems");
-      dispatch({ type: BASKET_CLEAR });
-    }
+  const payDirectDebitHandler = () => {
+    const paymentDetails = {
+      _id: memberInfo._id,
+      amount: Number(order.totalPrice) * 100,
+      description: "Payment to York Karate Shop",
+    };
+
+    dispatch(createPayment(paymentDetails));
   };
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
+  };
+
+  const fulfilHandler = () => {
+    dispatch(fulfilOrder(order));
   };
 
   return loading ? (
@@ -80,37 +140,41 @@ const OrderScreen = ({ match }) => {
     <Message variant="danger">{error}</Message>
   ) : (
     <Container>
-      <h3 className="border-bottom border-warning">
+      <h5 className="border-bottom border-warning">
         Order Number: {order._id}
-      </h3>
+      </h5>
 
       <Row>
-        <Col sm={8}>
-          <ListGroup.Item>
+        <Col md={7}>
+          <ListGroup.Item variant="light">
             <h4>Order Items</h4>
             {order.orderItems.length === 0 ? (
               <Message>Your cart is empty</Message>
             ) : (
-              <ListGroup variant="flush">
+              <ListGroup variant="flush" className="text-light">
                 {order.orderItems.map((item, index) => (
                   <ListGroup.Item key={index}>
                     <Row className="align-items-center">
-                      <Col md={4}>
+                      <Col md={4} className="bg-light p-1">
                         <Image src={item.image} alt={item.name} fluid rounded />
                       </Col>
-                      <Col md={2} className="text-center">
-                        <Link to={`/products/${item.product}`}>
-                          {item.name} <br />
-                          {item.print && `(${item.print})`}
-                        </Link>
-                      </Col>
-                      <Col md={2} className="text-center">
-                        Qty <br />
-                        {item.qty}
-                      </Col>
-                      <Col md={4} className="text-center">
-                        <strong>Total: </strong> £
-                        {(item.qty * item.price).toFixed(2)}
+                      <Col md={8}>
+                        <Row>
+                          <Col md={12} className="text-center">
+                            <Link to={`/products/${item.product}`}>
+                              {item.name} <br />
+                              {item.print && `(${item.print})`}
+                            </Link>
+                          </Col>
+                          <Col md={6} className="text-center">
+                            Qty <br />
+                            {item.qty}
+                          </Col>
+                          <Col md={6} className="text-center">
+                            <strong>Total: </strong> £
+                            {(item.qty * item.price).toFixed(2)}
+                          </Col>
+                        </Row>
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -119,51 +183,78 @@ const OrderScreen = ({ match }) => {
             )}
           </ListGroup.Item>
         </Col>
-        <Col sm={4}>
-          <ListGroup.Item>
-            <Row>
-              <Col>Order Total:</Col>
-              <Col>£{order.totalPrice.toFixed(2)}</Col>
-            </Row>
+        <Col md={5}>
+          <ListGroup.Item variant="light">
+            <ListGroup className="text-light">
+              <ListGroup.Item>
+                <p className="mb-0">Order Total:</p>
+                <p>£{order.totalPrice.toFixed(2)}</p>
+              </ListGroup.Item>
+              <ListGroup.Item className="text-center">
+                <p className="mb-0">Payment Method:</p>
+                <p> {order.paymentMethod}</p>
+                <Link to="/payment">
+                  <Button variant="default" className="btn-sm">
+                    Switch Payment Method
+                  </Button>
+                </Link>
+              </ListGroup.Item>
+            </ListGroup>
           </ListGroup.Item>
-          <ListGroup.Item>
-            <Row>
-              <Col>Payment Method:</Col>
-              <Col> {order.paymentMethod}</Col>
-            </Row>
-          </ListGroup.Item>
+          {!order.isPaid &&
+            (order.paymentMethod === "PayPal" ? (
+              <ListGroup.Item variant="light">
+                {loadingPay && <Loader variant="warning" />}
+                {!sdkReady ? (
+                  <Loader />
+                ) : (
+                  <div className="text-center">
+                    <PayPalButton
+                      amount={order.totalPrice.toFixed(2)}
+                      onSuccess={successPaymentHandler}
+                    />
+                  </div>
+                )}
+              </ListGroup.Item>
+            ) : (
+              <Button
+                variant="default"
+                className="btn-block"
+                onClick={payDirectDebitHandler}
+              >
+                Pay with your Direct Debit <br />
+                <img
+                  src={directDebitImg}
+                  alt="directdebitlogo"
+                  className="w-50 mt-1"
+                />
+              </Button>
+            ))}
         </Col>
       </Row>
-      {!order.isPaid && (
-        <ListGroup.Item>
-          {loadingPay && <Loader />}
-          {!sdkReady ? (
-            <Loader />
-          ) : (
-            <div className="text-center">
-              <PayPalButton
-                amount={order.totalPrice.toFixed(2)}
-                onSuccess={successPaymentHandler}
-              />
-            </div>
-          )}
-        </ListGroup.Item>
-      )}
       {!order.isPaid ? (
-        <ListGroup.Item variant="danger" className="text-center">
-          <h5 className="text-dark">Payment Status: Not Paid</h5>
-        </ListGroup.Item>
-      ) : (
-        <ListGroup.Item className="text-center">
-          <h5>Payment Status: Paid</h5>
-        </ListGroup.Item>
-      )}
+        <p className="text-danger text-center">Please complete payment</p>
+      ) : loadingDDPayment ? (
+        <Loader variant="default" />
+      ) : !order.isDelivered ? (
+        <Message className="text-center" variant="success">
+          <h5 className="text-dark">
+            Payment Success! Thank you for your order
+          </h5>
+        </Message>
+      ) : null}
       {order.isPaid &&
         (!order.isDelivered ? (
-          <ListGroup.Item variant="danger" className="text-center">
-            <h5 className="text-dark">
-              Collection Status: Not ready for collection
-            </h5>
+          <ListGroup.Item variant="light">
+            <p className="text-dark">
+              Your order is being processed. Check your order status anytime in
+              your profile:
+            </p>
+            <Link to="/profile?key=second">
+              <button className="btn-sm btn btn-default">
+                View Order Status
+              </button>
+            </Link>
           </ListGroup.Item>
         ) : (
           <ListGroup.Item className="text-center" variant="success">
@@ -171,18 +262,31 @@ const OrderScreen = ({ match }) => {
           </ListGroup.Item>
         ))}
 
-      {loadingDeliver && <Loader variant="warning" />}
-      {memberInfo.isShopAdmin && order.isPaid && !order.isDelivered && (
+      {loadingDeliver || (loadingFulfil && <Loader variant="warning" />)}
+      {memberInfo.isShopAdmin && order.isPaid && !order.isDelivered ? (
         <ListGroup.Item>
+          <p>SHOP ADMIN:</p>
           <button
-            type="button"
-            className="btn btn-block btn-default"
+            className="btn-sm d-inline btn-default btn"
             onClick={deliverHandler}
           >
             Mark As Ready For Collection
           </button>
         </ListGroup.Item>
-      )}
+      ) : memberInfo.isShopAdmin &&
+        order.isPaid &&
+        order.isDelivered &&
+        !order.isComplete ? (
+        <ListGroup.Item>
+          <p>SHOP ADMIN:</p>
+          <button
+            className="btn-sm d-inline btn-default btn"
+            onClick={fulfilHandler}
+          >
+            Mark As Fulfilled
+          </button>
+        </ListGroup.Item>
+      ) : null}
     </Container>
   );
 };

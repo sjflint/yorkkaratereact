@@ -2,31 +2,40 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
+import { useLocation } from "react-router-dom";
 
 const CompleteUpdateDD = () => {
-  // Redux
-  const updateDirectDebit = useSelector((state) => state.updateDirectDebit);
-  const { ddSetupInfo } = updateDirectDebit;
+  const search = useLocation().search;
+  const flowId = new URLSearchParams(search).get("redirect_flow_id");
+  const token = new URLSearchParams(search).get("token");
 
-  console.log(ddSetupInfo);
+  const memberDetails = useSelector((state) => state.memberDetails);
+  const { member } = memberDetails;
 
   useEffect(() => {
-    if (ddSetupInfo.ddRedirect) {
-      async function ddUpdate() {
-        const successURL = await axios.post(
-          "/ddroutes/updatedirectdebit",
-          ddSetupInfo
-        );
-        window.location.href = successURL.data.confirmationURL;
-      }
+    if (flowId && token && member._id) {
+      const ddSetupInfo = {
+        _id: member._id,
+        session_token: token,
+        ddRedirect: flowId,
+      };
+
+      const ddUpdate = async () => {
+        await axios
+          .post("/ddroutes/updatedirectdebit", ddSetupInfo)
+          .then((resp) => {
+            console.log(resp.data);
+            window.location.href = resp.data.confirmationURL;
+          });
+      };
       ddUpdate();
     }
-  }, [ddSetupInfo]);
+  }, [flowId, member, token]);
 
   return (
-    <div>
+    <>
       <Loader variant="warning" />
-    </div>
+    </>
   );
 };
 

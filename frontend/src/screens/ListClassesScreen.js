@@ -197,11 +197,11 @@ const ListClassesScreen = ({ history }) => {
     { key: "Please select the most appropriate description", value: "" },
     { key: "Junior", value: "Junior" },
     { key: "Novice", value: "Novice" },
+    { key: "Novice/Intermediate", value: "Novice/Intermediate" },
     { key: "Intermediate", value: "Intermediate" },
+    { key: "Intermediate/Advanced", value: "Intermediate/Advanced" },
     { key: "Advanced", value: "Advanced" },
-    { key: "Kata", value: "Kata" },
-    { key: "Kumite", value: "Kumite" },
-    { key: "Open", value: "Open" },
+    { key: "Squad", value: "Squad" },
   ];
   // Min grade options
   const minGradeOptions = [

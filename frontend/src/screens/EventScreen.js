@@ -39,11 +39,13 @@ const EventScreen = ({ match }) => {
               {errorEvent}
             </Message>
           ) : (
-            <div>
-              <Image src={event.image} alt={event.title} />
+            <>
+              <div className="bg-primary p-2">
+                <Image src={event.image} alt={event.title} />
+              </div>
               <ListGroup variant="flush">
                 <h3 className="p-2">{event.title}</h3>
-                <ListGroup.Item className="bg-primary">
+                <ListGroup.Item>
                   Date of Event: <FormatDate date={event.dateOfEvent} />
                 </ListGroup.Item>
                 <ListGroup.Item>Location: {event.location}</ListGroup.Item>
@@ -52,21 +54,17 @@ const EventScreen = ({ match }) => {
                 event.register === "/squadselection" ? (
                   <ListGroup.Item>
                     <a href={`${event.register}/${event._id}`} rel="noreferrer">
-                      <Button variant="warning" className="btn-block">
-                        Register
-                      </Button>
+                      <Button variant="default">Register</Button>
                     </a>
                   </ListGroup.Item>
                 ) : (
                   <ListGroup.Item>
                     <a href={event.register} target="_blank" rel="noreferrer">
-                      <Button variant="warning" className="btn-block">
-                        Register
-                      </Button>
+                      <Button variant="warning">Register</Button>
                     </a>
                   </ListGroup.Item>
                 )}
-                <ListGroup.Item className="bg-dark">
+                <ListGroup.Item>
                   <h5>Event Description</h5>
                   {paragraphs &&
                     paragraphs.map((paragraph) => (
@@ -77,18 +75,16 @@ const EventScreen = ({ match }) => {
                     ))}
                 </ListGroup.Item>
                 <div className="mt-2 mb-5 border-bottom border-warning">
-                  <Link className="btn btn-primary mb-5 btn-block" to="/events">
+                  <Link className="btn btn-default mb-5 btn-block" to="/events">
                     Return to event listings
                   </Link>
                 </div>
               </ListGroup>
-            </div>
+            </>
           )}
         </Col>
-        <Col md={4} className="bg-primary mb-2">
-          <h5 className="text-center text-white p-2 bg-secondary">
-            More events
-          </h5>
+        <Col md={4} className="mb-2">
+          <h5 className="text-center p-2">More events</h5>
           {loadingEvents ? (
             <Loader variant="warning" />
           ) : errorEvents ? (
@@ -103,7 +99,7 @@ const EventScreen = ({ match }) => {
             </div>
           )}
 
-          <Link className="btn btn-block btn-primary" to="/events">
+          <Link className="btn btn-block btn-default" to="/events">
             Return to event listings
           </Link>
         </Col>

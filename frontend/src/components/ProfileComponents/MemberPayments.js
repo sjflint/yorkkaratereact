@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
   cancelDirectDebit,
-  updateDirectDebit,
+  directDebitUpdate,
 } from "../../actions/directDebitActions";
 import { Button, Col, ListGroup, Modal, Row } from "react-bootstrap";
 import dojoImg from "../../img/dojo.jpeg";
@@ -28,7 +28,7 @@ const MemberPayments = () => {
 
   const changeDDHandler = async () => {
     if (memberInfo) {
-      dispatch(updateDirectDebit());
+      dispatch(directDebitUpdate());
     }
   };
 

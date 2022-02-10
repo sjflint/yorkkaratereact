@@ -10,7 +10,7 @@ const VenuesScreen = () => {
     <Container className="text-center">
       <h3 className="text-center border-bottom border-warning">Venues</h3>
       <Row>
-        <Col md={6}>
+        <Col md={6} className="d-flex">
           <Card className="mb-2">
             <Card.Img variant="top" src={stChadsHall} />
             <Card.Body>
@@ -21,7 +21,7 @@ const VenuesScreen = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6}>
+        <Col md={6} className="d-flex">
           <Card className="mb-2">
             <Card.Img variant="top" src={josephRowntreeSchool} />
             <Card.Body>
@@ -32,7 +32,7 @@ const VenuesScreen = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6}>
+        <Col md={6} className="d-flex">
           <Card className="mb-2">
             <Card.Img variant="top" src={archBishopHolgate} />
             <Card.Body>
@@ -43,7 +43,7 @@ const VenuesScreen = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6}>
+        <Col md={6} className="d-flex">
           <Card className="mb-2">
             <Card.Img variant="top" src={strensallVillageHall} />
             <Card.Body>
@@ -56,7 +56,7 @@ const VenuesScreen = () => {
         </Col>
       </Row>
 
-      <Link to="/timetable" className="btn btn-block btn-warning btn-lg">
+      <Link to="/timetable" className="btn btn-block btn-default">
         View full timetable listings
       </Link>
     </Container>

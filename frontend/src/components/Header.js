@@ -29,7 +29,7 @@ const Header = () => {
   };
 
   return (
-    <header className="mb-4 bg-primary">
+    <header className="mb-4">
       {error && loginErrorHandler()}
       <Navbar bg="primary" variant="dark" expand="md">
         <Container className="w-80">
@@ -40,9 +40,9 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto text-center navLinks">
+            <Nav className="ml-auto navLinks text-center">
               <LinkContainer to="/home">
-                <Nav.Link className="px-3">Home</Nav.Link>
+                <Nav.Link>Home</Nav.Link>
               </LinkContainer>
               <LinkContainer to="/news">
                 <Nav.Link>News</Nav.Link>
@@ -109,9 +109,10 @@ const Header = () => {
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <LinkContainer to="/login">
-                  <Nav.Link className="text-warning">
-                    <i className="fas fa-user"></i> Login
+                <LinkContainer to="/login" className="text-center">
+                  <Nav.Link className="text-warning d-flex align-items-center justify-content-center">
+                    <i className="fas fa-user"></i>
+                    <small>Login</small>
                   </Nav.Link>
                 </LinkContainer>
               )}

@@ -4,14 +4,14 @@ import FormatDate from "./FormatDate";
 
 const Article = ({ article }) => {
   return (
-    <Row className="p-2 rounded h-100 bg-primary">
-      <Col md="5">
+    <Row className="p-2 rounded h-100 bg-light align-items-center">
+      <Col md="5" className="bg-primary p-2">
         <Link to={`/article/${article._id}`}>
           <img src={article.image} alt="article" className="mb-2" />
         </Link>
       </Col>
       <Col md="7">
-        <Link to={`/article/${article._id}`}>
+        <Link to={`/article/${article._id}`} className="text-decoration-none">
           <Card className="h-100">
             <Card.Body>
               <Card.Title>
@@ -23,9 +23,9 @@ const Article = ({ article }) => {
               <div className="my-3">{article.leader}</div>
             </Card.Body>
             <Card.Footer>
-              <div className="text-white">Author: {article.author}</div>
-              <div className="text-white">Category: {article.category}</div>
-              <small className="text-white">
+              <div>Author: {article.author}</div>
+              <div>Category: {article.category}</div>
+              <small>
                 <FormatDate date={article.dateCreated} />
               </small>
             </Card.Footer>

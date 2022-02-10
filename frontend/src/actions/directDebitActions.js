@@ -1,6 +1,8 @@
 import axios from "axios";
 import {
+  CREATE_DD_PAYMENT_FAIL,
   CREATE_DD_PAYMENT_REQUEST,
+  CREATE_DD_PAYMENT_SUCCESS,
   DD_CANCEL_FAIL,
   DD_CANCEL_REQUEST,
   DD_CANCEL_SUCCESS,
@@ -12,8 +14,9 @@ import {
   UPDATE_SUBSCRIPTION_SUCCESS,
 } from "../constants/directDebitConstants";
 
-export const updateDirectDebit = () => async (dispatch, getState) => {
+export const directDebitUpdate = () => async (dispatch, getState) => {
   try {
+    console.log("trying dd update request");
     dispatch({
       type: DD_UPDATE_REQUEST,
     });
@@ -40,6 +43,7 @@ export const updateDirectDebit = () => async (dispatch, getState) => {
 
     localStorage.setItem("updateDD", JSON.stringify(data));
   } catch (error) {
+    console.log("error");
     dispatch({
       type: DD_UPDATE_FAIL,
       payload:
@@ -132,6 +136,7 @@ export const updateSubscription =
   };
 
 export const createPayment = (paymentDetails) => async (dispatch, getState) => {
+  console.log(paymentDetails);
   try {
     dispatch({
       type: CREATE_DD_PAYMENT_REQUEST,
@@ -151,19 +156,14 @@ export const createPayment = (paymentDetails) => async (dispatch, getState) => {
     const _id = memberInfo._id;
     paymentDetails._id = _id;
 
-    const { data } = await axios.post(
-      `/ddroutes/createpayment`,
-      { paymentDetails },
-      config
-    );
+    await axios.post(`/ddroutes/createpayment`, { paymentDetails }, config);
 
     dispatch({
-      type: UPDATE_SUBSCRIPTION_SUCCESS,
-      payload: data,
+      type: CREATE_DD_PAYMENT_SUCCESS,
     });
   } catch (error) {
     dispatch({
-      type: UPDATE_SUBSCRIPTION_FAIL,
+      type: CREATE_DD_PAYMENT_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

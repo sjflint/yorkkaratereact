@@ -19,6 +19,7 @@ import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
 
 import UploadImage from "../components/uploadImage";
+import ArticlePaginate from "../components/ArticlePaginate";
 
 const ListArticlesScreen = ({ history, match }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -29,6 +30,8 @@ const ListArticlesScreen = ({ history, match }) => {
   const [editBody, setEditBody] = useState(false);
   const [image, setImage] = useState();
   const [multiImage, setMultiImage] = useState([]);
+
+  const pageNumber = match.params.pageNumber || 1;
 
   const singleImageData = (singleImage) => {
     setImage(singleImage);
@@ -49,7 +52,7 @@ const ListArticlesScreen = ({ history, match }) => {
   const { member } = memberDetails;
 
   const articleList = useSelector((state) => state.articleList);
-  const { loading, error, articles } = articleList;
+  const { loading, error, articles, pages, page } = articleList;
 
   const displayArticle = useSelector((state) => state.displayArticle);
   const { error: articleError, article } = displayArticle;
@@ -78,7 +81,7 @@ const ListArticlesScreen = ({ history, match }) => {
     } else if (!member.isAuthor) {
       history.push("/profile");
     } else {
-      dispatch(listArticles());
+      dispatch(listArticles(pageNumber));
     }
   }, [
     dispatch,
@@ -88,6 +91,7 @@ const ListArticlesScreen = ({ history, match }) => {
     successDelete,
     successCreate,
     successUpdate,
+    pageNumber,
   ]);
 
   const deleteHandler = async () => {
@@ -289,6 +293,9 @@ const ListArticlesScreen = ({ history, match }) => {
               ))}
             </tbody>
           </Table>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ArticlePaginate pages={pages} page={page} editList={true} />
+          </div>
 
           <div className="text-center">
             <button

@@ -4,9 +4,9 @@ import {
   Container,
   Row,
   Col,
-  CardDeck,
   ListGroup,
   ListGroupItem,
+  CardGroup,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Video from "../components/Video";
@@ -26,68 +26,75 @@ import familyTrainingImg from "../img/family-training.jpg";
 import Parralax from "../components/Parralax";
 import InfoCard from "../components/InfoCard";
 import EnquiryForm from "../components//FormComponents/EnquiryForm";
+import Meta from "../components/Meta";
 
 const HomeScreen = () => {
   return (
     <>
+      <Meta />
       <Showcase />
-      <section
-        id="mini-promo"
-        className="bg-dark py-4 border-bottom border-warning"
-      >
+      <section id="mini-promo" className="py-4 border-bottom border-warning">
         <Container>
-          <h2 className="text-center mb-2 border-bottom border-warning">
-            Welcome to York Karate Dojo
-          </h2>
-          <h3 className="p-3 bg-primary" id="intro-title">
-            <span>
+          <Row className="p-3 align-items-center mb-2 bg-light">
+            <Col xs={2}>
               <img
                 id="simon-profile-round"
                 src={simonProfileImg}
                 alt="simon-instructor"
                 className="border border-warning"
               />
-            </span>{" "}
-            An introduction from the club instructor
-          </h3>
-          <div align="right" className="d-inline-block small-video">
-            <Video
-              poster={poster1Img}
-              mp4={benefitOfKarateMp4}
-              ogv={benefitOfKarateOgv}
-              webmhd={benefitOfKarateWebmHd}
-            />
-          </div>
-          <p className="wrap-text">
-            Welcome to York Karate Dojo. Please take a minute to explore our
-            site and discover what we do. Should You have any questions, please
-            don't hesitate to <Link to="/contact">contact us</Link>.<br />
-            <br /> Our ethos is very simple. We aim to provide an excellent
-            standard of karate training. We are interested in training those who
-            are very determined to achieve their potential within karate, as
-            well as developing other skills that are of wider benefit. Karate
-            has long been hailed as an activity to stimulate personal growth, be
-            it physical strength and fitness or defensive skills, emotional
-            nurturing through inner confidence and belief or learning to
-            appreciate the importance of respect and discipline. <br />
-            <br />
-            Our club motto is Respect - Discipline - Dedication:{" "}
-            <li>Respect others</li>
-            <li>Discipline yourself</li>
-            <li>Dedicate your energy to your dreams and ambitions</li>
-            Simon Flint <br />
-            Instructor
-          </p>
+            </Col>
+            <Col>
+              <h3>Welcome to York Karate Dojo</h3>
+            </Col>
+          </Row>
+
+          <Row className="align-items-start">
+            <Col lg={6} sm={12} className="bg-primary p-2">
+              <Video
+                poster={poster1Img}
+                mp4={benefitOfKarateMp4}
+                ogv={benefitOfKarateOgv}
+                webmhd={benefitOfKarateWebmHd}
+              />
+            </Col>
+            <Col lg={6} sm={12}>
+              <p>
+                Welcome to York Karate Dojo. Please take a minute to explore our
+                site and discover what we do. Should You have any questions,
+                please don't hesitate to <Link to="/contact">contact us</Link>.
+                <br />
+                <br /> Our ethos is very simple. We aim to provide an excellent
+                standard of karate training. We are interested in training those
+                who are very determined to achieve their potential within
+                karate, as well as developing other skills that are of wider
+                benefit. Karate has long been hailed as an activity to stimulate
+                personal growth, be it physical strength and fitness or
+                defensive skills, emotional nurturing through inner confidence
+                and belief or learning to appreciate the importance of respect
+                and discipline. <br />
+                <br />
+                Our club motto is Respect - Discipline - Dedication:{" "}
+                <li>Respect others</li>
+                <li>Discipline yourself</li>
+                <li>Dedicate your energy to your dreams and ambitions</li>
+                Simon Flint <br />
+                Instructor
+              </p>
+            </Col>
+          </Row>
         </Container>
       </section>
       <section
-        className="bg-dark py-4 border-bottom border-warning"
+        className="bg-primary py-4 border-bottom border-warning text-white"
         id="traditional-karate"
       >
         <Container>
-          <Row>
-            <Col lg={6} className="align-self-center">
-              <h3 className="text-center">Traditional Shotokan Karate</h3>
+          <Row className="align-items-center">
+            <Col lg={6}>
+              <h3 className="text-center text-white">
+                Traditional Shotokan Karate
+              </h3>
               <p>
                 We teach a traditional style of karate called Shotokan. Shotokan
                 is one of the most widely practised martial arts in the world
@@ -112,19 +119,16 @@ const HomeScreen = () => {
                 captivating audiences on the big screen.
               </p>
             </Col>
-            <Col lg={6}>
+            <Col lg={6} className="bg-light p-2">
               <img src={respectImg} alt="" />
             </Col>
           </Row>
         </Container>
       </section>
-      <section
-        className="bg-dark py-4 border-bottom border-warning"
-        id="sport-karate"
-      >
+      <section className="py-4 border-bottom border-warning" id="sport-karate">
         <Container>
           <Row className="no-gutters">
-            <Col md={6} className="d-flex">
+            <Col md={6} className="p-2 bg-primary">
               <img
                 src={sportRoundhouseKickImg}
                 alt="sport-karate-roundhouse-kick"
@@ -144,26 +148,28 @@ const HomeScreen = () => {
                 of our members.
               </p>
             </Col>
-            <Col md={6}>
+            <Col md={6} className="bg-primary p-2">
               <img src={sportKumiteTrainingImg} alt="sparring-class" />
             </Col>
-            <Col md={6}>
+            <Col md={6} className="bg-primary p-2">
               <img src={ekfTrainingImg} alt="" />
             </Col>
           </Row>
         </Container>
       </section>
       <section
-        className="bg-dark py-4 border-bottom border-warning"
+        className="bg-primary text-white py-4 border-bottom border-warning"
         id="family-training"
       >
         <Container>
           <Row>
-            <Col md={8}>
-              <img src={familyTrainingImg} alt="" />
+            <Col md={6}>
+              <img src={familyTrainingImg} alt="" className="bg-light p-2" />
             </Col>
-            <Col md={4} className="align-self-center">
-              <h3 className="text-center">Fun training for all the family</h3>
+            <Col md={6} className="align-self-center">
+              <h3 className="text-center text-white">
+                Fun training for all the family
+              </h3>
               <p>
                 Karate is a great way for family members to connect. Training
                 together, progressing through the belts together and achieving
@@ -178,7 +184,7 @@ const HomeScreen = () => {
       <Parralax image={"parralax2.jpg"} />
       <section id="affiliation" className="py-4">
         <Container>
-          <CardDeck>
+          <CardGroup>
             <InfoCard
               image="/img/jksinstructor.jpg"
               title="The Japan Karate Federation"
@@ -197,7 +203,7 @@ const HomeScreen = () => {
               text="The government body with oversight for sport in England, ensuring quality and standards are met."
               link="https://www.sportengland.org/how-we-can-help/safeguarding/safeguarding-martial-arts"
             />
-          </CardDeck>
+          </CardGroup>
 
           <h2 className="text-center mt-4">Our Affiliations</h2>
           <div
@@ -241,15 +247,20 @@ const HomeScreen = () => {
           </div>
         </Container>
       </section>
-      <section className="py-4 border-top border-warning" id="trailer">
+      <section
+        className=" bg-primary py-4 border-top border-warning"
+        id="trailer"
+      >
         <Container>
-          <h2 className="text-center">York Karate Dojo Trailer</h2>
-          <Video
-            poster={poster2Img}
-            mp4={yorkkarateMp4}
-            ogv={yorkkarateOgv}
-            webmhd={yorkkarateWebmHd}
-          />
+          <h2 className="text-center text-white">York Karate Dojo Trailer</h2>
+          <div className="p-2 bg-primary">
+            <Video
+              poster={poster2Img}
+              mp4={yorkkarateMp4}
+              ogv={yorkkarateOgv}
+              webmhd={yorkkarateWebmHd}
+            />
+          </div>
         </Container>
       </section>
       <section id="contact-enquiry" className="py-4 border-top border-warning">
@@ -332,9 +343,10 @@ const HomeScreen = () => {
                 href="https://www.facebook.com/YorkKarate"
                 target="_blank"
                 rel="noreferrer"
+                className="text-decoration-none"
               >
                 <i className="fab fa-facebook fa-3x"></i>
-                <h5 className="mt-2">Facebook</h5>
+                <h5 className="mt-2 text-warning">Facebook</h5>
               </a>
             </Col>
             <Col xs={4}>
@@ -342,9 +354,10 @@ const HomeScreen = () => {
                 href="https://www.instagram.com/yorkkarate"
                 target="_blank"
                 rel="noreferrer"
+                className="text-decoration-none"
               >
                 <i className="fab fa-instagram fa-3x"></i>
-                <h5 className="mt-2">Instagram</h5>
+                <h5 className="mt-2 text-warning">Instagram</h5>
               </a>
             </Col>
             <Col xs={4}>
@@ -352,9 +365,10 @@ const HomeScreen = () => {
                 href="https://www.youtube.com/channel/UC3uCY2UeiuTub4qsquGFdng?view_as=subscriber"
                 target="_blank"
                 rel="noreferrer"
+                className="text-decoration-none"
               >
                 <i className="fab fa-youtube fa-3x"></i>
-                <h5 className="mt-2">YouTube</h5>
+                <h5 className="mt-2 text-warning">YouTube</h5>
               </a>
             </Col>
           </Row>

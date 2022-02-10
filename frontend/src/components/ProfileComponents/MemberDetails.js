@@ -105,31 +105,34 @@ const MemberDetails = () => {
   });
 
   let numberMarker;
-  switch (member.kyuGrade && member.kyuGrade !== 0) {
-    case 1:
-      numberMarker = "st";
-      break;
-    case 2:
-      numberMarker = "nd";
-      break;
-    case 3:
-      numberMarker = "rd";
-      break;
-    default:
-      numberMarker = "th";
-  }
-  switch (member.danGrade && member.danGrade !== 0) {
-    case 1:
-      numberMarker = "st";
-      break;
-    case 2:
-      numberMarker = "nd";
-      break;
-    case 3:
-      numberMarker = "rd";
-      break;
-    default:
-      numberMarker = "th";
+  if (member && member.danGrade === 0) {
+    switch (member.kyuGrade) {
+      case 1:
+        numberMarker = "st";
+        break;
+      case 2:
+        numberMarker = "nd";
+        break;
+      case 3:
+        numberMarker = "rd";
+        break;
+      default:
+        numberMarker = "th";
+    }
+  } else {
+    switch (member.danGrade) {
+      case 1:
+        numberMarker = "st";
+        break;
+      case 2:
+        numberMarker = "nd";
+        break;
+      case 3:
+        numberMarker = "rd";
+        break;
+      default:
+        numberMarker = "th";
+    }
   }
 
   let grade;
@@ -175,58 +178,51 @@ const MemberDetails = () => {
             can book classes, amend bookings, change your payment details and
             much more.
           </p>
-          <h2>Your details</h2>
+          <h2 className="text-center text-white">Your details</h2>
 
-          <ListGroup variant="flush">
-            <ListGroup.Item>
+          <ListGroup variant="flush dark">
+            <ListGroup.Item variant="light">
               <Row>
                 <Col xs={4}>
-                  <strong className="text-white">Name</strong>
+                  <strong>Name</strong>
                 </Col>
                 <Col>{`${member.nameFirst} ${member.nameSecond}`}</Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item>
+            <ListGroup.Item variant="light">
               <Row>
                 <Col xs={4}>
-                  <strong className="text-white">Email</strong>
+                  <strong>Email</strong>
                 </Col>
                 <Col>{`${member.email}`}</Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item>
+            <ListGroup.Item variant="light">
               <Row>
                 <Col xs={4}>
-                  <strong className="text-white">Phone</strong>
+                  <strong>Phone</strong>
                 </Col>
                 <Col>{`0${member.phone}`}</Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item>
+
+            <ListGroup.Item variant="light">
               <Row>
                 <Col xs={4}>
-                  <strong className="text-white">Username</strong>
-                </Col>
-                <Col> {`${member.userName}`}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col xs={4}>
-                  <strong className="text-white">Grade</strong>
+                  <strong>Grade</strong>
                 </Col>
                 <Col>{`${grade} (${member.gradeLevel})`}</Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item>
+            <ListGroup.Item variant="light">
               <Row>
                 <Col xs={4}>
-                  <strong className="text-white">Membership Level</strong>
+                  <strong>Membership Level</strong>
                 </Col>
                 <Col>£{(member.membershipLevel / 100).toFixed(2)}</Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item className="mt-3">
+            <ListGroup.Item className="mt-3" variant="light">
               <Row>
                 <Col>
                   <Button

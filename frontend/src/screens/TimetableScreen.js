@@ -78,68 +78,55 @@ const TimetableScreen = () => {
         </h3>
 
         <h5>
-          Not sure which class is best for you? Search for a relevant classes
+          Not sure which class is best for you? Search for relevant classes
         </h5>
-        <Form
-          className="pb-3 mb-3 border-bottom border-warning"
-          onSubmit={onSubmit}
-        >
-          <Row className="bg-primary py-2 mx-1">
-            <Col md={5} className="mb-1">
-              <Form.Control
-                as="select"
-                placeholder="Age Group"
-                value={ageGroup}
-                onChange={handleAgeGroup}
-              >
-                <option value="under9">Aged under 9 years old</option>
-                <option value="9andover">Aged 9 years old or above</option>
-              </Form.Control>
-            </Col>
-            <Col md={5} className="mb-1">
-              <Form.Control
-                as="select"
-                placeholder="Grade Level"
-                value={grade}
-                onChange={handleGrade}
-              >
-                <option value="16">Beginner</option>
-                <option value="15">15 kyu</option>
-                <option value="14">14 kyu</option>
-                <option value="13">13 kyu</option>
-                <option value="12">12 kyu</option>
-                <option value="11">11 kyu</option>
-                <option value="10">10 kyu</option>
-                <option value="9">9 kyu</option>
-                <option value="8">8 kyu</option>
-                <option value="7">7 kyu</option>
-                <option value="6">6 kyu</option>
-                <option value="5">5 kyu</option>
-                <option value="4">4 kyu</option>
-                <option value="3">3 kyu</option>
-                <option value="2">2 kyu</option>
-                <option value="1">1 kyu</option>
-                <option value="0">Black belt</option>
-              </Form.Control>
-            </Col>
-            <Col md={2}>
-              <Button
-                variant="primary"
-                type="submit"
-                className="btn-lg btn-block"
-              >
-                <i className="fas fa-search text-warning"></i>
-              </Button>
-            </Col>
-          </Row>
-          <p
-            className="text-warning mt-1 text-link mb-0 d-inline"
-            onClick={handleShowKyu}
-          >
+        <div className="mb-3 border-bottom border-warning">
+          <Form onSubmit={onSubmit}>
+            <Row className="py-2 mx-1">
+              <Col md={5} className="mb-1">
+                <Form.Control
+                  as="select"
+                  value={ageGroup}
+                  onChange={handleAgeGroup}
+                >
+                  <option value="under9">Aged under 9 years old</option>
+
+                  <option value="9andover">Aged 9 years old or above</option>
+                </Form.Control>
+              </Col>
+
+              <Col md={5} className="mb-1">
+                <Form.Control as="select" value={grade} onChange={handleGrade}>
+                  <option value="16">Beginner</option>
+                  <option value="15">15 kyu</option>
+                  <option value="14">14 kyu</option>
+                  <option value="13">13 kyu</option>
+                  <option value="12">12 kyu</option>
+                  <option value="11">11 kyu</option>
+                  <option value="10">10 kyu</option>
+                  <option value="9">9 kyu</option>
+                  <option value="8">8 kyu</option>
+                  <option value="7">7 kyu</option>
+                  <option value="6">6 kyu</option>
+                  <option value="5">5 kyu</option>
+                  <option value="4">4 kyu</option>
+                  <option value="3">3 kyu</option>
+                  <option value="2">2 kyu</option>
+                  <option value="1">1 kyu</option>
+                  <option value="0">Black belt</option>
+                </Form.Control>
+              </Col>
+              <Col md={2}>
+                <Button variant="default" type="submit">
+                  <i className="fas fa-search"></i>
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+          <p className="text-warning mt-2 text-link" onClick={handleShowKyu}>
             What is a 'kyu' grade?
           </p>
-        </Form>
-
+        </div>
         {loading ? (
           <Loader variant="warning" />
         ) : error ? (
@@ -203,40 +190,42 @@ const TimetableScreen = () => {
       </Container>
 
       <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Header closeButton className="text-white bg-secondary">
-          <Modal.Title className="text-center">
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-center text-white">
             Your ability level is
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-light text-primary">
+        <Modal.Body className="">
           <h5>The classes that are most suitable for you are:</h5>
           {classList &&
             classList.map((session) => (
               <Card className="mb-2" key={session._id}>
-                <Card.Body className="bg-light text-primary">
+                <Card.Body className="">
                   <Card.Title>{session.name} Class</Card.Title>
                   <Card.Subtitle className="text-muted">
                     {session.times}
                   </Card.Subtitle>
                   <Card.Text>{session.location}</Card.Text>
                 </Card.Body>
-                <Card.Footer className="bg-light text-primary">
+                <Card.Footer className="">
                   Number of places available:{" "}
                   {session.capacity - session.numberBooked}
                 </Card.Footer>
               </Card>
             ))}
         </Modal.Body>
-        <Modal.Footer className="bg-light text-primary">
-          <Button onClick={() => setShow(false)}>Close</Button>
+        <Modal.Footer className="bg-dark">
+          <Button onClick={() => setShow(false)} variant="default">
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showKyu} onHide={handleCloseKyu}>
-        <Modal.Header className="text-white bg-secondary" closeButton>
-          <Modal.Title>Kyu (grade)</Modal.Title>
+        <Modal.Header className="text-white bg-dark" closeButton>
+          <Modal.Title className="text-white">Kyu (grade)</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-light text-primary">
+        <Modal.Body>
           <Row>
             <BeltCard grade="beginner" beltColor="White" />
             <BeltCard grade="15th Kyu" beltColor="White-Red" />
@@ -257,8 +246,10 @@ const TimetableScreen = () => {
             <BeltCard grade="1st dan" beltColor="Black" />
           </Row>
         </Modal.Body>
-        <Modal.Footer className="bg-light text-primary">
-          <Button onClick={handleCloseKyu}>Close</Button>
+        <Modal.Footer className="bg-dark text-white">
+          <Button onClick={handleCloseKyu} variant="default">
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

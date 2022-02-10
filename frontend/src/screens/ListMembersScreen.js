@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import { Container, Table, Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import { deleteMember, membersList } from "../actions/memberActions";
 import Loader from "../components/Loader";
+import MemberPaginate from "../components/MemberPaginate";
 import Message from "../components/Message";
+import SearchBox from "../components/SearchBox";
 
-const ListMembersScreen = ({ history }) => {
+const ListMembersScreen = ({ history, match }) => {
+  const keyword = match.params.keyword;
+
+  const pageNumber = match.params.pageNumber || 1;
+
   const [show, setShow] = useState(false);
   const [deleteId, setDeleteId] = useState("");
 
@@ -21,7 +27,7 @@ const ListMembersScreen = ({ history }) => {
   const activeMembers = [];
 
   const listMembers = useSelector((state) => state.listMembers);
-  const { loading, error, memberList } = listMembers;
+  const { loading, error, memberList, pages, page } = listMembers;
 
   if (memberList) {
     memberList.map((member) => {
@@ -35,12 +41,12 @@ const ListMembersScreen = ({ history }) => {
   useEffect(() => {
     if (!memberInfo) {
       history.push("/login?redirect=/profile");
-    } else if (!member.isAdmin) {
+    } else if (!memberInfo.isAdmin) {
       history.push("/profile");
     } else {
-      dispatch(membersList());
+      dispatch(membersList(pageNumber, keyword));
     }
-  }, [dispatch, history, memberInfo, member]);
+  }, [dispatch, history, memberInfo, member, pageNumber, keyword]);
 
   const deleteHandler = async () => {
     dispatch(deleteMember(deleteId));
@@ -52,20 +58,17 @@ const ListMembersScreen = ({ history }) => {
       <Link className="btn btn-dark" to="/admin">
         <i className="fas fa-arrow-left"></i> Return
       </Link>
+      <Route render={({ history }) => <SearchBox history={history} />} />
       <h3 className="text-center border-bottom border-warning pb-1">
         Member List
       </h3>
+
       {loading ? (
         <Loader variant="warning" />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <h5 className="my-2">Total active members: {activeMembers.length}</h5>
-          <h5 className="my-2">
-            Total inactive members still on record:{" "}
-            {memberList.length - activeMembers.length}
-          </h5>
           <Table striped bordered hover responsive className="table-sm">
             <thead>
               <tr>
@@ -130,6 +133,9 @@ const ListMembersScreen = ({ history }) => {
               ))}
             </tbody>
           </Table>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <MemberPaginate pages={pages} page={page} editList={true} />
+          </div>
         </>
       )}
 

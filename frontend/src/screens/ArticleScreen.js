@@ -9,6 +9,7 @@ import { listArticles } from "../actions/articleActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import ReactImageGallery from "react-image-gallery";
+import Meta from "../components/Meta";
 
 const ArticleScreen = ({ match }) => {
   const dispatch = useDispatch();
@@ -41,11 +42,12 @@ const ArticleScreen = ({ match }) => {
               {errorArticle}
             </Message>
           ) : (
-            <div>
+            <>
+              <Meta title={article.title} description={article.leader} />
               <Image src={article.image} alt={article.title} />
               <ListGroup>
                 <h3 className="p-2">{article.title}</h3>
-                <ListGroup.Item className="bg-primary">
+                <ListGroup.Item className="bg-light">
                   <Row className="align-items-center">
                     <Col xs={3} sm={2} className="p-0">
                       <Image
@@ -74,8 +76,8 @@ const ArticleScreen = ({ match }) => {
                   )}
                 </ListGroup.Item>
 
-                <ListGroup.Item className="bg-dark">
-                  <p className="text-white">{article.leader}</p>
+                <ListGroup.Item>
+                  <p>{article.leader}</p>
 
                   {paragraphs &&
                     paragraphs.map((paragraph) => (
@@ -86,11 +88,11 @@ const ArticleScreen = ({ match }) => {
                     ))}
                 </ListGroup.Item>
               </ListGroup>
-            </div>
+            </>
           )}
         </Col>
-        <Col md={4} className="bg-primary mb-2">
-          <h5 className="text-center text-white pt-2">More news articles</h5>
+        <Col md={4} className="mb-2">
+          <h5 className="text-center pt-2">More news articles</h5>
           {loadingArticles ? (
             <Loader variant="warning" />
           ) : errorArticles ? (

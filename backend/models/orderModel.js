@@ -53,6 +53,14 @@ const orderSchema = mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    isComplete: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    completeAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

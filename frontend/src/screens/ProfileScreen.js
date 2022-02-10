@@ -38,7 +38,7 @@ const ProfileScreen = ({ history, match }) => {
   const { memberInfo } = memberLogin;
 
   const memberDetails = useSelector((state) => state.memberDetails);
-  const { member } = memberDetails;
+  const { loading, member } = memberDetails;
 
   const [image, setImage] = useState();
   const singleImageData = (singleImage) => {
@@ -61,12 +61,12 @@ const ProfileScreen = ({ history, match }) => {
       setDDModal(true);
       history.push("/profile");
     }
-    if (!member.licenseNumber) {
+    if (!member.licenseNumber && !loading) {
       setJksModal(true);
     } else {
       setJksModal(false);
     }
-  }, [dispatch, history, memberInfo, member, ddSuccess]);
+  }, [dispatch, history, memberInfo, member, ddSuccess, loading]);
 
   // set page history and active menu selection
   const keyValue = new URLSearchParams(search).get("key");
@@ -248,6 +248,7 @@ const ProfileScreen = ({ history, match }) => {
                     href="https://www.jksengland.com/members"
                     target="_blank"
                     className="light-link"
+                    rel="noreferrer"
                   >
                     www.jksengland.com
                   </a>

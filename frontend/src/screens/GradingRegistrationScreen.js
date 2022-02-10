@@ -43,12 +43,6 @@ const GradingRegistrationScreen = ({ history, match }) => {
       dispatch(getMemberDetails(memberInfo._id));
     }
     dispatch(listEvent(match.params.id));
-
-    if (member.licenseNumber) {
-      setJksModal(false);
-    } else {
-      setJksModal(true);
-    }
   }, [dispatch, match, history, member, memberInfo]);
 
   let numberMarker;
@@ -87,7 +81,6 @@ const GradingRegistrationScreen = ({ history, match }) => {
   }
 
   const submitApplicationHandler = async (application) => {
-    console.log(application);
     try {
       const config = {
         headers: {
@@ -121,7 +114,7 @@ const GradingRegistrationScreen = ({ history, match }) => {
       licenseNumber: value,
     };
     await dispatch(updateProfile(values));
-    await dispatch(getMemberDetails(memberInfo._id));
+    window.location.reload(false);
   };
 
   return (
@@ -172,7 +165,7 @@ const GradingRegistrationScreen = ({ history, match }) => {
             {applicationError === true ? (
               <Message variant="danger">
                 Application Error. Please try again later or contact us on
-                admin@yorkkarate.net for assistance.
+                info@yorkkarate.net for assistance.
               </Message>
             ) : (
               <>
@@ -190,7 +183,8 @@ const GradingRegistrationScreen = ({ history, match }) => {
                 ) : (
                   <ListGroup.Item>
                     <Button
-                      className="btn-block btn-warning text-white"
+                      variant="default"
+                      className="btn-block text-white"
                       onClick={() => setShowModal(true)}
                     >
                       You are eligible to Grade. Register Now
@@ -220,8 +214,8 @@ const GradingRegistrationScreen = ({ history, match }) => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
-          <button
-            className="btn btn-warning"
+          <Button
+            variant="default"
             onClick={() => {
               const application = {
                 eventId: event._id,
@@ -232,7 +226,7 @@ const GradingRegistrationScreen = ({ history, match }) => {
             }}
           >
             Apply Now
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal>
       <Modal

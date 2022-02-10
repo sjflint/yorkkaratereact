@@ -22,7 +22,7 @@ const MemberOrders = () => {
     const getDay = newDate.getDate();
     const getMonth = newDate.getMonth();
     const getYear = newDate.getFullYear();
-    newDate = `${getDay}/${getMonth}/${getYear}`;
+    newDate = `${getDay}/${getMonth + 1}/${getYear}`;
     return newDate;
   };
 
@@ -34,13 +34,15 @@ const MemberOrders = () => {
   return (
     <>
       <img src={dojoImg} alt="dojo" />
-      <h2 className="border-bottom border-warning mt-2 text-warning">Orders</h2>
+      <h2 className="border-bottom border-warning mt-2 mb-2 text-warning">
+        Orders
+      </h2>
       {loading ? (
         <Loader variant="warning" />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : orders.length === 0 ? (
-        <h5 className="text-warning">No Orders to show</h5>
+        <h5>No Orders to show</h5>
       ) : (
         <>
           {filteredOrders.map((order) => (

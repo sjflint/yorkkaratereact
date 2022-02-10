@@ -46,36 +46,39 @@ const BasketScreen = ({ match, location, history }) => {
   };
 
   return (
-    <Container fluid>
-      <div className="d-flex align-items-center justify-content-between border-bottom border-warning p-3 mb-2 bg-secondary">
-        <Link className="btn btn-warning my-3 mr-2" to="/shop">
+    <Container fluid="lg">
+      <div className="d-flex align-items-center justify-content-between border-bottom border-warning mb-2">
+        <Link className="btn btn-default my-3 mr-2 btn-sm" to="/shop">
           <i className="fas fa-chevron-left"></i> Back to Shop
         </Link>
-        <h3 className="text-white">Club Shop</h3>
-        <Button
-          className="btn btn-warning my-3 mr-2"
+        <h3 className="text-center">Club Shop</h3>
+        <button
+          className="btn btn-default my-3 mr-2 btn-sm"
           disabled={basketItems.length === 0}
           onClick={checkoutHandler}
         >
           Proceed To Checkout <i className="fas fa-chevron-right"></i>
-        </Button>
+        </button>
       </div>
       <Row>
         <Col sm={8}>
           {basketItems.length === 0 ? (
             <Message variant="primary" heading="Your basket is empty"></Message>
           ) : (
-            <ListGroup.Item variant="flush">
+            <>
               {basketItems.map((item) => (
                 <ListGroup.Item key={item.product + item.size + Math.random()}>
-                  <Row>
-                    <Col md={2}>
+                  <Row className="align-items-center">
+                    <Col md={2} className="bg-light p-1">
                       <Image src={item.image} alt={item.name} />
                     </Col>
                     <Col md={3}>
-                      <Link to={`/products/${item.product.split("?")[0]}`}>
-                        {item.name}
-                        <br /> {item.size}
+                      <Link
+                        to={`/products/${item.product.split("?")[0]}`}
+                        className="text-decoration-none d-flex flex-column"
+                      >
+                        <small>{item.name}</small>
+                        <small>{item.size}</small>
                       </Link>
                     </Col>
                     <Col md={2}>£{item.price}</Col>
@@ -104,17 +107,18 @@ const BasketScreen = ({ match, location, history }) => {
                         </Form.Control>
                       ) : (
                         <>
-                          Name:
+                          <small>Name:</small>
                           <br />
-                          {item.print}
+                          <small>{item.print}</small>
                         </>
                       )}
                     </Col>
                     <Col md={2}>
                       <Button
                         type="button"
-                        variant="dark"
+                        variant="danger"
                         onClick={() => removeFromBasketHandler(item.product)}
+                        className="btn-sm"
                       >
                         <i className="fas fa-trash"></i>
                       </Button>
@@ -122,12 +126,12 @@ const BasketScreen = ({ match, location, history }) => {
                   </Row>
                 </ListGroup.Item>
               ))}
-            </ListGroup.Item>
+            </>
           )}
         </Col>
         <Col sm={4}>
           <Card>
-            <ListGroup variant="flush">
+            <ListGroup.Item variant="light" className="text-light">
               <ListGroup.Item>
                 <h5>
                   Subtotal (
@@ -138,18 +142,16 @@ const BasketScreen = ({ match, location, history }) => {
                   .reduce((acc, item) => acc + item.qty * item.price, 0)
                   .toFixed(2)}
               </ListGroup.Item>
-              <ListGroup.Item>
-                <Button
-                  type="button"
-                  variant="warning"
-                  className="btn-block"
+              <ListGroup.Item className="text-center">
+                <button
+                  className="btn-block btn btn-default btn-sm"
                   disabled={basketItems.length === 0}
                   onClick={checkoutHandler}
                 >
                   Proceed To Checkout
-                </Button>
+                </button>
               </ListGroup.Item>
-            </ListGroup>
+            </ListGroup.Item>
           </Card>
         </Col>
       </Row>

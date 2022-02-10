@@ -5,22 +5,27 @@ import {
   changeDirectDebit,
 } from "../utils/registerDirectDebit.cjs";
 import Member from "../models/memberModel.cjs";
-// import fs from "fs";
-// import { promisify } from "util";
-// import stream from "stream";
 
 // @desc Auth member & get token
 // @route GET /api/members/login
 // @access Public
 const authMember = asyncHandler(async (req, res) => {
-  const { name, password } = req.body;
+  let { firstName, lastName, email, password } = req.body;
 
-  const member = await Member.findOne({ name });
+  firstName = firstName.toLowerCase().trim();
+  lastName = lastName.toLowerCase().trim();
+  email = email.toLowerCase().trim();
+
+  const member = await Member.findOne({
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+  });
 
   if (member && (await member.matchPassword(password))) {
     res.json({
       _id: member._id,
-      name: member.name,
+      lastName: member.lastName,
       firstName: member.firstName,
       email: member.email,
       isAdmin: member.isAdmin,
@@ -39,21 +44,21 @@ const authMember = asyncHandler(async (req, res) => {
 // @route POST /api/members
 // @access Public
 const registerMember = asyncHandler(async (req, res) => {
-  const { values } = req.body;
-
-  // create jws token to store in db
-
-  const memberExists = await Member.findOne({ name: values.name });
+  const memberExists = await Member.findOne({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+  });
 
   if (memberExists) {
     res.status(400);
     throw new Error("Member already exists");
   }
 
-  const member = await Member.create(values);
+  const member = await Member.create(req.body);
 
   if (member) {
-    const session_token = member.name + member.email;
+    const session_token = Math.random() + member.firstName + member.email;
 
     const ddRedirect = await createDirectDebit(member, session_token);
 
@@ -64,7 +69,6 @@ const registerMember = asyncHandler(async (req, res) => {
       _id: member._id,
       firstName: member.firstName,
       lastName: member.lastName,
-      name: member.name,
       email: member.email,
       isAdmin: member.isAdmin,
       token: generateToken(member._id),
@@ -81,11 +85,10 @@ const registerMember = asyncHandler(async (req, res) => {
 // @route POST /api/members/updatedd
 // @access Private
 const updateDirectDebit = asyncHandler(async (req, res) => {
-  console.log(req.body._id);
   const member = await Member.findById(req.body._id);
 
   if (member) {
-    const session_token = Math.random() + member.name + member.email;
+    const session_token = Math.random() + member.firstName + member.email;
     const ddRedirect = await changeDirectDebit(session_token);
 
     if (ddRedirect) {
@@ -176,8 +179,6 @@ const updateProfile = asyncHandler(async (req, res) => {
 
   const member = await Member.findById(values.memberId);
 
-  console.log(values.licenseNumber);
-
   if (member && values.licenseNumber) {
     await Member.findOneAndUpdate(
       { _id: member._id },
@@ -233,13 +234,26 @@ const updatePassword = asyncHandler(async (req, res) => {
 // @route GET /api/members/resetpassword
 // @access Public
 const resetPassword = asyncHandler(async (req, res) => {
-  const member = await Member.findById(req.body._id);
+  const firstName = req.body.values.firstName.toLowerCase();
+  const lastName = req.body.values.lastName.toLowerCase();
+  const email = req.body.values.email.toLowerCase();
+  const dateOfBirth = req.body.values.dateOfBirth;
 
-  if (member) {
-    member.password = "Cannon110";
-    await member.save();
+  const member = await Member.find({
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    dateOfBirth: dateOfBirth,
+  });
+
+  if (member.length > 0 && member.length < 2) {
+    member[0].password = req.body.values.newPassword;
+    await member[0].save();
 
     res.json("Password updated");
+  } else {
+    res.status(404);
+    throw new Error("Error: Cannot find member details");
   }
 });
 
@@ -269,6 +283,30 @@ const getBlackBelts = asyncHandler(async (req, res) => {
 // @route GET /api/members
 // @access Private/Admin
 const getMembers = asyncHandler(async (req, res) => {
+  const keyword = req.query.keyword
+    ? {
+        $or: [
+          {
+            firstName: {
+              $regex: req.query.keyword,
+              $options: "i",
+            },
+          },
+          {
+            lastName: {
+              $regex: req.query.keyword,
+              $options: "i",
+            },
+          },
+        ],
+      }
+    : {};
+
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const count = await Member.countDocuments();
+
   const options = {
     _id: 1,
     firstName: 1,
@@ -278,9 +316,11 @@ const getMembers = asyncHandler(async (req, res) => {
     ddMandate: 1,
   };
 
-  const members = await Member.find({}, options);
+  const members = await Member.find({ ...keyword }, options)
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
-  res.json(members);
+  res.json({ members, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc Delete member
@@ -320,8 +360,6 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
 
   const member = await Member.findById(req.params.id);
 
-  console.log(values);
-
   if (member) {
     await Member.findOneAndUpdate({ _id: values.memberId }, values, {
       new: true,
@@ -338,7 +376,6 @@ export {
   getMemberProfile,
   registerMember,
   getBlackBelts,
-  // postProfileImg,
   updateProfile,
   updatePassword,
   updateDirectDebit,

@@ -1,6 +1,7 @@
 import {
   CREATE_DD_PAYMENT_FAIL,
   CREATE_DD_PAYMENT_REQUEST,
+  CREATE_DD_PAYMENT_RESET,
   CREATE_DD_PAYMENT_SUCCESS,
   DD_CANCEL_CLEAR,
   DD_CANCEL_FAIL,
@@ -60,9 +61,11 @@ export const createDDPaymentReducer = (state = {}, action) => {
     case CREATE_DD_PAYMENT_REQUEST:
       return { loading: true };
     case CREATE_DD_PAYMENT_SUCCESS:
-      return { loading: false, success: action.payload };
+      return { loading: false, success: true };
     case CREATE_DD_PAYMENT_FAIL:
       return { loading: false, error: action.payload };
+    case CREATE_DD_PAYMENT_RESET:
+      return {};
     default:
       return state;
   }

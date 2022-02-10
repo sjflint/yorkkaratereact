@@ -42,13 +42,15 @@ import ListLessonPlanScreen from "./ListLessonPlanScreen";
 import GradingRegistrationScreen from "./GradingRegistrationScreen";
 import ListGradingsScreen from "./ListGradingsScreen";
 import GradingScreen from "./GradingScreen";
+import AccountInactiveScreen from "./AccountInactiveScreen";
 
 const ScreenRoutes = () => {
   return (
     <>
       <Route path="/" component={HomeScreen} exact />
       <Route path="/home" component={HomeScreen} />
-      <Route path="/news" component={NewsScreen} />
+      <Route path="/news" component={NewsScreen} exact />
+      <Route path="/news/page/:pageNumber" component={NewsScreen} exact />
       <Route path="/article/:id" component={ArticleScreen} />
       <Route path="/products/:id" component={ProductScreen} />
       <Route path="/trainingvideos/:id" component={TrainingVideoScreen} />
@@ -75,7 +77,8 @@ const ScreenRoutes = () => {
         component={WelfareFundraisingScreen}
       />
       <Route path="/blackbelts" component={BlackBeltScreen} />
-      <Route path="/shop" component={ShopScreen} />
+      <Route path="/shop" component={ShopScreen} exact />
+      <Route path="/shop/page/:pageNumber" component={ShopScreen} exact />
       <Route path="/basket/:id?" component={BasketScreen} />
       <Route path="/events" component={EventsScreen} />
       <Route path="/event/:id" component={EventScreen} />
@@ -85,11 +88,34 @@ const ScreenRoutes = () => {
       <Route path="/shopAdmin/editorders" component={ListOrdersScreen} />
       <Route path="/profile" component={ProfileScreen} />
       <Route path="/admin" component={AdminScreen} exact />
-      <Route path="/admin/listmembers" component={ListMembersScreen} />
+      <Route
+        path="/admin/listmembers/search/:keyword"
+        component={ListMembersScreen}
+      />
+      <Route path="/admin/listmembers" component={ListMembersScreen} exact />
+      <Route
+        path="/admin/listmembers/:pageNumber"
+        component={ListMembersScreen}
+        exact
+      />
       <Route path="/admin/editevents" component={ListEventsScreen} />
       <Route path="/admin/members/:id/edit" component={MemberEditScreen} />
-      <Route path="/author/editarticles" component={ListArticlesScreen} />
-      <Route path="/shopadmin/editproducts" component={ListProductsScreen} />
+      <Route path="/author/editarticles" component={ListArticlesScreen} exact />
+      <Route
+        path="/author/editarticles/:pageNumber"
+        component={ListArticlesScreen}
+        exact
+      />
+      <Route
+        path="/shopadmin/editproducts"
+        component={ListProductsScreen}
+        exact
+      />
+      <Route
+        path="/shopadmin/editproducts/:pageNumber"
+        component={ListProductsScreen}
+        exact
+      />
       <Route path="/admin/editclasses" component={ListClassesScreen} />
       <Route path="/instructor/editsyllabus" component={ListSyllabusScreen} />
       <Route path="/grading/:id" component={GradingRegistrationScreen} />
@@ -99,6 +125,7 @@ const ScreenRoutes = () => {
         component={ListLessonPlanScreen}
       />
       <Route path="/instructor/editgradings" component={ListGradingsScreen} />
+      <Route path="/accountinactive" component={AccountInactiveScreen} />
     </>
   );
 };

@@ -1,16 +1,23 @@
-import { useSelector } from "react-redux";
+import { Button, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import ImgDDSuccess from "../img/ddsuccess.png";
 
-const DDUpdateSuccessScreen = () => {
+const DDUpdateSuccessScreen = ({ history }) => {
   localStorage.removeItem("updateDD");
 
-  const directDebit = useSelector((state) => state.updateDirectDebit);
-  const { ddSetupInfo } = directDebit;
-
-  if (ddSetupInfo) {
-    window.location.reload();
-  }
-
-  return <div></div>;
+  return (
+    <Container className="text-center">
+      <h1>Account successfuly reinstated</h1>
+      <div className="d-block">
+        <img src={ImgDDSuccess} alt="dd success" className="max-width-500" />
+      </div>
+      <div className="mt-4">
+        <Link to="/profile">
+          <Button variant="outline-warning">Return to Profile</Button>
+        </Link>
+      </div>
+    </Container>
+  );
 };
 
 export default DDUpdateSuccessScreen;

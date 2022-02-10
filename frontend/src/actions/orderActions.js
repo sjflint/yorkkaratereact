@@ -18,6 +18,9 @@ import {
   ORDER_DELIVER_REQUEST,
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_FAIL,
+  ORDER_FULFIL_REQUEST,
+  ORDER_FULFIL_SUCCESS,
+  ORDER_FULFIL_FAIL,
 } from "../constants/orderConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -155,6 +158,43 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_DELIVER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const fulfilOrder = (order) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ORDER_FULFIL_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/orders/${order._id}/fulfil`,
+      {},
+      config
+    );
+
+    dispatch({
+      type: ORDER_FULFIL_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDER_FULFIL_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

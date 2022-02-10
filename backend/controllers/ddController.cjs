@@ -12,6 +12,12 @@ const client = gocardless(
   constants.Environments.Sandbox
 );
 
+const findMandate = async () => {
+  const mandate = await client.mandates.find("MD000JWN2RETA3");
+  console.log(mandate.status);
+};
+findMandate();
+
 // @desc confirm dd setup and update database
 // @route GET /ddsetup_confirmed
 // @access Public
@@ -24,7 +30,7 @@ const ddSetup = asyncHandler(async (req, res) => {
   );
 
   await Member.findOneAndUpdate(
-    { name: req.body.name },
+    { _id: req.body._id },
     { ddsuccess: true, ddMandate: redirectFlow.links.mandate },
     { new: true },
     (err) => {
@@ -95,8 +101,9 @@ const ddSetup = asyncHandler(async (req, res) => {
   // Send auto email with nodemailer
 
   res.status(201).json({
-    confirmationURL: "http://localhost:3000/profile/ddsuccess",
+    confirmationURL: "http://localhost:3000/ddsuccess",
   });
+
   console.log(`Mandate: ${redirectFlow.links.mandate}`);
   console.log(`Customer: ${redirectFlow.links.customer}`);
 });
@@ -116,10 +123,9 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
   const classList = await TrainingSessions.find({});
   classList.forEach(async (indClass) => {
     for (let i = 0; i < indClass.participants.length; i++) {
-      if (indClass.participants[i] == req.body._id) {
+      if (indClass.participants[i].toString() === req.body._id.toString()) {
         indClass.participants.splice(i, 1);
         const numberBooked = indClass.numberBooked;
-        console.log(numberBooked);
 
         await TrainingSessions.findOneAndUpdate(
           { _id: indClass._id },
@@ -141,7 +147,6 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
     {
       ddMandate: "Cancelled",
       ddsuccess: false,
-      name: member.name + "Cancelled",
     },
     { new: true }
   );
@@ -192,6 +197,8 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
 // @route POST /ddroutes/updatedirectdebit
 // @access Public (private)
 const updateDirectDebit = asyncHandler(async (req, res) => {
+  console.log(req.body.session_token);
+  console.log(req.body.ddRedirect);
   // Create new DD
   const redirectFlow = await client.redirectFlows.complete(
     req.body.ddRedirect,
@@ -246,18 +253,24 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
       }
 
       // Cancel existing payment
-      console.log(`Cancelling mandate: ${mandateId}`);
-      const mandate = await client.mandates.cancel(mandateId);
-      if (mandate) {
+      if (mandateId === "Cancelled") {
         res.status(201).json({
           confirmationURL: "http://localhost:3000/ddupdatesuccess",
-          status: mandate.status,
         });
       } else {
-        res.status(404);
-        throw new Error(
-          "unable to fulfill request - Mandate not located and cancelled"
-        );
+        console.log(`Cancelling mandate: ${mandateId}`);
+        const mandate = await client.mandates.cancel(mandateId);
+        if (mandate) {
+          res.status(201).json({
+            confirmationURL: "http://localhost:3000/ddupdatesuccess",
+            status: mandate.status,
+          });
+        } else {
+          res.status(404);
+          throw new Error(
+            "unable to fulfill request - Mandate not located and cancelled"
+          );
+        }
       }
     } else {
       res.status(404);
@@ -275,6 +288,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
 // @access Public (private)
 const createPayment = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.body.paymentDetails._id);
+
   const payment = await client.payments.create(
     {
       amount: req.body.paymentDetails.amount,
@@ -285,7 +299,7 @@ const createPayment = asyncHandler(async (req, res) => {
       },
       metadata: {},
     },
-    Math.random() + req.body._id
+    Math.random() + req.body.paymentDetails._id + "paymentstring"
   );
 
   res.status(201).json({
@@ -293,23 +307,6 @@ const createPayment = asyncHandler(async (req, res) => {
     PaymentAmount: payment.amount,
   });
 });
-
-// const classListFunction = async () => {
-//   const classList = await TrainingSessions.find({});
-//   classList.forEach(async (indClass) => {
-//     for (let i = 0; i < indClass.participants.length; i++) {
-//       if (indClass.participants[i] == "60b8c1211cf90a5c941f4519") {
-//         indClass.participants.splice(i, 1);
-//         await TrainingSessions.findOneAndUpdate(
-//           { _id: indClass._id },
-//           { participants: indClass.participants },
-//           { new: true }
-//         );
-//       }
-//     }
-//   });
-// };
-// classListFunction();
 
 module.exports = {
   ddSetup,

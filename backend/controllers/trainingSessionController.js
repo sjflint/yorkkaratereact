@@ -83,7 +83,7 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
   const today = new Date();
   const changeDate = new Date(req.body.memberId.lastClassChange);
   changeDate.setMonth(changeDate.getMonth() + 1);
-  console.log(member._id);
+
   if (
     session.participants.includes(req.body.memberId._id) &&
     changeDate < today

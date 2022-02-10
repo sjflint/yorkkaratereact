@@ -17,13 +17,6 @@ const EventsScreen = () => {
     dispatch(listEvents());
   }, [dispatch]);
 
-  const today = Date.parse(new Date());
-
-  const filteredEvents = events.filter((event) => {
-    const eventDate = Date.parse(event.dateOfEvent);
-    return eventDate > today;
-  });
-
   return (
     <>
       <Container fluid="lg">
@@ -37,9 +30,8 @@ const EventsScreen = () => {
             {error}
           </Message>
         ) : (
-          filteredEvents.map((event) => (
+          events.map((event) => (
             <div className="mb-2" key={event._id}>
-              {console.log(Date.parse(event.dateOfEvent))}
               <Event event={event} />
             </div>
           ))

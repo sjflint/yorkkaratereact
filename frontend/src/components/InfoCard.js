@@ -2,7 +2,7 @@ import { Card } from "react-bootstrap";
 const InfoCard = ({ title, text, link, image }) => {
   return (
     <Card>
-      <Card.Img variant="top" src={image} />
+      <Card.Img variant="top" src={image} className="bg-primary p-1" />
       <Card.Body>
         <Card.Title>{title}</Card.Title>
         <Card.Text>{text}</Card.Text>
@@ -12,7 +12,7 @@ const InfoCard = ({ title, text, link, image }) => {
           href={link}
           target="_blank"
           rel="noreferrer"
-          className="btn-block btn btn-default"
+          className="d-block btn btn-default"
         >
           Visit Site
         </a>

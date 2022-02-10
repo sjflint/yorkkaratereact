@@ -8,7 +8,7 @@ const ArticleSidebar = ({ article }) => {
       <Link to={`/article/${article._id}`}>
         <Card.Img src={article.image} alt="article" className="mb-2" />
       </Link>
-      <Link to={`/article/${article._id}`}>
+      <Link to={`/article/${article._id}`} className="text-decoration-none">
         <div>
           <h5>
             <strong>{article.title}</strong>
@@ -17,8 +17,8 @@ const ArticleSidebar = ({ article }) => {
           <div className="my-3">{article.leader}</div>
         </div>
         <Card.Footer>
-          <div className="text-white">{article.author}</div>
-          <small className="text-white">
+          <div>{article.author}</div>
+          <small>
             <FormatDate date={article.dateCreated} />
           </small>
         </Card.Footer>

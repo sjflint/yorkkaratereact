@@ -20,6 +20,10 @@ import {
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_FAIL,
   ORDER_DELIVER_RESET,
+  ORDER_FULFIL_REQUEST,
+  ORDER_FULFIL_SUCCESS,
+  ORDER_FULFIL_FAIL,
+  ORDER_FULFIL_RESET,
 } from "../constants/orderConstants";
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -111,6 +115,29 @@ export const orderDeliverReducer = (state = {}, action) => {
         error: action.payload,
       };
     case ORDER_DELIVER_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const orderFulfilReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ORDER_FULFIL_REQUEST:
+      return {
+        loading: true,
+      };
+    case ORDER_FULFIL_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case ORDER_FULFIL_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case ORDER_FULFIL_RESET:
       return {};
     default:
       return state;

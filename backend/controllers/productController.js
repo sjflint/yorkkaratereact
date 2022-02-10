@@ -5,8 +5,31 @@ import Product from "../models/productModel.js";
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  const pageSize = 6;
+  const page = Number(req.query.pageNumber) || 1;
+  const filterBy = req.query.filterBy;
+
+  // const count = await Product.countDocuments();
+
+  if (filterBy === "") {
+    const count = await Product.find({}).countDocuments();
+
+    const products = await Product.find({})
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+      .sort({ name: 1 });
+
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    const count = await Product.find({ category: filterBy }).countDocuments();
+
+    const products = await Product.find({ category: filterBy }).sort({
+      name: 1,
+    });
+    // .limit(pageSize)
+    // .skip(pageSize * (page - 1));
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  }
 });
 
 // // @desc Fetch single article

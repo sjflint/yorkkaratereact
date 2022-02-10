@@ -1,51 +1,50 @@
-import { Nav } from "react-bootstrap";
+import { Col, Nav, Row } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 
 const FormSteps = ({ step1, step2, step3 }) => {
   return (
-    <Nav className="justify-content-center mb-4 text-white">
-      <Nav.Item>
+    <Row className="mb-2">
+      <Col className="d-flex justify-content-around align-items-center" xs={4}>
         {step1 ? (
-          <LinkContainer to="/basket">
-            <Nav.Link>View Basket</Nav.Link>
-          </LinkContainer>
+          <Link to="/basket" className="text-decoration-none">
+            <small>View Basket</small>
+          </Link>
         ) : (
-          <Nav.Link disabled className="text-primary">
+          <small disabled className="text-muted">
             View Basket
-          </Nav.Link>
+          </small>
         )}
-      </Nav.Item>
-      <div className="d-flex align-items-center">
         <i className="fas fa-walking fa-2x"></i>
         <i className="fas fa-arrow-right"></i>
-      </div>
-      <Nav.Item>
+      </Col>
+      <Col className="d-flex justify-content-around align-items-center" xs={4}>
         {step2 ? (
-          <LinkContainer to="/payment">
-            <Nav.Link>Payment Method</Nav.Link>
-          </LinkContainer>
+          <Link to="/payment" className="text-decoration-none">
+            <small>Payment Method</small>
+          </Link>
         ) : (
-          <Nav.Link disabled className="text-primary">
+          <small disabled className="text-muted">
             Payment Method
-          </Nav.Link>
+          </small>
         )}
-      </Nav.Item>
-      <div className="d-flex align-items-center">
-        <i className="fas fa-walking fa-2x"></i>
-        <i className="fas fa-arrow-right"></i>
-      </div>
-      <Nav.Item>
+        <div className="d-flex align-items-center">
+          <i className="fas fa-walking fa-2x"></i>
+          <i className="fas fa-arrow-right"></i>
+        </div>
+      </Col>
+      <Col className="d-flex justify-content-around align-items-center" xs={4}>
         {step3 ? (
           <LinkContainer to="placeOrder">
             <Nav.Link>Review Order</Nav.Link>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled className="text-primary">
+          <small disabled className="text-muted">
             Review Order
-          </Nav.Link>
+          </small>
         )}
-      </Nav.Item>
-    </Nav>
+      </Col>
+    </Row>
   );
 };
 

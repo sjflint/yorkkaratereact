@@ -29,8 +29,10 @@ import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
 
 import UploadImage from "../components/uploadImage";
+import ProductPaginate from "../components/ProductPaginate";
 
 const ListProductsScreen = ({ history, match }) => {
+  const pageNumber = match.params.pageNumber || 1;
   const [deleteModal, setDeleteModal] = useState(false);
   const [createModal, setCreateModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -54,7 +56,7 @@ const ListProductsScreen = ({ history, match }) => {
   const { member } = memberDetails;
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
 
   const displayProduct = useSelector((state) => state.displayProduct);
   const { error: productError, product } = displayProduct;
@@ -83,7 +85,7 @@ const ListProductsScreen = ({ history, match }) => {
     } else if (!member.isShopAdmin) {
       history.push("/profile");
     } else {
-      dispatch(listProducts());
+      dispatch(listProducts(pageNumber));
     }
   }, [
     dispatch,
@@ -92,6 +94,8 @@ const ListProductsScreen = ({ history, match }) => {
     successDelete,
     successCreate,
     successUpdate,
+    member.isShopAdmin,
+    pageNumber,
   ]);
 
   const deleteHandler = async () => {
@@ -349,6 +353,14 @@ const ListProductsScreen = ({ history, match }) => {
               ))}
             </tbody>
           </Table>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ProductPaginate
+              pages={pages}
+              page={page}
+              editList={true}
+              className="d-flex justify-content-center"
+            />
+          </div>
 
           <div className="text-center">
             <Button

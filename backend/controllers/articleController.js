@@ -5,8 +5,16 @@ import Article from "../models/articleModel.js";
 // @route GET /api/articles
 // @access Public
 const getArticles = asyncHandler(async (req, res) => {
-  const articles = await Article.find({}).sort({ dateCreated: -1 });
-  res.json(articles);
+  const pageSize = 4;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const count = await Article.countDocuments();
+  const articles = await Article.find({})
+    .sort({ dateCreated: -1 })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ articles, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc Fetch single article

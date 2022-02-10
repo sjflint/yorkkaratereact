@@ -70,7 +70,7 @@ const EnquiryForm = () => {
         onSubmit={onSubmit}
       >
         <Form
-          className="py-2"
+          className="py-2 d-flex flex-column"
           id="enquiryform"
           name="enquiryform"
           action="sendEnquiry"
@@ -109,9 +109,10 @@ const EnquiryForm = () => {
             name="message"
             placeholder="Please enter a brief description of how we can help you"
           />
-          <Button type="submit" variant="primary" className="btn-block">
+
+          <button type="submit" className="mt-1 btn-block btn-default btn">
             Submit
-          </Button>
+          </button>
         </Form>
       </Formik>
 

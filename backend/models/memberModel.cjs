@@ -5,7 +5,6 @@ const memberSchema = mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    name: { type: String, required: true, unique: true },
     dateOfBirth: { type: Date, required: true },
     medicalStatus: { type: String, required: true },
     medicalDetails: { type: String },
@@ -20,7 +19,7 @@ const memberSchema = mongoose.Schema(
     emergencyContactEmail: { type: String, required: true },
     emergencyContactPhone: { type: Number, required: true },
     ddsuccess: { type: Boolean, required: true, default: false },
-    totalPayment: { type: Number, required: true, default: 12.5 },
+    totalPayment: { type: Number, required: true, default: 15 },
     kyuGrade: { type: Number, required: true, default: 16 },
     danGrade: { type: Number, required: true, default: 0 },
     danGradings: {

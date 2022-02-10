@@ -72,7 +72,15 @@ const ListEventsScreen = ({ history, match }) => {
     } else {
       dispatch(listEvents());
     }
-  }, [dispatch, history, member, successDelete, successCreate, successUpdate]);
+  }, [
+    dispatch,
+    history,
+    member,
+    successDelete,
+    successCreate,
+    successUpdate,
+    memberInfo,
+  ]);
 
   const deleteHandler = async () => {
     dispatch(deleteEvent(deleteId));

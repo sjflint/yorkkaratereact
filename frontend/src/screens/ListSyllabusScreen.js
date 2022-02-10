@@ -104,6 +104,7 @@ const ListSyllabusScreen = ({ history, match }) => {
     successDelete,
     successCreate,
     successUpdate,
+    member.isInstructor,
   ]);
 
   const deleteHandler = async () => {

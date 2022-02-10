@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Button,
   Col,
   Container,
   Form,
@@ -44,12 +43,12 @@ const ProductScreen = ({ history, match }) => {
 
   return (
     <Container>
-      <div className="d-flex align-items-center justify-content-between border-bottom border-warning p-3 mb-2 bg-secondary">
-        <Link className="btn btn-warning my-3 mr-2" to="/shop">
+      <div className="d-flex align-items-center justify-content-between border-bottom border-warning mb-2">
+        <Link className="btn btn-default my-3 mr-2" to="/shop">
           <i className="fas fa-chevron-left"></i> Back to Shop
         </Link>
-        <h3 className="text-white">Club Shop</h3>
-        <Link className="btn btn-warning my-3" to="/basket">
+        <h3>Club Shop</h3>
+        <Link className="btn btn-default my-3" to="/basket">
           <i className="fas fa-shopping-cart"></i> Checkout
         </Link>
       </div>
@@ -61,8 +60,8 @@ const ProductScreen = ({ history, match }) => {
         </Message>
       ) : (
         <>
-          <Row>
-            <Col md={7}>
+          <Row className="align-items-center">
+            <Col md={7} className="bg-light p-2">
               <Image src={product.image} alt={product.name} />
             </Col>
             <Col md={5}>
@@ -132,14 +131,13 @@ const ProductScreen = ({ history, match }) => {
                             ></Form.Control>
                           </ListGroupItem>
                           <ListGroupItem variant="secondary">
-                            <Button
-                              variant="warning"
-                              className="btn-block"
+                            <button
+                              className="btn-block btn btn-default"
                               type="button"
                               onClick={addToBasketHandler}
                             >
                               Add to Basket
-                            </Button>
+                            </button>
                           </ListGroupItem>
                         </>
                       )}
@@ -175,14 +173,13 @@ const ProductScreen = ({ history, match }) => {
                         </Row>
                       </ListGroup.Item>
                       <ListGroupItem variant="secondary">
-                        <Button
-                          variant="warning"
-                          className="btn-block"
+                        <button
+                          className="btn-block btn btn-default"
                           type="button"
                           onClick={addToBasketHandler}
                         >
                           Add to Basket
-                        </Button>
+                        </button>
                       </ListGroupItem>
                     </>
                   )
