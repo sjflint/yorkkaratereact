@@ -52,7 +52,7 @@ const UploadImage = ({ img, type, id, singleImageData, buttonText }) => {
 
   return (
     <>
-      <label className="d-block btn-secondary py-2 my-1 text-center custom-fileupload-button">
+      <label className="d-block btn btn-default py-2 my-1 text-center custom-fileupload-button">
         <input type="file" name="image" onChange={onChange} />
         {buttonText ? buttonText : "Change Image"}
       </label>

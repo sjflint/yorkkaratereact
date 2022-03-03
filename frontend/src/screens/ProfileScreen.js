@@ -121,7 +121,7 @@ const ProfileScreen = ({ history, match }) => {
                   <Nav.Link eventKey="first">
                     <Row>
                       <Col xs={3} className="align-self-center">
-                        <i className="fas fa-id-card mr-3 text-center"></i>
+                        <i className="fas fa-id-card mr-3"></i>
                       </Col>
                       <Col>Your Details</Col>
                     </Row>
@@ -149,7 +149,7 @@ const ProfileScreen = ({ history, match }) => {
                       <Col xs={3} className="align-self-center">
                         <i className="fas fa-calendar-alt mr-3"></i>
                       </Col>
-                      <Col>Class Bookings</Col>
+                      <Col>Classes</Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -162,7 +162,7 @@ const ProfileScreen = ({ history, match }) => {
                       <Col xs={3} className="align-self-center">
                         <i className="fas fa-video mr-3"></i>
                       </Col>
-                      <Col>Training Videos</Col>
+                      <Col>Videos</Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -227,7 +227,9 @@ const ProfileScreen = ({ history, match }) => {
         }}
       >
         <Modal.Header closeButton className="bg-primary">
-          <Modal.Title>Add JKS Number to your profile</Modal.Title>
+          <Modal.Title className="text-white">
+            Add JKS Number to your profile
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-dark text-center">
           <p className="text-center">
@@ -330,10 +332,12 @@ const ProfileScreen = ({ history, match }) => {
           setDDModal(false);
         }}
       >
-        <Modal.Header closeButton className="text-white bg-secondary">
-          <Modal.Title>Welcome to York Karate</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">
+            Welcome to York Karate
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-light text-primary">
+        <Modal.Body>
           <img src={ImgDDSuccess} alt="dd success" />
           <h5 className="text-center mt-2">Congratulations!</h5>
           <p className="text-center">
@@ -358,7 +362,7 @@ const ProfileScreen = ({ history, match }) => {
             here.
           </p>
         </Modal.Body>
-        <Modal.Footer className="bg-light">
+        <Modal.Footer className="bg-dark">
           <Button
             variant="secondary"
             onClick={(e) => {
@@ -378,8 +382,8 @@ const ProfileScreen = ({ history, match }) => {
           window.location.reload();
         }}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Change Profile Image</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Change Profile Image</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {member._id && (
@@ -401,7 +405,7 @@ const ProfileScreen = ({ history, match }) => {
             nature.
           </small>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button
             variant="secondary"
             onClick={(e) => {

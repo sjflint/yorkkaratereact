@@ -66,14 +66,12 @@ const ListGradingsScreen = ({ history }) => {
             <tbody>
               {filteredEvents.map((event) => (
                 <tr key={event._id}>
-                  <td
-                    style={{ maxWidth: "80px" }}
-                    className="text-center align-middle"
-                  >
+                  <td className="text-center align-middle max-width-200">
                     <img
                       src={event.image}
                       alt="grading course"
                       max-width="80"
+                      fluid
                     />
                   </td>
                   <td className="text-center align-middle">{event.title}</td>
@@ -85,13 +83,8 @@ const ListGradingsScreen = ({ history }) => {
                   </td>
                   <td className="text-center align-middle">
                     <a href={`/gradingdetails/${event._id}`}>
-                      <Button variant="light" className="btn btn-block p-1 m-1">
-                        <i
-                          className="fa-solid fa-eye"
-                          style={{ color: "orange" }}
-                        ></i>{" "}
-                        <br />
-                        View Grading
+                      <Button variant="warning" className="btn-sm">
+                        <i className="fa-solid fa-eye"></i>
                       </Button>
                     </a>
                   </td>
@@ -99,6 +92,13 @@ const ListGradingsScreen = ({ history }) => {
               ))}
             </tbody>
           </Table>
+          <small>
+            To edit/delete a grading course, please visit the{" "}
+            <Link to="/admin/editevents" className="text-info">
+              Events page
+            </Link>{" "}
+            if you have admin access.
+          </small>
         </>
       )}
     </Container>

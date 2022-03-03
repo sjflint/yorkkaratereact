@@ -39,7 +39,9 @@ const postGradingApplication = asyncHandler(async (req, res) => {
             links: {
               mandate: mandate,
             },
-            metadata: {},
+            metadata: {
+              gradingId: req.params.id,
+            },
           },
           // `${member._id}${req.params.id} - payment ID`
           `${Math.random()} - payment ID`
@@ -62,6 +64,8 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               phone: member.phone,
               dateOfBirth: member.dateOfBirth,
               licenseNumber: member.licenseNumber,
+              paymentStatus: "pending",
+              paymentId: payment.id,
             });
             await gradingCourse.save();
             res.send("grading application successful!");

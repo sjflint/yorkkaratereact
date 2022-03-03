@@ -91,8 +91,10 @@ const ArticleScreen = ({ match }) => {
             </>
           )}
         </Col>
-        <Col md={4} className="mb-2">
-          <h5 className="text-center pt-2">More news articles</h5>
+        <Col md={4}>
+          <h5 className="text-center p-2 bg-primary text-white">
+            More news articles
+          </h5>
           {loadingArticles ? (
             <Loader variant="warning" />
           ) : errorArticles ? (
@@ -106,7 +108,7 @@ const ArticleScreen = ({ match }) => {
               ))}
             </div>
           )}
-          <Link className="btn btn-block btn-default my-3" to="/news">
+          <Link className="btn w-100 btn-default my-3" to="/news">
             Read more news articles
           </Link>
         </Col>

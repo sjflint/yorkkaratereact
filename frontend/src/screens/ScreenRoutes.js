@@ -43,6 +43,7 @@ import GradingRegistrationScreen from "./GradingRegistrationScreen";
 import ListGradingsScreen from "./ListGradingsScreen";
 import GradingScreen from "./GradingScreen";
 import AccountInactiveScreen from "./AccountInactiveScreen";
+import AttendanceScreen from "./AttendanceScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -125,6 +126,7 @@ const ScreenRoutes = () => {
         component={ListLessonPlanScreen}
       />
       <Route path="/instructor/editgradings" component={ListGradingsScreen} />
+      <Route path="/instructor/attendance" component={AttendanceScreen} />
       <Route path="/accountinactive" component={AccountInactiveScreen} />
     </>
   );

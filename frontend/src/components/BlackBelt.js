@@ -20,7 +20,12 @@ const BlackBelt = ({ blackBelt }) => {
 
   return (
     <Card className="blackbelt-card">
-      <Card.Img variant="top" src={blackBelt.profileImg} alt="" />
+      <Card.Img
+        variant="top"
+        src={blackBelt.profileImg}
+        alt=""
+        className="bg-primary p-2"
+      />
       <Card.Body>
         <Card.Title className="text-center border-bottom border-warning pb-1">
           {blackBelt.firstName} {blackBelt.lastName}

@@ -55,10 +55,12 @@ const ListMembersScreen = ({ history, match }) => {
 
   return (
     <Container fluid="lg">
-      <Link className="btn btn-dark" to="/admin">
-        <i className="fas fa-arrow-left"></i> Return
-      </Link>
-      <Route render={({ history }) => <SearchBox history={history} />} />
+      <div className="d-flex justify-content-between mb-3">
+        <Link className="btn btn-dark" to="/admin">
+          <i className="fas fa-arrow-left"></i> Return
+        </Link>
+        <Route render={({ history }) => <SearchBox history={history} />} />
+      </div>
       <h3 className="text-center border-bottom border-warning pb-1">
         Member List
       </h3>
@@ -106,25 +108,19 @@ const ListMembersScreen = ({ history, match }) => {
                   <td>
                     {member.ddMandate === "Cancelled" ? (
                       <Button
-                        variant="light"
+                        variant="danger"
                         className="btn-sm"
                         onClick={() => {
                           setShow(true);
                           setDeleteId(member._id);
                         }}
                       >
-                        <i
-                          className="fas fa-trash"
-                          style={{ color: "red" }}
-                        ></i>
+                        <i className="fas fa-trash"></i>
                       </Button>
                     ) : (
                       <LinkContainer to={`/admin/members/${member._id}/edit`}>
-                        <Button variant="light" className="btn-sm">
-                          <i
-                            className="fas fa-edit"
-                            style={{ color: "green" }}
-                          ></i>
+                        <Button variant="success" className="btn-sm">
+                          <i className="fas fa-edit"></i>
                         </Button>
                       </LinkContainer>
                     )}

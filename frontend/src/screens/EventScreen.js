@@ -54,13 +54,13 @@ const EventScreen = ({ match }) => {
                 event.register === "/squadselection" ? (
                   <ListGroup.Item>
                     <a href={`${event.register}/${event._id}`} rel="noreferrer">
-                      <Button variant="default">Register</Button>
+                      <Button variant="primary">Register</Button>
                     </a>
                   </ListGroup.Item>
                 ) : (
                   <ListGroup.Item>
                     <a href={event.register} target="_blank" rel="noreferrer">
-                      <Button variant="warning">Register</Button>
+                      <Button variant="primary">Register</Button>
                     </a>
                   </ListGroup.Item>
                 )}
@@ -75,7 +75,7 @@ const EventScreen = ({ match }) => {
                     ))}
                 </ListGroup.Item>
                 <div className="mt-2 mb-5 border-bottom border-warning">
-                  <Link className="btn btn-default mb-5 btn-block" to="/events">
+                  <Link className="btn btn-default mb-5 w-100" to="/events">
                     Return to event listings
                   </Link>
                 </div>
@@ -99,7 +99,7 @@ const EventScreen = ({ match }) => {
             </div>
           )}
 
-          <Link className="btn btn-block btn-default" to="/events">
+          <Link className="btn w-100 btn-default" to="/events">
             Return to event listings
           </Link>
         </Col>

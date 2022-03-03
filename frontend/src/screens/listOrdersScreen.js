@@ -9,7 +9,7 @@ import Message from "../components/Message";
 
 const ListOrdersScreen = ({ history }) => {
   const [paid, setPaid] = useState("paid");
-  const [collection, setReady] = useState("notReady");
+  const [collection, setReady] = useState("all");
 
   const dispatch = useDispatch();
 
@@ -79,7 +79,6 @@ const ListOrdersScreen = ({ history }) => {
           >
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Member</th>
                 <th>Date</th>
                 <th>Total</th>
@@ -110,12 +109,12 @@ const ListOrdersScreen = ({ history }) => {
                     Ready For Collection (All) <i className="fas fa-sort"></i>
                   </th>
                 )}
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
               {filteredOrders.map((order) => (
                 <tr key={order._id}>
-                  <td>{order._id}</td>
                   <td>
                     {order.member && (
                       <Link to={`/shopadmin/members/${order.member._id}`}>
@@ -124,26 +123,28 @@ const ListOrdersScreen = ({ history }) => {
                     )}
                   </td>
 
-                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td>£{order.totalPrice.toFixed(2)}</td>
                   <td className="text-center">
                     {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
+                      new Date(order.paidAt).toLocaleDateString()
                     ) : (
-                      <i className="fas fa-times" style={{ color: "red" }}></i>
+                      <small className="text-danger">Not paid</small>
                     )}
                   </td>
                   <td className="text-center">
                     {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
+                      new Date(order.deliveredAt).toLocaleDateString()
                     ) : (
-                      <i className="fas fa-times" style={{ color: "red" }}></i>
+                      <small className="text-danger">
+                        Not ready for collection
+                      </small>
                     )}
                   </td>
                   <td>
                     <Link to={`/order/${order._id}`}>
-                      <Button variant="light" className="btn-sm">
-                        Details
+                      <Button variant="success" className="btn-sm">
+                        <i className="fas fa-edit"></i>
                       </Button>
                     </Link>
                   </td>

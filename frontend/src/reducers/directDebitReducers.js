@@ -61,7 +61,7 @@ export const createDDPaymentReducer = (state = {}, action) => {
     case CREATE_DD_PAYMENT_REQUEST:
       return { loading: true };
     case CREATE_DD_PAYMENT_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: true, data: action.payload };
     case CREATE_DD_PAYMENT_FAIL:
       return { loading: false, error: action.payload };
     case CREATE_DD_PAYMENT_RESET:

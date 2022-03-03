@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import FormatDate from "./FormatDate";
 
 const Article = ({ article }) => {
@@ -28,6 +28,9 @@ const Article = ({ article }) => {
               <small>
                 <FormatDate date={article.dateCreated} />
               </small>
+              <Button variant="primary" className="w-100 btn-sm">
+                Read Article
+              </Button>
             </Card.Footer>
           </Card>
         </Link>

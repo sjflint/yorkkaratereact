@@ -113,27 +113,22 @@ const MemberVideos = () => {
       <h5 className="my-3">Your Current Status:</h5>
       <ListGroup variant="flush">
         <ListGroup.Item>
-          <strong className="text-white">Grade: </strong>
+          <strong>Grade: </strong>
           {grade}
         </ListGroup.Item>
         <ListGroup.Item>
-          <strong className="text-white">
-            Training time required before next grading:{" "}
-          </strong>
+          <strong>Training time required before next grading: </strong>
           10 hours
         </ListGroup.Item>
         <ListGroup.Item>
-          <strong className="text-white">
-            Total hours completed to date:{" "}
-          </strong>
-          0 hours
+          <strong>Total hours completed to date: </strong>0 hours
         </ListGroup.Item>
         <ListGroup.Item>
-          <strong className="text-white">Next Grade: </strong>
+          <strong>Next Grade: </strong>
           {nextGrade}
         </ListGroup.Item>
         <ListGroup.Item>
-          <p className="btn btn-light" onClick={handleShowKyu}>
+          <p className="btn btn-default" onClick={handleShowKyu}>
             View the different belt colours
           </p>
         </ListGroup.Item>
@@ -147,7 +142,7 @@ const MemberVideos = () => {
         ) : (
           <>
             <ListGroup.Item>
-              <h5 className="my-3 text-white">Kihon for {nextGrade}</h5>
+              <h5 className="my-3 text-warning">Kihon for {nextGrade}</h5>
               <p>
                 Kihon is the basic movememnts performed solo. The examiner is
                 looking for the perfect execution of the given techniques. Take
@@ -164,9 +159,8 @@ const MemberVideos = () => {
                     >
                       <a href={`/trainingVideos/${trainingVideo._id}`}>
                         <img src={trainingVideo.img} alt="" />
-
-                        <p>{trainingVideo.title}</p>
                       </a>
+                      <p>{trainingVideo.title}</p>
                     </Col>
                   ))
                 ) : (
@@ -179,7 +173,9 @@ const MemberVideos = () => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h5 className="my-3 text-white">Kihon Kumite for {nextGrade}</h5>
+              <h5 className="my-3 text-warning">
+                Kihon Kumite for {nextGrade}
+              </h5>
               <p>Kihon Kumite is very important blah blah blah</p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
                 {kihonKumiteVideos.length !== 0 ? (
@@ -192,8 +188,8 @@ const MemberVideos = () => {
                     >
                       <a href={`/trainingVideos/${trainingVideo._id}`}>
                         <img src={trainingVideo.img} alt="" />
-                        <p>{trainingVideo.title}</p>
                       </a>
+                      <p>{trainingVideo.title}</p>
                     </Col>
                   ))
                 ) : (
@@ -206,7 +202,9 @@ const MemberVideos = () => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h5 className="my-3 text-white">Shobu Kumite for {nextGrade}</h5>
+              <h5 className="my-3 text-warning">
+                Shobu Kumite for {nextGrade}
+              </h5>
               <p>Shobu Kumite is very important blah blah blah</p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
                 {shobuKumiteVideos.length !== 0 ? (
@@ -219,8 +217,8 @@ const MemberVideos = () => {
                     >
                       <a href={`/trainingVideos/${trainingVideo._id}`}>
                         <img src={trainingVideo.img} alt="" />
-                        <p>{trainingVideo.title}</p>
                       </a>
+                      <p>{trainingVideo.title}</p>
                     </Col>
                   ))
                 ) : (
@@ -233,7 +231,7 @@ const MemberVideos = () => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h5 className="my-3 text-white">
+              <h5 className="my-3 text-warning">
                 Kata for {nextGrade} and below
               </h5>
               <p>Kata is very important blah blah blah</p>
@@ -248,8 +246,8 @@ const MemberVideos = () => {
                     >
                       <a href={`/trainingVideos/${trainingVideo._id}`}>
                         <img src={trainingVideo.img} alt="" />
-                        <p>{trainingVideo.title}</p>
                       </a>
+                      <p>{trainingVideo.title}</p>
                     </Col>
                   ))
                 ) : (

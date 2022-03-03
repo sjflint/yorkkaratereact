@@ -50,15 +50,17 @@ const HomeScreen = () => {
           </Row>
 
           <Row className="align-items-start">
-            <Col lg={6} sm={12} className="bg-primary p-2">
-              <Video
-                poster={poster1Img}
-                mp4={benefitOfKarateMp4}
-                ogv={benefitOfKarateOgv}
-                webmhd={benefitOfKarateWebmHd}
-              />
+            <Col lg={6} sm={12} className="p-2">
+              <div className="p-2 bg-primary">
+                <Video
+                  poster={poster1Img}
+                  mp4={benefitOfKarateMp4}
+                  ogv={benefitOfKarateOgv}
+                  webmhd={benefitOfKarateWebmHd}
+                />
+              </div>
             </Col>
-            <Col lg={6} sm={12}>
+            <Col lg={6} sm={12} className="p-2">
               <p>
                 Welcome to York Karate Dojo. Please take a minute to explore our
                 site and discover what we do. Should You have any questions,

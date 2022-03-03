@@ -226,8 +226,8 @@ const MemberDetails = () => {
               <Row>
                 <Col>
                   <Button
-                    variant="secondary"
-                    className="h6 btn-block"
+                    variant="primary"
+                    className="btn-block w-100 mb-2"
                     onClick={() => setShowModal(true)}
                   >
                     <i className="fas fa-tools"></i> Update contact details
@@ -235,8 +235,8 @@ const MemberDetails = () => {
                 </Col>
                 <Col>
                   <Button
-                    variant="secondary"
-                    className="h6 btn-block"
+                    variant="primary"
+                    className="btn-block w-100"
                     onClick={() => setShowPasswordModal(true)}
                   >
                     <i className="fas fa-key"></i> Change Password
@@ -250,8 +250,8 @@ const MemberDetails = () => {
 
       {/* Update user modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton className="text-white bg-secondary">
-          <Modal.Title>Update Details</Modal.Title>
+        <Modal.Header closeButton className="text-white bg-primary">
+          <Modal.Title className="text-white">Update Details</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
           <Formik
@@ -355,16 +355,16 @@ const MemberDetails = () => {
                 </div>
                 <Row className="mt-2">
                   <Col>
-                    <Button type="submit" className="btn btn-warning btn-block">
-                      Update
-                    </Button>
-                  </Col>
-                  <Col>
                     <Button
-                      className="btn btn-block btn-primary m-0"
+                      className="btn w-100 btn-primary m-0"
                       onClick={() => setShowModal(false)}
                     >
                       Cancel
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button type="submit" className="btn btn-default w-100">
+                      Update
                     </Button>
                   </Col>
                 </Row>
@@ -379,8 +379,8 @@ const MemberDetails = () => {
         show={showPasswordModal}
         onHide={() => setShowPasswordModal(false)}
       >
-        <Modal.Header closeButton className="text-white bg-secondary">
-          <Modal.Title>Change Password</Modal.Title>
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title className="text-white">Change Password</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
           <Formik
@@ -433,14 +433,19 @@ const MemberDetails = () => {
                     </Row>
                     <Row>
                       <Col>
-                        <Button type="submit" variant="warning btn-block">
+                        <Button
+                          type="submit"
+                          variant="default"
+                          className="w-100"
+                        >
                           Update
                         </Button>
                       </Col>
                       <Col>
                         <Button
-                          variant="primary btn-block"
+                          variant="primary"
                           onClick={() => setShowPasswordModal(false)}
+                          className="w-100"
                         >
                           Close
                         </Button>

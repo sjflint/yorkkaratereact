@@ -61,7 +61,7 @@ const MemberPayments = () => {
             </Col>
             <Col>
               <Button
-                variant="secondary"
+                variant="primary"
                 className="btn-block"
                 onClick={changeDDHandler}
                 disabled={success && true}
@@ -142,8 +142,8 @@ const MemberPayments = () => {
 
       {/* Cancel modal */}
       <Modal show={cancelModal} onHide={() => setCancelModal(false)}>
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
             <i className="fas fa-exclamation-circle"></i> Cancel Membership?
           </Modal.Title>
         </Modal.Header>
@@ -167,8 +167,8 @@ const MemberPayments = () => {
               <Row className="mt-5">
                 <Col>
                   <Button
-                    variant="secondary"
-                    className="btn-block"
+                    variant="primary"
+                    className="w-100"
                     onClick={() => setCancelModal(false)}
                   >
                     Back
@@ -177,7 +177,7 @@ const MemberPayments = () => {
                 <Col>
                   <Button
                     variant="danger"
-                    className="btn-block"
+                    className="w-100"
                     onClick={cancelHandler}
                   >
                     Cancel Membership

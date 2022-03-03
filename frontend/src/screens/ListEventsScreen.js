@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Modal, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -228,7 +228,8 @@ const ListEventsScreen = ({ history, match }) => {
                 <th></th>
                 <th>Title</th>
                 <th>Date of Event</th>
-                <th>View</th>
+                <th>Edit</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -263,48 +264,32 @@ const ListEventsScreen = ({ history, match }) => {
                   <td className="text-center align-middle">
                     {new Date(event.dateOfEvent).toLocaleDateString()}
                   </td>
-                  <td className="align-middle">
-                    {
-                      <Row className="no-gutters">
-                        <Col>
-                          <Button
-                            variant="light"
-                            className="btn btn-block p-1 m-1 text-danger"
-                            onClick={() => {
-                              setDeleteModal(true);
-                              setDeleteId(event._id);
-                            }}
-                          >
-                            <i
-                              className="fas fa-trash"
-                              style={{ color: "red" }}
-                            ></i>{" "}
-                            <br />
-                            Delete
-                          </Button>
-                        </Col>
-                        <Col>
-                          <Button
-                            variant="light"
-                            className="btn btn-block p-1 m-1"
-                            onClick={async () => {
-                              setUpdateId(event._id);
+                  <td>
+                    <Button
+                      variant="success"
+                      className="btn-sm"
+                      onClick={async () => {
+                        setUpdateId(event._id);
 
-                              await dispatch(listEvent(event._id));
-                              await setImage(event.image);
-                              await setEditModal(true);
-                            }}
-                          >
-                            <i
-                              className="fas fa-edit"
-                              style={{ color: "green" }}
-                            ></i>{" "}
-                            <br />
-                            Edit
-                          </Button>
-                        </Col>
-                      </Row>
-                    }
+                        await dispatch(listEvent(event._id));
+                        await setImage(event.image);
+                        await setEditModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i>{" "}
+                    </Button>
+                  </td>
+                  <td className="align-middle">
+                    <Button
+                      variant="danger"
+                      className="btn-sm"
+                      onClick={() => {
+                        setDeleteModal(true);
+                        setDeleteId(event._id);
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -314,15 +299,17 @@ const ListEventsScreen = ({ history, match }) => {
       )}
 
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title>Permanently Delete Event?</Modal.Title>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
+            Permanently Delete Event?
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           This action will permanently delete the event from the database and
           the details will be irretrievable. <br /> Are you sure?
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setDeleteModal(false)}>
+        <Modal.Footer className="bg-dark">
+          <Button variant="light" onClick={() => setDeleteModal(false)}>
             Cancel
           </Button>
           <Button variant="danger" onClick={deleteHandler}>
@@ -332,8 +319,8 @@ const ListEventsScreen = ({ history, match }) => {
       </Modal>
 
       <Modal show={createModal} onHide={() => setCreateModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Create a new event</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Create a new event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <img src={`${image}`} alt="" />
@@ -387,14 +374,14 @@ const ListEventsScreen = ({ history, match }) => {
                   options={dropdownOptions}
                 />
 
-                <Button type="submit" className="btn-block btn-warning">
+                <Button type="submit" className="w-100 mt-2 btn-default">
                   Create
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setCreateModal(false)}>
             Cancel
           </Button>
@@ -408,14 +395,13 @@ const ListEventsScreen = ({ history, match }) => {
           setEditDescription(false);
         }}
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit event</Modal.Title>
+        <Modal.Header closeButton className="bg-success">
+          <Modal.Title className="text-white">Edit event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {event && (
             <>
-              {console.log(event.image)}
-              <img src={`${image}`} alt="" />
+              <img src={`${image}`} alt="" className="bg-primary p-2" />
               <UploadImage
                 img={event.image}
                 type={"Event"}
@@ -457,7 +443,7 @@ const ListEventsScreen = ({ history, match }) => {
                   placeholder="Location Address and Post Code"
                 />
 
-                <h3>Description</h3>
+                <h5 className="mt-2">Description</h5>
 
                 {!editDescription && (
                   <>
@@ -474,7 +460,7 @@ const ListEventsScreen = ({ history, match }) => {
 
                     <Button
                       onClick={() => setEditDescription(true)}
-                      className="mb-4 btn-sm"
+                      className="mb-4 btn-sm d-block"
                     >
                       Edit Description?
                     </Button>
@@ -500,14 +486,14 @@ const ListEventsScreen = ({ history, match }) => {
                   </>
                 )}
 
-                <Button type="submit" className="btn-block btn-warning">
+                <Button type="submit" className="w-100 btn-default">
                   Update
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-success">
           <Button
             variant="secondary"
             onClick={() => {

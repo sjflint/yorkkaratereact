@@ -151,13 +151,15 @@ const MemberClasses = () => {
               <Row className="align-items-center text-center">
                 <Col md={4}>
                   <div>
-                    <h5 className="text-center pb-0">{session.name}</h5>
+                    <p className="text-center pb-0">{session.name}</p>
                   </div>
                 </Col>
                 <Col md={4}>
-                  {session.location}
-                  <br />
-                  {session.times}
+                  <p>
+                    {session.location}
+                    <br />
+                    {session.times}
+                  </p>
                 </Col>
                 <Col md={4}>
                   {canSwitch === false ? (
@@ -211,13 +213,13 @@ const MemberClasses = () => {
         </ListGroup>
       )}
       <Button
-        className="btn-block btn btn-warning"
+        className="btn-block btn btn-default w-100"
         onClick={() => setAddClass(true)}
       >
         <i className="fas fa-plus"></i> Add New Class
       </Button>
       {canSwitch === false && (
-        <h5 className="text-warning text-center mt-4">
+        <p className="text-warning text-center mt-4">
           Unable to switch or delete classes again until:
           <br />
           {`${String(changeDate).substring(7, 10)}
@@ -225,7 +227,7 @@ const MemberClasses = () => {
             10,
             15
           )}`}
-        </h5>
+        </p>
       )}
 
       {/* Add Class Modal */}
@@ -235,12 +237,12 @@ const MemberClasses = () => {
         dialogClassName="modal-90w"
         aria-labelledby="add-class"
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title id="add-class">
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title id="add-class" className="text-white">
             <i className="fas fa-plus"></i> Add Class
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-light text-primary">
+        <Modal.Body>
           <h5>
             Your current monthly training fees are: £
             {(member.membershipLevel / 100).toFixed(2)}
@@ -254,7 +256,7 @@ const MemberClasses = () => {
               filteredSessions.map((session) => (
                 <Col md={6} className="mb-3" key={session._id}>
                   <Card>
-                    <Card.Header className="bg-secondary text-white">
+                    <Card.Header className="bg-primary text-white">
                       {session.name}
                     </Card.Header>
                     <Card.Body className="bg-light text-primary">
@@ -263,7 +265,7 @@ const MemberClasses = () => {
                       </Card.Subtitle>
                       <Card.Text>{session.location}</Card.Text>
                     </Card.Body>
-                    <Card.Footer className="bg-light text-primary">
+                    <Card.Footer className="bg-light">
                       {session.participants.length === session.capacity ? (
                         <Button disabled>Class Fully Booked</Button>
                       ) : (
@@ -271,7 +273,10 @@ const MemberClasses = () => {
                           {buttonLoader ? (
                             <Button disabled>Add Class</Button>
                           ) : (
-                            <Button onClick={() => addClassToList(session._id)}>
+                            <Button
+                              onClick={() => addClassToList(session._id)}
+                              variant="warning"
+                            >
                               Add Class
                             </Button>
                           )}
@@ -283,7 +288,7 @@ const MemberClasses = () => {
               ))}
           </Row>
         </Modal.Body>
-        <Modal.Footer className="bg-light text-primary">
+        <Modal.Footer className="bg-dark">
           {buttonLoader && <Loader />}
           <Button variant="secondary" onClick={() => setAddClass(false)}>
             Close

@@ -180,9 +180,20 @@ const ListArticlesScreen = ({ history, match }) => {
 
   return (
     <Container fluid="lg">
-      <Link className="btn btn-dark" to="/admin">
-        <i className="fas fa-arrow-left"></i> Return
-      </Link>
+      <div className="d-flex justify-content-between">
+        <Link className="btn btn-dark" to="/admin">
+          <i className="fas fa-arrow-left"></i> Return
+        </Link>
+        <Button
+          className="btn-dark"
+          onClick={() => {
+            setCreateModal(true);
+            setImage(imagePlaceholder);
+          }}
+        >
+          <i className="fas fa-plus"></i> Write Article
+        </Button>
+      </div>
       {loadingDelete && <Loader variant="warning" />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loadingCreate && <Loader variant="warning" />}
@@ -207,14 +218,14 @@ const ListArticlesScreen = ({ history, match }) => {
                 <th>Title</th>
                 <th>Category</th>
                 <th>Edit</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
               {articles.map((article) => (
                 <tr key={article._id}>
                   <td
-                    style={{ maxWidth: "40px" }}
-                    className="text-center align-middle mouse-hover-pointer"
+                    className="text-center align-middle mouse-hover-pointer max-width-100"
                     onClick={async () => {
                       setUpdateId(article._id);
 
@@ -224,15 +235,10 @@ const ListArticlesScreen = ({ history, match }) => {
                       await setEditModal(true);
                     }}
                   >
-                    <img
-                      src={`${article.image}`}
-                      alt="article"
-                      width="10"
-                      height="40"
-                    />
+                    <img src={`${article.image}`} alt="article" fluid />
                   </td>
                   <td
-                    className="text-center align-middle mouse-hover-pointer"
+                    className="text-center align-middle mouse-hover-pointer max-width-200"
                     onClick={async () => {
                       setUpdateId(article._id);
 
@@ -248,46 +254,33 @@ const ListArticlesScreen = ({ history, match }) => {
                   <td className="text-center align-middle">
                     {article.category}
                   </td>
-                  <td className="d-flex">
-                    {
-                      <>
-                        <Button
-                          variant="light"
-                          className="btn btn-block p-0 text-danger"
-                          onClick={() => {
-                            setDeleteModal(true);
-                            setDeleteId(article._id);
-                          }}
-                        >
-                          <i
-                            className="fas fa-trash"
-                            style={{ color: "red" }}
-                          ></i>{" "}
-                          <br />
-                          Delete
-                        </Button>
+                  <td>
+                    <Button
+                      variant="success"
+                      className="btn btn-sm"
+                      onClick={async () => {
+                        setUpdateId(article._id);
 
-                        <Button
-                          variant="light"
-                          className="btn btn-block m-0 p-0"
-                          onClick={async () => {
-                            setUpdateId(article._id);
-
-                            await dispatch(listArticle(article._id));
-                            await setImage(article.image);
-                            await setMultiImage(article.carouselImages);
-                            await setEditModal(true);
-                          }}
-                        >
-                          <i
-                            className="fas fa-edit"
-                            style={{ color: "green" }}
-                          ></i>{" "}
-                          <br />
-                          Edit
-                        </Button>
-                      </>
-                    }
+                        await dispatch(listArticle(article._id));
+                        await setImage(article.image);
+                        await setMultiImage(article.carouselImages);
+                        await setEditModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i>{" "}
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      className="btn btn-sm"
+                      onClick={() => {
+                        setDeleteModal(true);
+                        setDeleteId(article._id);
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -296,30 +289,20 @@ const ListArticlesScreen = ({ history, match }) => {
           <div style={{ display: "flex", justifyContent: "center" }}>
             <ArticlePaginate pages={pages} page={page} editList={true} />
           </div>
-
-          <div className="text-center">
-            <button
-              className="btn-default btn"
-              onClick={() => {
-                setCreateModal(true);
-                setImage(imagePlaceholder);
-              }}
-            >
-              <i className="fas fa-plus"></i> Write Article
-            </button>
-          </div>
         </>
       )}
 
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title>Permanently Delete Article?</Modal.Title>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
+            Permanently Delete Article?
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           This action will permanently delete the article from the database and
           the details will be irretrievable. <br /> Are you sure?
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setDeleteModal(false)}>
             Cancel
           </Button>
@@ -330,8 +313,8 @@ const ListArticlesScreen = ({ history, match }) => {
       </Modal>
 
       <Modal show={createModal} onHide={() => setCreateModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Write a new article</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Write a new article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <img src={`${image}`} alt="" />
@@ -422,7 +405,7 @@ const ListArticlesScreen = ({ history, match }) => {
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setCreateModal(false)}>
             Cancel
           </Button>
@@ -436,8 +419,8 @@ const ListArticlesScreen = ({ history, match }) => {
           setEditBody(false);
         }}
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit Article</Modal.Title>
+        <Modal.Header closeButton className="bg-success">
+          <Modal.Title className="text-white">Edit Article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {article && (
@@ -475,7 +458,7 @@ const ListArticlesScreen = ({ history, match }) => {
                             await setEditModal(false);
                             await setEditModal(true);
                           }}
-                          className="btn btn-block btn-sm btn-secondary"
+                          className="btn w-100 btn-sm btn-secondary my-2"
                         >
                           Remove Image
                         </Button>
@@ -517,7 +500,7 @@ const ListArticlesScreen = ({ history, match }) => {
                   options={dropdownOptions}
                 />
 
-                <h3>Body</h3>
+                <h5 className="mt-3">Body</h5>
 
                 {!editBody && (
                   <>
@@ -559,14 +542,18 @@ const ListArticlesScreen = ({ history, match }) => {
                   </>
                 )}
 
-                <Button type="submit" className="btn-block btn-warning">
+                <Button
+                  type="submit"
+                  className="d-block w-100"
+                  variant="default"
+                >
                   Update
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-success">
           <Button
             variant="secondary"
             onClick={() => {

@@ -15,7 +15,7 @@ import FormatDate from "../components/FormatDate";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import axios from "axios";
-import logo from "../img/logo2021.png";
+import logo from "../img/logo2021(transparent-black).png";
 import jksLicense from "../img/jkslicense.png";
 import insideJksLicense from "../img/insidelicense.png";
 import { updateProfile } from "../actions/memberActions";
@@ -198,9 +198,11 @@ const GradingRegistrationScreen = ({ history, match }) => {
       )}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton className="bg-primary">
-          <Modal.Title>Register for the grading course</Modal.Title>
+          <Modal.Title className="text-white">
+            Register for the grading course
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-secondary text-white">
+        <Modal.Body>
           <img src={logo} alt="logo" />
           <h5>Apply for this grading course?</h5>
           <p>
@@ -236,7 +238,9 @@ const GradingRegistrationScreen = ({ history, match }) => {
         }}
       >
         <Modal.Header closeButton className="bg-primary">
-          <Modal.Title>Add JKS Number to your profile</Modal.Title>
+          <Modal.Title className="text-white">
+            Add JKS Number to your profile
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-dark text-center">
           <p className="text-center">

@@ -1,7 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { Row, Col, ListGroup, Image, Container, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Container,
+  Button,
+  ListGroupItem,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -45,8 +53,11 @@ const OrderScreen = ({ match }) => {
   const { loading: loadingFulfil, success: successFulfil } = orderFulfil;
 
   const createDDPayment = useSelector((state) => state.createDDPayment);
-  const { loading: loadingDDPayment, success: successDDPayment } =
-    createDDPayment;
+  const {
+    loading: loadingDDPayment,
+    success: successDDPayment,
+    data,
+  } = createDDPayment;
 
   const successPaymentHandler = useCallback(
     async (paymentResult) => {
@@ -80,6 +91,7 @@ const OrderScreen = ({ match }) => {
         payer: {
           email_address: memberInfo.email,
         },
+        paymentId: data.paymentId,
       };
       successPaymentHandler(paymentResult);
     }
@@ -97,7 +109,7 @@ const OrderScreen = ({ match }) => {
       dispatch({ type: ORDER_FULFIL_RESET });
       dispatch({ type: CREATE_DD_PAYMENT_RESET });
       dispatch(getOrderDetails(orderId));
-    } else if (!order.isPaid) {
+    } else if (order.isPaid === "false") {
       if (!window.paypal) {
         addPayPalScript();
       } else {
@@ -113,7 +125,6 @@ const OrderScreen = ({ match }) => {
     successFulfil,
     successDDPayment,
     memberInfo.email,
-    successPaymentHandler,
   ]);
 
   const payDirectDebitHandler = () => {
@@ -184,25 +195,29 @@ const OrderScreen = ({ match }) => {
           </ListGroup.Item>
         </Col>
         <Col md={5}>
-          <ListGroup.Item variant="light">
-            <ListGroup className="text-light">
-              <ListGroup.Item>
-                <p className="mb-0">Order Total:</p>
-                <p>£{order.totalPrice.toFixed(2)}</p>
-              </ListGroup.Item>
-              <ListGroup.Item className="text-center">
-                <p className="mb-0">Payment Method:</p>
-                <p> {order.paymentMethod}</p>
-                <Link to="/payment">
-                  <Button variant="default" className="btn-sm">
-                    Switch Payment Method
-                  </Button>
-                </Link>
-              </ListGroup.Item>
-            </ListGroup>
-          </ListGroup.Item>
-          {!order.isPaid &&
-            (order.paymentMethod === "PayPal" ? (
+          <ListGroup className="text-light">
+            <ListGroup.Item>
+              <p className="mb-0">Order Total:</p>
+              <p>£{order.totalPrice.toFixed(2)}</p>
+            </ListGroup.Item>
+
+            {order.isPaid === "false" && (
+              <>
+                <ListGroup.Item className="text-center">
+                  <p className="mb-0">Payment Method:</p>
+                  <p> {order.paymentMethod}</p>
+                  <Link to="/payment">
+                    <Button variant="default" className="btn-sm">
+                      Switch Payment Method
+                    </Button>
+                  </Link>
+                </ListGroup.Item>
+              </>
+            )}
+          </ListGroup>
+
+          {order.isPaid === "false" ? (
+            order.paymentMethod === "PayPal" ? (
               <ListGroup.Item variant="light">
                 {loadingPay && <Loader variant="warning" />}
                 {!sdkReady ? (
@@ -217,76 +232,95 @@ const OrderScreen = ({ match }) => {
                 )}
               </ListGroup.Item>
             ) : (
-              <Button
-                variant="default"
-                className="btn-block"
-                onClick={payDirectDebitHandler}
-              >
-                Pay with your Direct Debit <br />
+              <div className="d-flex flex-column align-items-center">
                 <img
                   src={directDebitImg}
                   alt="directdebitlogo"
-                  className="w-50 mt-1"
+                  className="w-50 m-2"
                 />
-              </Button>
-            ))}
+                <Button variant="default" onClick={payDirectDebitHandler}>
+                  Pay Now
+                </Button>
+              </div>
+            )
+          ) : order.isPaid === "pending" ? (
+            <ListGroupItem>
+              Payment Status:
+              <br />
+              <h5 className="text-warning">Payment Pending</h5>
+              <small>
+                Direct Debit payments usually clear within 5 working days.
+                You're order will be fulfilled after the payment has cleared.
+              </small>
+            </ListGroupItem>
+          ) : (
+            <ListGroup.Item>
+              Payment Status:
+              <br />
+              <h5 className="text-success">Payment Success</h5>
+            </ListGroup.Item>
+          )}
         </Col>
       </Row>
-      {!order.isPaid ? (
+      {order.isPaid === "false" ? (
         <p className="text-danger text-center">Please complete payment</p>
       ) : loadingDDPayment ? (
         <Loader variant="default" />
       ) : !order.isDelivered ? (
         <Message className="text-center" variant="success">
-          <h5 className="text-dark">
-            Payment Success! Thank you for your order
-          </h5>
+          <h5 className="text-dark">Thank you for your order</h5>
         </Message>
       ) : null}
-      {order.isPaid &&
-        (!order.isDelivered ? (
-          <ListGroup.Item variant="light">
-            <p className="text-dark">
-              Your order is being processed. Check your order status anytime in
-              your profile:
-            </p>
-            <Link to="/profile?key=second">
-              <button className="btn-sm btn btn-default">
-                View Order Status
-              </button>
-            </Link>
-          </ListGroup.Item>
-        ) : (
-          <ListGroup.Item className="text-center" variant="success">
-            <h5>Collection Status: Ready to be collected at your next class</h5>
-          </ListGroup.Item>
-        ))}
+      <ListGroup className="mt-2">
+        {order.isPaid === "true" &&
+          (!order.isDelivered ? (
+            <ListGroup.Item variant="light">
+              <p className="text-dark">
+                Your order is being processed. Check your order status anytime
+                in your profile:
+              </p>
+              <Link to="/profile?key=second">
+                <button className="btn-sm btn btn-default">
+                  View Order Status
+                </button>
+              </Link>
+            </ListGroup.Item>
+          ) : (
+            <ListGroup.Item className="text-center" variant="success">
+              <h5>
+                Collection Status: Ready to be collected at your next class
+              </h5>
+            </ListGroup.Item>
+          ))}
 
-      {loadingDeliver || (loadingFulfil && <Loader variant="warning" />)}
-      {memberInfo.isShopAdmin && order.isPaid && !order.isDelivered ? (
-        <ListGroup.Item>
-          <p>SHOP ADMIN:</p>
-          <button
-            className="btn-sm d-inline btn-default btn"
-            onClick={deliverHandler}
-          >
-            Mark As Ready For Collection
-          </button>
-        </ListGroup.Item>
-      ) : memberInfo.isShopAdmin &&
-        order.isPaid &&
-        order.isDelivered &&
-        !order.isComplete ? (
-        <ListGroup.Item>
-          <p>SHOP ADMIN:</p>
-          <button
-            className="btn-sm d-inline btn-default btn"
-            onClick={fulfilHandler}
-          >
-            Mark As Fulfilled
-          </button>
-        </ListGroup.Item>
-      ) : null}
+        {loadingDeliver || (loadingFulfil && <Loader variant="warning" />)}
+        {memberInfo.isShopAdmin &&
+        order.isPaid === "true" &&
+        !order.isDelivered ? (
+          <ListGroup.Item>
+            <p>SHOP ADMIN:</p>
+            <button
+              className="btn-sm d-inline btn-default btn"
+              onClick={deliverHandler}
+            >
+              Mark As Ready For Collection
+            </button>
+          </ListGroup.Item>
+        ) : memberInfo.isShopAdmin &&
+          order.isPaid &&
+          order.isDelivered &&
+          !order.isComplete ? (
+          <ListGroup.Item>
+            <p>SHOP ADMIN:</p>
+            <button
+              className="btn-sm d-inline btn-default btn"
+              onClick={fulfilHandler}
+            >
+              Mark As Fulfilled
+            </button>
+          </ListGroup.Item>
+        ) : null}
+      </ListGroup>
     </Container>
   );
 };

@@ -256,9 +256,20 @@ const ListClassesScreen = ({ history }) => {
   return (
     <>
       <Container fluid="lg">
-        <Link className="btn btn-dark" to="/admin">
-          <i className="fas fa-arrow-left"></i> Return
-        </Link>
+        <div className="d-flex justify-content-between">
+          <Link className="btn btn-dark" to="/admin">
+            <i className="fas fa-arrow-left"></i> Return
+          </Link>
+
+          <Button
+            variant="primary"
+            onClick={() => {
+              setCreateModal(true);
+            }}
+          >
+            <i className="fas fa-plus"></i> Create Class
+          </Button>
+        </div>
         <h3 className="text-center border-bottom border-warning pb-1">
           Classes
         </h3>
@@ -282,53 +293,54 @@ const ListClassesScreen = ({ history }) => {
               <th>Day</th>
               <th>Location</th>
               <th>Time</th>
-              <th>Grade Range (kyu)</th>
               <th>Participants</th>
               <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
             {filteredSessions.map((trainingSession) => (
               <tr key={trainingSession._id}>
-                <td>{trainingSession.name}</td>
-                <td style={{ maxWidth: "100px" }}>
-                  {trainingSession.location}
-                </td>
-                <td>{trainingSession.times}</td>
                 <td>
-                  {trainingSession.minGradeLevel + "kyu"} -{" "}
-                  {trainingSession.maxGradeLevel === 0
-                    ? "Black Belts"
-                    : trainingSession.maxGradeLevel + "kyu"}
+                  <small>{trainingSession.name}</small>
                 </td>
                 <td>
-                  {trainingSession.numberBooked} / {trainingSession.capacity}{" "}
-                  <br />
+                  <small className="max-width-200">
+                    {trainingSession.location}
+                  </small>
+                </td>
+                <td>
+                  <small>{trainingSession.times}</small>
+                </td>
+
+                <td>
+                  <small>
+                    {trainingSession.numberBooked} / {trainingSession.capacity}{" "}
+                  </small>
                   <button
-                    className="btn btn-sm btn-primary mt-2"
+                    className="btn btn-sm btn-primary mt-1 w-100"
                     onClick={() => {
                       setParticipantsModal(true);
                       setParticipantsList(trainingSession.participants);
                     }}
                   >
-                    View Participants
+                    Participants
                   </button>
                 </td>
                 <td>
                   <Button
-                    variant="light"
-                    className="btn btn-block p-1 m-1"
+                    variant="success"
+                    className="btn btn-sm"
                     onClick={async () => {
                       setUpdateId(trainingSession._id);
                       await dispatch(trainingSessionById(trainingSession._id));
                       await setEditModal(true);
                     }}
                   >
-                    <i className="fas fa-edit" style={{ color: "green" }}></i>{" "}
-                    <br />
-                    Edit
+                    <i className="fas fa-edit"></i>{" "}
                   </Button>
-
+                </td>
+                <td>
                   {trainingSession.participants.length > 0 ? (
                     <OverlayTrigger
                       placement="left"
@@ -341,30 +353,20 @@ const ListClassesScreen = ({ history }) => {
                         </Tooltip>
                       }
                     >
-                      <Button
-                        variant="light"
-                        className="btn btn-block p-1 m-1 text-danger"
-                      >
-                        <i
-                          className="fas fa-trash"
-                          style={{ color: "red" }}
-                        ></i>{" "}
-                        <br />
-                        Delete
+                      <Button variant="danger" className="btn btn-sm">
+                        <i className="fas fa-trash"></i>
                       </Button>
                     </OverlayTrigger>
                   ) : (
                     <Button
-                      variant="light"
-                      className="btn btn-block p-1 m-1 text-danger"
+                      variant="danger"
+                      className="btn btn-sm"
                       onClick={() => {
                         setDeleteModal(true);
                         setDeleteId(trainingSession._id);
                       }}
                     >
-                      <i className="fas fa-trash" style={{ color: "red" }}></i>{" "}
-                      <br />
-                      Delete
+                      <i className="fas fa-trash"></i>{" "}
                     </Button>
                   )}
                 </td>
@@ -372,24 +374,15 @@ const ListClassesScreen = ({ history }) => {
             ))}
           </tbody>
         </Table>
-        <div className="text-center">
-          <Button
-            className="btn-secondary"
-            onClick={() => {
-              setCreateModal(true);
-            }}
-          >
-            <i className="fas fa-plus"></i> Create Class
-          </Button>
-        </div>
+        <div className="text-center"></div>
       </Container>
 
       <Modal
         show={participantsModal}
         onHide={() => setParticipantsModal(false)}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>List of Participants</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">List of Participants</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Table
@@ -407,30 +400,34 @@ const ListClassesScreen = ({ history }) => {
               </tr>
             </thead>
             <tbody>
-              {participantsList.map((participant) => (
-                <tr key={participant._id}>
-                  <td>
-                    <Link to={`members/${participant._id}/edit`}>
-                      {participant.firstName} {participant.lastName}
-                    </Link>
-                  </td>
-                  <td>
-                    <a href={`mailto: ${participant.email}`}>
-                      {participant.email}
-                    </a>
-                  </td>
-                  <td>
-                    {" "}
-                    <a href={`tel:0${participant.phone}`}>
-                      0{participant.phone}
-                    </a>
-                  </td>
-                </tr>
-              ))}
+              {participantsList.length === 0 ? (
+                <p className="text-center text-warning">The class is empty!</p>
+              ) : (
+                participantsList.map((participant) => (
+                  <tr key={participant._id}>
+                    <td>
+                      <Link to={`members/${participant._id}/edit`}>
+                        {participant.firstName} {participant.lastName}
+                      </Link>
+                    </td>
+                    <td>
+                      <a href={`mailto: ${participant.email}`}>
+                        {participant.email}
+                      </a>
+                    </td>
+                    <td>
+                      {" "}
+                      <a href={`tel:0${participant.phone}`}>
+                        0{participant.phone}
+                      </a>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </Table>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           {" "}
           <Button
             variant="secondary"
@@ -445,14 +442,16 @@ const ListClassesScreen = ({ history }) => {
       </Modal>
 
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title>Permanently Delete Training Session?</Modal.Title>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
+            Permanently Delete Training Session?
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           This action will permanently delete the event from the database and
           the details will be irretrievable. <br /> Are you sure?
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setDeleteModal(false)}>
             Cancel
           </Button>
@@ -463,8 +462,8 @@ const ListClassesScreen = ({ history }) => {
       </Modal>
 
       <Modal show={createModal} onHide={() => setCreateModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Create a new Class</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Create a new Class</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
@@ -532,14 +531,17 @@ const ListClassesScreen = ({ history }) => {
                   name="juniorSession"
                   options={radioOptions}
                 />
-                <Button type="submit" className="btn-block btn-secondary">
+                <Button
+                  type="submit"
+                  className="btn-block btn-default w-100 my-2"
+                >
                   Create
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setCreateModal(false)}>
             Cancel
           </Button>
@@ -547,8 +549,8 @@ const ListClassesScreen = ({ history }) => {
       </Modal>
 
       <Modal show={editModal} onHide={() => setEditModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit Class Details</Modal.Title>
+        <Modal.Header closeButton className="bg-success">
+          <Modal.Title className="text-white">Edit Class Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {loadingTrainingSession && <Loader variant="warning" />}
@@ -618,15 +620,18 @@ const ListClassesScreen = ({ history }) => {
                   name="juniorSession"
                   options={radioOptions}
                 />
-                <Button type="submit" className="btn-block btn-secondary">
+                <Button
+                  type="submit"
+                  className="btn-block btn-default w-100 my-2"
+                >
                   Update
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setCreateModal(false)}>
+        <Modal.Footer className="bg-dark">
+          <Button variant="secondary" onClick={() => setEditModal(false)}>
             Cancel
           </Button>
         </Modal.Footer>

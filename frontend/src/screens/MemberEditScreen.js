@@ -211,7 +211,7 @@ const MemberEditScreen = ({ match, history }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <Link className="btn btn-dark" to="/admin/listMembers">
+          <Link className="btn btn-default mb-2" to="/admin/listMembers">
             <i className="fas fa-arrow-left"></i> Return
           </Link>
           <h3 className="text-center border-bottom border-warning pb-1">
@@ -227,11 +227,8 @@ const MemberEditScreen = ({ match, history }) => {
               singleImageData={singleImageData}
             />
             <small className="text-center">
-              Recommended aspect ratio: 1:1. Image will be cropped to fit <br />
               Please consider that this image might be displayed across the
               public website, as well as being displayed to grading examinars.
-              <br /> The image should depict the member and be of a suitable
-              nature.
             </small>
           </div>
 
@@ -391,12 +388,12 @@ const MemberEditScreen = ({ match, history }) => {
                               </ListGroup.Item>
                             </ListGroup>
                           ) : (
-                            <h5
-                              className="btn btn-block btn-primary"
+                            <Button
+                              className="btn d-block btn-default text-center w-100"
                               onClick={() => setShowModal(true)}
                             >
                               Add Dan grading
-                            </h5>
+                            </Button>
                           )}
                         </div>
                       </Col>
@@ -457,14 +454,14 @@ const MemberEditScreen = ({ match, history }) => {
                   <Row className="mt-2">
                     <Col>
                       {success ? (
-                        <Button className="btn btn-success btn-block" disabled>
+                        <Button className="btn btn-success d-block" disabled>
                           Updated
                         </Button>
                       ) : (
                         <Button
                           type="submit"
                           variant="default"
-                          className="btn-block"
+                          className="d-block w-100"
                         >
                           Update
                         </Button>
@@ -495,12 +492,15 @@ const MemberEditScreen = ({ match, history }) => {
         onHide={() => setShowModal(false)}
         aria-labelledby="title-sm"
       >
-        <Modal.Header closeButton>
-          <Modal.Title id="title-sm">
-            Please enter the date the member passed their grading
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title id="title-sm" className="text-white">
+            Date of dan grading
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p className="mb-1">
+            Please enter the date the member passed their grading
+          </p>
           <form>
             <div className="form-group">
               <input
@@ -511,25 +511,28 @@ const MemberEditScreen = ({ match, history }) => {
               />
             </div>
           </form>
-          <Button
-            className="mr-2"
-            variant="default"
-            onClick={() => {
-              setShowModal(false);
-              setGradingDate();
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="default"
-            onClick={() => {
-              setShowModal(false);
-              setDanGrade(member.danGrade + 1);
-            }}
-          >
-            Add grading date
-          </Button>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              className="w-100"
+              onClick={() => {
+                setShowModal(false);
+                setDanGrade(member.danGrade + 1);
+              }}
+            >
+              Add grading date
+            </Button>
+            <Button
+              className="mr-2 w-100"
+              variant="danger"
+              onClick={() => {
+                setShowModal(false);
+                setGradingDate();
+              }}
+            >
+              Cancel
+            </Button>
+          </Modal.Footer>
         </Modal.Body>
       </Modal>
     </Container>

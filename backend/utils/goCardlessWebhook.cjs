@@ -7,6 +7,11 @@ const Webhook = require("../models/webhookModel.cjs");
 const Member = require("../models/memberModel.cjs");
 const TrainingSessions = require("../models/trainingSessionModel.cjs");
 const app = express();
+const {
+  processMandate,
+  processSubscription,
+  processPayment,
+} = require("../controllers/WebhookController.cjs");
 
 app.use(bodyParser.text({ type: "application/json" }));
 
@@ -36,57 +41,6 @@ const verifyGocardlessWebhook = () => {
   };
 };
 
-const processMandate = async (event) => {
-  // create record of event
-  const createdEvent = await Webhook.create(event);
-  // search member database to find member id
-  const member = await Member.findOne({
-    ddMandate: createdEvent.links.mandate,
-  });
-  const memberId = member._id.toString();
-
-  switch (createdEvent.action) {
-    case "cancelled":
-      // Cancel member in database
-      const sessions = await TrainingSessions.find({});
-      for (const session of sessions) {
-        if (session.participants.includes(member._id)) {
-          const newParticipants = session.participants.filter(
-            (participant) => participant.toString() !== memberId
-          );
-          await TrainingSessions.findOneAndUpdate(
-            { _id: session._id },
-            {
-              participants: newParticipants,
-              numberBooked: session.numberBooked - 1,
-            },
-            { new: true }
-          );
-        }
-      }
-      await Member.findOneAndUpdate(
-        { ddMandate: createdEvent.links.mandate },
-        {
-          ddMandate: "Cancelled",
-          ddsuccess: false,
-        },
-        { new: true }
-      );
-      return `Mandate ${createdEvent.links.mandate} has been cancelled.\n`;
-
-    case "failed":
-      return "Mandate failed";
-    case "created":
-      return "Mandate created";
-    case "active":
-      return "Mandate active";
-    case "customer_approval_granted":
-      return "customer approval secured";
-    default:
-      return `Do not know how to process an event with action ${createdEvent.action}`;
-  }
-};
-
 const processEvent = async (event) => {
   // check event not already processed
   const foundEvent = await Webhook.findOne({ id: event.id });
@@ -96,6 +50,10 @@ const processEvent = async (event) => {
     switch (event.resource_type) {
       case "mandates":
         return processMandate(event);
+      case "subscriptions":
+        return processSubscription(event);
+      case "payments":
+        return processPayment(event);
       default:
         return `Do not know how to process an event with resource_type ${event.resource_type}`;
     }

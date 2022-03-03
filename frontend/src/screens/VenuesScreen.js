@@ -12,7 +12,11 @@ const VenuesScreen = () => {
       <Row>
         <Col md={6} className="d-flex">
           <Card className="mb-2">
-            <Card.Img variant="top" src={stChadsHall} />
+            <Card.Img
+              variant="top"
+              src={stChadsHall}
+              className="bg-primary p-1"
+            />
             <Card.Body>
               <Card.Title>Monday</Card.Title>
               <Card.Text>
@@ -23,7 +27,11 @@ const VenuesScreen = () => {
         </Col>
         <Col md={6} className="d-flex">
           <Card className="mb-2">
-            <Card.Img variant="top" src={josephRowntreeSchool} />
+            <Card.Img
+              variant="top"
+              src={josephRowntreeSchool}
+              className="bg-primary p-1"
+            />
             <Card.Body>
               <Card.Title>Tuesday / Wednesday / Friday</Card.Title>
               <Card.Text>
@@ -34,7 +42,11 @@ const VenuesScreen = () => {
         </Col>
         <Col md={6} className="d-flex">
           <Card className="mb-2">
-            <Card.Img variant="top" src={archBishopHolgate} />
+            <Card.Img
+              variant="top"
+              src={archBishopHolgate}
+              className="bg-primary p-1"
+            />
             <Card.Body>
               <Card.Title>Thursday</Card.Title>
               <Card.Text>
@@ -45,7 +57,11 @@ const VenuesScreen = () => {
         </Col>
         <Col md={6} className="d-flex">
           <Card className="mb-2">
-            <Card.Img variant="top" src={strensallVillageHall} />
+            <Card.Img
+              variant="top"
+              src={strensallVillageHall}
+              className="bg-primary p-1"
+            />
             <Card.Body>
               <Card.Title>Saturday</Card.Title>
               <Card.Text>

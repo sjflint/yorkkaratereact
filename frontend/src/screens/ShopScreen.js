@@ -6,7 +6,7 @@ import Message from "../components/Message";
 import Product from "../components/Product";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import ProductCarousel from "../components/ProductCarousel";
-import logo from "../img/logo2021.png";
+import logo from "../img/logo2021(transparent-black).png";
 import ProductPaginate from "../components/ProductPaginate";
 import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
 import { Link } from "react-router-dom";
@@ -46,7 +46,7 @@ const ShopScreen = ({ match }) => {
                 <Button
                   variant="dark"
                   onClick={() => setFilterBy("uniform/gi")}
-                  className="btn-block"
+                  className="w-100"
                 >
                   Karate Suits
                 </Button>
@@ -56,7 +56,7 @@ const ShopScreen = ({ match }) => {
                 <Button
                   variant="dark"
                   onClick={() => setFilterBy("equipment/protection")}
-                  className="btn-block"
+                  className="w-100"
                 >
                   Equipment
                 </Button>
@@ -65,7 +65,7 @@ const ShopScreen = ({ match }) => {
                 <Button
                   variant="dark"
                   onClick={() => setFilterBy("clothing")}
-                  className="btn-block"
+                  className="w-100"
                 >
                   Clothing
                 </Button>
@@ -74,7 +74,7 @@ const ShopScreen = ({ match }) => {
                 <Button
                   variant="dark"
                   onClick={() => setFilterBy("")}
-                  className="btn-block"
+                  className="w-100"
                 >
                   All Products
                 </Button>
@@ -90,7 +90,7 @@ const ShopScreen = ({ match }) => {
             ) : (
               <>
                 {!filterBy && (
-                  <Row className="align-items-center bg-primary p-4">
+                  <Row className="align-items-center bg-light p-4">
                     <Col xs={12} sm={6}>
                       <h3 className="text-center text-white">
                         Featured Products
@@ -99,13 +99,13 @@ const ShopScreen = ({ match }) => {
                     </Col>
                     <Col xs={12} sm={6}>
                       <Row className="mx-1 text-center">
-                        <Col sm={12} xs={6} className="bg-primary p-2">
+                        <Col sm={12} xs={6} className="p-2">
                           <img src={logo} alt="logo" className="fluid" />
                           <h5 className="text-center text-warning">
                             Bespoke training items available using the club logo
                           </h5>
                         </Col>
-                        <Col sm={12} xs={6} className="bg-primary p-2 mt-3">
+                        <Col sm={12} xs={6} className="p-2 mt-3">
                           <img
                             src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
                             className="fluid max-width-300"

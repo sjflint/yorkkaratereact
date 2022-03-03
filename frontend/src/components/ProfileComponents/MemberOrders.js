@@ -41,8 +41,8 @@ const MemberOrders = () => {
         <Loader variant="warning" />
       ) : error ? (
         <Message variant="danger">{error}</Message>
-      ) : orders.length === 0 ? (
-        <h5>No Orders to show</h5>
+      ) : filteredOrders.length === 0 ? (
+        <p>No Orders to show</p>
       ) : (
         <>
           {filteredOrders.map((order) => (
@@ -57,7 +57,9 @@ const MemberOrders = () => {
                   </Col>
                   <Col className="align-self-center">
                     <Link to={`/order/${order._id}`}>
-                      <button className="btn btn-primary">View Order</button>
+                      <button className="btn btn-primary btn-sm">
+                        View Order
+                      </button>
                     </Link>
                   </Col>
                   <Col>
@@ -72,9 +74,13 @@ const MemberOrders = () => {
               </Card.Header>
               <Card.Body>
                 {order.orderItems.map((item) => (
-                  <Row className="my-2" key={item._id}>
+                  <Row className="my-2 bg-light" key={item._id}>
                     <Col xs={2}>
-                      <img src={item.image} alt={item.name} />
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="bg-primary p-1"
+                      />
                     </Col>
                     <Col xs={4}>
                       <Link to={`/products/${item.product}`}>

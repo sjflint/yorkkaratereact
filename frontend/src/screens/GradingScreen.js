@@ -127,7 +127,7 @@ const GradingScreen = ({ match, history }) => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton className="bg-primary">
-          <Modal.Title>Start Grading</Modal.Title>
+          <Modal.Title className="text-white">Start Grading</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-dark text-center">
           <img src={logo} alt="logo" />

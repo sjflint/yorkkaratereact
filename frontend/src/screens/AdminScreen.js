@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
-
 import { useSelector } from "react-redux";
 import membersImg from "../img/members.png";
 import eventsImg from "../img/events.png";
@@ -24,9 +23,11 @@ const AdminScreen = ({ history }) => {
   const { member } = memberDetails;
 
   useEffect(() => {
-    if (memberInfo === null) {
+    console.log(memberInfo);
+    if (!memberInfo) {
       history.push("/login");
-    } else if (member && !member.isAdmin) {
+    }
+    if (memberInfo && !memberInfo.isAdmin) {
       history.push("/");
     }
   }, [history, memberInfo, member]);
@@ -50,7 +51,7 @@ const AdminScreen = ({ history }) => {
             </h5>
 
             <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/admin/listMembers">
                   <Card>
                     <Card.Img variant="top" src={membersImg} className="p-3" />
@@ -59,7 +60,7 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/admin/editevents">
                   <Card>
                     <Card.Img variant="top" src={eventsImg} className="p-3" />
@@ -68,7 +69,7 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/admin/financialsummary">
                   <Card>
                     <Card.Img
@@ -83,7 +84,7 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/admin/emailmembers">
                   <Card>
                     <Card.Img variant="top" src={emailImg} className="p-3" />
@@ -94,7 +95,7 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/admin/editclasses">
                   <Card>
                     <Card.Img
@@ -117,7 +118,7 @@ const AdminScreen = ({ history }) => {
               Shop Admin
             </h5>
             <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/shopadmin/editproducts">
                   <Card>
                     <Card.Img variant="top" src={productsImg} className="p-3" />
@@ -126,7 +127,7 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/shopadmin/editorders">
                   <Card>
                     <Card.Img variant="top" src={ordersImg} className="p-3" />
@@ -135,8 +136,8 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2"></Col>
-              <Col xs={6} sm={3} md={2} className="mb-2"></Col>
+              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
             </Row>
           </>
         )}
@@ -147,7 +148,7 @@ const AdminScreen = ({ history }) => {
               Author
             </h5>
             <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/author/editarticles">
                   <Card>
                     <Card.Img variant="top" src={articlesImg} className="p-3" />
@@ -155,9 +156,9 @@ const AdminScreen = ({ history }) => {
                   </Card>
                 </Link>
               </Col>
-              <Col xs={6} sm={3} md={2} className="mb-2"></Col>
-              <Col xs={6} sm={3} md={2} className="mb-2"></Col>
-              <Col xs={6} sm={3} md={2} className="mb-2"></Col>
+              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
             </Row>
           </>
         )}
@@ -168,7 +169,7 @@ const AdminScreen = ({ history }) => {
               Instructor
             </h5>
             <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/instructor/editsyllabus">
                   <Card>
                     <Card.Img variant="top" src={syllabusImg} className="p-3" />
@@ -177,7 +178,7 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/instructor/editlessonplans">
                   <Card>
                     <Card.Img
@@ -192,17 +193,25 @@ const AdminScreen = ({ history }) => {
                 </Link>
               </Col>
 
-              <Col xs={6} sm={3} md={2} className="mb-2">
+              <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/instructor/editgradings">
                   <Card>
                     <Card.Img variant="top" src={gradingImg} className="p-3" />
+                    <Card.Footer className="text-center">Gradings</Card.Footer>
+                  </Card>
+                </Link>
+              </Col>
+
+              <Col xs={6} sm={3} md={3} className="mb-2">
+                <Link to="/instructor/attendance">
+                  <Card>
+                    <Card.Img variant="top" src={gradingImg} className="p-3" />
                     <Card.Footer className="text-center">
-                      Gradings (Incomplete)
+                      Attendance
                     </Card.Footer>
                   </Card>
                 </Link>
               </Col>
-              <Col xs={6} sm={3} md={2} className="mb-2"></Col>
             </Row>
           </>
         )}

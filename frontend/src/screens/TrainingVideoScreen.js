@@ -99,7 +99,7 @@ const TrainingVideoScreen = ({ match }) => {
             </Message>
           ) : (
             <>
-              <ListGroup variant="flush">
+              <ListGroup variant="flush" className="bg-primary p-2">
                 <ListGroup.Item>
                   <div>
                     <iframe
@@ -111,13 +111,13 @@ const TrainingVideoScreen = ({ match }) => {
                     ></iframe>
                   </div>
                 </ListGroup.Item>
-                <ListGroup.Item variant="primary">
+                <ListGroup.Item>
                   <h4>{video.title}</h4>
                 </ListGroup.Item>
-                <ListGroup.Item variant="primary">
+                <ListGroup.Item>
                   <p className="m-0">Category - {video.category}</p>
                 </ListGroup.Item>
-                <ListGroup.Item variant="primary">
+                <ListGroup.Item>
                   {volume === "stop" ? (
                     <>
                       <div className="btn btn-light mt-2" onClick={playAudio}>
@@ -168,7 +168,7 @@ const TrainingVideoScreen = ({ match }) => {
 
               <ListGroup variant="flush">
                 {filteredVideos.map((trainingVideo) => (
-                  <ListGroup.Item key={trainingVideo._id} variant="primary">
+                  <ListGroup.Item key={trainingVideo._id}>
                     <Row className="no-gutters align-items-center">
                       <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
                         <Link to={`/trainingvideos/${trainingVideo._id}`}>
@@ -178,7 +178,7 @@ const TrainingVideoScreen = ({ match }) => {
 
                       <Col className="ml-2">
                         <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                          <h5 className="mb-1">{trainingVideo.title}</h5>
+                          <p className="mb-1">{trainingVideo.title}</p>
                         </Link>
                         <Link to={`/trainingvideos/${trainingVideo._id}`}>
                           <small>

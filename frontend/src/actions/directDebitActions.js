@@ -136,7 +136,6 @@ export const updateSubscription =
   };
 
 export const createPayment = (paymentDetails) => async (dispatch, getState) => {
-  console.log(paymentDetails);
   try {
     dispatch({
       type: CREATE_DD_PAYMENT_REQUEST,
@@ -156,10 +155,15 @@ export const createPayment = (paymentDetails) => async (dispatch, getState) => {
     const _id = memberInfo._id;
     paymentDetails._id = _id;
 
-    await axios.post(`/ddroutes/createpayment`, { paymentDetails }, config);
+    const { data } = await axios.post(
+      `/ddroutes/createpayment`,
+      { paymentDetails },
+      config
+    );
 
     dispatch({
       type: CREATE_DD_PAYMENT_SUCCESS,
+      payload: data,
     });
   } catch (error) {
     dispatch({

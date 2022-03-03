@@ -138,17 +138,17 @@ const MemberTrainingSessions = () => {
       ) : classListError ? (
         <Message variant="danger">{classListError}</Message>
       ) : sessions.length === 0 ? (
-        <h5 className="text-warning">No Classes booked</h5>
+        <p className="text-warning">No Classes booked</p>
       ) : (
         <>
-          <ListGroup variant="flush">
+          <ListGroup variant="flush" className="mb-2 bg-light">
             {sessions !== "No classes found" &&
               sessions.map((session) => (
-                <ListGroup.Item bg="light" key={session._id}>
+                <ListGroup.Item className="bg-light mb-1" key={session._id}>
                   <Row className="align-items-center text-center">
                     <Col md={4}>
                       <div>
-                        <h5 className="text-center pb-0">{session.name}</h5>
+                        <div className="text-center pb-0">{session.name}</div>
                       </div>
                     </Col>
                     <Col md={4}>
@@ -160,7 +160,11 @@ const MemberTrainingSessions = () => {
                       {canSwitch === false ? (
                         <Row noGutters>
                           <Col md={6}>
-                            <Button className="btn-block px-1" disabled>
+                            <Button
+                              className="btn-block px-1"
+                              variant="primary"
+                              disabled
+                            >
                               <i className="fas fa-exchange-alt"></i>
                               <br /> Switch Class
                             </Button>
@@ -181,6 +185,7 @@ const MemberTrainingSessions = () => {
                         <Row noGutters>
                           <Col md={6}>
                             <Button
+                              variant="primary"
                               className="btn-block px-1"
                               onClick={() => switchHandler(session)}
                             >
@@ -209,7 +214,7 @@ const MemberTrainingSessions = () => {
         </>
       )}
       <Button
-        className="btn-block btn btn-secondary"
+        className="d-block btn btn-default mb-2"
         onClick={() => {
           setAddClass(true);
         }}
@@ -217,7 +222,7 @@ const MemberTrainingSessions = () => {
         <i className="fas fa-plus"></i> Add New Class
       </Button>
       {canSwitch === false && (
-        <h5 className="text-warning text-center mt-4">
+        <small className="text-warning text-center">
           Unable to switch or delete classes again until:
           <br />
           {`${String(changeDate).substring(7, 10)}
@@ -225,7 +230,7 @@ const MemberTrainingSessions = () => {
             10,
             15
           )}`}
-        </h5>
+        </small>
       )}
 
       {/* Add Class Modal */}
@@ -235,12 +240,12 @@ const MemberTrainingSessions = () => {
         dialogClassName="modal-90w"
         aria-labelledby="add-class"
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title id="add-class">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title id="add-class" className="text-white">
             <i className="fas fa-plus"></i> Add Class
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-light text-primary">
+        <Modal.Body>
           <h5>
             Current monthly training fees are: £
             {(member.trainingFees / 100).toFixed(2)}
@@ -253,17 +258,15 @@ const MemberTrainingSessions = () => {
             {filteredSessions &&
               filteredSessions.map((session) => (
                 <Col md={6} className="mb-3" key={session._id}>
-                  <Card>
-                    <Card.Header className="bg-secondary text-white">
-                      {session.name}
-                    </Card.Header>
-                    <Card.Body className="bg-light text-primary">
+                  <Card className="h-100">
+                    <Card.Header>{session.name}</Card.Header>
+                    <Card.Body>
                       <Card.Subtitle className="mb-2">
                         {session.times}
                       </Card.Subtitle>
                       <Card.Text>{session.location}</Card.Text>
                     </Card.Body>
-                    <Card.Footer className="bg-light text-primary">
+                    <Card.Footer>
                       {session.participants.length === session.capacity ? (
                         <Button disabled>Class Fully Booked</Button>
                       ) : (
@@ -283,7 +286,7 @@ const MemberTrainingSessions = () => {
               ))}
           </Row>
         </Modal.Body>
-        <Modal.Footer className="bg-light text-primary">
+        <Modal.Footer className="bg-primary text-light">
           {buttonLoader && <Loader />}
           <Button variant="secondary" onClick={() => setAddClass(false)}>
             Close

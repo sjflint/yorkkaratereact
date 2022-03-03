@@ -14,7 +14,7 @@ const Message = ({ variant, heading, children }) => {
 
   if (show) {
     return (
-      <Alert variant={variant} onClose={() => setShow(false)} dismissible>
+      <Alert variant={variant}>
         <Alert.Heading>{heading}</Alert.Heading>
         {children}
       </Alert>

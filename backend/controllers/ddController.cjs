@@ -12,12 +12,6 @@ const client = gocardless(
   constants.Environments.Sandbox
 );
 
-const findMandate = async () => {
-  const mandate = await client.mandates.find("MD000JWN2RETA3");
-  console.log(mandate.status);
-};
-findMandate();
-
 // @desc confirm dd setup and update database
 // @route GET /ddsetup_confirmed
 // @access Public
@@ -305,6 +299,7 @@ const createPayment = asyncHandler(async (req, res) => {
   res.status(201).json({
     PaymentStatus: "submitted",
     PaymentAmount: payment.amount,
+    paymentId: payment.id,
   });
 });
 

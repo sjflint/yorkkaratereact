@@ -9,7 +9,6 @@ import {
   Container,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import FormContainer from "../components/FormContainer";
 import FormSteps from "../components/FormSteps";
 import { savePaymentMethod } from "../actions/basketActions";
 

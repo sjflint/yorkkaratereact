@@ -4,8 +4,6 @@ import {
   Table,
   Button,
   Modal,
-  Col,
-  Row,
   FormControl,
   FormGroup,
   FormLabel,
@@ -222,9 +220,21 @@ const ListProductsScreen = ({ history, match }) => {
 
   return (
     <Container fluid="lg">
-      <Link className="btn btn-dark" to="/admin">
-        <i className="fas fa-arrow-left"></i> Return
-      </Link>
+      <div className="d-flex justify-content-between">
+        <Link className="btn btn-dark" to="/admin">
+          <i className="fas fa-arrow-left"></i> Return
+        </Link>
+
+        <Button
+          className="btn-dark"
+          onClick={() => {
+            setCreateModal(true);
+            setImage(imagePlaceholder);
+          }}
+        >
+          <i className="fas fa-plus"></i> Create Product
+        </Button>
+      </div>
       {loadingDelete && <Loader variant="warning" />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loadingCreate && <Loader variant="warning" />}
@@ -247,8 +257,9 @@ const ListProductsScreen = ({ history, match }) => {
               <tr className="text-center">
                 <th></th>
                 <th>Name</th>
-
                 <th>Edit</th>
+                <th>Stock Level</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -283,71 +294,53 @@ const ListProductsScreen = ({ history, match }) => {
                   >
                     {product.name}
                   </td>
+                  <td>
+                    <Button
+                      variant="success"
+                      className="btn btn-sm"
+                      onClick={async () => {
+                        setUpdateId(product._id);
 
+                        await dispatch(listProduct(product._id));
+                        await setImage(product.image);
+                        await setEditModal(true);
+                      }}
+                    >
+                      <i className="fas fa-edit"></i>{" "}
+                    </Button>
+                  </td>
+                  <td>
+                    {product.countInStock ? (
+                      <Button
+                        variant="info"
+                        className="btn btn-sm"
+                        onClick={async () => {
+                          setUpdateId(product._id);
+
+                          await dispatch(listProduct(product._id));
+                          await setImage(product.image);
+                          await setStockModal(true);
+                        }}
+                      >
+                        <i className="fas fa-box-open"></i>{" "}
+                      </Button>
+                    ) : (
+                      <Button variant="info" className="btn-sm" disabled>
+                        <i className="fas fa-x"></i>
+                      </Button>
+                    )}
+                  </td>
                   <td className="align-middle">
-                    {
-                      <Row className="no-gutters">
-                        <Col>
-                          <Button
-                            variant="light"
-                            className="btn btn-block p-1 m-1 text-danger"
-                            onClick={() => {
-                              setDeleteModal(true);
-                              setDeleteId(product._id);
-                            }}
-                          >
-                            <i
-                              className="fas fa-trash"
-                              style={{ color: "red" }}
-                            ></i>{" "}
-                            <br />
-                            Delete
-                          </Button>
-                        </Col>
-                        <Col>
-                          <Button
-                            variant="light"
-                            className="btn btn-block p-1 m-1"
-                            onClick={async () => {
-                              setUpdateId(product._id);
-
-                              await dispatch(listProduct(product._id));
-                              await setImage(product.image);
-                              await setEditModal(true);
-                            }}
-                          >
-                            <i
-                              className="fas fa-edit"
-                              style={{ color: "green" }}
-                            ></i>{" "}
-                            <br />
-                            Edit
-                          </Button>
-                        </Col>
-                        {product.countInStock && (
-                          <Col>
-                            <Button
-                              variant="light"
-                              className="btn btn-block p-1 m-1"
-                              onClick={async () => {
-                                setUpdateId(product._id);
-
-                                await dispatch(listProduct(product._id));
-                                await setImage(product.image);
-                                await setStockModal(true);
-                              }}
-                            >
-                              <i
-                                className="fas fa-box-open"
-                                style={{ color: "green" }}
-                              ></i>{" "}
-                              <br />
-                              Stock Level
-                            </Button>
-                          </Col>
-                        )}
-                      </Row>
-                    }
+                    <Button
+                      variant="danger"
+                      className="btn btn-sm"
+                      onClick={() => {
+                        setDeleteModal(true);
+                        setDeleteId(product._id);
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>{" "}
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -361,30 +354,20 @@ const ListProductsScreen = ({ history, match }) => {
               className="d-flex justify-content-center"
             />
           </div>
-
-          <div className="text-center">
-            <Button
-              className="btn-warning"
-              onClick={() => {
-                setCreateModal(true);
-                setImage(imagePlaceholder);
-              }}
-            >
-              <i className="fas fa-plus"></i> Create Product
-            </Button>
-          </div>
         </>
       )}
 
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title>Permanently Delete Product?</Modal.Title>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
+            Permanently Delete Product?
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          This action will permanently delete the event from the database and
+          This action will permanently delete the product from the database and
           the details will be irretrievable. <br /> Are you sure?
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setDeleteModal(false)}>
             Cancel
           </Button>
@@ -395,8 +378,8 @@ const ListProductsScreen = ({ history, match }) => {
       </Modal>
 
       <Modal show={createModal} onHide={() => setCreateModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Create a new product</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Create a new product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <img src={`${image}`} alt="" />
@@ -459,14 +442,17 @@ const ListProductsScreen = ({ history, match }) => {
                   options={dropdownOptions}
                 />
 
-                <Button type="submit" className="btn-block btn-warning">
+                <Button
+                  type="submit"
+                  className="btn-block btn-default w-100 mt-2"
+                >
                   Create
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setCreateModal(false)}>
             Cancel
           </Button>
@@ -480,8 +466,8 @@ const ListProductsScreen = ({ history, match }) => {
           setEditDescription(false);
         }}
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit Product</Modal.Title>
+        <Modal.Header closeButton className="bg-success">
+          <Modal.Title className="text-white">Edit Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {product && (
@@ -545,7 +531,7 @@ const ListProductsScreen = ({ history, match }) => {
                   options={dropdownOptions}
                 />
 
-                <h3>Description</h3>
+                <h5 className="mt-3">Description</h5>
 
                 {!editDescription && (
                   <>
@@ -588,14 +574,17 @@ const ListProductsScreen = ({ history, match }) => {
                   </>
                 )}
 
-                <Button type="submit" className="btn-block btn-warning">
+                <Button
+                  type="submit"
+                  className="btn-block btn-default w-100 mt-2"
+                >
                   Update
                 </Button>
               </Form>
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-success">
           <Button
             variant="secondary"
             onClick={() => {
@@ -614,8 +603,8 @@ const ListProductsScreen = ({ history, match }) => {
           setStockModal(false);
         }}
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit Stock level</Modal.Title>
+        <Modal.Header closeButton className="bg-info">
+          <Modal.Title className="text-white">Edit Stock level</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {product.countInStock && (
@@ -638,14 +627,17 @@ const ListProductsScreen = ({ history, match }) => {
                     ></FormControl>
                   </FormGroup>
                 ))}
-                <button type="submit" className="btn btn-block btn-default">
+                <Button
+                  type="submit"
+                  className="btn btn-block btn-default w-100 mt-2"
+                >
                   Update
-                </button>
+                </Button>
               </form>
             </>
           )}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-info">
           <Button
             variant="secondary"
             onClick={() => {

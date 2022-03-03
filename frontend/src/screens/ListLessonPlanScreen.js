@@ -224,11 +224,11 @@ const ListLessonPlanScreen = ({ history }) => {
 
   return (
     <Container fluid="lg">
-      <div className="d-flex justify-content-between align-items-center border-bottom border-warning pb-1 mb-2">
+      <div className="d-flex justify-content-between">
         <Link className="btn btn-dark" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
-        <h3 className="text-center pb-0 mb-0">Lesson Plans</h3>
+
         <button
           className="btn-dark btn"
           onClick={() => {
@@ -238,6 +238,9 @@ const ListLessonPlanScreen = ({ history }) => {
           <i className="fas fa-plus"></i> Create Lesson Plan
         </button>
       </div>
+      <h3 className="text-center border-bottom border-warning pb-1 mb-2">
+        Lesson Plans
+      </h3>
       {loadingDelete && <Loader variant="warning" />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loadingCreate && <Loader variant="warning" />}
@@ -269,57 +272,45 @@ const ListLessonPlanScreen = ({ history }) => {
           <tbody>
             {lessonPlans &&
               lessonPlans.map((lessonPlan) => (
-                <tr key={lessonPlan._id}>
-                  <td className="align-middle">{lessonPlan.title}</td>
-                  <td className="align-middle">{lessonPlan.description}</td>
-                  <td className="align-middle">
+                <tr key={lessonPlan._id} className="align-middle">
+                  <td>{lessonPlan.title}</td>
+                  <td>{lessonPlan.description}</td>
+                  <td>
                     <Button
-                      variant="light"
-                      className="btn btn-block p-1 m-1"
+                      variant="warning"
+                      className="btn-sm"
                       onClick={async () => {
                         setUpdateId(lessonPlan._id);
                         await dispatch(listLessonPlan(lessonPlan._id));
                         await setViewModal(true);
                       }}
                     >
-                      <i
-                        className="fa-solid fa-eye"
-                        style={{ color: "orange" }}
-                      ></i>{" "}
-                      <br />
-                      View
+                      <i className="fa-solid fa-eye"></i>
                     </Button>
                   </td>
-                  <td className="align-middle">
+                  <td>
                     <Button
-                      variant="light"
-                      className="btn btn-block px-3 py-1 m-1"
+                      variant="success"
+                      className="btn-sm"
                       onClick={async () => {
                         setUpdateId(lessonPlan._id);
                         await dispatch(listLessonPlan(lessonPlan._id));
                         await setEditModal(true);
                       }}
                     >
-                      <i
-                        className="fa-solid fa-pen-to-square"
-                        style={{ color: "green" }}
-                      ></i>{" "}
-                      <br />
-                      Edit
+                      <i className="fa-solid fa-pen-to-square"></i>
                     </Button>
                   </td>
-                  <td className="align-middle">
+                  <td>
                     <Button
-                      variant="light"
-                      className="btn btn-block p-1 m-1 text-danger"
+                      variant="danger"
+                      className="btn-sm"
                       onClick={() => {
                         setDeleteModal(true);
                         setDeleteId(lessonPlan._id);
                       }}
                     >
-                      <i className="fas fa-trash" style={{ color: "red" }}></i>{" "}
-                      <br />
-                      Delete
+                      <i className="fas fa-trash"></i>
                     </Button>
                   </td>
                 </tr>
@@ -331,14 +322,16 @@ const ListLessonPlanScreen = ({ history }) => {
       {/* Create modal / edit modal / view modal / delete modal */}
 
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title>Permanently Delete Lesson PLan?</Modal.Title>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
+            Permanently Delete Lesson PLan?
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           This action will permanently delete the lesson plan from the database
           and the details will be irretrievable. <br /> Are you sure?
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={() => setDeleteModal(false)}>
             Cancel
           </Button>
@@ -349,8 +342,10 @@ const ListLessonPlanScreen = ({ history }) => {
       </Modal>
 
       <Modal show={createModal} onHide={() => setCreateModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Create a new lesson plan</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">
+            Create a new lesson plan
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
@@ -427,9 +422,9 @@ const ListLessonPlanScreen = ({ history }) => {
                   />
                 )}
 
-                <button type="submit" className="btn btn-block btn-default">
+                <Button type="submit" className="w-100 btn-default my-3">
                   Create
-                </button>
+                </Button>
               </Form>
             )}
           </Formik>
@@ -437,8 +432,8 @@ const ListLessonPlanScreen = ({ history }) => {
       </Modal>
 
       <Modal show={editModal} onHide={() => setEditModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>Edit lesson plan</Modal.Title>
+        <Modal.Header closeButton className="bg-success">
+          <Modal.Title className="text-white">Edit lesson plan</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
@@ -517,9 +512,9 @@ const ListLessonPlanScreen = ({ history }) => {
                   />
                 )}
 
-                <button type="submit" className="btn btn-block btn-default">
+                <Button type="submit" className="w-100 btn-default my-3">
                   Update
-                </button>
+                </Button>
               </Form>
             )}
           </Formik>
@@ -527,8 +522,8 @@ const ListLessonPlanScreen = ({ history }) => {
       </Modal>
 
       <Modal show={viewModal} size="lg" onHide={() => setViewModal(false)}>
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title>View Lesson Plan</Modal.Title>
+        <Modal.Header closeButton className="bg-warning">
+          <Modal.Title className="text-white">{lessonPlan.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {lessonPlan.title && (
@@ -548,25 +543,23 @@ const ListLessonPlanScreen = ({ history }) => {
                                 className="mb-2 pb-2 border-warning border-bottom"
                                 key={video._id}
                               >
-                                <div>
-                                  <iframe
-                                    src={video.video}
-                                    width="100%"
-                                    height="400"
-                                    allow="autoplay"
-                                    title={video._id}
-                                  ></iframe>
-                                </div>
-                                <div className="bg-primary px-3 py-1 text-white">
-                                  <h4 className="text-white">{video.title}</h4>
+                                <iframe
+                                  src={video.video}
+                                  width="100%"
+                                  height="400"
+                                  allow="autoplay"
+                                  title={video._id}
+                                ></iframe>
+
+                                <div className="px-3">
+                                  <h4>{video.title}</h4>
                                   <small>
-                                    Category <br /> {video.category}
+                                    Category - {video.category}
                                     <br />
-                                    Kyu grade level -{" "}
-                                    {video.grade &&
-                                      video.grade.map((grade) => (
-                                        <div key={grade}>{`${grade}, `}</div>
-                                      ))}
+                                    grade level -{" "}
+                                    {`${
+                                      video.grade[video.grade.length - 1]
+                                    } - ${video.grade[0]}`}
                                   </small>
                                 </div>
                                 {volume === "stop" ? (
@@ -630,25 +623,23 @@ const ListLessonPlanScreen = ({ history }) => {
                               className="mb-2 pb-2 border-warning border-bottom"
                               key={video._id}
                             >
-                              <div>
-                                <iframe
-                                  src={video.video}
-                                  width="100%"
-                                  height="400"
-                                  allow="autoplay"
-                                  title={video._id}
-                                ></iframe>
-                              </div>
-                              <div className="bg-primary px-3 py-1 text-white">
-                                <h4 className="text-white">{video.title}</h4>
+                              <iframe
+                                src={video.video}
+                                width="100%"
+                                height="400"
+                                allow="autoplay"
+                                title={video._id}
+                              ></iframe>
+
+                              <div className="px-3 py-1">
+                                <h4>{video.title}</h4>
                                 <small>
-                                  Category <br /> {video.category}
+                                  Category - {video.category}
                                   <br />
-                                  Kyu grade level -{" "}
-                                  {video.grade &&
-                                    video.grade.map((grade) => (
-                                      <div key={grade}>{`${grade}, `}</div>
-                                    ))}
+                                  grade level -{" "}
+                                  {`${video.grade[video.grade.length - 1]} - ${
+                                    video.grade[0]
+                                  }`}
                                 </small>
                               </div>
                               {volume === "stop" ? (
@@ -710,25 +701,23 @@ const ListLessonPlanScreen = ({ history }) => {
                               className="mb-2 pb-2 border-warning border-bottom"
                               key={video._id}
                             >
-                              <div>
-                                <iframe
-                                  src={video.video}
-                                  width="100%"
-                                  height="400"
-                                  allow="autoplay"
-                                  title={video._id}
-                                ></iframe>
-                              </div>
-                              <div className="bg-primary px-3 py-1 text-white">
-                                <h4 className="text-white">{video.title}</h4>
+                              <iframe
+                                src={video.video}
+                                width="100%"
+                                height="400"
+                                allow="autoplay"
+                                title={video._id}
+                              ></iframe>
+
+                              <div className="px-3 py-1">
+                                <h4>{video.title}</h4>
                                 <small>
-                                  Category <br /> {video.category}
+                                  Category - {video.category}
                                   <br />
-                                  Kyu grade level -{" "}
-                                  {video.grade &&
-                                    video.grade.map((grade) => (
-                                      <div key={grade}>`${grade}, `</div>
-                                    ))}
+                                  grade level -{" "}
+                                  {`${video.grade[video.grade.length - 1]} - ${
+                                    video.grade[0]
+                                  }`}
                                 </small>
                               </div>
                               {volume === "stop" ? (
@@ -791,25 +780,23 @@ const ListLessonPlanScreen = ({ history }) => {
                               className="mb-2 pb-2 border-warning border-bottom"
                               key={video._id}
                             >
-                              <div>
-                                <iframe
-                                  src={video.video}
-                                  width="100%"
-                                  height="400"
-                                  allow="autoplay"
-                                  title={video._id}
-                                ></iframe>
-                              </div>
-                              <div className="bg-primary px-3 py-1 text-white">
-                                <h4 className="text-white">{video.title}</h4>
+                              <iframe
+                                src={video.video}
+                                width="100%"
+                                height="400"
+                                allow="autoplay"
+                                title={video._id}
+                              ></iframe>
+
+                              <div className="px-3 py-1">
+                                <h4>{video.title}</h4>
                                 <small>
-                                  Category <br /> {video.category}
+                                  Category - {video.category}
                                   <br />
-                                  Kyu grade level -{" "}
-                                  {video.grade &&
-                                    video.grade.map((grade) => (
-                                      <div key={grade}>`${grade}, `</div>
-                                    ))}
+                                  grade level -{" "}
+                                  {`${video.grade[video.grade.length - 1]} - ${
+                                    video.grade[0]
+                                  }`}
                                 </small>
                               </div>
                               {volume === "stop" ? (
@@ -859,7 +846,7 @@ const ListLessonPlanScreen = ({ history }) => {
             </>
           )}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button className="btn-block" onClick={() => setViewModal(false)}>
             Close
           </Button>

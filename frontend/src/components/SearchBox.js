@@ -15,7 +15,7 @@ const SearchBox = ({ history }) => {
   };
 
   return (
-    <Form onSubmit={submitHandler} inline>
+    <Form onSubmit={submitHandler} className="d-flex">
       <Form.Control
         type="text"
         name="q"
@@ -23,7 +23,7 @@ const SearchBox = ({ history }) => {
         placeholder="Search..."
         className="mr-sm-2 ml-sm-2"
       ></Form.Control>
-      <Button type="submit" variant="outline-warning" className="p-2">
+      <Button type="submit" variant="default" className="p-2">
         Search
       </Button>
     </Form>
