@@ -78,8 +78,16 @@ import {
   lessonPlanUpdateReducer,
 } from "./reducers/lessonPlanReducer";
 import { displayGradingReducer } from "./reducers/gradingReducer";
+import {
+  addAttendeeReducer,
+  attendanceListReducer,
+  removeAttendeeReducer,
+} from "./reducers/attendanceReducer";
 
 const reducer = combineReducers({
+  attendanceList: attendanceListReducer,
+  removeAttendee: removeAttendeeReducer,
+  addAttendee: addAttendeeReducer,
   articleList: articleListReducer,
   articleDelete: articleDeleteReducer,
   articleCreate: articleCreateReducer,
