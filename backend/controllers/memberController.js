@@ -114,7 +114,44 @@ const getMemberProfile = asyncHandler(async (req, res) => {
 
   if (member) {
     const age = Math.floor((new Date() - member.dateOfBirth) / 60000 / 525600);
-    const grade = Number(member.grade);
+    const kyuGrade = member.kyuGrade;
+    const danGrade = member.danGrade;
+    let gradeLevel;
+    let grade;
+    let numberOfSessionsRequired;
+    if (kyuGrade === 0) {
+      grade = danGrade;
+    } else {
+      grade = kyuGrade;
+    }
+
+    if (age < 9 && grade > 1) {
+      gradeLevel = "Intermediate";
+      numberOfSessionsRequired = 24;
+    }
+    if (age < 9 && grade > 6) {
+      gradeLevel = "Novice";
+      numberOfSessionsRequired = 16;
+    }
+    if (age < 9 && grade > 10) {
+      gradeLevel = "Junior";
+      numberOfSessionsRequired = 10;
+    }
+    if (age < 9 && grade < 2) {
+      gradeLevel = "Advanced";
+    }
+
+    if (age > 8 && grade > 1) {
+      gradeLevel = "Intermediate";
+      numberOfSessionsRequired = 24;
+    }
+    if (age > 8 && grade > 6) {
+      gradeLevel = "Novice";
+      numberOfSessionsRequired = 16;
+    }
+    if (age > 8 && grade < 2) {
+      gradeLevel = "Advanced";
+    }
 
     res.json({
       _id: member._id,
@@ -135,7 +172,7 @@ const getMemberProfile = asyncHandler(async (req, res) => {
       emergencyContactEmail: member.emergencyContactEmail,
       emergencyContactPhone: member.emergencyContactPhone,
       userName: member.name,
-      gradeLevel: member.gradeLevel,
+      gradeLevel: gradeLevel,
       membershipLevel: member.trainingFees,
       age: age,
       lastClassChange: member.lastClassChange,
@@ -144,6 +181,8 @@ const getMemberProfile = asyncHandler(async (req, res) => {
       kyuGrade: member.kyuGrade,
       danGrade: member.danGrade,
       licenseNumber: member.licenseNumber,
+      attendanceRecord: member.attendanceRecord,
+      numberOfSessionsRequired: numberOfSessionsRequired,
     });
   } else {
     res.status(404);
@@ -314,6 +353,8 @@ const getMembers = asyncHandler(async (req, res) => {
     email: 1,
     phone: 1,
     ddMandate: 1,
+    kyuGrade: 1,
+    danGrade: 1,
   };
 
   const members = await Member.find({ ...keyword }, options)

@@ -5,6 +5,7 @@ import {
   Container,
   Image,
   ListGroup,
+  ListGroupItem,
   Modal,
   Row,
 } from "react-bootstrap";
@@ -159,9 +160,26 @@ const GradingRegistrationScreen = ({ history, match }) => {
               ) : (
                 <ListGroup.Item>Grade: {grade}</ListGroup.Item>
               ))}
-            <ListGroup.Item>
-              Attendance Record: 16 sessions attended (24 required)
-            </ListGroup.Item>
+
+            {member.nameFirst && member.gradeLevel !== "Advanced" && (
+              <ListGroup.Item className="text-center">
+                Attendance Record:
+                <br />
+                {member.attendanceRecord > member.sessionsRequired ? (
+                  <img
+                    src={`/img/Stampcards/${member.gradeLevel}Card${member.sessionsRequired}.png`}
+                    alt=""
+                    className="max-width-300"
+                  />
+                ) : (
+                  <img
+                    src={`/img/Stampcards/${member.gradeLevel}Card${member.attendanceRecord}.png`}
+                    alt=""
+                    className="max-width-300"
+                  />
+                )}
+              </ListGroup.Item>
+            )}
             {applicationError === true ? (
               <Message variant="danger">
                 Application Error. Please try again later or contact us on
@@ -175,16 +193,28 @@ const GradingRegistrationScreen = ({ history, match }) => {
                   </ListGroup.Item>
                 ) : !member.licenseNumber ? (
                   <ListGroup.Item variant="danger" className="text-center">
-                    <Button variant="danger" onClick={() => setJksModal(true)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => setJksModal(true)}
+                      className="w-100"
+                    >
                       You are unable to register as we are missing your license
                       number. Click here to add the license number.
                     </Button>
                   </ListGroup.Item>
+                ) : member.attendanceRecord <
+                  member.numberOfSessionsRequired ? (
+                  <ListGroupItem>
+                    <Button variant="default" disabled className="w-100">
+                      You are unable to register as you have not attended the
+                      minimum number of trianing sessions required.
+                    </Button>
+                  </ListGroupItem>
                 ) : (
                   <ListGroup.Item>
                     <Button
                       variant="default"
-                      className="btn-block text-white"
+                      className="w-100 text-white"
                       onClick={() => setShowModal(true)}
                     >
                       You are eligible to Grade. Register Now

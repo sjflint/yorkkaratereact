@@ -134,7 +134,6 @@ const MemberDetails = () => {
         numberMarker = "th";
     }
   }
-
   let grade;
   if (member && member.kyuGrade === 0) {
     grade = `${member.danGrade}${numberMarker} dan`;
@@ -181,47 +180,56 @@ const MemberDetails = () => {
           <h2 className="text-center text-white">Your details</h2>
 
           <ListGroup variant="flush dark">
-            <ListGroup.Item variant="light">
-              <Row>
-                <Col xs={4}>
+            <Row>
+              <Col sm={7} className="mb-3">
+                <ListGroup.Item className="bg-dark text-white">
                   <strong>Name</strong>
-                </Col>
-                <Col>{`${member.nameFirst} ${member.nameSecond}`}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item variant="light">
-              <Row>
-                <Col xs={4}>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  {`${member.nameFirst} ${member.nameSecond}`}
+                </ListGroup.Item>
+                <ListGroup.Item className="bg-dark text-white">
                   <strong>Email</strong>
-                </Col>
-                <Col>{`${member.email}`}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item variant="light">
-              <Row>
-                <Col xs={4}>
+                </ListGroup.Item>
+                <ListGroup.Item>{`${member.email}`}</ListGroup.Item>
+                <ListGroup.Item className="bg-dark text-white">
                   <strong>Phone</strong>
-                </Col>
-                <Col>{`0${member.phone}`}</Col>
-              </Row>
-            </ListGroup.Item>
+                </ListGroup.Item>
+                <ListGroup.Item>{`0${member.phone}`}</ListGroup.Item>
 
-            <ListGroup.Item variant="light">
-              <Row>
-                <Col xs={4}>
+                <ListGroup.Item className="bg-dark text-white">
                   <strong>Grade</strong>
-                </Col>
-                <Col>{`${grade} (${member.gradeLevel})`}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item variant="light">
-              <Row>
-                <Col xs={4}>
+                </ListGroup.Item>
+                <ListGroup.Item>{`${grade} (${member.gradeLevel})`}</ListGroup.Item>
+                <ListGroup.Item className="bg-dark text-white">
                   <strong>Membership Level</strong>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  £{(member.membershipLevel / 100).toFixed(2)}
+                </ListGroup.Item>
+              </Col>
+
+              {member && member.gradeLevel !== "Advanced" && (
+                <Col sm={5} className="p-2 text-center">
+                  <h5 className="mb-0 border-bottom border-warning">
+                    Attendance Card
+                  </h5>
+                  {member.attendanceRecord > member.sessionsRequired ? (
+                    <img
+                      src={`/img/Stampcards/${member.gradeLevel}Card${member.sessionsRequired}.png`}
+                      alt=""
+                      className="max-width-300"
+                    />
+                  ) : (
+                    <img
+                      src={`/img/Stampcards/${member.gradeLevel}Card${member.attendanceRecord}.png`}
+                      alt=""
+                      className="max-width-300"
+                    />
+                  )}
                 </Col>
-                <Col>£{(member.membershipLevel / 100).toFixed(2)}</Col>
-              </Row>
-            </ListGroup.Item>
+              )}
+            </Row>
             <ListGroup.Item className="mt-3" variant="light">
               <Row>
                 <Col>

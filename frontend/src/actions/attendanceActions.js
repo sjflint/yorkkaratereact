@@ -9,13 +9,21 @@ import {
   ATTENDANCE_ADD_REQUEST,
   ATTENDANCE_ADD_SUCCESS,
   ATTENDANCE_ADD_FAIL,
+  ATTENDANCE_ADD_EXTRA_REQUEST,
+  ATTENDANCE_ADD_EXTRA_SUCCESS,
+  ATTENDANCE_ADD_EXTRA_FAIL,
 } from "../constants/attendanceConstants";
 
-export const updateAttendance = (values) => async (dispatch, getState) => {
+export const updateAttendance = (classId) => async (dispatch, getState) => {
   try {
     dispatch({
       type: ATTENDANCE_LIST_REQUEST,
     });
+
+    const values = {
+      date: new Date().toDateString(),
+      name: classId,
+    };
 
     const {
       memberLogin: { memberInfo },
@@ -117,3 +125,41 @@ export const attendeeAdd = (id, classId) => async (dispatch, getState) => {
     });
   }
 };
+
+export const attendeeExtraAdd =
+  (memberId, recordId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ATTENDANCE_ADD_EXTRA_REQUEST,
+      });
+
+      const {
+        memberLogin: { memberInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${memberInfo.token}`,
+        },
+      };
+
+      const values = {
+        memberId: memberId,
+        recordId: recordId,
+      };
+
+      await axios.post(`/api/attendance/addextra`, values, config);
+
+      dispatch({
+        type: ATTENDANCE_ADD_EXTRA_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({
+        type: ATTENDANCE_ADD_EXTRA_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

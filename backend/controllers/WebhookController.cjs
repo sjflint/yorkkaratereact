@@ -223,6 +223,9 @@ const processPayment = async (event) => {
             );
             console.log("training fees not paid");
             return "Training fees not paid. Membership cancelled";
+          case "Extra class payment":
+            // email admin and member to state payment not made
+            return "Payment for extra class not made";
           default:
             return "Dont know what this payment is for";
         }

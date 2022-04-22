@@ -80,6 +80,7 @@ import {
 import { displayGradingReducer } from "./reducers/gradingReducer";
 import {
   addAttendeeReducer,
+  addExtraAttendeeReducer,
   attendanceListReducer,
   removeAttendeeReducer,
 } from "./reducers/attendanceReducer";
@@ -88,6 +89,7 @@ const reducer = combineReducers({
   attendanceList: attendanceListReducer,
   removeAttendee: removeAttendeeReducer,
   addAttendee: addAttendeeReducer,
+  addExtraAttendee: addExtraAttendeeReducer,
   articleList: articleListReducer,
   articleDelete: articleDeleteReducer,
   articleCreate: articleCreateReducer,

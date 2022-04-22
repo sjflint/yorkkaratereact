@@ -12,6 +12,7 @@ import ordersImg from "../img/orders.png";
 import syllabusImg from "../img/syllabus.png";
 import lessonplanImg from "../img/lessonplan.png";
 import gradingImg from "../img/grading.png";
+import registerImg from "../img/register.png";
 import { Link } from "react-router-dom";
 import Meta from "../components/Meta";
 
@@ -23,7 +24,6 @@ const AdminScreen = ({ history }) => {
   const { member } = memberDetails;
 
   useEffect(() => {
-    console.log(memberInfo);
     if (!memberInfo) {
       history.push("/login");
     }
@@ -205,7 +205,7 @@ const AdminScreen = ({ history }) => {
               <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/instructor/attendance">
                   <Card>
-                    <Card.Img variant="top" src={gradingImg} className="p-3" />
+                    <Card.Img variant="top" src={registerImg} className="p-3" />
                     <Card.Footer className="text-center">
                       Attendance
                     </Card.Footer>

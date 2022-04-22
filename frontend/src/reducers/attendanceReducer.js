@@ -8,6 +8,9 @@ import {
   ATTENDANCE_ADD_REQUEST,
   ATTENDANCE_ADD_SUCCESS,
   ATTENDANCE_ADD_FAIL,
+  ATTENDANCE_ADD_EXTRA_REQUEST,
+  ATTENDANCE_ADD_EXTRA_SUCCESS,
+  ATTENDANCE_ADD_EXTRA_FAIL,
 } from "../constants/attendanceConstants";
 
 export const attendanceListReducer = (state = {}, action) => {
@@ -52,6 +55,22 @@ export const addAttendeeReducer = (state = {}, action) => {
         success: true,
       };
     case ATTENDANCE_ADD_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const addExtraAttendeeReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ATTENDANCE_ADD_EXTRA_REQUEST:
+      return { loading: true };
+    case ATTENDANCE_ADD_EXTRA_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case ATTENDANCE_ADD_EXTRA_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

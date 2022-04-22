@@ -44,6 +44,7 @@ import ListGradingsScreen from "./ListGradingsScreen";
 import GradingScreen from "./GradingScreen";
 import AccountInactiveScreen from "./AccountInactiveScreen";
 import AttendanceScreen from "./AttendanceScreen";
+import { AttendanceRegisterScreen } from "./AttendanceRegisterScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -126,7 +127,11 @@ const ScreenRoutes = () => {
         component={ListLessonPlanScreen}
       />
       <Route path="/instructor/editgradings" component={ListGradingsScreen} />
-      <Route path="/instructor/attendance" component={AttendanceScreen} />
+      <Route path="/instructor/attendance" component={AttendanceScreen} exact />
+      <Route
+        path="/instructor/attendance/:className/search/:keyword?"
+        component={AttendanceRegisterScreen}
+      />
       <Route path="/accountinactive" component={AccountInactiveScreen} />
     </>
   );

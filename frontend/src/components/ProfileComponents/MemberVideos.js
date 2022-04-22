@@ -110,29 +110,55 @@ const MemberVideos = () => {
       <h2 className="border-bottom border-warning mt-2 text-warning">
         Training Videos
       </h2>
+
       <h5 className="my-3">Your Current Status:</h5>
       <ListGroup variant="flush">
-        <ListGroup.Item>
-          <strong>Grade: </strong>
-          {grade}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <strong>Training time required before next grading: </strong>
-          10 hours
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <strong>Total hours completed to date: </strong>0 hours
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <strong>Next Grade: </strong>
-          {nextGrade}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <p className="btn btn-default" onClick={handleShowKyu}>
-            View the different belt colours
-          </p>
-        </ListGroup.Item>
-
+        <Row>
+          <Col sm={6}>
+            <ListGroup.Item>
+              <strong>Grade: </strong>
+              {grade}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <strong>
+                Total number of sessions required before next grading:{" "}
+              </strong>
+              {member.numberOfSessionsRequired}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <strong>Total sessions completed towards the next grade: </strong>
+              {member.attendanceRecord}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <strong>Next Grade: </strong>
+              {nextGrade}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Button
+                className="btn-sm w-100"
+                variant="default"
+                onClick={handleShowKyu}
+              >
+                View the different belt colours
+              </Button>
+            </ListGroup.Item>
+          </Col>
+          <Col sm={6} className="text-center">
+            {member.attendanceRecord > member.sessionsRequired ? (
+              <img
+                src={`/img/Stampcards/${member.gradeLevel}Card${member.sessionsRequired}.png`}
+                alt=""
+                className="max-width-300"
+              />
+            ) : (
+              <img
+                src={`/img/Stampcards/${member.gradeLevel}Card${member.attendanceRecord}.png`}
+                alt=""
+                className="max-width-300"
+              />
+            )}
+          </Col>
+        </Row>
         {loadingTrainingVideos ? (
           <Loader variant="warning" />
         ) : error ? (
@@ -176,7 +202,12 @@ const MemberVideos = () => {
               <h5 className="my-3 text-warning">
                 Kihon Kumite for {nextGrade}
               </h5>
-              <p>Kihon Kumite is very important blah blah blah</p>
+              <p>
+                Kihon Kumite is the practical test of your basic kihon
+                techniques with a partner. Attention must be given to the
+                correct application of technique, including stances and hand
+                positions.
+              </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
                 {kihonKumiteVideos.length !== 0 ? (
                   kihonKumiteVideos.map((trainingVideo) => (
@@ -205,7 +236,14 @@ const MemberVideos = () => {
               <h5 className="my-3 text-warning">
                 Shobu Kumite for {nextGrade}
               </h5>
-              <p>Shobu Kumite is very important blah blah blah</p>
+              <p>
+                Shobu Kumite tests your ability to apply what you have learnt in
+                a more 'fluid' combat environment with an unpredictable
+                opponent. By not using perscribed attackes and counters, you
+                will learn how to react to your opponent. The rules of 'shobu'
+                (meaning competition) allow for you to improve your skills to
+                compete in karate competitions.
+              </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
                 {shobuKumiteVideos.length !== 0 ? (
                   shobuKumiteVideos.map((trainingVideo) => (
@@ -234,7 +272,14 @@ const MemberVideos = () => {
               <h5 className="my-3 text-warning">
                 Kata for {nextGrade} and below
               </h5>
-              <p>Kata is very important blah blah blah</p>
+              <p>
+                Kata is the essence of karate. You must learn the precise
+                movements of the kata and then perform them at speed and power,
+                with focus and control. Kata was originally a way for the
+                ancient masters to remember and pass on their understanding, as
+                karate was not written down, but now is the ultimate test of
+                your karate skill.
+              </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
                 {kataVideos.length !== 0 ? (
                   kataVideos.map((trainingVideo) => (

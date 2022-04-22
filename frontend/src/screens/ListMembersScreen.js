@@ -59,7 +59,11 @@ const ListMembersScreen = ({ history, match }) => {
         <Link className="btn btn-dark" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
-        <Route render={({ history }) => <SearchBox history={history} />} />
+        <Route
+          render={({ history }) => (
+            <SearchBox history={history} path={"/admin/listmembers/"} />
+          )}
+        />
       </div>
       <h3 className="text-center border-bottom border-warning pb-1">
         Member List

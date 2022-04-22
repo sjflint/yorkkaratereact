@@ -1,20 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import { useEffect } from "react";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import {
-  listTrainingSessions,
-  updateTrainingSession,
-} from "../actions/trainingSessionActions";
-import {
-  attendeeAdd,
-  attendeeRemove,
-  updateAttendance,
-} from "../actions/attendanceActions";
+import { listTrainingSessions } from "../actions/trainingSessionActions";
 
-const AttendanceScreen = ({ history }) => {
-  const [participants, setParticipants] = useState([]);
-
+const AttendanceScreen = ({ match, history }) => {
   const dayToday = () => {
     const d = new Date();
     const day = d.getDay();
@@ -45,13 +35,6 @@ const AttendanceScreen = ({ history }) => {
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
-  const attendanceList = useSelector((state) => state.attendanceList);
-  const {
-    loading: attendanceLoading,
-    error: attendanceError,
-    record,
-  } = attendanceList;
-
   const trainingSessionsList = useSelector(
     (state) => state.trainingSessionsList
   );
@@ -60,7 +43,7 @@ const AttendanceScreen = ({ history }) => {
   useEffect(() => {
     if (!memberInfo) {
       history.push("/login");
-    } else if (!memberInfo.isAdmin) {
+    } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {
       dispatch(listTrainingSessions());
@@ -68,43 +51,12 @@ const AttendanceScreen = ({ history }) => {
   }, [dispatch, history, memberInfo]);
 
   let todaysClasses;
-
-  const todaysDate = new Date().toDateString();
   const day = dayToday().substring(0, 3);
   if (trainingSessions) {
     todaysClasses = trainingSessions.filter(
       (trainingSession) => trainingSession.name.substring(0, 3) === day
     );
   }
-
-  const registerHandler = (className) => {
-    const values = {
-      date: todaysDate,
-      name: className,
-      _id: null,
-    };
-    dispatch(updateAttendance(values));
-  };
-
-  const removeAttendeeHandler = async (id, recordId, className) => {
-    await dispatch(attendeeRemove(id, recordId));
-    const values = {
-      date: todaysDate,
-      name: className,
-      id: null,
-    };
-    await dispatch(updateAttendance(values));
-  };
-
-  const addAttendeeHandler = async (id, recordId, className) => {
-    await dispatch(attendeeAdd(id, recordId));
-    const values = {
-      date: todaysDate,
-      name: className,
-      id: null,
-    };
-    await dispatch(updateAttendance(values));
-  };
 
   return (
     <div>
@@ -135,9 +87,9 @@ const AttendanceScreen = ({ history }) => {
                     className="w-100"
                     onClick={() => {
                       const className = `${indClass.name}: ${indClass.times}`;
-                      setParticipants(indClass.participants);
-                      // set class name
-                      registerHandler(className);
+                      history.push(
+                        `/instructor/attendance/${indClass._id}/search/`
+                      );
                     }}
                   >
                     View Register
@@ -147,84 +99,6 @@ const AttendanceScreen = ({ history }) => {
             </Col>
           ))}
         </Row>
-
-        <Table
-          striped
-          bordered
-          hover
-          responsive
-          className="table-sm text-center mt-3"
-        >
-          <thead>
-            <tr className="text-center">
-              <th>Name</th>
-              <th>Present</th>
-              <th>Not Present</th>
-            </tr>
-          </thead>
-          <tbody>
-            {participants &&
-              participants.map((participant) => {
-                // check if participant._id is included in the record.participants list
-
-                // if yes: They are here and show as attending
-                // if no: They are not here and show as not attending
-                return (
-                  <tr key={participant._id}>
-                    <td>
-                      {participant.firstName} {participant.lastName}
-                    </td>
-                    {/* map through currentAttendees and if id's match, show attending, else show not attending */}
-                    {console.log(record.participants)}
-                    {record.participants &&
-                    record.participants.includes(participant._id.toString()) ? (
-                      <>
-                        <td>
-                          <i className="fa-solid fa-circle-check text-success fa-3x"></i>
-                        </td>
-                        <td>
-                          <Button
-                            variant="outline-danger"
-                            className="btn-sm"
-                            onClick={() =>
-                              removeAttendeeHandler(
-                                participant._id,
-                                record._id,
-                                record.name
-                              )
-                            }
-                          >
-                            Mark as Not Present
-                          </Button>
-                        </td>
-                      </>
-                    ) : (
-                      <>
-                        <td>
-                          <Button
-                            variant="outline-success"
-                            className="btn-sm"
-                            onClick={() =>
-                              addAttendeeHandler(
-                                participant._id,
-                                record._id,
-                                record.name
-                              )
-                            }
-                          >
-                            Mark as Present
-                          </Button>
-                        </td>
-                        <td>
-                          <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </Table>
       </Container>
     </div>
   );

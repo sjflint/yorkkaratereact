@@ -2,6 +2,7 @@ const gocardless = require("gocardless-nodejs");
 const constants = require("gocardless-nodejs/constants");
 const asyncHandler = require("express-async-handler");
 const Member = require("../models/memberModel.cjs");
+const Attendance = require("../models/attendanceModel.cjs");
 const TrainingSessions = require("../models/trainingSessionModel.cjs");
 
 const dotenv = require("dotenv");
@@ -303,10 +304,98 @@ const createPayment = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc create payment
+// @route Access from server only
+// @access Server (private)
+const serverCreatedPayment = asyncHandler(async (paymentDetails) => {
+  const member = await Member.findById(paymentDetails._id);
+
+  const payment = await client.payments.create(
+    {
+      amount: paymentDetails.amount,
+      currency: "GBP",
+      description: paymentDetails.description,
+      links: {
+        mandate: member.ddMandate,
+      },
+      metadata: {},
+    },
+    Math.random() + paymentDetails._id + "paymentstring"
+  );
+  const paymentsObject = member.additionalPayments;
+  paymentsObject[paymentDetails.recordId] = payment.id;
+
+  await Member.findOneAndUpdate(
+    { _id: member._id },
+    {
+      additionalPayments: paymentsObject,
+    },
+    { new: true }
+  );
+
+  return {
+    PaymentStatus: "submitted",
+    PaymentAmount: payment.amount,
+    paymentId: payment.id,
+  };
+});
+
+// @desc cancel extra class payment
+// @route POST /ddroutes/cancelpayment
+// @access Public (private)
+const cancelPayment = asyncHandler(async (req, res) => {
+  const member = await Member.findById(req.body._id);
+
+  const payment = await client.payments.cancel(req.body.paymentId);
+
+  // update database if payment cancelled
+  if (payment.status === "cancelled") {
+    // update member => payment record
+    const keyValue = `additionalPayments.${req.body.recordId}`;
+    await Member.findOneAndUpdate(
+      { _id: member._id },
+      {
+        $set: { [keyValue]: payment.status },
+      },
+      { new: true }
+    );
+
+    // update attendance record
+    const record = await Attendance.findById(req.body.recordId);
+
+    const attendees = record.extraParticipants;
+
+    console.log(`old attendee list: ${attendees}`);
+    console.log(`id to remove: ${req.body._id}`);
+
+    const newAttendees = attendees.filter(
+      (attendee) => attendee !== req.body._id
+    );
+
+    console.log(`new attendee list: ${newAttendees}`);
+
+    await Attendance.findOneAndUpdate(
+      { _id: req.body.recordId },
+      {
+        extraParticipants: newAttendees,
+      },
+      { new: true }
+    );
+
+    res.status(201).json({
+      PaymentStatus: payment.status,
+    });
+  } else {
+    // throw error
+  }
+});
+
 module.exports = {
   ddSetup,
   cancelDirectDebit,
   updateSubscription,
   updateDirectDebit,
   createPayment,
+  serverCreatedPayment,
+  cancelPayment,
 };

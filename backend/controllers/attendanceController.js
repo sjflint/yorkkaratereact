@@ -1,37 +1,34 @@
 import asyncHandler from "express-async-handler";
-import Attendance from "../models/attendanceModel.js";
+import Attendance from "../models/attendanceModel.cjs";
 import Member from "../models/memberModel.cjs";
+import TrainingSession from "../models/trainingSessionModel.cjs";
+import { serverCreatedPayment } from "./ddController.cjs";
 
 // @desc get Attendance Record
 // @route POST /api/attendance
 // @access Private/Instructor
 const getAttendanceRecord = asyncHandler(async (req, res) => {
-  const attendanceRecord = await Attendance.findOne({
-    date: req.body.date,
-    name: req.body.name,
-  });
-  if (attendanceRecord && req.body._id) {
-    if (attendanceRecord.participants.includes(req.body._id)) {
+  const trainingSession = await TrainingSession.findById(req.body.name);
+
+  if (trainingSession) {
+    const className = `${trainingSession.name}: ${trainingSession.times}`;
+
+    const attendanceRecord = await Attendance.findOne({
+      date: req.body.date,
+      name: className,
+    }).populate("extraParticipants", "id firstName lastName email phone");
+
+    if (attendanceRecord) {
       res.json(attendanceRecord);
     } else {
-      attendanceRecord.participants.push(req.body._id);
-      await Attendance.findOneAndUpdate(
-        { date: req.body.date },
-        { participants: attendanceRecord.participants },
-        { new: true }
-      );
-      res.json(attendanceRecord);
+      const attendance = new Attendance({
+        date: new Date().toDateString(),
+        name: className,
+        participants: [],
+      });
+      const createdAttendance = await attendance.save();
+      res.status(201).json(createdAttendance);
     }
-  } else if (attendanceRecord && !req.body._id) {
-    res.json(attendanceRecord);
-  } else {
-    const attendance = new Attendance({
-      date: new Date().toDateString(),
-      name: req.body.name,
-      participants: [],
-    });
-    const createdAttendance = await attendance.save();
-    res.status(201).json(createdAttendance);
   }
 });
 
@@ -91,4 +88,65 @@ const removeAttendeeRecord = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAttendanceRecord, addAttendeeRecord, removeAttendeeRecord };
+// @desc add Extra Attendee
+// @route POST /api/attendance/addextra
+// @access Private/Instructor
+const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
+  const todaysDate = new Date();
+  const record = await Attendance.findById(req.body.recordId);
+
+  const member = await Member.findById(req.body.memberId);
+
+  // Member actions
+  const lastExtraClassAdded = member.extraClassAdded.setDate(
+    member.extraClassAdded.getDate() + 28
+  );
+  if (lastExtraClassAdded < todaysDate) {
+    console.log("no action");
+  } else {
+    // Charge DD for extra session
+    const paymentDetails = {
+      _id: member._id,
+      amount: 500,
+      description: "Extra class payment",
+      recordId: req.body.recordId,
+    };
+    serverCreatedPayment(paymentDetails);
+  }
+
+  try {
+    const extraParticipants = record.extraParticipants;
+    const memberId = extraParticipants.filter(
+      (participant) => participant === member._id
+    );
+
+    if (memberId.length !== 0) {
+      console.log("member already added");
+      res.status(200).json("member already added");
+    } else {
+      console.log("adding member to array");
+      extraParticipants.push(member._id);
+    }
+    await Attendance.findByIdAndUpdate(
+      req.body.recordId,
+      { extraParticipants: extraParticipants },
+      { new: true }
+    );
+    await Member.findByIdAndUpdate(
+      req.body.memberId,
+      { extraClassAdded: todaysDate },
+      { new: true }
+    );
+
+    res.status(201).json("Extra participants added");
+  } catch {
+    res.status(404);
+  }
+});
+
+export {
+  getAttendanceRecord,
+  addAttendeeRecord,
+  removeAttendeeRecord,
+  addExtraAttendeeRecord,
+};

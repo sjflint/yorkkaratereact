@@ -39,7 +39,9 @@ const memberSchema = mongoose.Schema(
     licenseNumber: { type: Number },
     token: { type: String },
     lastClassChange: { type: Date, required: true, default: new Date(2000, 0) },
-    attendanceRecord: { type: Number, required: true, default: 0 },
+    attendanceRecord: { type: Number, required: true, default: 1 },
+    extraClassAdded: { type: Date },
+    additionalPayments: { type: Object },
     profileImg: {
       type: String,
       required: true,

@@ -189,6 +189,7 @@ const ListClassesScreen = ({ history }) => {
     { key: "Thursday", value: "Thursday" },
     { key: "Friday", value: "Friday" },
     { key: "Saturday", value: "Saturday" },
+    { key: "Sunday", value: "Sunday" },
   ];
   // Description options
   const descriptionOptions = [
