@@ -35,6 +35,7 @@ const createLessonPlan = asyncHandler(async (req, res) => {
     kata: req.body.kata,
     title: req.body.title,
     description: req.body.description,
+    additionalInfo: req.body.additionalInfo,
   });
 
   const createdLessonPlan = await lessonPlan.save();
@@ -52,6 +53,7 @@ const updateLessonPlan = asyncHandler(async (req, res) => {
     lessonPlan.kihonKumite = req.body.kihonKumite;
     lessonPlan.shobuKumite = req.body.shobuKumite;
     lessonPlan.kata = req.body.kata;
+    lessonPlan.additionalInfo = req.body.additionalInfo;
 
     const updatedLessonPlan = await lessonPlan.save();
     res.status(201).json(updatedLessonPlan);

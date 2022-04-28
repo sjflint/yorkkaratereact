@@ -80,7 +80,7 @@ const ListProductsScreen = ({ history, match }) => {
     dispatch({ type: PRODUCT_CREATE_RESET });
     if (!memberInfo) {
       history.push("/login");
-    } else if (!member.isShopAdmin) {
+    } else if (!memberInfo.isShopAdmin) {
       history.push("/profile");
     } else {
       dispatch(listProducts(pageNumber));
@@ -219,14 +219,15 @@ const ListProductsScreen = ({ history, match }) => {
   }
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between">
-        <Link className="btn btn-dark" to="/admin">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
 
         <Button
-          className="btn-dark"
+          variant="outline-secondary"
+          className="py-0"
           onClick={() => {
             setCreateModal(true);
             setImage(imagePlaceholder);
@@ -395,53 +396,59 @@ const ListProductsScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="Name"
-                  type="text"
-                  name="name"
-                  placeholder="Product Name"
-                />
-
-                <FormikControl
-                  control="currency"
-                  label="Price"
-                  type="number"
-                  name="price"
-                  placeholder="Price"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Sizes"
-                  type="text"
-                  name="sizes"
-                  placeholder="Add sizes, seperated by ;"
-                />
-
-                <FormikControl
-                  control="input"
-                  as="textarea"
-                  label="Please provide a description"
-                  name="description"
-                  placeholder="Please provide a description"
-                  rows="10"
-                />
-
-                <FormikControl
-                  control="radio"
-                  label="Is this product held in stock?"
-                  name="heldInStock"
-                  options={inStock}
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Category"
-                  name="category"
-                  options={dropdownOptions}
-                />
-
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Name"
+                    type="text"
+                    name="name"
+                    placeholder="Product Name"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="currency"
+                    label="Price"
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Sizes"
+                    type="text"
+                    name="sizes"
+                    placeholder="Add sizes, seperated by ;"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    as="textarea"
+                    label="Please provide a description"
+                    name="description"
+                    placeholder="Please provide a description"
+                    rows="10"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="radio"
+                    label="Is this product held in stock?"
+                    name="heldInStock"
+                    options={inStock}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Category"
+                    name="category"
+                    options={dropdownOptions}
+                  />
+                </div>
                 <Button
                   type="submit"
                   className="btn-block btn-default w-100 mt-2"
@@ -466,7 +473,7 @@ const ListProductsScreen = ({ history, match }) => {
           setEditDescription(false);
         }}
       >
-        <Modal.Header closeButton className="bg-success">
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Edit Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -492,88 +499,99 @@ const ListProductsScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="name"
-                  type="text"
-                  name="name"
-                  placeholder="Product Name"
-                />
-
-                <div className="w-50">
+                <div className="bg-light p-2 mb-2">
                   <FormikControl
-                    control="currency"
-                    label="Price"
-                    type="number"
-                    name="price"
-                    placeholder="Product Price"
+                    control="input"
+                    label="name"
+                    type="text"
+                    name="name"
+                    placeholder="Product Name"
                   />
                 </div>
-                <FormikControl
-                  control="input"
-                  label="Sizes"
-                  type="text"
-                  name="sizes"
-                  placeholder="Add sizes, seperated by ;"
-                />
-
-                <FormikControl
-                  control="radio"
-                  label="Is this product held in stock?"
-                  name="heldInStock"
-                  options={inStock}
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Category"
-                  name="category"
-                  options={dropdownOptions}
-                />
-
-                <h5 className="mt-3">Description</h5>
-
-                {!editDescription && (
-                  <>
-                    {paragraphs &&
-                      paragraphs.map((paragraph) => (
-                        <p
-                          key={`${paragraph}${Math.random()}`}
-                          className="mb-2 "
-                        >
-                          {paragraph}
-                          <br />
-                        </p>
-                      ))}
-
-                    <Button
-                      onClick={() => setEditDescription(true)}
-                      className="mb-4 btn-sm"
-                    >
-                      Edit Description?
-                    </Button>
-                  </>
-                )}
-                {editDescription && (
-                  <>
+                <div className="bg-light p-2 mb-2">
+                  <div className="w-50">
                     <FormikControl
-                      control="input"
-                      as="textarea"
-                      label="Please provide a description"
-                      name="description"
-                      placeholder="Please enter a new description..."
-                      rows="10"
+                      control="currency"
+                      label="Price"
+                      type="number"
+                      name="price"
+                      placeholder="Product Price"
                     />
-                    <Button
-                      onClick={() => setEditDescription(false)}
-                      variant="danger"
-                      className="mb-2 btn-sm"
-                    >
-                      Cancel Edit Description?
-                    </Button>
-                  </>
-                )}
+                  </div>
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Sizes"
+                    type="text"
+                    name="sizes"
+                    placeholder="Add sizes, seperated by ;"
+                  />
+                  <small className="text-muted">
+                    include size, followed by ; (e.g. small;medium;large)
+                  </small>
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="radio"
+                    label="Is this product held in stock?"
+                    name="heldInStock"
+                    options={inStock}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Category"
+                    name="category"
+                    options={dropdownOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <h5 className="mt-3">Description</h5>
 
+                  {!editDescription && (
+                    <>
+                      {paragraphs &&
+                        paragraphs.map((paragraph) => (
+                          <p
+                            key={`${paragraph}${Math.random()}`}
+                            className="mb-2 "
+                          >
+                            {paragraph}
+                            <br />
+                          </p>
+                        ))}
+
+                      <Button
+                        variant="outline-secondary"
+                        onClick={() => setEditDescription(true)}
+                        className="mb-4 btn-sm"
+                      >
+                        Edit Description?
+                      </Button>
+                    </>
+                  )}
+                  {editDescription && (
+                    <>
+                      <FormikControl
+                        control="input"
+                        as="textarea"
+                        label="Please provide a description"
+                        name="description"
+                        placeholder="Please enter a new description..."
+                        rows="10"
+                      />
+                      <Button
+                        onClick={() => setEditDescription(false)}
+                        variant="danger"
+                        className="mb-2 btn-sm"
+                      >
+                        Cancel Edit Description?
+                      </Button>
+                    </>
+                  )}
+                </div>
                 <Button
                   type="submit"
                   className="btn-block btn-default w-100 mt-2"
@@ -584,7 +602,7 @@ const ListProductsScreen = ({ history, match }) => {
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer className="bg-success">
+        <Modal.Footer className="bg-dark">
           <Button
             variant="secondary"
             onClick={() => {
@@ -603,7 +621,7 @@ const ListProductsScreen = ({ history, match }) => {
           setStockModal(false);
         }}
       >
-        <Modal.Header closeButton className="bg-info">
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Edit Stock level</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -637,7 +655,7 @@ const ListProductsScreen = ({ history, match }) => {
             </>
           )}
         </Modal.Body>
-        <Modal.Footer className="bg-info">
+        <Modal.Footer className="bg-dark">
           <Button
             variant="secondary"
             onClick={() => {

@@ -6,7 +6,7 @@ const DDUpdateSuccessScreen = ({ history }) => {
   localStorage.removeItem("updateDD");
 
   return (
-    <Container className="text-center">
+    <Container className="text-center mt-3">
       <h1>Account successfuly reinstated</h1>
       <div className="d-block">
         <img src={ImgDDSuccess} alt="dd success" className="max-width-500" />

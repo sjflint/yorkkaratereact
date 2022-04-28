@@ -42,7 +42,7 @@ const PlaceOrderScreen = ({ history }) => {
   };
 
   return (
-    <Container className="mb-3">
+    <Container className="my-3">
       <div className="border-bottom border-warning p-1 mb-2">
         <FormSteps step1 step2 step3 />
         <div className="d-flex align-items-center justify-content-between">

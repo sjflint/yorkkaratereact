@@ -18,7 +18,7 @@ const EventsScreen = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <div className="mt-3">
       <Container fluid="lg">
         <h3 className="text-center border-bottom border-warning pb-1">
           Upcoming Events
@@ -37,7 +37,7 @@ const EventsScreen = () => {
           ))
         )}
       </Container>
-    </>
+    </div>
   );
 };
 

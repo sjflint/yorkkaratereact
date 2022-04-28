@@ -16,11 +16,10 @@ const Event = ({ event }) => {
           className="d-flex flex-column text-decoration-none"
         >
           <Card>
+            <div className="bg-dark text-white p-2 m-0">
+              <p className="my-1">{event.title}</p>
+            </div>
             <Card.Body>
-              <Card.Title>
-                <strong>{event.title}</strong>
-              </Card.Title>
-
               <Card.Text as="div">
                 <div className="my-3">
                   Date of Event: <FormatDate date={event.dateOfEvent} />
@@ -30,14 +29,14 @@ const Event = ({ event }) => {
               </Card.Text>
             </Card.Body>
           </Card>
-          <Card.Footer>
+          <Card.Footer className="text-center">
             <small>
               Date added: <FormatDate date={event.dateCreated} />
             </small>
+            <Button variant="outline-secondary" className="w-100 btn-sm">
+              View more details
+            </Button>
           </Card.Footer>
-          <Button variant="default" className="btn-block mt-2">
-            View more details
-          </Button>
         </Link>
       </Col>
     </Row>

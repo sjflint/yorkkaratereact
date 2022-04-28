@@ -17,7 +17,7 @@ const BlackBeltScreen = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <div className="mt-3">
       <Container>
         <h3 className="text-center border-bottom border-warning pb-1">
           Club Black Belts
@@ -44,7 +44,7 @@ const BlackBeltScreen = () => {
           </Row>
         )}
       </Container>
-    </>
+    </div>
   );
 };
 

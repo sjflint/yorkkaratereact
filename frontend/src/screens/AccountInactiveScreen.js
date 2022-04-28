@@ -24,7 +24,7 @@ const AccountInactiveScreen = () => {
   }, [history, ddSetupInfo]);
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       {loading ? (
         <Loader variant="default" />
       ) : (

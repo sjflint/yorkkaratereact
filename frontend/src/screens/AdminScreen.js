@@ -33,7 +33,7 @@ const AdminScreen = ({ history }) => {
   }, [history, memberInfo, member]);
 
   return (
-    <>
+    <div className="mt-3">
       <Meta title="York Karate | Admin" />
       <Container fluid="md">
         <h3 className="text-center border-bottom border-warning pb-1">
@@ -216,7 +216,7 @@ const AdminScreen = ({ history }) => {
           </>
         )}
       </Container>
-    </>
+    </div>
   );
 };
 

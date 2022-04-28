@@ -46,7 +46,7 @@ const BasketScreen = ({ match, location, history }) => {
   };
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex align-items-center justify-content-between border-bottom border-warning mb-2">
         <Link className="btn btn-default my-3 mr-2 btn-sm" to="/shop">
           <i className="fas fa-chevron-left"></i> Back to Shop

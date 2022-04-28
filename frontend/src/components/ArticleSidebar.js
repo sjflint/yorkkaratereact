@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import FormatDate from "./FormatDate";
+import { Button } from "react-bootstrap";
 
 const ArticleSidebar = ({ article }) => {
   return (
@@ -9,17 +10,20 @@ const ArticleSidebar = ({ article }) => {
         <Card.Img src={article.image} alt="article" className="mb-2" />
       </Link>
       <Link to={`/article/${article._id}`} className="text-decoration-none">
-        <div>
-          <h5>
-            <strong>{article.title}</strong>
-          </h5>
-
-          <div className="my-3">{article.leader}</div>
+        <div className="bg-primary text-white p-1">
+          <p className="mb-0">{article.title}</p>
         </div>
-        <Card.Footer>
-          <div>{article.author}</div>
+        <div>
+          <div className="my-1">
+            <small>{article.leader}</small>
+          </div>
+        </div>
+        <Card.Footer className="text-center">
+          <Button variant="outline-secondary btn-sm w-100 mb-2">
+            Read More...
+          </Button>
           <small>
-            <FormatDate date={article.dateCreated} />
+            Date: <FormatDate date={article.dateCreated} />
           </small>
         </Card.Footer>
       </Link>

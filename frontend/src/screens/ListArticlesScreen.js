@@ -78,7 +78,7 @@ const ListArticlesScreen = ({ history, match }) => {
     dispatch({ type: ARTICLE_CREATE_RESET });
     if (!memberInfo) {
       history.push("/login");
-    } else if (!member.isAuthor) {
+    } else if (!memberInfo.isAuthor) {
       history.push("/profile");
     } else {
       dispatch(listArticles(pageNumber));
@@ -179,13 +179,14 @@ const ListArticlesScreen = ({ history, match }) => {
   }
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between">
-        <Link className="btn btn-dark" to="/admin">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
         <Button
-          className="btn-dark"
+          variant="outline-secondary"
+          className="py-0"
           onClick={() => {
             setCreateModal(true);
             setImage(imagePlaceholder);
@@ -366,38 +367,42 @@ const ListArticlesScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="Title"
-                  type="text"
-                  name="title"
-                  placeholder="Title of the article"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Leader"
-                  type="text"
-                  name="leader"
-                  placeholder="Grab the reader's attention with something catchy!"
-                />
-
-                <FormikControl
-                  control="input"
-                  as="textarea"
-                  label="The Article Body"
-                  name="body"
-                  placeholder="All the details. Try to write fluently and without being boring!"
-                  rows="15"
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Category"
-                  name="category"
-                  options={dropdownOptions}
-                />
-
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Title"
+                    type="text"
+                    name="title"
+                    placeholder="Title of the article"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Leader"
+                    type="text"
+                    name="leader"
+                    placeholder="Grab the reader's attention with something catchy!"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    as="textarea"
+                    label="The Article Body"
+                    name="body"
+                    placeholder="All the details. Try to write fluently and without being boring!"
+                    rows="15"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Category"
+                    name="category"
+                    options={dropdownOptions}
+                  />
+                </div>
                 <button type="submit" className="btn-block btn-default btn">
                   Create
                 </button>
@@ -419,7 +424,7 @@ const ListArticlesScreen = ({ history, match }) => {
           setEditBody(false);
         }}
       >
-        <Modal.Header closeButton className="bg-success">
+        <Modal.Header closeButton className="bg-primary">
           <Modal.Title className="text-white">Edit Article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -477,71 +482,76 @@ const ListArticlesScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="Title"
-                  type="text"
-                  name="title"
-                  placeholder="Title of the article"
-                />
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Title"
+                    type="text"
+                    name="title"
+                    placeholder="Title of the article"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Leader"
+                    type="text"
+                    name="leader"
+                    placeholder="Grab the reader's attention with something catchy!"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Category"
+                    name="category"
+                    options={dropdownOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <h5 className="mt-3">Body</h5>
 
-                <FormikControl
-                  control="input"
-                  label="Leader"
-                  type="text"
-                  name="leader"
-                  placeholder="Grab the reader's attention with something catchy!"
-                />
+                  {!editBody && (
+                    <>
+                      {paragraphs &&
+                        paragraphs.map((paragraph) => (
+                          <p
+                            key={`${paragraph}${Math.random()}`}
+                            className="mb-2"
+                          >
+                            {paragraph}
+                            <br />
+                          </p>
+                        ))}
 
-                <FormikControl
-                  control="select"
-                  label="Category"
-                  name="category"
-                  options={dropdownOptions}
-                />
-
-                <h5 className="mt-3">Body</h5>
-
-                {!editBody && (
-                  <>
-                    {paragraphs &&
-                      paragraphs.map((paragraph) => (
-                        <p
-                          key={`${paragraph}${Math.random()}`}
-                          className="mb-2"
-                        >
-                          {paragraph}
-                          <br />
-                        </p>
-                      ))}
-
-                    <Button
-                      onClick={() => setEditBody(true)}
-                      className="mb-4 btn-sm"
-                    >
-                      Edit Body?
-                    </Button>
-                  </>
-                )}
-                {editBody && (
-                  <>
-                    <FormikControl
-                      control="input"
-                      as="textarea"
-                      name="body"
-                      placeholder="All the details. Try to write fluently and without being boring!"
-                      rows="15"
-                    />
-                    <Button
-                      onClick={() => setEditBody(false)}
-                      variant="danger"
-                      className="mb-2 btn-sm"
-                    >
-                      Cancel Edit Body?
-                    </Button>
-                  </>
-                )}
-
+                      <Button
+                        variant="outline-secondary"
+                        onClick={() => setEditBody(true)}
+                        className="mb-4 btn-sm py-0"
+                      >
+                        Edit Body?
+                      </Button>
+                    </>
+                  )}
+                  {editBody && (
+                    <>
+                      <FormikControl
+                        control="input"
+                        as="textarea"
+                        name="body"
+                        placeholder="All the details. Try to write fluently and without being boring!"
+                        rows="15"
+                      />
+                      <Button
+                        onClick={() => setEditBody(false)}
+                        variant="danger"
+                        className="mb-2 btn-sm"
+                      >
+                        Cancel Edit Body?
+                      </Button>
+                    </>
+                  )}
+                </div>
                 <Button
                   type="submit"
                   className="d-block w-100"
@@ -553,7 +563,7 @@ const ListArticlesScreen = ({ history, match }) => {
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer className="bg-success">
+        <Modal.Footer className="bg-dark">
           <Button
             variant="secondary"
             onClick={() => {

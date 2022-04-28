@@ -4,7 +4,7 @@ import Meta from "../components/Meta";
 
 const AfterSchoolScreen = () => {
   return (
-    <>
+    <div className="mt-3">
       <Meta title="York Karate | After School Clubs" />
       <Container>
         <h3 className="text-center border-bottom border-warning pb-1">
@@ -17,7 +17,7 @@ const AfterSchoolScreen = () => {
           provide details here in due course.
         </p>
       </Container>
-    </>
+    </div>
   );
 };
 

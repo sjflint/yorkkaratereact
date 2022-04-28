@@ -44,7 +44,7 @@ const GradingScreen = ({ match, history }) => {
   }
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       {loadingGrading && <Loader variant="warning" />}
       {error && <Message variant="danger">{error}</Message>}
       {grading && (

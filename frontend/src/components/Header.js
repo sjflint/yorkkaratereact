@@ -29,9 +29,9 @@ const Header = () => {
   };
 
   return (
-    <header className="mb-4">
+    <header>
       {error && loginErrorHandler()}
-      <Navbar bg="primary" variant="dark" expand="md">
+      <Navbar bg="primary" variant="dark" expand="md" className="bg-black">
         <Container className="w-80">
           <LinkContainer to="/">
             <Navbar.Brand className="text-center p-0">

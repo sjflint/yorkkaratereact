@@ -93,7 +93,7 @@ const ListSyllabusScreen = ({ history, match }) => {
     dispatch({ type: TRAINING_VIDEO_CREATE_RESET });
     if (!memberInfo) {
       history.push("/login");
-    } else if (!member.isInstructor) {
+    } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {
       dispatch(listTrainingVideos());
@@ -265,14 +265,14 @@ const ListSyllabusScreen = ({ history, match }) => {
   });
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between">
-        <Link className="btn btn-dark" to="/admin">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
 
         <button
-          className="btn-dark btn"
+          className="btn-outline-secondary py-0 btn"
           onClick={() => {
             setCreateModal(true);
           }}
@@ -305,8 +305,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                 <Card.Body>
                   <Card.Title>Junior</Card.Title>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(juniorBeginner);
                       setSyllabusModal(true);
@@ -315,8 +315,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                     15th kyu
                   </Button>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(juniorWhite);
                       setSyllabusModal(true);
@@ -325,8 +325,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                     14th & 13th kyu
                   </Button>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(juniorOrange);
                       setSyllabusModal(true);
@@ -335,8 +335,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                     12th & 11th kyu
                   </Button>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(juniorAdvanced);
                       setSyllabusModal(true);
@@ -353,8 +353,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                 <Card.Body>
                   <Card.Title>Novice</Card.Title>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(noviceL1);
                       setSyllabusModal(true);
@@ -363,8 +363,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                     Novice - Level 1
                   </Button>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(noviceL2);
                       setSyllabusModal(true);
@@ -382,8 +382,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                 <Card.Body>
                   <Card.Title>Intermediate</Card.Title>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(intermediateL1);
                       setSyllabusModal(true);
@@ -392,8 +392,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                     Intermediate Level 1
                   </Button>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(intermediateL2);
                       setSyllabusModal(true);
@@ -410,8 +410,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                 <Card.Body>
                   <Card.Title>Advanced</Card.Title>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(advancedL1);
                       setSyllabusModal(true);
@@ -420,8 +420,8 @@ const ListSyllabusScreen = ({ history, match }) => {
                     Advanced Level 1
                   </Button>
                   <Button
-                    variant="primary"
-                    className="btn-sm w-100 mb-1"
+                    variant="outline-secondary"
+                    className="btn-sm w-100 mb-1 py-0"
                     onClick={() => {
                       setSyllabusLevel(advancedL2);
                       setSyllabusModal(true);
@@ -584,50 +584,58 @@ const ListSyllabusScreen = ({ history, match }) => {
                   Please note: The title must be unique and identify the
                   training video
                 </small>
-                <FormikControl
-                  control="input"
-                  label="title"
-                  type="text"
-                  name="title"
-                  placeholder="Training Video Title"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="link to image"
-                  type="text"
-                  name="img"
-                  placeholder="Image ID number"
-                />
-                <FormikControl
-                  control="input"
-                  label="link to video"
-                  type="text"
-                  name="video"
-                  placeholder="Video Link"
-                />
-                <FormikControl
-                  control="input"
-                  label="link to sound"
-                  type="text"
-                  name="soundFile"
-                  placeholder="Sound ID number"
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Category"
-                  name="category"
-                  options={categoryOptions}
-                />
-
-                <FormikControl
-                  control="checkbox"
-                  label="Grade Level"
-                  name="grade"
-                  options={gradeOptions}
-                />
-
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="title"
+                    type="text"
+                    name="title"
+                    placeholder="Training Video Title"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="link to image"
+                    type="text"
+                    name="img"
+                    placeholder="Image ID number"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="link to video"
+                    type="text"
+                    name="video"
+                    placeholder="Video Link"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="link to sound"
+                    type="text"
+                    name="soundFile"
+                    placeholder="Sound ID number"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Category"
+                    name="category"
+                    options={categoryOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="checkbox"
+                    label="Grade Level"
+                    name="grade"
+                    options={gradeOptions}
+                  />
+                </div>
                 <Button type="submit" className="btn-default w-100">
                   Create
                 </Button>
@@ -643,7 +651,7 @@ const ListSyllabusScreen = ({ history, match }) => {
           setEditModal(false);
         }}
       >
-        <Modal.Header closeButton className="bg-success">
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Edit Training Video</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -654,50 +662,58 @@ const ListSyllabusScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="title"
-                  type="text"
-                  name="title"
-                  placeholder="Training Video Title"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="link to image"
-                  type="text"
-                  name="img"
-                  placeholder="Image ID number"
-                />
-                <FormikControl
-                  control="input"
-                  label="link to video"
-                  type="text"
-                  name="video"
-                  placeholder="Video Link"
-                />
-                <FormikControl
-                  control="input"
-                  label="link to sound"
-                  type="text"
-                  name="soundFile"
-                  placeholder="Sound ID number"
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Category"
-                  name="category"
-                  options={categoryOptions}
-                />
-
-                <FormikControl
-                  control="checkbox"
-                  label="Grade Level"
-                  name="grade"
-                  options={gradeOptions}
-                />
-
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="title"
+                    type="text"
+                    name="title"
+                    placeholder="Training Video Title"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="link to image"
+                    type="text"
+                    name="img"
+                    placeholder="Image ID number"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="link to video"
+                    type="text"
+                    name="video"
+                    placeholder="Video Link"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="link to sound"
+                    type="text"
+                    name="soundFile"
+                    placeholder="Sound ID number"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Category"
+                    name="category"
+                    options={categoryOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="checkbox"
+                    label="Grade Level"
+                    name="grade"
+                    options={gradeOptions}
+                  />
+                </div>
                 <Button type="submit" className="btn-default w-100">
                   Update
                 </Button>

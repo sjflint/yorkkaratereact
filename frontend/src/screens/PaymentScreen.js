@@ -31,7 +31,7 @@ const PaymentScreen = ({ history }) => {
   };
 
   return (
-    <Container>
+    <Container className="mt-3">
       <div className="border-bottom border-warning mb-2">
         <FormSteps step1 step2 />
         <h3 className="text-center">Select Payment Method</h3>

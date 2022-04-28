@@ -27,6 +27,7 @@ const lessonPlanSchema = mongoose.Schema({
       ref: "TrainingVideo",
     },
   ],
+  additionalInfo: { type: Array },
 });
 
 const LessonPlan = mongoose.model("LessonPlan", lessonPlanSchema);

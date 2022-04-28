@@ -32,7 +32,7 @@ const ArticleScreen = ({ match }) => {
   const images = article.carouselImages;
 
   return (
-    <Container>
+    <Container className="mt-3">
       <Row>
         <Col md={8} className="mb-2">
           {loadingArticle ? (
@@ -108,7 +108,10 @@ const ArticleScreen = ({ match }) => {
               ))}
             </div>
           )}
-          <Link className="btn w-100 btn-default my-3" to="/news">
+          <Link
+            className="btn w-100 btn-outline-secondary btn-sm my-3"
+            to="/news"
+          >
             Read more news articles
           </Link>
         </Col>

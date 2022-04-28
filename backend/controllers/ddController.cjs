@@ -344,50 +344,65 @@ const serverCreatedPayment = asyncHandler(async (paymentDetails) => {
 // @route POST /ddroutes/cancelpayment
 // @access Public (private)
 const cancelPayment = asyncHandler(async (req, res) => {
-  const member = await Member.findById(req.body._id);
+  const member = await Member.findById(req.body.paymentDetails._id);
 
-  const payment = await client.payments.cancel(req.body.paymentId);
+  // Find payment ID using record id
+  const paymentKey =
+    member.additionalPayments[req.body.paymentDetails.recordId];
 
-  // update database if payment cancelled
-  if (payment.status === "cancelled") {
-    // update member => payment record
-    const keyValue = `additionalPayments.${req.body.recordId}`;
+  let paymentId;
+  if (paymentKey && paymentKey !== "cancelled") {
+    paymentId = member.additionalPayments[req.body.paymentDetails.recordId];
+
+    const payment = await client.payments.cancel(paymentId);
+
+    // update database if payment cancelled
+    if (payment.status === "cancelled") {
+      // update member => payment record
+      // date 26 days ago
+      const today = new Date();
+      const pastDate = today.setDate(today.getDate() - 26);
+
+      const keyValue = `additionalPayments.${req.body.paymentDetails.recordId}`;
+      await Member.findOneAndUpdate(
+        { _id: member._id },
+        {
+          $set: { [keyValue]: payment.status },
+          extraClassAdded: pastDate,
+          $inc: { attendanceRecord: -1 },
+        },
+        { new: true }
+      );
+    }
+  } else {
     await Member.findOneAndUpdate(
       { _id: member._id },
       {
-        $set: { [keyValue]: payment.status },
+        extraClassAdded: new Date(2000, 0),
       },
       { new: true }
     );
-
-    // update attendance record
-    const record = await Attendance.findById(req.body.recordId);
-
-    const attendees = record.extraParticipants;
-
-    console.log(`old attendee list: ${attendees}`);
-    console.log(`id to remove: ${req.body._id}`);
-
-    const newAttendees = attendees.filter(
-      (attendee) => attendee !== req.body._id
-    );
-
-    console.log(`new attendee list: ${newAttendees}`);
-
-    await Attendance.findOneAndUpdate(
-      { _id: req.body.recordId },
-      {
-        extraParticipants: newAttendees,
-      },
-      { new: true }
-    );
-
-    res.status(201).json({
-      PaymentStatus: payment.status,
-    });
-  } else {
-    // throw error
   }
+  // update attendance record
+  const record = await Attendance.findById(req.body.paymentDetails.recordId);
+
+  const attendees = record.extraParticipants;
+
+  const newAttendees = attendees.filter((attendee) => {
+    attendee !== req.body.paymentDetails._id;
+  });
+
+  await Attendance.findOneAndUpdate(
+    { _id: req.body.paymentDetails.recordId },
+    {
+      extraParticipants: newAttendees,
+    },
+    { new: true }
+  );
+
+  res.status(201).json({
+    "attendee Removed": "success",
+  });
 });
 
 module.exports = {

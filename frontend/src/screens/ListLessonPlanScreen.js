@@ -40,6 +40,9 @@ const ListLessonPlanScreen = ({ history }) => {
   const [updateId, setUpdateId] = useState();
   const [syllabusLevel, setSyllabusLevel] = useState(junior.join(","));
   const [volume, setVolume] = useState("stop");
+  const [videoModal, setVideoModal] = useState(false);
+  const [videoModalId, setVideoModalId] = useState("");
+  const [editAdditionalInfo, setEditAdditionalInfo] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -79,7 +82,7 @@ const ListLessonPlanScreen = ({ history }) => {
     dispatch({ type: LESSON_PLAN_CREATE_RESET });
     if (!memberInfo) {
       history.push("/login");
-    } else if (!member.isInstructor) {
+    } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {
       dispatch(listLessonPlans());
@@ -106,12 +109,18 @@ const ListLessonPlanScreen = ({ history }) => {
   };
 
   const createLessonPlanHandler = (values) => {
+    values.additionalInfo = values.additionalInfo.split("\n");
     dispatch(createLessonPlan(values));
     setCreateModal(false);
   };
 
   const editLessonPlanHandler = async (values) => {
     values.id = updateId;
+    if (editAdditionalInfo === false) {
+      values.additionalInfo = lessonPlan.additionalInfo;
+    } else {
+      values.additionalInfo = values.additionalInfo.split("\n");
+    }
     dispatch(updateLessonPlan(values));
     setEditModal(false);
   };
@@ -129,10 +138,16 @@ const ListLessonPlanScreen = ({ history }) => {
     kihonKumite: [],
     shobuKumite: [],
     kata: [],
+    additionalInfo: "",
   };
 
   let editInitialValues;
-  if (lessonPlan) {
+  let paragraphs;
+  if (lessonPlan.title) {
+    paragraphs = lessonPlan.additionalInfo;
+
+    const additionalInfo = paragraphs.join("\n");
+
     editInitialValues = {
       title: lessonPlan.title,
       description: lessonPlan.description,
@@ -140,6 +155,7 @@ const ListLessonPlanScreen = ({ history }) => {
       kihonKumite: lessonPlan.kihonKumite,
       shobuKumite: lessonPlan.shobuKumite,
       kata: lessonPlan.kata,
+      additionalInfo: additionalInfo,
     };
   }
 
@@ -223,14 +239,14 @@ const ListLessonPlanScreen = ({ history }) => {
   };
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between">
-        <Link className="btn btn-dark" to="/admin">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
 
         <button
-          className="btn-dark btn"
+          className="btn-outline-secondary py-0 btn"
           onClick={() => {
             setCreateModal(true);
           }}
@@ -319,8 +335,6 @@ const ListLessonPlanScreen = ({ history }) => {
         </Table>
       )}
 
-      {/* Create modal / edit modal / view modal / delete modal */}
-
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
         <Modal.Header closeButton className="bg-danger">
           <Modal.Title className="text-white">
@@ -355,11 +369,11 @@ const ListLessonPlanScreen = ({ history }) => {
           >
             {({ values }) => (
               <Form>
-                <div className="mb-2 pb-2 border-warning border-bottom">
+                <div className="mb-2 p-2 bg-light">
                   <label>Grade Category</label>
+
                   <FormControl
                     as="select"
-                    style={{ maxWidth: "200px" }}
                     onChange={(e) => {
                       filteredKihonVideos = [];
                       initialValues.kihonKumite = [];
@@ -373,54 +387,75 @@ const ListLessonPlanScreen = ({ history }) => {
                     ))}
                   </FormControl>
                 </div>
-                <FormikControl
-                  control="input"
-                  label="Title"
-                  type="text"
-                  name="title"
-                  placeholder="Lesson Plan Title"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Description"
-                  type="text"
-                  name="description"
-                  placeholder="Description"
-                />
-
-                {kihonDropdownOptions.length !== 0 && (
+                <div className="mb-2 p-2 bg-light">
                   <FormikControl
-                    control="checkbox"
-                    label="Kihon Videos"
-                    name="kihon"
-                    options={kihonDropdownOptions}
+                    control="input"
+                    label="Title"
+                    type="text"
+                    name="title"
+                    placeholder="Lesson Plan Title"
                   />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Description"
+                    type="text"
+                    name="description"
+                    placeholder="Description"
+                  />
+                </div>
+                {kihonDropdownOptions.length !== 0 && (
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Kihon Videos"
+                      name="kihon"
+                      options={kihonDropdownOptions}
+                    />
+                  </div>
                 )}
                 {kihonKumiteDropdownOptions.length !== 0 && (
-                  <FormikControl
-                    control="checkbox"
-                    label="Kihon Kumite Videos"
-                    name="kihonKumite"
-                    options={kihonKumiteDropdownOptions}
-                  />
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Kihon Kumite Videos"
+                      name="kihonKumite"
+                      options={kihonKumiteDropdownOptions}
+                    />
+                  </div>
                 )}
                 {kataDropdownOptions.length !== 0 && (
-                  <FormikControl
-                    control="checkbox"
-                    label="Kata Videos"
-                    name="kata"
-                    options={kataDropdownOptions}
-                  />
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Kata Videos"
+                      name="kata"
+                      options={kataDropdownOptions}
+                    />
+                  </div>
                 )}
                 {shobuKumiteDropdownOptions.length !== 0 && (
-                  <FormikControl
-                    control="checkbox"
-                    label="Shobu Kumite Videos"
-                    name="shobuKumite"
-                    options={shobuKumiteDropdownOptions}
-                  />
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Shobu Kumite Videos"
+                      name="shobuKumite"
+                      options={shobuKumiteDropdownOptions}
+                    />
+                  </div>
                 )}
+
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    as="textarea"
+                    label="Please provide any additional information"
+                    name="additionalInfo"
+                    placeholder="Please provide further information for the session, including warm-up, games, fitness drills or anything else outside of the core techniques to be covered."
+                    rows="10"
+                  />
+                </div>
 
                 <Button type="submit" className="w-100 btn-default my-3">
                   Create
@@ -432,7 +467,7 @@ const ListLessonPlanScreen = ({ history }) => {
       </Modal>
 
       <Modal show={editModal} onHide={() => setEditModal(false)}>
-        <Modal.Header closeButton className="bg-success">
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Edit lesson plan</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -443,11 +478,10 @@ const ListLessonPlanScreen = ({ history }) => {
           >
             {({ values }) => (
               <Form>
-                <div className="mb-2 pb-2 border-warning border-bottom">
+                <div className="mb-2 p-2 bg-light">
                   <label>Grade Category</label>
                   <FormControl
                     as="select"
-                    style={{ maxWidth: "200px" }}
                     onChange={(e) => {
                       filteredKihonVideos = [];
                       initialValues.kihonKumite = [];
@@ -463,54 +497,109 @@ const ListLessonPlanScreen = ({ history }) => {
                     ))}
                   </FormControl>
                 </div>
-                <FormikControl
-                  control="input"
-                  label="Title"
-                  type="text"
-                  name="title"
-                  placeholder="Lesson Plan Title"
-                />
 
-                <FormikControl
-                  control="input"
-                  label="Description"
-                  type="text"
-                  name="description"
-                  placeholder="Description"
-                />
-
-                {kihonDropdownOptions.length !== 0 && (
+                <div className="mb-2 p-2 bg-light">
                   <FormikControl
-                    control="checkbox"
-                    label="Kihon Videos"
-                    name="kihon"
-                    options={kihonDropdownOptions}
+                    control="input"
+                    label="Title"
+                    type="text"
+                    name="title"
+                    placeholder="Lesson Plan Title"
                   />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Description"
+                    type="text"
+                    name="description"
+                    placeholder="Description"
+                  />
+                </div>
+                {kihonDropdownOptions.length !== 0 && (
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Kihon Videos"
+                      name="kihon"
+                      options={kihonDropdownOptions}
+                    />
+                  </div>
                 )}
                 {kihonKumiteDropdownOptions.length !== 0 && (
-                  <FormikControl
-                    control="checkbox"
-                    label="Kihon Kumite Videos"
-                    name="kihonKumite"
-                    options={kihonKumiteDropdownOptions}
-                  />
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Kihon Kumite Videos"
+                      name="kihonKumite"
+                      options={kihonKumiteDropdownOptions}
+                    />
+                  </div>
                 )}
                 {kataDropdownOptions.length !== 0 && (
-                  <FormikControl
-                    control="checkbox"
-                    label="Kata Videos"
-                    name="kata"
-                    options={kataDropdownOptions}
-                  />
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Kata Videos"
+                      name="kata"
+                      options={kataDropdownOptions}
+                    />
+                  </div>
                 )}
                 {shobuKumiteDropdownOptions.length !== 0 && (
-                  <FormikControl
-                    control="checkbox"
-                    label="Shobu Kumite Videos"
-                    name="shobuKumite"
-                    options={shobuKumiteDropdownOptions}
-                  />
+                  <div className="mb-2 p-2 bg-light">
+                    <FormikControl
+                      control="checkbox"
+                      label="Shobu Kumite Videos"
+                      name="shobuKumite"
+                      options={shobuKumiteDropdownOptions}
+                    />
+                  </div>
                 )}
+                <div className="mb-2 p-2 bg-light">
+                  {!editAdditionalInfo && (
+                    <>
+                      {paragraphs &&
+                        paragraphs.map((paragraph) => (
+                          <p
+                            key={`${paragraph}${Math.random()}`}
+                            className="mb-2 "
+                          >
+                            {paragraph}
+                            <br />
+                          </p>
+                        ))}
+
+                      <Button
+                        variant="outline-secondary btn-sm"
+                        onClick={() => setEditAdditionalInfo(true)}
+                        className="mb-4 btn-sm d-block"
+                      >
+                        Edit Additional Information?
+                      </Button>
+                    </>
+                  )}
+                  {editAdditionalInfo && (
+                    <>
+                      <FormikControl
+                        control="input"
+                        as="textarea"
+                        label="Please provide additional information"
+                        name="additionalInfo"
+                        placeholder="Please enter new additional information"
+                        rows="10"
+                      />
+
+                      <Button
+                        onClick={() => setEditAdditionalInfo(false)}
+                        variant="danger"
+                        className="mb-2 btn-sm"
+                      >
+                        Cancel Edit Additional Information?
+                      </Button>
+                    </>
+                  )}
+                </div>
 
                 <Button type="submit" className="w-100 btn-default my-3">
                   Update
@@ -543,14 +632,6 @@ const ListLessonPlanScreen = ({ history }) => {
                                 className="mb-2 pb-2 border-warning border-bottom"
                                 key={video._id}
                               >
-                                <iframe
-                                  src={video.video}
-                                  width="100%"
-                                  height="400"
-                                  allow="autoplay"
-                                  title={video._id}
-                                ></iframe>
-
                                 <div className="px-3">
                                   <h4>{video.title}</h4>
                                   <small>
@@ -596,6 +677,15 @@ const ListLessonPlanScreen = ({ history }) => {
                                   id="soundFile"
                                   onEnded={() => setVolume("stop")}
                                 ></audio>
+                                <Button
+                                  variant="outline-secondary btn-sm w-100"
+                                  onClick={() => {
+                                    setVideoModal(true);
+                                    setVideoModalId(video.video);
+                                  }}
+                                >
+                                  View Video
+                                </Button>
                               </Col>
                             );
                           } else {
@@ -623,14 +713,6 @@ const ListLessonPlanScreen = ({ history }) => {
                               className="mb-2 pb-2 border-warning border-bottom"
                               key={video._id}
                             >
-                              <iframe
-                                src={video.video}
-                                width="100%"
-                                height="400"
-                                allow="autoplay"
-                                title={video._id}
-                              ></iframe>
-
                               <div className="px-3 py-1">
                                 <h4>{video.title}</h4>
                                 <small>
@@ -676,6 +758,15 @@ const ListLessonPlanScreen = ({ history }) => {
                                 id="soundFile"
                                 onEnded={() => setVolume("stop")}
                               ></audio>
+                              <Button
+                                variant="outline-secondary btn-sm w-100"
+                                onClick={() => {
+                                  setVideoModal(true);
+                                  setVideoModalId(video.video);
+                                }}
+                              >
+                                View Video
+                              </Button>
                             </Col>
                           );
                         } else {
@@ -701,14 +792,6 @@ const ListLessonPlanScreen = ({ history }) => {
                               className="mb-2 pb-2 border-warning border-bottom"
                               key={video._id}
                             >
-                              <iframe
-                                src={video.video}
-                                width="100%"
-                                height="400"
-                                allow="autoplay"
-                                title={video._id}
-                              ></iframe>
-
                               <div className="px-3 py-1">
                                 <h4>{video.title}</h4>
                                 <small>
@@ -754,6 +837,15 @@ const ListLessonPlanScreen = ({ history }) => {
                                 id="soundFile"
                                 onEnded={() => setVolume("stop")}
                               ></audio>
+                              <Button
+                                variant="outline-secondary btn-sm w-100"
+                                onClick={() => {
+                                  setVideoModal(true);
+                                  setVideoModalId(video.video);
+                                }}
+                              >
+                                View Video
+                              </Button>
                             </Col>
                           );
                         } else {
@@ -780,14 +872,6 @@ const ListLessonPlanScreen = ({ history }) => {
                               className="mb-2 pb-2 border-warning border-bottom"
                               key={video._id}
                             >
-                              <iframe
-                                src={video.video}
-                                width="100%"
-                                height="400"
-                                allow="autoplay"
-                                title={video._id}
-                              ></iframe>
-
                               <div className="px-3 py-1">
                                 <h4>{video.title}</h4>
                                 <small>
@@ -833,6 +917,15 @@ const ListLessonPlanScreen = ({ history }) => {
                                 id="soundFile"
                                 onEnded={() => setVolume("stop")}
                               ></audio>
+                              <Button
+                                variant="outline-secondary btn-sm w-100"
+                                onClick={() => {
+                                  setVideoModal(true);
+                                  setVideoModalId(video.video);
+                                }}
+                              >
+                                View Video
+                              </Button>
                             </Col>
                           );
                         } else {
@@ -845,12 +938,34 @@ const ListLessonPlanScreen = ({ history }) => {
               )}
             </>
           )}
+          <h3 className="text-center text-white bg-dark p-2">
+            Additional Information
+          </h3>
+          {lessonPlan.additionalInfo &&
+            lessonPlan.additionalInfo.map((paragraph) => (
+              <p key={Math.random()} className="mb-2">
+                {paragraph}
+              </p>
+            ))}
         </Modal.Body>
         <Modal.Footer className="bg-dark">
           <Button className="btn-block" onClick={() => setViewModal(false)}>
             Close
           </Button>
         </Modal.Footer>
+      </Modal>
+      {/* Video modal */}
+      <Modal show={videoModal} onHide={() => setVideoModal(false)}>
+        <Modal.Header closeButton className="bg-light"></Modal.Header>
+        <div>
+          <iframe
+            src={videoModalId}
+            width="100%"
+            height="400"
+            allow="autoplay"
+            title={videoModalId}
+          ></iframe>
+        </div>
       </Modal>
     </Container>
   );

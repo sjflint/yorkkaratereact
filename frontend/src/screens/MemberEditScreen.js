@@ -200,37 +200,26 @@ const MemberEditScreen = ({ match, history }) => {
 
     await dispatch(editMember(values));
 
-    setTimeout(() => history.push("/admin/listmembers"), 2000);
+    setTimeout(() => history.push("/admin/listmembers"), 1000);
   };
 
   return (
-    <Container>
+    <Container className="mt-3">
       {loading ? (
         <Loader variant="warning" />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <Link className="btn btn-default mb-2" to="/admin/listMembers">
+          <Link
+            className="btn btn-outline-secondary py-0 mb-2"
+            to="/admin/listMembers"
+          >
             <i className="fas fa-arrow-left"></i> Return
           </Link>
           <h3 className="text-center border-bottom border-warning pb-1">
             Membership details for {member.firstName} {member.lastName}
           </h3>
-
-          <div className="max-width-300 mx-auto mb-3">
-            <img src={`${image}`} alt="" />
-            <UploadImage
-              img={member.image}
-              type={"Profile"}
-              id={member._id}
-              singleImageData={singleImageData}
-            />
-            <small className="text-center">
-              Please consider that this image might be displayed across the
-              public website, as well as being displayed to grading examinars.
-            </small>
-          </div>
 
           {initialValues ? (
             <Formik
@@ -239,118 +228,147 @@ const MemberEditScreen = ({ match, history }) => {
               onSubmit={saveHandler}
             >
               {({ values }) => (
-                <Form>
+                <Form className="text-muted">
                   <h5>Personal Details</h5>
                   <Row className="pb-4 border-bottom border-warning">
-                    <Col>
-                      <FormikControl
-                        control="input"
-                        label="First Name"
-                        type="text"
-                        name="firstName"
-                      />
-
-                      <FormikControl
-                        control="input"
-                        label="Last Name"
-                        type="text"
-                        name="lastName"
-                      />
-                      <FormikControl
-                        control="input"
-                        label="Email"
-                        type="text"
-                        name="email"
-                        placeholder="Please enter your Email"
-                      />
-
-                      <FormikControl
-                        control="input"
-                        label="Phone Number"
-                        type="text"
-                        name="phone"
-                        placeholder="Please enter your phone number"
-                      />
-                      <FormikControl
-                        control="input"
-                        type="date"
-                        label="Date of Birth"
-                        name="dateOfBirth"
-                      />
-                      <FormikControl
-                        control="input"
-                        as="textarea"
-                        label="Medical Details"
-                        name="medicalDetails"
-                        placeholder="Provide any important medical information here"
-                      />
+                    <Col md={6}>
+                      <div className="max-width-300 mx-auto mb-3 bg-primary p-2">
+                        <img src={`${image}`} alt="" />
+                        <UploadImage
+                          img={member.image}
+                          type={"Profile"}
+                          id={member._id}
+                          singleImageData={singleImageData}
+                        />
+                        <small className="text-center text-white">
+                          Please consider that this image might be displayed
+                          across the public website, as well as being displayed
+                          to grading examinars.
+                        </small>
+                      </div>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          label="First Name"
+                          type="text"
+                          name="firstName"
+                        />
+                      </div>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          label="Last Name"
+                          type="text"
+                          name="lastName"
+                        />
+                      </div>
                     </Col>
+                    <Col md={6}>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          type="text"
+                          label="Address"
+                          name="addressLine1"
+                          placeholder="Address number/name"
+                          margin="mb-0"
+                        />
 
-                    <Col>
-                      <FormikControl
-                        control="input"
-                        type="text"
-                        label="Address"
-                        name="addressLine1"
-                        placeholder="Address number/name"
-                        margin="mb-0"
-                      />
-
-                      <FormikControl
-                        control="input"
-                        type="text"
-                        name="addressLine2"
-                        placeholder="Street"
-                        margin="mb-0"
-                      />
-                      <FormikControl
-                        control="input"
-                        type="text"
-                        name="addressLine3"
-                        placeholder="Village/Town/District"
-                        margin="mb-0"
-                      />
-                      <FormikControl
-                        control="input"
-                        type="text"
-                        name="addressLine4"
-                        placeholder="City"
-                        margin="mb-0"
-                      />
-                      <FormikControl
-                        control="input"
-                        type="text"
-                        name="postCode"
-                        placeholder="Postcode"
-                      />
+                        <FormikControl
+                          control="input"
+                          type="text"
+                          name="addressLine2"
+                          placeholder="Street"
+                          margin="mb-0"
+                        />
+                        <FormikControl
+                          control="input"
+                          type="text"
+                          name="addressLine3"
+                          placeholder="Village/Town/District"
+                          margin="mb-0"
+                        />
+                        <FormikControl
+                          control="input"
+                          type="text"
+                          name="addressLine4"
+                          placeholder="City"
+                          margin="mb-0"
+                        />
+                        <FormikControl
+                          control="input"
+                          type="text"
+                          name="postCode"
+                          placeholder="Postcode"
+                        />
+                      </div>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          label="Email"
+                          type="text"
+                          name="email"
+                          placeholder="Please enter your Email"
+                        />
+                      </div>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          label="Phone Number"
+                          type="text"
+                          name="phone"
+                          placeholder="Please enter your phone number"
+                        />
+                      </div>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          type="date"
+                          label="Date of Birth"
+                          name="dateOfBirth"
+                        />
+                      </div>
+                      <div className="bg-light mb-2 p-2">
+                        <FormikControl
+                          control="input"
+                          as="textarea"
+                          label="Medical Details"
+                          name="medicalDetails"
+                          placeholder="Provide any important medical information here"
+                        />
+                      </div>
                     </Col>
                   </Row>
 
                   <div className="py-4 border-bottom border-warning">
                     <h5>Emergency Contact Details</h5>
-                    <FormikControl
-                      control="input"
-                      label="Name of emergency contact"
-                      type="text"
-                      name="emergencyContactName"
-                      placeholder="Please enter their name"
-                    />
-
-                    <FormikControl
-                      control="input"
-                      label="Email of emergency contact"
-                      type="text"
-                      name="emergencyContactEmail"
-                      placeholder="Please enter their email"
-                    />
-
-                    <FormikControl
-                      control="input"
-                      label="Number of emergency contact"
-                      type="text"
-                      name="emergencyContactPhone"
-                      placeholder="Please enter their number"
-                    />
+                    <div className="bg-light mb-2 p-2">
+                      <FormikControl
+                        control="input"
+                        label="Name of emergency contact"
+                        type="text"
+                        name="emergencyContactName"
+                        placeholder="Please enter their name"
+                      />
+                    </div>
+                    <div className="bg-light mb-2 p-2">
+                      <FormikControl
+                        control="input"
+                        label="Email of emergency contact"
+                        type="text"
+                        name="emergencyContactEmail"
+                        placeholder="Please enter their email"
+                      />
+                    </div>
+                    <div className="bg-light mb-2 p-2">
+                      <FormikControl
+                        control="input"
+                        label="Number of emergency contact"
+                        type="text"
+                        name="emergencyContactPhone"
+                        placeholder="Please enter their number"
+                      />
+                    </div>
                   </div>
                   <div className="py-4 border-bottom border-warning">
                     <h5>Membership Status</h5>
@@ -366,10 +384,7 @@ const MemberEditScreen = ({ match, history }) => {
                         </div>
                       </Col>
                       <Col md={2} className="align-self-center">
-                        <h3 className="text-center">Or</h3>
-                        <p className="text-center">
-                          If not a kyu grade, enter 0 for the kyu grade value
-                        </p>
+                        <h3 className="text-center my-2">Or</h3>
                       </Col>
                       <Col md={5}>
                         <div className="border border-warning p-2">
@@ -389,7 +404,8 @@ const MemberEditScreen = ({ match, history }) => {
                             </ListGroup>
                           ) : (
                             <Button
-                              className="btn d-block btn-default text-center w-100"
+                              variant="outline-secondary"
+                              className="text-center w-100 py-0"
                               onClick={() => setShowModal(true)}
                             >
                               Add Dan grading
@@ -397,6 +413,9 @@ const MemberEditScreen = ({ match, history }) => {
                           )}
                         </div>
                       </Col>
+                      <p className="text-center my-2">
+                        If not a kyu grade, enter 0 for the kyu grade value
+                      </p>
                     </Row>
                     <Row className="mt-2">
                       <Col md={3}>
@@ -454,14 +473,14 @@ const MemberEditScreen = ({ match, history }) => {
                   <Row className="mt-2">
                     <Col>
                       {success ? (
-                        <Button className="btn btn-success d-block" disabled>
+                        <Button className="btn btn-success w-100" disabled>
                           Updated
                         </Button>
                       ) : (
                         <Button
-                          type="submit"
                           variant="default"
-                          className="d-block w-100"
+                          type="submit"
+                          className="w-100"
                         >
                           Update
                         </Button>

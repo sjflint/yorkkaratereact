@@ -136,196 +136,225 @@ const RegistrationForm = () => {
           <Form>
             <Row className="py-4 border-bottom border-warning">
               <Col>
-                <FormikControl
-                  control="input"
-                  type="text"
-                  label="First Name"
-                  name="firstName"
-                  placeholder="First Name"
-                />
-              </Col>
-              <Col>
-                <FormikControl
-                  control="input"
-                  type="text"
-                  label="Last Name"
-                  name="lastName"
-                  placeholder="Last Name"
-                />
-              </Col>
-            </Row>
-            <Row className="py-4 border-bottom border-warning">
-              <Col>
-                <FormikControl
-                  control="input"
-                  type="date"
-                  label="Date of Birth"
-                  name="dateOfBirth"
-                />
-              </Col>
-              <Col>
-                <FormikControl
-                  control="radio"
-                  label="Do you suffer from any medical conditions or disabilities that could affect you when practicing karate?"
-                  name="medicalStatus"
-                  options={medicalOptions}
-                />
-                {values.medicalStatus === "Yes medical" ? (
+                <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
-                    as="textarea"
-                    label="Please provide further details"
-                    name="medicalDetails"
-                    placeholder="A brief description"
+                    type="text"
+                    label="First Name"
+                    name="firstName"
+                    placeholder="First Name"
                   />
-                ) : null}
+                </div>
+              </Col>
+              <Col>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    type="text"
+                    label="Last Name"
+                    name="lastName"
+                    placeholder="Last Name"
+                  />
+                </div>
+              </Col>
+            </Row>
+            <Row className="py-4 border-bottom border-warning">
+              <Col>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    type="date"
+                    label="Date of Birth"
+                    name="dateOfBirth"
+                  />
+                </div>
+              </Col>
+              <Col>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="radio"
+                    label="Do you suffer from any medical conditions or disabilities that could affect you when practicing karate?"
+                    name="medicalStatus"
+                    options={medicalOptions}
+                  />
+                  {values.medicalStatus === "Yes medical" ? (
+                    <FormikControl
+                      control="input"
+                      as="textarea"
+                      label="Please provide further details"
+                      name="medicalDetails"
+                      placeholder="A brief description"
+                    />
+                  ) : null}
+                </div>
               </Col>
             </Row>
 
             <Row className="py-4 border-bottom border-warning">
               <Col>
-                <FormikControl
-                  control="input"
-                  type="text"
-                  label="Address"
-                  name="addressLine1"
-                  placeholder="Address number/name"
-                  margin="mb-0"
-                />
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    type="text"
+                    label="Address"
+                    name="addressLine1"
+                    placeholder="Address number/name"
+                    margin="mb-0"
+                  />
 
-                <FormikControl
-                  control="input"
-                  type="text"
-                  name="addressLine2"
-                  placeholder="Street"
-                  margin="mb-0"
-                />
-                <FormikControl
-                  control="input"
-                  type="text"
-                  name="addressLine3"
-                  placeholder="Village/Town/District"
-                  margin="mb-0"
-                />
-                <FormikControl
-                  control="input"
-                  type="text"
-                  name="addressLine4"
-                  placeholder="City"
-                  margin="mb-0"
-                />
-                <FormikControl
-                  control="input"
-                  type="text"
-                  name="postCode"
-                  placeholder="Postcode"
-                />
+                  <FormikControl
+                    control="input"
+                    type="text"
+                    name="addressLine2"
+                    placeholder="Street"
+                    margin="mb-0"
+                  />
+                  <FormikControl
+                    control="input"
+                    type="text"
+                    name="addressLine3"
+                    placeholder="Village/Town/District"
+                    margin="mb-0"
+                  />
+                  <FormikControl
+                    control="input"
+                    type="text"
+                    name="addressLine4"
+                    placeholder="City"
+                    margin="mb-0"
+                  />
+                  <FormikControl
+                    control="input"
+                    type="text"
+                    name="postCode"
+                    placeholder="Postcode"
+                  />
+                </div>
               </Col>
 
               <Col>
-                <FormikControl
-                  control="input"
-                  label="Email"
-                  type="text"
-                  name="email"
-                  placeholder="Please enter your Email"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Confirm Email"
-                  type="text"
-                  name="confirmEmail"
-                  placeholder="Confirm Email"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Phone Number"
-                  type="text"
-                  name="phone"
-                  placeholder="Please enter your phone number"
-                />
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Email"
+                    type="text"
+                    name="email"
+                    placeholder="Please enter your Email"
+                  />
+                </div>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Confirm Email"
+                    type="text"
+                    name="confirmEmail"
+                    placeholder="Confirm Email"
+                  />
+                </div>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Phone Number"
+                    type="text"
+                    name="phone"
+                    placeholder="Please enter your phone number"
+                  />
+                </div>
               </Col>
             </Row>
 
-            <div className="py-4 border-bottom border-warning">
-              <FormikControl
-                control="input"
-                label="Name of emergency contact"
-                type="text"
-                name="emergencyContactName"
-                placeholder="Please enter their name"
-              />
-
-              <FormikControl
-                control="input"
-                label="Email of emergency contact"
-                type="text"
-                name="emergencyContactEmail"
-                placeholder="Please enter their email"
-              />
-
-              <FormikControl
-                control="input"
-                label="Number of emergency contact"
-                type="text"
-                name="emergencyContactPhone"
-                placeholder="Please enter their number"
-              />
+            <div className="py-4 border-bottom border-warning text-warning">
+              <div className="bg-light mb-2 p-2">
+                <FormikControl
+                  control="input"
+                  label="Name of emergency contact"
+                  type="text"
+                  name="emergencyContactName"
+                  placeholder="Please enter their name"
+                />
+              </div>
+              <div className="bg-light mb-2 p-2">
+                <FormikControl
+                  control="input"
+                  label="Email of emergency contact"
+                  type="text"
+                  name="emergencyContactEmail"
+                  placeholder="Please enter their email"
+                />
+              </div>
+              <div className="bg-light mb-2 p-2">
+                <FormikControl
+                  control="input"
+                  label="Number of emergency contact"
+                  type="text"
+                  name="emergencyContactPhone"
+                  placeholder="Please enter their number"
+                />
+              </div>
             </div>
 
             <Row className="py-4 border-bottom border-warning">
               <Col>
-                <FormikControl
-                  control="input"
-                  label="Please set a password"
-                  name="password"
-                  type="password"
-                  placeholder="Set Password"
-                />
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Please set a password"
+                    name="password"
+                    type="password"
+                    placeholder="Set Password"
+                  />
+                </div>
               </Col>
               <Col>
-                <FormikControl
-                  control="input"
-                  label="Please confirm password"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Confirm password"
-                />
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Please confirm password"
+                    name="confirmPassword"
+                    type="password"
+                    placeholder="Confirm password"
+                  />
+                </div>
               </Col>
             </Row>
 
             <Row className="py-4">
               <Col>
-                <FormikControl
-                  control="checkbox"
-                  label="Terms and Conditions"
-                  name="termsOptions"
-                  options={termsOptions}
-                />
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="checkbox"
+                    label="Terms and Conditions"
+                    name="termsOptions"
+                    options={termsOptions}
+                  />
+                </div>
               </Col>
               <Col className="align-self-center text-center">
                 <Button
-                  type="button"
-                  variant="primary btn-block"
+                  className="py-0"
+                  variant="outline-secondary"
                   onClick={handleShow}
                 >
                   View Terms & Conditions
                 </Button>
               </Col>
             </Row>
-
-            <Button type="submit" variant="default btn-block">
-              Register
-            </Button>
+            <Row>
+              <Col md={6}>
+                <Button type="submit" variant="default btn-block w-100">
+                  Register
+                </Button>
+              </Col>
+            </Row>
           </Form>
         )}
       </Formik>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header className="bg-warning text-white" closeButton>
-          <Modal.Title>Terms and Conditions of Membership</Modal.Title>
+      <Modal show={show} onHide={handleClose} size="lg">
+        <Modal.Header className="bg-dark" closeButton>
+          <Modal.Title className="text-white">
+            Terms and Conditions of Membership
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
@@ -336,23 +365,27 @@ const RegistrationForm = () => {
             policy, Code of Conduct and Safe in Care guidelines are available
             from www.yorkkarate.net.
           </p>
-          <p>A. CONSENT - CLUB CODE OF CONDUCT AND CHILD PROTECTION</p>
-          <p>
+          <h5 className="text-warning">
+            A. CONSENT - CLUB CODE OF CONDUCT AND CHILD PROTECTION
+          </h5>
+          <small>
             I consent/my child(ren) consent to abide by the Club's Code of
             Conduct and understand and accept the disciplinary procedures that
             may be brought against me should I fail to do so. I also consent to
             abide by the Club's Child Protection Policy and fulfil all duties
             expected of me. I will further promote both the Code of Conduct and
             the Child Protection policy within the club.
-          </p>
-          <p>B. CONSENT - MEDICAL TREATMENT</p>
-          <p>
+          </small>
+          <h5 className="text-warning mt-4">B. CONSENT - MEDICAL TREATMENT</h5>
+          <small>
             I consent/my child(ren) consent to receiving medical treatment,
             including anaesthetic, which the medical professionals present
             consider necessary.
-          </p>
-          <p>C. CONSENT - TRANSPORTATION OF CHILDREN</p>
-          <p>
+          </small>
+          <h5 className="text-warning mt-4">
+            C. CONSENT - TRANSPORTATION OF CHILDREN
+          </h5>
+          <small>
             I consent/my child(ren) consent to being transported by persons
             representing York Karate, individual members or affiliated clubs for
             the purposes of taking part in Karate. I understand York Karate will
@@ -360,26 +393,30 @@ const RegistrationForm = () => {
             properly licensed and insured and, in the case of a person who
             cannot so declare, will not permit that individual to transport
             children.
-          </p>
-          <p>D. CONSENT - PHOTOGRAPHS AND PUBLICATIONS (INCLUDING WEBSITE)</p>
-          <p>
+          </small>
+          <h5 className="text-warning mt-4">
+            D. CONSENT - PHOTOGRAPHS AND PUBLICATIONS (INCLUDING WEBSITE)
+          </h5>
+          <small>
             You/your child may be photographed or filmed when participating in
             Karate. I consent/my child(ren) consent to being involved in
             photographing/filming and for such images and videos to be used for
             marketing and advertising purposes, in accordance with York Karate's
             policies.
-          </p>
-          <p>E. CONSENT - CONTACT INFORMATION</p>
-          <p>
+          </small>
+          <h5 className="text-warning mt-4">
+            E. CONSENT - CONTACT INFORMATION
+          </h5>
+          <small>
             York Karate may contact your child from time to time via email, text
             or social networking site if such contact details have been provided
             to the Club. I consent/my child(ren) consent to being contacted via
             email, text or social networking site for the purposes stated in
             York Karate's Child Protection Policy.
-          </p>
+          </small>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="warning" onClick={handleClose}>
+        <Modal.Footer className="bg-dark">
+          <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>

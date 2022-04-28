@@ -40,7 +40,7 @@ const AccountResetScreen = () => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer className="mt-3">
       <h1 className="text-center">Password Reset</h1>
       {loading && <Loader variant="warning" />}
       {success && (
@@ -61,8 +61,8 @@ const AccountResetScreen = () => {
         </div>
       )}
       {!loading && !success && (
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId="firstName">
+        <Form onSubmit={submitHandler} className="text-warning">
+          <Form.Group controlId="firstName" className="mb-3 bg-light p-2">
             <Form.Label>First Name</Form.Label>
             <Form.Control
               type="text"
@@ -71,7 +71,7 @@ const AccountResetScreen = () => {
               onChange={(e) => setFirstName(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="lastName">
+          <Form.Group controlId="lastName" className="mb-3 bg-light p-2">
             <Form.Label>Last Name</Form.Label>
             <Form.Control
               type="text"
@@ -80,7 +80,7 @@ const AccountResetScreen = () => {
               onChange={(e) => setLastName(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="email">
+          <Form.Group controlId="email" className="mb-3 bg-light p-2">
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
@@ -89,7 +89,7 @@ const AccountResetScreen = () => {
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="dateOfBirth">
+          <Form.Group controlId="dateOfBirth" className="mb-3 bg-light p-2">
             <Form.Label>Date Of Birth</Form.Label>
             <Form.Control
               type="date"
@@ -102,7 +102,7 @@ const AccountResetScreen = () => {
           {passwordError && (
             <Message variant="danger">Passwords don't match</Message>
           )}
-          <Form.Group controlId="password">
+          <Form.Group controlId="password" className="mb-3 bg-light p-2">
             <Form.Label>Enter New Password</Form.Label>
             <Form.Control
               type="password"
@@ -111,7 +111,7 @@ const AccountResetScreen = () => {
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="new password">
+          <Form.Group controlId="new password" className="mb-3 bg-light p-2">
             <Form.Label>Confirm New Password</Form.Label>
             <Form.Control
               type="password"
@@ -120,7 +120,11 @@ const AccountResetScreen = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Button type="submit" variant="outline-warning" className="p-2">
+          <Button
+            type="submit"
+            variant="outline-secondary"
+            className="p-2 w-100"
+          >
             Reset Password
           </Button>
         </Form>

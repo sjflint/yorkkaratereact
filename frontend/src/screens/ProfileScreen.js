@@ -93,7 +93,7 @@ const ProfileScreen = ({ history, match }) => {
   };
 
   return (
-    <>
+    <div className="mt-3">
       <Container fluid="lg" id="profile-container">
         <Tab.Container id="left-tabs" defaultActiveKey={key}>
           <Row>
@@ -417,7 +417,7 @@ const ProfileScreen = ({ history, match }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 

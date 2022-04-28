@@ -20,7 +20,7 @@ const CompleteDDSetup = () => {
   }, [memberInfo]);
 
   return (
-    <div>
+    <div className="mt-3">
       <Loader variant="warning" />
     </div>
   );

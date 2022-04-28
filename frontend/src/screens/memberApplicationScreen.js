@@ -5,7 +5,7 @@ import templeIMG from "../img/temple.jpg";
 
 const memberApplicationScreen = () => {
   return (
-    <Container>
+    <Container className="mt-3">
       <h3 className="text-center border-bottom border-warning pb-1 mb-3">
         Before you apply...
       </h3>

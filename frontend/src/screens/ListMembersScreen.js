@@ -54,9 +54,9 @@ const ListMembersScreen = ({ history, match }) => {
   };
 
   return (
-    <Container fluid="lg">
-      <div className="d-flex justify-content-between mb-3">
-        <Link className="btn btn-dark" to="/admin">
+    <Container fluid="lg" className="mt-3">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
         <Route

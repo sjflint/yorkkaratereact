@@ -71,7 +71,7 @@ const TimetableScreen = () => {
   };
 
   return (
-    <>
+    <div className="mt-3">
       <Container fluid="lg">
         <h3 className="text-center border-bottom border-warning pb-1">
           Timetable
@@ -123,9 +123,23 @@ const TimetableScreen = () => {
               </Col>
             </Row>
           </Form>
-          <p className="text-warning mt-2 text-link" onClick={handleShowKyu}>
-            What is a 'kyu' grade?
+          <p>What is a kyu grade?</p>
+          <p>
+            A kyu, in Japanese martial arts, designates grade (level) of
+            proficiency. The levels go in reverse, that is to say that 1st kyu
+            is the highest and 15th kyu the lowest. When black belt is achieved,
+            the rank system switches to dan and counts up. 1st dan is the first
+            level of black belt and 10th dan is the highest level. <br />
+            Every kyu grade has a different belt colour, unlike dan grades that
+            are all black.
           </p>
+          <Button
+            variant="outline-secondary"
+            className="py-0 mb-2"
+            onClick={handleShowKyu}
+          >
+            See the different kyu colours
+          </Button>
         </div>
         {loading ? (
           <Loader variant="warning" />
@@ -134,80 +148,98 @@ const TimetableScreen = () => {
             {error}
           </Message>
         ) : (
-          <>
-            <Image src={ImgStChads} alt="monday dojo" />
-            <TrainingSession
-              trainingSessions={trainingSessions}
-              trainingDay={"Monday"}
-            />
-            <Image
-              src={ImgJoRo}
-              alt="monday dojo"
-              className="mt-3 border-top border-warning pt-3"
-            />
-            <TrainingSession
-              trainingSessions={trainingSessions}
-              trainingDay={"Tuesday"}
-            />
-            <Image
-              src={ImgJoRo}
-              alt="monday dojo"
-              className="mt-3 border-top border-warning pt-3"
-            />
-            <TrainingSession
-              trainingSessions={trainingSessions}
-              trainingDay={"Wednesday"}
-            />
-            <Image
-              src={ImgArchHol}
-              alt="monday dojo"
-              className="mt-3 border-top border-warning pt-3"
-            />
-            <TrainingSession
-              trainingSessions={trainingSessions}
-              trainingDay={"Thursday"}
-            />
-            <Image
-              src={ImgStrensall}
-              alt="monday dojo"
-              className="mt-3 border-top border-warning pt-3"
-            />
-            <TrainingSession
-              trainingSessions={trainingSessions}
-              trainingDay={"Friday"}
-            />
-            <Image
-              src={ImgStrensall}
-              alt="monday dojo"
-              className="mt-3 border-top border-warning pt-3"
-            />
-            <TrainingSession
-              trainingSessions={trainingSessions}
-              trainingDay={"Saturday"}
-            />
-          </>
+          <Row>
+            <Col md={6}>
+              <Image
+                src={ImgStChads}
+                alt="monday dojo"
+                className="border-top border-warning mt-2 p-2 bg-primary"
+              />
+              <TrainingSession
+                trainingSessions={trainingSessions}
+                trainingDay={"Monday"}
+              />
+            </Col>
+            <Col md={6}>
+              <Image
+                src={ImgJoRo}
+                alt="monday dojo"
+                className="border-top border-warning mt-2 p-2 bg-primary"
+              />
+              <TrainingSession
+                trainingSessions={trainingSessions}
+                trainingDay={"Tuesday"}
+              />
+            </Col>
+            <Col md={6}>
+              <Image
+                src={ImgJoRo}
+                alt="monday dojo"
+                className="border-top border-warning mt-2 p-2 bg-primary"
+              />
+              <TrainingSession
+                trainingSessions={trainingSessions}
+                trainingDay={"Wednesday"}
+              />
+            </Col>
+            <Col md={6}>
+              <Image
+                src={ImgArchHol}
+                alt="monday dojo"
+                className="border-top border-warning mt-2 p-2 bg-primary"
+              />
+              <TrainingSession
+                trainingSessions={trainingSessions}
+                trainingDay={"Thursday"}
+              />
+            </Col>
+            <Col md={6}>
+              <Image
+                src={ImgStrensall}
+                alt="monday dojo"
+                className="border-top border-warning mt-2 p-2 bg-primary"
+              />
+              <TrainingSession
+                trainingSessions={trainingSessions}
+                trainingDay={"Friday"}
+              />
+            </Col>
+            <Col md={6}>
+              <Image
+                src={ImgStrensall}
+                alt="monday dojo"
+                className="border-top border-warning mt-2 p-2 bg-primary"
+              />
+              <TrainingSession
+                trainingSessions={trainingSessions}
+                trainingDay={"Saturday"}
+              />
+            </Col>
+          </Row>
         )}
       </Container>
 
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-center text-white">
-            Your ability level is
+            Class Search
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="">
-          <h5>The classes that are most suitable for you are:</h5>
+          <p>The classes that are most suitable for you are:</p>
           {classList &&
             classList.map((session) => (
               <Card className="mb-2" key={session._id}>
-                <Card.Body className="">
-                  <Card.Title>{session.name} Class</Card.Title>
+                <Card.Body>
+                  <Card.Title className="mb-1 text-warning">
+                    {session.name} Class
+                  </Card.Title>
                   <Card.Subtitle className="text-muted">
                     {session.times}
                   </Card.Subtitle>
                   <Card.Text>{session.location}</Card.Text>
                 </Card.Body>
-                <Card.Footer className="">
+                <Card.Footer className="border-bottom border-warning mb-2">
                   Number of places available:{" "}
                   {session.capacity - session.numberBooked}
                 </Card.Footer>
@@ -252,7 +284,7 @@ const TimetableScreen = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 

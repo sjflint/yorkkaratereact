@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { listTrainingSessions } from "../actions/trainingSessionActions";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 const AttendanceScreen = ({ match, history }) => {
   const dayToday = () => {
@@ -59,13 +61,15 @@ const AttendanceScreen = ({ match, history }) => {
   }
 
   return (
-    <div>
+    <div className="mt-3">
       <Container fluid="lg">
+        {loading && <Loader variant="warning" />}
+        {error && <Message variant="danger">{error}</Message>}
         <div className="d-flex justify-content-between align-items-center">
-          <Link className="btn btn-dark" to="/admin">
+          <Link className="btn btn-outline-secondary py-0" to="/admin">
             <i className="fas fa-arrow-left"></i> Return
           </Link>
-          <div className="bg-dark py-2 px-4 rounded text-white">
+          <div className="btn btn-outline-secondary py-0">
             Day: {dayToday()}
           </div>
         </div>
@@ -83,12 +87,11 @@ const AttendanceScreen = ({ match, history }) => {
                 </Card.Body>
                 <Card.Footer>
                   <Button
-                    variant="primary"
+                    variant="outline-secondary"
                     className="w-100"
                     onClick={() => {
-                      const className = `${indClass.name}: ${indClass.times}`;
                       history.push(
-                        `/instructor/attendance/${indClass._id}/search/`
+                        `/instructor/attendance/${indClass._id}/search/~`
                       );
                     }}
                   >

@@ -44,7 +44,7 @@ const MembershipCancelledScreen = () => {
   };
 
   return (
-    <Container>
+    <Container className="mt-3">
       <h1 className="text-danger">Membership Cancelled</h1>
       <h5>Your membership to York Karate Dojo has been cancelled.</h5>
       <p>

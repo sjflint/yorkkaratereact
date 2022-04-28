@@ -76,39 +76,49 @@ const EnquiryForm = () => {
           action="sendEnquiry"
           method="POST"
         >
-          <FormikControl
-            control="input"
-            type="text"
-            label="Name"
-            name="name"
-            placeholder="Please enter your name"
-          />
-          <FormikControl
-            control="input"
-            type="email"
-            label="Email"
-            name="email"
-            placeholder="email"
-          />
-          <FormikControl
-            control="input"
-            type="text"
-            label="Phone"
-            name="phone"
-            placeholder="Please enter your phone number"
-          />
-          <FormikControl
-            control="select"
-            label="Age Group"
-            name="ageGroup"
-            options={dropdownOptions}
-          />
-          <FormikControl
-            control="textarea"
-            label="Message"
-            name="message"
-            placeholder="Please enter a brief description of how we can help you"
-          />
+          <div className="bg-light mb-2 p-2">
+            <FormikControl
+              control="input"
+              type="text"
+              label="Name"
+              name="name"
+              placeholder="Please enter your name"
+            />
+          </div>
+          <div className="bg-light mb-2 p-2">
+            <FormikControl
+              control="input"
+              type="email"
+              label="Email"
+              name="email"
+              placeholder="email"
+            />
+          </div>
+          <div className="bg-light mb-2 p-2">
+            <FormikControl
+              control="input"
+              type="text"
+              label="Phone"
+              name="phone"
+              placeholder="Please enter your phone number"
+            />
+          </div>
+          <div className="bg-light mb-2 p-2">
+            <FormikControl
+              control="select"
+              label="Age Group"
+              name="ageGroup"
+              options={dropdownOptions}
+            />
+          </div>
+          <div className="bg-light mb-2 p-2">
+            <FormikControl
+              control="textarea"
+              label="Message"
+              name="message"
+              placeholder="Please enter a brief description of how we can help you"
+            />
+          </div>
 
           <button type="submit" className="mt-1 btn-block btn-default btn">
             Submit
@@ -117,15 +127,15 @@ const EnquiryForm = () => {
       </Formik>
 
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton className="bg-warning text-white">
-          <Modal.Title>Message Sent</Modal.Title>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Message Sent</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Thank you for contacting York Karate. We will review your enquiry and
           reply to you in due course.
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="warning" onClick={handleClose}>
+        <Modal.Footer className="bg-dark">
+          <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>

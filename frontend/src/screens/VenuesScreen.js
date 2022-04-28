@@ -7,7 +7,7 @@ import strensallVillageHall from "../img/strensallvillagehall.jpg";
 
 const VenuesScreen = () => {
   return (
-    <Container className="text-center">
+    <Container className="text-center mt-3">
       <h3 className="text-center border-bottom border-warning">Venues</h3>
       <Row>
         <Col md={6} className="d-flex">

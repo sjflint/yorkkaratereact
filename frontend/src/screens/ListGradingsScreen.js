@@ -37,9 +37,9 @@ const ListGradingsScreen = ({ history }) => {
   }, [dispatch, history, memberInfo, member]);
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between">
-        <Link className="btn btn-dark" to="/admin">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
       </div>

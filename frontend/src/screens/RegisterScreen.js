@@ -4,7 +4,7 @@ import RegistrationForm from "../components/FormComponents/RegistrationForm";
 
 const RegisterScreen = () => {
   return (
-    <Container>
+    <Container className="mt-3">
       <h1>Member Registration</h1>
       <RegistrationForm />
       <Row className="py-3">

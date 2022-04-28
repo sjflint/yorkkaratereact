@@ -29,7 +29,7 @@ const EventScreen = ({ match }) => {
   const moreEvents = events.filter((event) => event._id !== eventId);
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <Row>
         <Col md={8}>
           {loadingEvent ? (
@@ -54,13 +54,20 @@ const EventScreen = ({ match }) => {
                 event.register === "/squadselection" ? (
                   <ListGroup.Item>
                     <a href={`${event.register}/${event._id}`} rel="noreferrer">
-                      <Button variant="primary">Register</Button>
+                      <Button variant="outline-warning" className="w-100">
+                        Register
+                      </Button>
                     </a>
                   </ListGroup.Item>
                 ) : (
                   <ListGroup.Item>
                     <a href={event.register} target="_blank" rel="noreferrer">
-                      <Button variant="primary">Register</Button>
+                      <Button
+                        variant="outline-warning"
+                        className="w-100 btn-sm"
+                      >
+                        Register
+                      </Button>
                     </a>
                   </ListGroup.Item>
                 )}
@@ -75,7 +82,10 @@ const EventScreen = ({ match }) => {
                     ))}
                 </ListGroup.Item>
                 <div className="mt-2 mb-5 border-bottom border-warning">
-                  <Link className="btn btn-default mb-5 w-100" to="/events">
+                  <Link
+                    className="btn btn-outline-secondary btn-sm mb-5 w-100"
+                    to="/events"
+                  >
                     Return to event listings
                   </Link>
                 </div>
@@ -99,7 +109,7 @@ const EventScreen = ({ match }) => {
             </div>
           )}
 
-          <Link className="btn w-100 btn-default" to="/events">
+          <Link className="btn w-100 btn-outline-secondary btn-sm" to="/events">
             Return to event listings
           </Link>
         </Col>

@@ -9,6 +9,9 @@ import {
   DD_UPDATE_FAIL,
   DD_UPDATE_REQUEST,
   DD_UPDATE_SUCCESS,
+  PAYMENT_CANCEL_FAIL,
+  PAYMENT_CANCEL_REQUEST,
+  PAYMENT_CANCEL_SUCCESS,
   UPDATE_SUBSCRIPTION_FAIL,
   UPDATE_SUBSCRIPTION_REQUEST,
   UPDATE_SUBSCRIPTION_SUCCESS,
@@ -168,6 +171,49 @@ export const createPayment = (paymentDetails) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: CREATE_DD_PAYMENT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const cancelPayment = (_id, recordId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: PAYMENT_CANCEL_REQUEST,
+    });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const paymentDetails = {
+      _id: _id,
+      recordId: recordId,
+    };
+
+    const { data } = await axios.post(
+      `/ddroutes/cancelpayment`,
+      { paymentDetails },
+      config
+    );
+
+    dispatch({
+      type: PAYMENT_CANCEL_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: PAYMENT_CANCEL_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

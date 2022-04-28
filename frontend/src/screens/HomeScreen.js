@@ -1,4 +1,3 @@
-import Showcase from "../components/Showcase";
 import simonProfileImg from "../img/simon-profile.jpg";
 import {
   Container,
@@ -10,11 +9,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Video from "../components/Video";
-import poster1Img from "../img/poster1.png";
 import poster2Img from "../img/poster2.png";
-import benefitOfKarateMp4 from "../img/benefitsofkaratetraining.mp4";
-import benefitOfKarateOgv from "../img/benefitsofkaratetraining.ogv";
-import benefitOfKarateWebmHd from "../img/benefitsofkaratetraining.webmhd.webm";
 import yorkkarateMp4 from "../img/yorkkarate.mp4";
 import yorkkarateOgv from "../img/yorkkarate.ogv";
 import yorkkarateWebmHd from "../img/yorkkarate.webmhd.webm";
@@ -23,16 +18,17 @@ import sportRoundhouseKickImg from "../img/sport-roundhousekick.jpg";
 import sportKumiteTrainingImg from "../img/sportkumitetraining.jpg";
 import ekfTrainingImg from "../img/ekftraining.jpg";
 import familyTrainingImg from "../img/family-training.jpg";
-import Parralax from "../components/Parralax";
 import InfoCard from "../components/InfoCard";
 import EnquiryForm from "../components//FormComponents/EnquiryForm";
 import Meta from "../components/Meta";
+import showcase from "../img/showcase.png";
 
 const HomeScreen = () => {
   return (
     <>
       <Meta />
-      <Showcase />
+      <img src={showcase} className="pt-0" alt="banner" />
+
       <section id="mini-promo" className="py-4 border-bottom border-warning">
         <Container>
           <Row className="p-3 align-items-center mb-2 bg-light">
@@ -53,10 +49,10 @@ const HomeScreen = () => {
             <Col lg={6} sm={12} className="p-2">
               <div className="p-2 bg-primary">
                 <Video
-                  poster={poster1Img}
-                  mp4={benefitOfKarateMp4}
-                  ogv={benefitOfKarateOgv}
-                  webmhd={benefitOfKarateWebmHd}
+                  poster={poster2Img}
+                  mp4={yorkkarateMp4}
+                  ogv={yorkkarateOgv}
+                  webmhd={yorkkarateWebmHd}
                 />
               </div>
             </Col>
@@ -183,7 +179,7 @@ const HomeScreen = () => {
           </Row>
         </Container>
       </section>
-      <Parralax image={"parralax2.jpg"} />
+
       <section id="affiliation" className="py-4">
         <Container>
           <CardGroup>
@@ -249,27 +245,17 @@ const HomeScreen = () => {
           </div>
         </Container>
       </section>
+
       <section
-        className=" bg-primary py-4 border-top border-warning"
-        id="trailer"
+        id="contact-enquiry"
+        className="py-4 border-top border-warning bg-primary"
       >
-        <Container>
-          <h2 className="text-center text-white">York Karate Dojo Trailer</h2>
-          <div className="p-2 bg-primary">
-            <Video
-              poster={poster2Img}
-              mp4={yorkkarateMp4}
-              ogv={yorkkarateOgv}
-              webmhd={yorkkarateWebmHd}
-            />
-          </div>
-        </Container>
-      </section>
-      <section id="contact-enquiry" className="py-4 border-top border-warning">
         <Container>
           <Row>
             <Col lg={6}>
-              <h3>Benefits of training with York Karate Dojo:</h3>
+              <h5 className="text-white mb-3">
+                Benefits of training in Karate:
+              </h5>
               <ListGroup className="mb-4">
                 <ListGroupItem className="list-group-item d-flex justify-content-between align-items-center">
                   Self-defence
@@ -329,7 +315,7 @@ const HomeScreen = () => {
               </ListGroup>
             </Col>
             <Col lg={6}>
-              <h3>Let us know how we can help and we will get back to you:</h3>
+              <h5 className="text-white">Let us know how we can help:</h5>
               <EnquiryForm />
             </Col>
           </Row>
@@ -374,17 +360,6 @@ const HomeScreen = () => {
               </a>
             </Col>
           </Row>
-          {/* <iframe
-            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FYorkKarate%2F&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-            width="340"
-            height="500"
-            style={{ border: "none" }}
-            scrolling="no"
-            frameBorder="0"
-            allowFullScreen={true}
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            title="York-Karate-Facebook"
-          ></iframe> */}
         </Container>
       </section>
     </>

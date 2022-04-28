@@ -10,6 +10,10 @@ import {
   DD_UPDATE_FAIL,
   DD_UPDATE_REQUEST,
   DD_UPDATE_SUCCESS,
+  PAYMENT_CANCEL_CLEAR,
+  PAYMENT_CANCEL_FAIL,
+  PAYMENT_CANCEL_REQUEST,
+  PAYMENT_CANCEL_SUCCESS,
   UPDATE_SUBSCRIPTION_FAIL,
   UPDATE_SUBSCRIPTION_REQUEST,
   UPDATE_SUBSCRIPTION_SUCCESS,
@@ -66,6 +70,21 @@ export const createDDPaymentReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case CREATE_DD_PAYMENT_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const cancelPaymentReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PAYMENT_CANCEL_REQUEST:
+      return { loading: true };
+    case PAYMENT_CANCEL_SUCCESS:
+      return { loading: false, success: action.payload };
+    case PAYMENT_CANCEL_FAIL:
+      return { loading: false, error: action.payload };
+    case PAYMENT_CANCEL_CLEAR:
+      return { loading: false, state: null };
     default:
       return state;
   }

@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
 
 const AboutScreen = () => {
   return (
-    <>
+    <div className="mt-3">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}
@@ -233,7 +233,7 @@ const AboutScreen = () => {
           </section>
         </motion.div>
       </AnimatePresence>
-    </>
+    </div>
   );
 };
 

@@ -21,7 +21,7 @@ const NewsScreen = ({ match }) => {
   }, [dispatch, pageNumber]);
 
   return (
-    <>
+    <div className="mt-3">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}
@@ -66,7 +66,7 @@ const NewsScreen = ({ match }) => {
           </Container>
         </motion.div>
       </AnimatePresence>
-    </>
+    </div>
   );
 };
 

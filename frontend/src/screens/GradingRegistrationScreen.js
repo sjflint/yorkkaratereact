@@ -119,7 +119,7 @@ const GradingRegistrationScreen = ({ history, match }) => {
   };
 
   return (
-    <Container>
+    <Container className="mt-3">
       {loadingEvent ? (
         <Loader variant="warning" />
       ) : eventError ? (

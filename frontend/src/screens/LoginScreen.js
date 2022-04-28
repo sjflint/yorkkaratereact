@@ -38,13 +38,13 @@ const LoginScreen = ({ location, history }) => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer className="mt-3">
       <h1 className="text-center">Member Sign In</h1>
 
       {error && <Message variant="danger">Incorrect Login details</Message>}
       {loading && <Loader variant="warning" />}
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="firstName" className="mb-3">
+      <Form onSubmit={submitHandler} className="text-muted">
+        <Form.Group controlId="firstName" className="mb-3 bg-light p-2">
           <Form.Label>First Name</Form.Label>
           <Form.Control
             type="text"
@@ -53,7 +53,7 @@ const LoginScreen = ({ location, history }) => {
             onChange={(e) => setFirstName(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="lastName" className="mb-3">
+        <Form.Group controlId="lastName" className="mb-3 bg-light p-2">
           <Form.Label>Last Name</Form.Label>
           <Form.Control
             type="text"
@@ -62,7 +62,7 @@ const LoginScreen = ({ location, history }) => {
             onChange={(e) => setLastName(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="email" className="mb-3">
+        <Form.Group controlId="email" className="mb-3 bg-light p-2">
           <Form.Label>email</Form.Label>
           <Form.Control
             type="email"
@@ -71,7 +71,7 @@ const LoginScreen = ({ location, history }) => {
             onChange={(e) => setEmail(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="password" className="mb-3">
+        <Form.Group controlId="password" className="mb-3 bg-light p-2">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
@@ -82,12 +82,12 @@ const LoginScreen = ({ location, history }) => {
         </Form.Group>
 
         <div className="d-flex justify-content-around">
-          <Button type="submit" variant="primary" className="px-5">
+          <Button type="submit" variant="outline-secondary" className="px-5">
             Sign In
           </Button>
 
           <Link to={"/reset-account"}>
-            <Button variant="warning">Forgotten password?</Button>
+            <Button variant="outline-danger">Forgotten password?</Button>
           </Link>
         </div>
       </Form>

@@ -9,14 +9,18 @@ import {
   updateAttendance,
   attendeeExtraAdd,
 } from "../actions/attendanceActions";
+import { cancelPayment } from "../actions/directDebitActions";
 import { membersList } from "../actions/memberActions";
 import { listTrainingSessions } from "../actions/trainingSessionActions";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 import SearchBox from "../components/SearchBox";
 
 export const AttendanceRegisterScreen = ({ history, match }) => {
-  const classId = match.params.className;
   const keyword = match.params.keyword;
+
+  const classId = match.params.className;
+
   const pageNumber = match.params.pageNumber || 1;
 
   const dispatch = useDispatch();
@@ -39,7 +43,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   const listMembers = useSelector((state) => state.listMembers);
   const {
     loading: memberListLoading,
-    error: memberListLoadingError,
+    error: memberListError,
     memberList,
   } = listMembers;
 
@@ -55,7 +59,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         dispatch(membersList(pageNumber, keyword));
       }
     }
-  }, [dispatch, classId, keyword]);
+  }, [dispatch, classId, keyword, history, memberInfo, pageNumber]);
 
   const removeAttendeeHandler = async (id, recordId, className) => {
     await dispatch(attendeeRemove(id, recordId));
@@ -77,10 +81,11 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   let participantsArray = [];
 
   if (trainingSessions) {
-    trainingSessions.map((trainingSession) => {
+    trainingSessions.forEach((trainingSession) => {
       // build array of participant id's
-      if (trainingSession._id == classId) {
-        trainingSession.participants.map((id) =>
+
+      if (trainingSession._id === classId) {
+        trainingSession.participants.forEach((id) =>
           participantsArray.push(id._id)
         );
       }
@@ -90,16 +95,16 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   const filterSearches = async () => {
     // check if extra participants get added
     if (record && record.length !== 0) {
-      record.extraParticipants.map((participant) => {
+      record.extraParticipants.forEach((participant) => {
         participantsArray.push(participant._id);
       });
     }
 
     if (trainingSessions) {
-      trainingSessions.map((trainingSession) => {
+      trainingSessions.forEach((trainingSession) => {
         // find suitable members from search list
-        if (memberList && trainingSession._id == classId) {
-          memberList.map((member) => {
+        if (memberList && trainingSession._id === classId) {
+          memberList.forEach((member) => {
             if (
               member.kyuGrade < trainingSession.minGradeLevel &&
               member.kyuGrade > trainingSession.maxGradeLevel
@@ -107,7 +112,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
               if (participantsArray.includes(member._id)) {
                 console.log("already attending");
               } else if (filteredMembersList.length !== 0) {
-                filteredMembersList.map((filteredMember) => {
+                filteredMembersList.forEach((filteredMember) => {
                   if (filteredMember._id === member._id) {
                     // do nothing
                   } else {
@@ -126,12 +131,28 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   filterSearches();
 
   return (
-    <Container>
-      <Link className="btn btn-dark" to="/instructor/attendance">
+    <Container className="mt-3">
+      {error && <Message variant="danger">{error}</Message>}
+      {memberListError && <Message variant="danger">{memberListError}</Message>}
+      {attendanceError && <Message variant="danger">{attendanceError}</Message>}
+      <Link
+        className="btn btn-outline-secondary py-0"
+        to="/instructor/attendance"
+      >
         <i className="fas fa-arrow-left"></i> Return To Attendance Screen
       </Link>
-      {loading && <Loader variant="warning" />}
-      {attendanceLoading && <Loader variant="warning" />}
+      {trainingSessions &&
+        trainingSessions.forEach((trainingSession) => {
+          if (trainingSession._id === classId) {
+            return (
+              <h5 className="text-center mt-3 mb-1">{trainingSession.name}</h5>
+            );
+          }
+        })}
+      {(loading || attendanceLoading || memberListLoading) && (
+        <Loader variant="warning" />
+      )}
+
       <Table
         striped
         bordered
@@ -202,6 +223,8 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                     </tr>
                   );
                 });
+              } else {
+                return null;
               }
             })}
 
@@ -217,7 +240,18 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                     <i className="fa-solid fa-circle-check text-success fa-3x"></i>
                   </td>
                   <td>
-                    {/* cancel attendee once added? Can a dd payment be cancelled? */}
+                    <Button
+                      variant="outline-danger"
+                      className="btn-sm"
+                      onClick={async () => {
+                        await dispatch(
+                          cancelPayment(participant._id, record._id)
+                        );
+                        await dispatch(updateAttendance(classId));
+                      }}
+                    >
+                      Mark as Not Present
+                    </Button>
                   </td>
                 </tr>
               );
@@ -225,6 +259,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         </tbody>
       </Table>
 
+      <p className="mt-4 mb-1">+ additional members</p>
       <Route
         render={({ history }) => (
           <SearchBox
@@ -233,6 +268,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
           />
         )}
       />
+
       {filteredMembersList.length > 0 && (
         <Table
           striped
@@ -256,7 +292,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                   </td>
                   <td>
                     <Button
-                      variant="outline-default"
+                      variant="outline-success"
                       className="btn-sm"
                       onClick={() => addExtraAttendeeHandler(member._id)}
                     >

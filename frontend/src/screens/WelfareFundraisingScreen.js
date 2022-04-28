@@ -17,7 +17,7 @@ import termsAndConditionsPDF from "../documents/termsAndConditions.pdf";
 
 const WelfareFundraisingScreen = () => {
   return (
-    <Container>
+    <Container className="mt-3">
       <h3 className="text-center border-bottom border-warning pb-1">
         Welfare and Fundraising
       </h3>

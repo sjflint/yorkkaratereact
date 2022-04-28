@@ -214,9 +214,9 @@ const MemberDetails = () => {
                   <h5 className="mb-0 border-bottom border-warning">
                     Attendance Card
                   </h5>
-                  {member.attendanceRecord > member.sessionsRequired ? (
+                  {member.attendanceRecord > member.numberOfSessionsRequired ? (
                     <img
-                      src={`/img/Stampcards/${member.gradeLevel}Card${member.sessionsRequired}.png`}
+                      src={`/img/Stampcards/${member.gradeLevel}Card${member.numberOfSessionsRequired}.png`}
                       alt=""
                       className="max-width-300"
                     />
@@ -234,7 +234,7 @@ const MemberDetails = () => {
               <Row>
                 <Col>
                   <Button
-                    variant="primary"
+                    variant="outline-secondary"
                     className="btn-block w-100 mb-2"
                     onClick={() => setShowModal(true)}
                   >
@@ -243,7 +243,7 @@ const MemberDetails = () => {
                 </Col>
                 <Col>
                   <Button
-                    variant="primary"
+                    variant="outline-secondary"
                     className="btn-block w-100"
                     onClick={() => setShowPasswordModal(true)}
                   >
@@ -257,7 +257,7 @@ const MemberDetails = () => {
       )}
 
       {/* Update user modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} size="lg" onHide={() => setShowModal(false)}>
         <Modal.Header closeButton className="text-white bg-primary">
           <Modal.Title className="text-white">Update Details</Modal.Title>
         </Modal.Header>
@@ -268,9 +268,9 @@ const MemberDetails = () => {
             onSubmit={saveHandler}
           >
             {({ values }) => (
-              <Form>
-                <Row className="py-4 border-bottom border-warning">
-                  <Col>
+              <Form className="text-warning">
+                <div className="py-3 border-bottom border-warning mb-3">
+                  <div className="bg-light mb-2 p-2">
                     <FormikControl
                       control="input"
                       type="text"
@@ -307,9 +307,11 @@ const MemberDetails = () => {
                       name="postCode"
                       placeholder="Postcode"
                     />
-                  </Col>
+                  </div>
+                </div>
 
-                  <Col>
+                <div className="py-3 border-bottom border-warning mb-3">
+                  <div className="bg-light mb-2 p-2">
                     <FormikControl
                       control="input"
                       label="Email"
@@ -317,7 +319,8 @@ const MemberDetails = () => {
                       name="email"
                       placeholder="Please enter your Email"
                     />
-
+                  </div>
+                  <div className="bg-light mb-2 p-2">
                     <FormikControl
                       control="input"
                       label="Confirm Email"
@@ -325,7 +328,8 @@ const MemberDetails = () => {
                       name="confirmEmail"
                       placeholder="Confirm Email"
                     />
-
+                  </div>
+                  <div className="bg-light mb-2 p-2">
                     <FormikControl
                       control="input"
                       label="Phone Number"
@@ -333,33 +337,37 @@ const MemberDetails = () => {
                       name="phone"
                       placeholder="Please enter your phone number"
                     />
-                  </Col>
-                </Row>
+                  </div>
+                </div>
 
                 <div className="py-4 border-bottom border-warning">
-                  <FormikControl
-                    control="input"
-                    label="Name of emergency contact"
-                    type="text"
-                    name="emergencyContactName"
-                    placeholder="Please enter their name"
-                  />
-
-                  <FormikControl
-                    control="input"
-                    label="Email of emergency contact"
-                    type="text"
-                    name="emergencyContactEmail"
-                    placeholder="Please enter their email"
-                  />
-
-                  <FormikControl
-                    control="input"
-                    label="Number of emergency contact"
-                    type="text"
-                    name="emergencyContactPhone"
-                    placeholder="Please enter their number"
-                  />
+                  <div className="bg-light mb-2 p-2">
+                    <FormikControl
+                      control="input"
+                      label="Name of emergency contact"
+                      type="text"
+                      name="emergencyContactName"
+                      placeholder="Please enter their name"
+                    />
+                  </div>
+                  <div className="bg-light mb-2 p-2">
+                    <FormikControl
+                      control="input"
+                      label="Email of emergency contact"
+                      type="text"
+                      name="emergencyContactEmail"
+                      placeholder="Please enter their email"
+                    />
+                  </div>
+                  <div className="bg-light mb-2 p-2">
+                    <FormikControl
+                      control="input"
+                      label="Number of emergency contact"
+                      type="text"
+                      name="emergencyContactPhone"
+                      placeholder="Please enter their number"
+                    />
+                  </div>
                 </div>
                 <Row className="mt-2">
                   <Col>
@@ -397,7 +405,7 @@ const MemberDetails = () => {
             onSubmit={updatePasswordHandler}
           >
             {({ passwordValues }) => (
-              <Form>
+              <Form className="text-warning">
                 {loadingPasswordUpdate ? (
                   <Loader variant="warning" />
                 ) : errorPasswordUpdate ? (
@@ -408,8 +416,8 @@ const MemberDetails = () => {
                   <Message variant="success">Password Updated</Message>
                 ) : (
                   <>
-                    <Row className="py-4 border-bottom border-warning">
-                      <Col>
+                    <div className="py-3 border-bottom border-warning mb-3">
+                      <div className="bg-light mb-2 p-2">
                         <FormikControl
                           control="input"
                           label="Please enter current Password"
@@ -417,38 +425,29 @@ const MemberDetails = () => {
                           type="password"
                           placeholder="Enter Password"
                         />
-                      </Col>
-                    </Row>
-                    <Row className="py-4">
-                      <Col>
-                        <FormikControl
-                          control="input"
-                          label="Please set a new password"
-                          name="newPassword"
-                          type="password"
-                          placeholder="Set Password"
-                        />
-                      </Col>
-                      <Col>
-                        <FormikControl
-                          control="input"
-                          label="Please confirm new password"
-                          name="confirmNewPassword"
-                          type="password"
-                          placeholder="Confirm password"
-                        />
-                      </Col>
-                    </Row>
+                      </div>
+                    </div>
+
+                    <div className="bg-light mb-2 p-2">
+                      <FormikControl
+                        control="input"
+                        label="Please set a new password"
+                        name="newPassword"
+                        type="password"
+                        placeholder="Set Password"
+                      />
+                    </div>
+                    <div className="bg-light mb-2 p-2">
+                      <FormikControl
+                        control="input"
+                        label="Please confirm new password"
+                        name="confirmNewPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                      />
+                    </div>
+
                     <Row>
-                      <Col>
-                        <Button
-                          type="submit"
-                          variant="default"
-                          className="w-100"
-                        >
-                          Update
-                        </Button>
-                      </Col>
                       <Col>
                         <Button
                           variant="primary"
@@ -456,6 +455,15 @@ const MemberDetails = () => {
                           className="w-100"
                         >
                           Close
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          type="submit"
+                          variant="default"
+                          className="w-100"
+                        >
+                          Update
                         </Button>
                       </Col>
                     </Row>

@@ -116,6 +116,7 @@ const OrderScreen = ({ match }) => {
         setSdkReady(true);
       }
     }
+    // eslint-disable-next-line
   }, [
     dispatch,
     order,
@@ -146,11 +147,13 @@ const OrderScreen = ({ match }) => {
   };
 
   return loading ? (
-    <Loader variant="warning" />
+    <Loader variant="warning" className="mt-3" />
   ) : error ? (
-    <Message variant="danger">{error}</Message>
+    <Message variant="danger" className="mt-3">
+      {error}
+    </Message>
   ) : (
-    <Container>
+    <Container className="mt-3">
       <h5 className="border-bottom border-warning">
         Order Number: {order._id}
       </h5>

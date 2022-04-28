@@ -111,10 +111,12 @@ const MemberVideos = () => {
         Training Videos
       </h2>
 
-      <h5 className="my-3">Your Current Status:</h5>
       <ListGroup variant="flush">
-        <Row>
+        <Row className="mt-2">
           <Col sm={6}>
+            <h5 className="mb-0 border-bottom border-warning text-center mb-2">
+              Your Current Status
+            </h5>
             <ListGroup.Item>
               <strong>Grade: </strong>
               {grade}
@@ -136,7 +138,7 @@ const MemberVideos = () => {
             <ListGroup.Item>
               <Button
                 className="btn-sm w-100"
-                variant="default"
+                variant="outline-secondary"
                 onClick={handleShowKyu}
               >
                 View the different belt colours
@@ -144,9 +146,12 @@ const MemberVideos = () => {
             </ListGroup.Item>
           </Col>
           <Col sm={6} className="text-center">
-            {member.attendanceRecord > member.sessionsRequired ? (
+            <h5 className="mb-0 border-bottom border-warning">
+              Attendance Card
+            </h5>
+            {member.attendanceRecord > member.numberOfSessionsRequired ? (
               <img
-                src={`/img/Stampcards/${member.gradeLevel}Card${member.sessionsRequired}.png`}
+                src={`/img/Stampcards/${member.gradeLevel}Card${member.numberOfSessionsRequired}.png`}
                 alt=""
                 className="max-width-300"
               />

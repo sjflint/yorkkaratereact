@@ -13,13 +13,10 @@ const Article = ({ article }) => {
       <Col md="7">
         <Link to={`/article/${article._id}`} className="text-decoration-none">
           <Card className="h-100">
+            <div className="bg-primary p-2 m-0 text-white">
+              <p className="my-1">{article.title}</p>
+            </div>
             <Card.Body>
-              <Card.Title>
-                <h5>
-                  <strong>{article.title}</strong>
-                </h5>
-              </Card.Title>
-
               <div className="my-3">{article.leader}</div>
             </Card.Body>
             <Card.Footer>
@@ -28,7 +25,7 @@ const Article = ({ article }) => {
               <small>
                 <FormatDate date={article.dateCreated} />
               </small>
-              <Button variant="primary" className="w-100 btn-sm">
+              <Button variant="outline-secondary" className="w-100 btn-sm">
                 Read Article
               </Button>
             </Card.Footer>

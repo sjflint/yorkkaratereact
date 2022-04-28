@@ -214,7 +214,8 @@ const MemberTrainingSessions = () => {
         </>
       )}
       <Button
-        className="d-block btn btn-default mb-2"
+        variant="outline-secondary"
+        className="d-block mb-2 py-0"
         onClick={() => {
           setAddClass(true);
         }}

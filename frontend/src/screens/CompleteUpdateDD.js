@@ -33,9 +33,9 @@ const CompleteUpdateDD = () => {
   }, [flowId, member, token]);
 
   return (
-    <>
+    <div className="mt-3">
       <Loader variant="warning" />
-    </>
+    </div>
   );
 };
 

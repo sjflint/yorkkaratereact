@@ -253,15 +253,16 @@ const ListClassesScreen = ({ history }) => {
   });
 
   return (
-    <>
+    <div className="mt-3">
       <Container fluid="lg">
         <div className="d-flex justify-content-between">
-          <Link className="btn btn-dark" to="/admin">
+          <Link className="btn btn-outline-secondary py-0" to="/admin">
             <i className="fas fa-arrow-left"></i> Return
           </Link>
 
           <Button
-            variant="primary"
+            variant="outline-secondary"
+            className="py-0"
             onClick={() => {
               setCreateModal(true);
             }}
@@ -317,7 +318,7 @@ const ListClassesScreen = ({ history }) => {
                     {trainingSession.numberBooked} / {trainingSession.capacity}{" "}
                   </small>
                   <button
-                    className="btn btn-sm btn-primary mt-1 w-100"
+                    className="btn btn-sm btn-outline-secondary py-0 mt-1 w-100"
                     onClick={() => {
                       setParticipantsModal(true);
                       setParticipantsList(trainingSession.participants);
@@ -472,64 +473,80 @@ const ListClassesScreen = ({ history }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="select"
-                  label="Day of the week"
-                  name="dayOfWeek"
-                  options={dayOptions}
-                />
-                <FormikControl
-                  control="select"
-                  label="Class Description"
-                  name="description"
-                  options={descriptionOptions}
-                />
-                <FormikControl
-                  control="input"
-                  label="Location"
-                  type="text"
-                  name="location"
-                  placeholder="Address and post code of the class"
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Minimum Grade Level"
-                  name="minGradeLevel"
-                  options={minGradeOptions}
-                />
-                <FormikControl
-                  control="select"
-                  label="Maximum Grade Level"
-                  name="maxGradeLevel"
-                  options={maxGradeOptions}
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Maximum Capacity"
-                  type="number"
-                  name="capacity"
-                  placeholder="Maximum capacity of the class"
-                />
-                <FormikControl
-                  control="input"
-                  label="Start Time"
-                  type="time"
-                  name="startTime"
-                />
-                <FormikControl
-                  control="input"
-                  label="End Time"
-                  type="time"
-                  name="endTime"
-                />
-                <FormikControl
-                  control="radio"
-                  label="Is this a Junior session (for under 9's only)?"
-                  name="juniorSession"
-                  options={radioOptions}
-                />
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Day of the week"
+                    name="dayOfWeek"
+                    options={dayOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Class Description"
+                    name="description"
+                    options={descriptionOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Location"
+                    type="text"
+                    name="location"
+                    placeholder="Address and post code of the class"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Minimum Grade Level"
+                    name="minGradeLevel"
+                    options={minGradeOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Maximum Grade Level"
+                    name="maxGradeLevel"
+                    options={maxGradeOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Maximum Capacity"
+                    type="number"
+                    name="capacity"
+                    placeholder="Maximum capacity of the class"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Start Time"
+                    type="time"
+                    name="startTime"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="End Time"
+                    type="time"
+                    name="endTime"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="radio"
+                    label="Is this a Junior session (for under 9's only)?"
+                    name="juniorSession"
+                    options={radioOptions}
+                  />
+                </div>
                 <Button
                   type="submit"
                   className="btn-block btn-default w-100 my-2"
@@ -548,7 +565,7 @@ const ListClassesScreen = ({ history }) => {
       </Modal>
 
       <Modal show={editModal} onHide={() => setEditModal(false)}>
-        <Modal.Header closeButton className="bg-success">
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Edit Class Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -561,64 +578,80 @@ const ListClassesScreen = ({ history }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="select"
-                  label="Day of the week"
-                  name="dayOfWeek"
-                  options={dayOptions}
-                />
-                <FormikControl
-                  control="select"
-                  label="Class Description"
-                  name="description"
-                  options={descriptionOptions}
-                />
-                <FormikControl
-                  control="input"
-                  label="Location"
-                  type="text"
-                  name="location"
-                  placeholder="Address and post code of the class"
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Minimum Grade Level"
-                  name="minGradeLevel"
-                  options={minGradeOptions}
-                />
-                <FormikControl
-                  control="select"
-                  label="Maximum Grade Level"
-                  name="maxGradeLevel"
-                  options={maxGradeOptions}
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Maximum Capacity"
-                  type="number"
-                  name="capacity"
-                  placeholder="Maximum capacity of the class"
-                />
-                <FormikControl
-                  control="input"
-                  label="Start Time"
-                  type="time"
-                  name="startTime"
-                />
-                <FormikControl
-                  control="input"
-                  label="End Time"
-                  type="time"
-                  name="endTime"
-                />
-                <FormikControl
-                  control="radio"
-                  label="Is this a Junior session (for under 9's only)?"
-                  name="juniorSession"
-                  options={radioOptions}
-                />
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Day of the week"
+                    name="dayOfWeek"
+                    options={dayOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Class Description"
+                    name="description"
+                    options={descriptionOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Location"
+                    type="text"
+                    name="location"
+                    placeholder="Address and post code of the class"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Minimum Grade Level"
+                    name="minGradeLevel"
+                    options={minGradeOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Maximum Grade Level"
+                    name="maxGradeLevel"
+                    options={maxGradeOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Maximum Capacity"
+                    type="number"
+                    name="capacity"
+                    placeholder="Maximum capacity of the class"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Start Time"
+                    type="time"
+                    name="startTime"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="End Time"
+                    type="time"
+                    name="endTime"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="radio"
+                    label="Is this a Junior session (for under 9's only)?"
+                    name="juniorSession"
+                    options={radioOptions}
+                  />
+                </div>
                 <Button
                   type="submit"
                   className="btn-block btn-default w-100 my-2"
@@ -635,7 +668,7 @@ const ListClassesScreen = ({ history }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 

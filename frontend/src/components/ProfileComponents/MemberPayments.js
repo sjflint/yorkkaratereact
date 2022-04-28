@@ -61,8 +61,8 @@ const MemberPayments = () => {
             </Col>
             <Col>
               <Button
-                variant="primary"
-                className="btn-block"
+                variant="outline-secondary"
+                className="w-100"
                 onClick={changeDDHandler}
                 disabled={success && true}
               >
@@ -103,7 +103,7 @@ const MemberPayments = () => {
             <Col>
               <Button
                 variant="danger"
-                className="btn-block"
+                className="w-100"
                 onClick={() => setCancelModal(true)}
               >
                 Cancel Membership

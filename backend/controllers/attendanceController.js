@@ -134,7 +134,7 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
     );
     await Member.findByIdAndUpdate(
       req.body.memberId,
-      { extraClassAdded: todaysDate },
+      { extraClassAdded: todaysDate, $inc: { attendanceRecord: +1 } },
       { new: true }
     );
 

@@ -88,7 +88,7 @@ const TrainingVideoScreen = ({ match }) => {
   }
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <Row>
         <Col md={7} lg={7}>
           {loadingTrainingVideo ? (

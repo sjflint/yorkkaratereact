@@ -25,7 +25,7 @@ const ShopScreen = ({ match }) => {
   }, [dispatch, pageNumber, filterBy]);
 
   return (
-    <>
+    <div className="mt-3">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}
@@ -168,7 +168,7 @@ const ShopScreen = ({ match }) => {
           </Container>
         </motion.div>
       </AnimatePresence>
-    </>
+    </div>
   );
 };
 

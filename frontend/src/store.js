@@ -65,6 +65,7 @@ import {
 } from "./reducers/orderReducers";
 import {
   cancelDirectDebitReducer,
+  cancelPaymentReducer,
   createDDPaymentReducer,
   updateDirectDebitReducer,
   updateSubscriptionReducer,
@@ -148,6 +149,7 @@ const reducer = combineReducers({
   cancelDirectDebit: cancelDirectDebitReducer,
   updateSubscription: updateSubscriptionReducer,
   createDDPayment: createDDPaymentReducer,
+  cancelPayment: cancelPaymentReducer,
   uploadImg: uploadImgReducer,
 });
 

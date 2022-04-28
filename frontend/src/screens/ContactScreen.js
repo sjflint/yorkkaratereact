@@ -4,7 +4,7 @@ import { Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 
 const ContactScreen = () => {
   return (
-    <Container>
+    <Container className="mt-3">
       <Row>
         <Col md={6}>
           <h3>Benefits of training with York Karate Dojo:</h3>

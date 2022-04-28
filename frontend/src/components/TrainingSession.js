@@ -13,21 +13,25 @@ const TrainingSession = ({ trainingSessions, trainingDay }) => {
         {trainingDay}
       </h4>
       <CardGroup className="text-center">
-        {day.map((trainingSession) => (
-          <Card className="mb-2" key={trainingSession._id}>
-            <Card.Body>
-              <Card.Title>{trainingSession.name} Class</Card.Title>
-              <Card.Subtitle className="text-muted">
-                {trainingSession.times}
-              </Card.Subtitle>
-              <Card.Text>{trainingSession.location}</Card.Text>
-            </Card.Body>
-            <Card.Footer>
-              Number of places available:{" "}
-              {trainingSession.capacity - trainingSession.numberBooked}
-            </Card.Footer>
-          </Card>
-        ))}
+        <Card>
+          <Card.Body>
+            {day.map((trainingSession) => (
+              <div className="mb-4" key={trainingSession._id}>
+                <Card.Title className="mb-1 text-warning">
+                  {trainingSession.name} Class
+                </Card.Title>
+                <Card.Subtitle className="text-muted">
+                  {trainingSession.times}
+                </Card.Subtitle>
+                <Card.Text>{trainingSession.location}</Card.Text>
+                <Card.Footer className="border-bottom border-warning mb-2">
+                  Number of places available:{" "}
+                  {trainingSession.capacity - trainingSession.numberBooked}
+                </Card.Footer>
+              </div>
+            ))}
+          </Card.Body>
+        </Card>
       </CardGroup>
     </>
   );

@@ -67,7 +67,7 @@ const ListEventsScreen = ({ history, match }) => {
     dispatch({ type: EVENT_CREATE_RESET });
     if (!memberInfo) {
       history.push("/login");
-    } else if (!member.isAdmin) {
+    } else if (!memberInfo.isAdmin) {
       history.push("/profile");
     } else {
       dispatch(listEvents());
@@ -188,14 +188,15 @@ const ListEventsScreen = ({ history, match }) => {
   }
 
   return (
-    <Container fluid="lg">
+    <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between">
-        <Link className="btn btn-dark" to="/admin">
+        <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
         <div className="text-center">
           <Button
-            className="btn-primary"
+            variant="outline-secondary"
+            className="py-0"
             onClick={() => {
               setCreateModal(true);
               setImage(imagePlaceholder);
@@ -336,44 +337,50 @@ const ListEventsScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="title"
-                  type="text"
-                  name="title"
-                  placeholder="Event Title"
-                />
-
-                <FormikControl
-                  control="input"
-                  label="Date of Event"
-                  type="date"
-                  name="dateOfEvent"
-                />
-                <FormikControl
-                  control="input"
-                  label="Location"
-                  type="text"
-                  name="location"
-                  placeholder="Location Address and Post Code"
-                />
-
-                <FormikControl
-                  control="input"
-                  as="textarea"
-                  label="Please provide a description"
-                  name="description"
-                  placeholder="Please provide a description"
-                  rows="10"
-                />
-
-                <FormikControl
-                  control="select"
-                  label="Event Type / How to Register"
-                  name="register"
-                  options={dropdownOptions}
-                />
-
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Title"
+                    type="text"
+                    name="title"
+                    placeholder="Event Title"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Date of Event"
+                    type="date"
+                    name="dateOfEvent"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Location"
+                    type="text"
+                    name="location"
+                    placeholder="Location Address and Post Code"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    as="textarea"
+                    label="Please provide a description"
+                    name="description"
+                    placeholder="Please provide a description"
+                    rows="10"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="select"
+                    label="Event Type / How to Register"
+                    name="register"
+                    options={dropdownOptions}
+                  />
+                </div>
                 <Button type="submit" className="w-100 mt-2 btn-default">
                   Create
                 </Button>
@@ -395,7 +402,7 @@ const ListEventsScreen = ({ history, match }) => {
           setEditDescription(false);
         }}
       >
-        <Modal.Header closeButton className="bg-success">
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Edit event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -421,70 +428,78 @@ const ListEventsScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <FormikControl
-                  control="input"
-                  label="Title"
-                  type="text"
-                  name="title"
-                  placeholder="Event Title"
-                />
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Title"
+                    type="text"
+                    name="title"
+                    placeholder="Event Title"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Date of Event"
+                    type="date"
+                    name="dateOfEvent"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <FormikControl
+                    control="input"
+                    label="Location"
+                    type="text"
+                    name="location"
+                    placeholder="Location Address and Post Code"
+                  />
+                </div>
+                <div className="mb-2 p-2 bg-light">
+                  <h5 className="mt-2">Description</h5>
 
-                <FormikControl
-                  control="input"
-                  label="Date of Event"
-                  type="date"
-                  name="dateOfEvent"
-                />
-                <FormikControl
-                  control="input"
-                  label="Location"
-                  type="text"
-                  name="location"
-                  placeholder="Location Address and Post Code"
-                />
+                  {!editDescription && (
+                    <>
+                      {paragraphs &&
+                        paragraphs.map((paragraph) => (
+                          <p
+                            key={`${paragraph}${Math.random()}`}
+                            className="mb-2 "
+                          >
+                            {paragraph}
+                            <br />
+                          </p>
+                        ))}
 
-                <h5 className="mt-2">Description</h5>
+                      <Button
+                        variant="outline-secondary btn-sm"
+                        onClick={() => setEditDescription(true)}
+                        className="mb-4 btn-sm d-block"
+                      >
+                        Edit Description?
+                      </Button>
+                    </>
+                  )}
+                  {editDescription && (
+                    <>
+                      <FormikControl
+                        control="input"
+                        as="textarea"
+                        label="Please provide a description"
+                        name="description"
+                        placeholder="Please enter a new description..."
+                        rows="10"
+                      />
 
-                {!editDescription && (
-                  <>
-                    {paragraphs &&
-                      paragraphs.map((paragraph) => (
-                        <p
-                          key={`${paragraph}${Math.random()}`}
-                          className="mb-2 "
-                        >
-                          {paragraph}
-                          <br />
-                        </p>
-                      ))}
-
-                    <Button
-                      onClick={() => setEditDescription(true)}
-                      className="mb-4 btn-sm d-block"
-                    >
-                      Edit Description?
-                    </Button>
-                  </>
-                )}
-                {editDescription && (
-                  <>
-                    <FormikControl
-                      control="input"
-                      as="textarea"
-                      label="Please provide a description"
-                      name="description"
-                      placeholder="Please enter a new description..."
-                      rows="10"
-                    />
-                    <Button
-                      onClick={() => setEditDescription(false)}
-                      variant="danger"
-                      className="mb-2 btn-sm"
-                    >
-                      Cancel Edit Description?
-                    </Button>
-                  </>
-                )}
+                      <Button
+                        onClick={() => setEditDescription(false)}
+                        variant="danger"
+                        className="mb-2 btn-sm"
+                      >
+                        Cancel Edit Description?
+                      </Button>
+                    </>
+                  )}
+                </div>
 
                 <Button type="submit" className="w-100 btn-default">
                   Update
@@ -493,7 +508,7 @@ const ListEventsScreen = ({ history, match }) => {
             )}
           </Formik>
         </Modal.Body>
-        <Modal.Footer className="bg-success">
+        <Modal.Footer className="bg-dark">
           <Button
             variant="secondary"
             onClick={() => {
