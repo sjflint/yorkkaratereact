@@ -1,7 +1,7 @@
 import { Col, Container, ListGroup, Row } from "react-bootstrap";
 import cameronKankuImg from "../img/cameron1.jpg";
 import simonProfileImg from "../img/simon-profile.jpg";
-import simonMedalImg from "../img/simon-medal.jpg";
+
 import katoSenseiImg from "../img/katosensei.jpg";
 import kagawa2Img from "../img/kagawa2.jpg";
 import Parralax from "../components/Parralax";
@@ -40,7 +40,7 @@ const AboutScreen = () => {
               </p>
 
               <Row className="text-center bg-primary align-items-center">
-                <Col md={6}>
+                <Col lg={8} md={6}>
                   <ListGroup className="px-3 py-2">
                     <h4 className="text-white">
                       The aims of York Karate Dojo are:
@@ -61,26 +61,33 @@ const AboutScreen = () => {
                     </ListGroup.Item>
                   </ListGroup>
                 </Col>
-                <Col md={6} className="p-4 bg-primary">
-                  <img src={cameronKankuImg} alt="about-York-Karate" />
+                <Col lg={4} md={6} className="p-4 bg-primary">
+                  <img
+                    src={cameronKankuImg}
+                    alt="about-York-Karate"
+                    className="rounded-circle"
+                  />
                 </Col>
               </Row>
             </section>
+          </Container>
+          <Parralax image={"simonkato2.jpg"} />
+          <Container>
             <section className="pb-4 border-bottom border-warning">
               <h3 className="text-center my-3">
                 Sensei Simon Flint - Club founder and instructor
               </h3>
               <Row className="no-gutters my-3 bg-primary p-3">
-                <Col md={5}>
+                <Col md={6}>
                   <img
                     src={simonProfileImg}
                     alt="simon-profile"
                     className="rounded-0"
                   />
                 </Col>
-                <Col md={7}>
+                <Col md={6}>
                   <img
-                    src={simonMedalImg}
+                    src="../img/simonkagawa.jpg"
                     alt="simon-medal"
                     className="rounded-0"
                   />

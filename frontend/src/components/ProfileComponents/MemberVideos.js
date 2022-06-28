@@ -107,7 +107,7 @@ const MemberVideos = () => {
   return (
     <>
       <img src={dojoImg} alt="dojo" />
-      <h2 className="border-bottom border-warning mt-2 text-warning">
+      <h2 className="border-bottom border-warning mt-2 text-warning text-center">
         Training Videos
       </h2>
 
@@ -145,24 +145,26 @@ const MemberVideos = () => {
               </Button>
             </ListGroup.Item>
           </Col>
-          <Col sm={6} className="text-center">
-            <h5 className="mb-0 border-bottom border-warning">
-              Attendance Card
-            </h5>
-            {member.attendanceRecord > member.numberOfSessionsRequired ? (
-              <img
-                src={`/img/Stampcards/${member.gradeLevel}Card${member.numberOfSessionsRequired}.png`}
-                alt=""
-                className="max-width-300"
-              />
-            ) : (
-              <img
-                src={`/img/Stampcards/${member.gradeLevel}Card${member.attendanceRecord}.png`}
-                alt=""
-                className="max-width-300"
-              />
-            )}
-          </Col>
+          {member.nameFirst && member.gradeLevel !== "Advanced" && (
+            <Col sm={5} className="p-2 text-center">
+              <h5 className="mb-0 border-bottom border-warning">
+                Attendance Card
+              </h5>
+              {member.attendanceRecord > member.numberOfSessionsRequired ? (
+                <img
+                  src={`/img/Stampcards/${member.gradeLevel}Card${member.numberOfSessionsRequired}.png`}
+                  alt=""
+                  className="max-width-300"
+                />
+              ) : (
+                <img
+                  src={`/img/Stampcards/${member.gradeLevel}Card${member.attendanceRecord}.png`}
+                  alt=""
+                  className="max-width-300"
+                />
+              )}
+            </Col>
+          )}
         </Row>
         {loadingTrainingVideos ? (
           <Loader variant="warning" />

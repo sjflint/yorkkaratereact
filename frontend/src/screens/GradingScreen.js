@@ -37,7 +37,8 @@ const GradingScreen = ({ match, history }) => {
 
   const dateToday = Date.now();
 
-  if (grading) {
+  if (grading && grading.title) {
+    console.log(grading.participants);
     grading.participants.sort((a, b) =>
       a.grade > b.grade ? -1 : b.grade < a.grade ? 1 : 0
     );
@@ -65,15 +66,16 @@ const GradingScreen = ({ match, history }) => {
                 </ListGroup.Item>
                 <ListGroup.Item>Location: {grading.location}</ListGroup.Item>
                 <ListGroup.Item>
-                  Number of participants: {grading.participants.length}
+                  Number of participants:{" "}
+                  {/* How to calculate number of participants */}
                 </ListGroup.Item>
               </ListGroup>
-              <button
-                className="btn btn-lg btn-default mt-4"
+              <Button
+                className="btn-default mt-4"
                 onClick={() => setShowModal(true)}
               >
                 Start Grading Examination
-              </button>
+              </Button>
             </Col>
           </Row>
           <h5 className="my-3 border-bottom border-warning text-center">
@@ -91,35 +93,39 @@ const GradingScreen = ({ match, history }) => {
               </tr>
             </thead>
             <tbody>
-              {grading.participants.map((member) => {
-                // Calculate current age, as of today
-                const age = (
-                  (dateToday - Date.parse(member.dateOfBirth)) /
-                  31556952000
-                ).toFixed(0);
-                return (
-                  <tr key={member._id} className="text-center">
-                    <td>{`${member.firstName} ${member.lastName}`}</td>
-                    {member.grade === 1 ? (
-                      <td>{member.grade}st kyu</td>
-                    ) : member.grade === 2 ? (
-                      <td>{member.grade}nd kyu</td>
-                    ) : member.grade === 3 ? (
-                      <td>{member.grade}rd kyu</td>
-                    ) : (
-                      <td>{member.grade}th kyu</td>
-                    )}
-                    <td>{member.licenseNumber}</td>
-                    <td>{age}</td>
-                    <td>
-                      <a href={`mailto:${member.email}`}>{member.email}</a>
-                    </td>
-                    <td>
-                      <a href={`tel:0${member.phone}`}>{`0${member.phone}`}</a>
-                    </td>
-                  </tr>
-                );
-              })}
+              {grading.title &&
+                grading.participants.map((member) => {
+                  const DofB = new Date(member.dateOfBirth);
+                  // Calculate current age, as of today
+                  const diff_ms = Date.now() - DofB.getTime();
+                  const age_dt = new Date(diff_ms);
+                  const age = Math.abs(age_dt.getFullYear() - 1970);
+
+                  return (
+                    <tr key={member._id} className="text-center">
+                      <td>{`${member.firstName} ${member.lastName}`}</td>
+                      {member.grade === 1 ? (
+                        <td>{member.grade}st kyu</td>
+                      ) : member.grade === 2 ? (
+                        <td>{member.grade}nd kyu</td>
+                      ) : member.grade === 3 ? (
+                        <td>{member.grade}rd kyu</td>
+                      ) : (
+                        <td>{member.grade}th kyu</td>
+                      )}
+                      <td>{member.licenseNumber}</td>
+                      <td>{age}</td>
+                      <td>
+                        <a href={`mailto:${member.email}`}>{member.email}</a>
+                      </td>
+                      <td>
+                        <a
+                          href={`tel:0${member.phone}`}
+                        >{`0${member.phone}`}</a>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
         </>

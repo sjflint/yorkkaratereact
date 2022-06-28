@@ -4,7 +4,7 @@ import {
   GRADING_DISPLAY_SUCCESS,
 } from "../constants/gradingConstants";
 
-export const displayGradingReducer = (state = { article: {} }, action) => {
+export const displayGradingReducer = (state = { grading: {} }, action) => {
   switch (action.type) {
     case GRADING_DISPLAY_REQUEST:
       return { loadingGrading: true, ...state };

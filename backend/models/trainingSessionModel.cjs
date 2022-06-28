@@ -9,6 +9,7 @@ const trainingSessionSchema = mongoose.Schema(
     juniorSession: { type: Boolean, required: true },
     times: { type: String, required: true },
     capacity: { type: Number, required: true },
+    hallHire: { type: Number, required: true },
     numberBooked: { type: Number, required: true, default: 0 },
     participants: [
       {

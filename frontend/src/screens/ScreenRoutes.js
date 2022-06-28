@@ -45,6 +45,7 @@ import GradingScreen from "./GradingScreen";
 import AccountInactiveScreen from "./AccountInactiveScreen";
 import AttendanceScreen from "./AttendanceScreen";
 import { AttendanceRegisterScreen } from "./AttendanceRegisterScreen";
+import FinanceScreen from "./FinanceScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -90,6 +91,7 @@ const ScreenRoutes = () => {
       <Route path="/shopAdmin/editorders" component={ListOrdersScreen} />
       <Route path="/profile" component={ProfileScreen} />
       <Route path="/admin" component={AdminScreen} exact />
+      <Route path="/admin/financialsummary" component={FinanceScreen} />
       <Route
         path="/admin/listmembers/search/:keyword"
         component={ListMembersScreen}

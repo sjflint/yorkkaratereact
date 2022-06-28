@@ -193,9 +193,8 @@ td {
   margin-right: 0px !important;
 }
 
-.form-control {
-  margin-bottom: 5px !important;
-  display: inline-block !important;
+.table-font-size {
+  font-size: small;
 }
 
 @media (max-width: 1000px) {

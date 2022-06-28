@@ -300,7 +300,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 // @route GET /api/members/blackbelts
 // @access Public
 const getBlackBelts = asyncHandler(async (req, res) => {
-  const query = { danGrade: { $gt: 0 } };
+  const query = { danGrade: { $gt: 0 }, ddsuccess: true };
 
   const options = {
     danGrade: 1,
@@ -355,6 +355,7 @@ const getMembers = asyncHandler(async (req, res) => {
     ddMandate: 1,
     kyuGrade: 1,
     danGrade: 1,
+    trainingFees: 1,
   };
 
   const members = await Member.find({ ...keyword }, options)

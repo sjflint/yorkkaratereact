@@ -146,65 +146,46 @@ const MemberTrainingSessions = () => {
               sessions.map((session) => (
                 <ListGroup.Item className="bg-light mb-1" key={session._id}>
                   <Row className="align-items-center text-center">
-                    <Col md={4}>
+                    <Col md={5}>
                       <div>
-                        <div className="text-center pb-0">{session.name}</div>
+                        <div className="text-center pb-0">
+                          <p>{session.name}</p>
+                          <p>{session.times}</p>
+                        </div>
                       </div>
                     </Col>
-                    <Col md={4}>
-                      {session.location}
-                      <br />
-                      {session.times}
-                    </Col>
-                    <Col md={4}>
+
+                    <Col md={7}>
                       {canSwitch === false ? (
-                        <Row noGutters>
-                          <Col md={6}>
-                            <Button
-                              className="btn-block px-1"
-                              variant="primary"
-                              disabled
-                            >
-                              <i className="fas fa-exchange-alt"></i>
-                              <br /> Switch Class
-                            </Button>
-                          </Col>
+                        <div className="d-flex justify-content-around">
+                          <Button className="btn-sm" variant="primary" disabled>
+                            <i className="fas fa-exchange-alt"></i> Switch Class
+                          </Button>
 
-                          <Col md={6}>
-                            <Button
-                              variant="danger"
-                              className="btn-block px-1"
-                              disabled
-                            >
-                              <i className="fas fa-trash"></i>
-                              <br /> Delete Class
-                            </Button>
-                          </Col>
-                        </Row>
+                          <Button variant="danger" className="btn-sm" disabled>
+                            <i className="fas fa-trash"></i> Delete Class
+                          </Button>
+                        </div>
                       ) : (
-                        <Row noGutters>
-                          <Col md={6}>
-                            <Button
-                              variant="primary"
-                              className="btn-block px-1"
-                              onClick={() => switchHandler(session)}
-                            >
-                              <i className="fas fa-exchange-alt"></i>
-                              <br /> Switch Class
-                            </Button>
-                          </Col>
+                        <div className="d-flex justify-content-around">
+                          <Button
+                            variant="primary"
+                            className="btn-block px-1"
+                            onClick={() => switchHandler(session)}
+                          >
+                            <i className="fas fa-exchange-alt"></i>
+                            <br /> Switch Class
+                          </Button>
 
-                          <Col md={6}>
-                            <Button
-                              variant="danger"
-                              className="btn-block px-1"
-                              onClick={() => deleteHandler(session)}
-                            >
-                              <i className="fas fa-trash"></i>
-                              <br /> Delete Class
-                            </Button>
-                          </Col>
-                        </Row>
+                          <Button
+                            variant="danger"
+                            className="btn-block px-1"
+                            onClick={() => deleteHandler(session)}
+                          >
+                            <i className="fas fa-trash"></i>
+                            <br /> Delete Class
+                          </Button>
+                        </div>
                       )}
                     </Col>
                   </Row>

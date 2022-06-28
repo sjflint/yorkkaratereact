@@ -77,9 +77,7 @@ const AdminScreen = ({ history }) => {
                       src={financialImg}
                       className="p-3"
                     />
-                    <Card.Footer className="text-center">
-                      Financial (Incomplete)
-                    </Card.Footer>
+                    <Card.Footer className="text-center">Financial</Card.Footer>
                   </Card>
                 </Link>
               </Col>

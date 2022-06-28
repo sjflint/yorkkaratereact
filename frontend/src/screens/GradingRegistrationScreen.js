@@ -206,8 +206,8 @@ const GradingRegistrationScreen = ({ history, match }) => {
                   member.numberOfSessionsRequired ? (
                   <ListGroupItem>
                     <Button variant="default" disabled className="w-100">
-                      You are unable to register as you have not attended the
-                      minimum number of trianing sessions required.
+                      You are unable to register as you have not yet attended
+                      the minimum number of trianing sessions required.
                     </Button>
                   </ListGroupItem>
                 ) : (

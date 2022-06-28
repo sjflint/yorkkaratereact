@@ -34,7 +34,7 @@ const MemberOrders = () => {
   return (
     <>
       <img src={dojoImg} alt="dojo" />
-      <h2 className="border-bottom border-warning mt-2 mb-2 text-warning">
+      <h2 className="border-bottom border-warning mt-2 mb-2 text-warning text-center">
         Orders
       </h2>
       {loading ? (

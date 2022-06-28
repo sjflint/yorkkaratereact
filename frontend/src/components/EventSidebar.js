@@ -17,7 +17,7 @@ const EventSidebar = ({ event }) => {
           <div className="my-3">{event.leader}</div>
         </div>
         <Card.Footer>
-          <small className="text-white">
+          <small>
             Date of Event: <FormatDate date={event.dateOfEvent} />
           </small>
         </Card.Footer>

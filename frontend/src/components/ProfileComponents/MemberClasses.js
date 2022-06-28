@@ -12,6 +12,7 @@ import { getMemberDetails } from "../../actions/memberActions";
 import dojoImg from "../../img/dojo.jpeg";
 import Loader from "../Loader";
 import Message from "../Message";
+import { listFinancials } from "../../actions/financialActions";
 
 const MemberClasses = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,13 @@ const MemberClasses = () => {
     sessions,
   } = myClassList;
 
+  const financialList = useSelector((state) => state.financialList);
+  const {
+    loading: financialsLoading,
+    financials,
+    error: financialsError,
+  } = financialList;
+
   // Check for delete/switch eligibility
   let changeDate;
   if (member) {
@@ -55,6 +63,7 @@ const MemberClasses = () => {
   useEffect(() => {
     dispatch(listTrainingSessions());
     dispatch(listMyClasses());
+    dispatch(listFinancials());
   }, [dispatch]);
 
   // Filter classes to only what is relevant
@@ -135,7 +144,7 @@ const MemberClasses = () => {
   return (
     <>
       <img src={dojoImg} alt="dojo" />
-      <h2 className="border-bottom border-warning mt-2 text-warning">
+      <h2 className="border-bottom border-warning mt-2 text-warning text-center">
         Your class bookings
       </h2>
       {classListLoading ? (
@@ -152,59 +161,38 @@ const MemberClasses = () => {
                 <Col md={4}>
                   <div>
                     <p className="text-center pb-0">{session.name}</p>
+                    <p>{session.times}</p>
                   </div>
                 </Col>
-                <Col md={4}>
-                  <p>
-                    {session.location}
-                    <br />
-                    {session.times}
-                  </p>
-                </Col>
-                <Col md={4}>
+
+                <Col md={7}>
                   {canSwitch === false ? (
-                    <Row noGutters>
-                      <Col md={6}>
-                        <Button className="btn-block px-1" disabled>
-                          <i className="fas fa-exchange-alt"></i>
-                          <br /> Switch Class
-                        </Button>
-                      </Col>
+                    <div className="d-flex justify-content-around">
+                      <Button className="btn-sm" disabled>
+                        <i className="fas fa-exchange-alt"></i> Switch Class
+                      </Button>
 
-                      <Col md={6}>
-                        <Button
-                          variant="danger"
-                          className="btn-block px-1"
-                          disabled
-                        >
-                          <i className="fas fa-trash"></i>
-                          <br /> Delete Class
-                        </Button>
-                      </Col>
-                    </Row>
+                      <Button variant="danger" className="btn-sm" disabled>
+                        <i className="fas fa-trash"></i> Delete Class
+                      </Button>
+                    </div>
                   ) : (
-                    <Row noGutters>
-                      <Col md={6}>
-                        <Button
-                          className="btn-block px-1"
-                          onClick={() => switchHandler(session)}
-                        >
-                          <i className="fas fa-exchange-alt"></i>
-                          <br /> Switch Class
-                        </Button>
-                      </Col>
+                    <div className="d-flex justify-content-around">
+                      <Button
+                        className="btn-sm"
+                        onClick={() => switchHandler(session)}
+                      >
+                        <i className="fas fa-exchange-alt"></i> Switch Class
+                      </Button>
 
-                      <Col md={6}>
-                        <Button
-                          variant="danger"
-                          className="btn-block px-1"
-                          onClick={() => deleteHandler(session)}
-                        >
-                          <i className="fas fa-trash"></i>
-                          <br /> Delete Class
-                        </Button>
-                      </Col>
-                    </Row>
+                      <Button
+                        variant="danger"
+                        className="btn-sm"
+                        onClick={() => deleteHandler(session)}
+                      >
+                        <i className="fas fa-trash"></i> Delete Class
+                      </Button>
+                    </div>
                   )}
                 </Col>
               </Row>
@@ -247,10 +235,14 @@ const MemberClasses = () => {
             Your current monthly training fees are: £
             {(member.membershipLevel / 100).toFixed(2)}
           </h5>
-          <h5>
-            Your monthly training fees will increase by:{" "}
-            {sessions && sessions.length === 0 ? "£0.00" : "£3.00"}
-          </h5>
+          {financials && (
+            <h5>
+              Your monthly training fees will increase by:{" "}
+              {sessions && sessions.length === 0
+                ? "£0.00"
+                : `£${financials.costOfAdditionalClass.toFixed(2)}`}
+            </h5>
+          )}
           <Row>
             {filteredSessions &&
               filteredSessions.map((session) => (
@@ -303,33 +295,38 @@ const MemberClasses = () => {
         dialogClassName="modal-90w"
         aria-labelledby="delete-class"
       >
-        <Modal.Header closeButton className="bg-danger text-white">
-          <Modal.Title id="delete-class">
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title id="delete-class" className="text-white">
             <i className="fas fa-trash"></i> Delete Class
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
-          <h5>Are you sure you wish to delete the following class:</h5>
-          <h5 variant="flush">{sessionToDelete.name}</h5>
-
-          <p>
-            {sessionToDelete.location}
-            <br />
-            {sessionToDelete.times}
-          </p>
-
-          <p className="mt-3">
-            This class will be removed from your list of classes and your direct
-            debit adjusted accordingly
-          </p>
-          <h5 className="text-center text-danger">
+          <ListGroup variant="flush text-center">
+            <ListGroup.Item>
+              <p>{sessionToDelete.name}</p>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <p>
+                {sessionToDelete.location}
+                <br />
+                {sessionToDelete.times}
+              </p>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <p className="mt-3">
+                This class will be removed from your list of classes and your
+                direct debit adjusted accordingly
+              </p>
+            </ListGroup.Item>
+          </ListGroup>
+          <small className="text-danger">
             Please note that you can only switch/delete one class per month.
             This action cannot be undone.
-          </h5>
+          </small>
         </Modal.Body>
         <Modal.Footer className="bg-light text-primary">
           {buttonLoader ? (
-            <Button variant="danger" disbaled>
+            <Button variant="danger" disabled>
               <h5>
                 <Loader />
               </h5>
@@ -357,19 +354,14 @@ const MemberClasses = () => {
         dialogClassName="modal-90w"
         aria-labelledby="switch-class"
       >
-        <Modal.Header closeButton className="bg-secondary text-white">
-          <Modal.Title id="switch-class">
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title id="switch-class" className="text-white">
             <i className="fas fa-exchange-alt"></i> Switch Class
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
-          <h5>
-            The class below will be removed from your class list and you will
-            not be able to attend in the future:
-          </h5>
-
           <Card className="mb-3">
-            <Card.Header className="bg-secondary text-white">
+            <Card.Header className="bg-secondary">
               {sessionToDelete.name}
             </Card.Header>
             <Card.Body className="bg-light text-primary">
@@ -379,17 +371,19 @@ const MemberClasses = () => {
               <Card.Text>{sessionToDelete.location}</Card.Text>
             </Card.Body>
           </Card>
-          <h5 className="text-center text-danger">
+          <small className="text-center text-danger">
             Please note that you can only switch/delete one class per month.
             This action cannot be undone.
-          </h5>
-          <h5>Please choose your replacement class from below:</h5>
+          </small>
+          <p className="mt-2">
+            Please choose your replacement class from below:
+          </p>
           <Row>
             {filteredSessions &&
               filteredSessions.map((session) => (
                 <Col md={6} className="mb-3" key={session._id}>
                   <Card>
-                    <Card.Header className="bg-secondary text-white">
+                    <Card.Header className="bg-secondary">
                       {session.name}
                     </Card.Header>
                     <Card.Body className="bg-light text-primary">
@@ -400,14 +394,18 @@ const MemberClasses = () => {
                     </Card.Body>
                     <Card.Footer className="bg-light text-primary">
                       {session.participants.length === session.capacity ? (
-                        <Button disabled>Class Fully Booked</Button>
+                        <Button disabled className="btn-sm">
+                          Class Fully Booked
+                        </Button>
                       ) : (
                         <Button
+                          className="btn-sm w-100"
                           onClick={() =>
                             actionSwitchClass(sessionToDelete._id, session._id)
                           }
                         >
-                          <i className="fas fa-exchange-alt"></i> Switch Class
+                          <i className="fas fa-exchange-alt"></i> Confirm class
+                          switch
                         </Button>
                       )}
                     </Card.Footer>

@@ -3,6 +3,7 @@ const constants = require("gocardless-nodejs/constants");
 const asyncHandler = require("express-async-handler");
 const Event = require("../models/eventModel.cjs");
 const Member = require("../models/memberModel.cjs");
+const Financial = require("../models/financialModel.cjs");
 
 const dotenv = require("dotenv");
 
@@ -18,6 +19,7 @@ const client = gocardless(
 // @access Private
 const postGradingApplication = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.body.memberId);
+  const financials = await Financial.findOne({});
 
   if (!member) {
     res.status(404);
@@ -31,9 +33,11 @@ const postGradingApplication = asyncHandler(async (req, res) => {
     } else {
       // process payment and update grading course
       try {
+        const costOfGrading = financials.costOfGrading * 100;
+        console.log(`Cost of grading: ${costOfGrading}`);
         const payment = await client.payments.create(
           {
-            amount: 2500,
+            amount: costOfGrading,
             currency: "GBP",
             description: "Grading fee",
             links: {

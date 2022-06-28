@@ -168,7 +168,7 @@ const MemberDetails = () => {
       ) : (
         <>
           <img src={dojoImg} alt="dojo" />
-          <h2 className="mt-2 border-bottom border-warning text-warning">
+          <h2 className="mt-2 border-bottom border-warning text-warning text-center">
             Welcome {member.nameFirst}!
           </h2>
           <p>
@@ -179,29 +179,29 @@ const MemberDetails = () => {
           </p>
           <h2 className="text-center text-white">Your details</h2>
 
-          <ListGroup variant="flush dark">
+          <ListGroup variant="flush">
             <Row>
               <Col sm={7} className="mb-3">
-                <ListGroup.Item className="bg-dark text-white">
+                <ListGroup.Item className="bg-light text-warning">
                   <strong>Name</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   {`${member.nameFirst} ${member.nameSecond}`}
                 </ListGroup.Item>
-                <ListGroup.Item className="bg-dark text-white">
+                <ListGroup.Item className="bg-light text-warning">
                   <strong>Email</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>{`${member.email}`}</ListGroup.Item>
-                <ListGroup.Item className="bg-dark text-white">
+                <ListGroup.Item className="bg-light text-warning">
                   <strong>Phone</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>{`0${member.phone}`}</ListGroup.Item>
 
-                <ListGroup.Item className="bg-dark text-white">
+                <ListGroup.Item className="bg-light text-warning">
                   <strong>Grade</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>{`${grade} (${member.gradeLevel})`}</ListGroup.Item>
-                <ListGroup.Item className="bg-dark text-white">
+                <ListGroup.Item className="bg-light text-warning">
                   <strong>Membership Level</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -209,7 +209,7 @@ const MemberDetails = () => {
                 </ListGroup.Item>
               </Col>
 
-              {member && member.gradeLevel !== "Advanced" && (
+              {member.nameFirst && member.gradeLevel !== "Advanced" && (
                 <Col sm={5} className="p-2 text-center">
                   <h5 className="mb-0 border-bottom border-warning">
                     Attendance Card

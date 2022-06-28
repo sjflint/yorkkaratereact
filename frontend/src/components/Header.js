@@ -31,7 +31,13 @@ const Header = () => {
   return (
     <header>
       {error && loginErrorHandler()}
-      <Navbar bg="primary" variant="dark" expand="md" className="bg-black">
+      <Navbar
+        bg="primary"
+        variant="dark"
+        expand="md"
+        className="bg-black"
+        collapseOnSelect
+      >
         <Container className="w-80">
           <LinkContainer to="/">
             <Navbar.Brand className="text-center p-0">

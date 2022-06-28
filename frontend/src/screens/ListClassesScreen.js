@@ -133,6 +133,7 @@ const ListClassesScreen = ({ history }) => {
     capacity: "",
     dayOfWeek: "",
     description: "",
+    hallHire: "",
   };
 
   let editInitialValues;
@@ -157,6 +158,7 @@ const ListClassesScreen = ({ history }) => {
       startTime: times[0],
       endTime: times[2],
       capacity: Number(trainingSession.capacity),
+      hallHire: Number(trainingSession.hallHire).toFixed(2),
       // dayOfWeek
       // description
     };
@@ -170,6 +172,7 @@ const ListClassesScreen = ({ history }) => {
     startTime: Yup.string().required("Required"),
     endTime: Yup.string().required("Required"),
     capacity: Yup.number().required("Required"),
+    hallHire: Yup.number().required("Required"),
     dayOfWeek: Yup.string().required("Required"),
     description: Yup.string().required("Required"),
   });
@@ -256,7 +259,10 @@ const ListClassesScreen = ({ history }) => {
     <div className="mt-3">
       <Container fluid="lg">
         <div className="d-flex justify-content-between">
-          <Link className="btn btn-outline-secondary py-0" to="/admin">
+          <Link
+            className="btn btn-outline-secondary py-0"
+            onClick={() => history.goBack()}
+          >
             <i className="fas fa-arrow-left"></i> Return
           </Link>
 
@@ -526,6 +532,15 @@ const ListClassesScreen = ({ history }) => {
                 <div className="bg-light p-2 mb-2">
                   <FormikControl
                     control="input"
+                    label="Hall Hire (£)"
+                    type="number"
+                    name="hallHire"
+                    placeholder="cost of hiring the hall"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
                     label="Start Time"
                     type="time"
                     name="startTime"
@@ -626,6 +641,15 @@ const ListClassesScreen = ({ history }) => {
                     type="number"
                     name="capacity"
                     placeholder="Maximum capacity of the class"
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="input"
+                    label="Hall Hire (£)"
+                    type="number"
+                    name="hallHire"
+                    placeholder="cost of hiring the hall"
                   />
                 </div>
                 <div className="bg-light p-2 mb-2">

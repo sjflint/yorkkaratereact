@@ -85,6 +85,13 @@ import {
   attendanceListReducer,
   removeAttendeeReducer,
 } from "./reducers/attendanceReducer";
+import {
+  financialListReducer,
+  financialUpdateReducer,
+  monthlyCostDeleteReducer,
+  monthlyCostListReducer,
+  monthlyCostUpdateReducer,
+} from "./reducers/financialReducers";
 
 const reducer = combineReducers({
   attendanceList: attendanceListReducer,
@@ -151,6 +158,11 @@ const reducer = combineReducers({
   createDDPayment: createDDPaymentReducer,
   cancelPayment: cancelPaymentReducer,
   uploadImg: uploadImgReducer,
+  financialList: financialListReducer,
+  financialUpdate: financialUpdateReducer,
+  monthlyCostList: monthlyCostListReducer,
+  monthlyCostUpdate: monthlyCostUpdateReducer,
+  monthlyCostDelete: monthlyCostDeleteReducer,
 });
 
 const memberInfoFromStorage = localStorage.getItem("memberInfo")

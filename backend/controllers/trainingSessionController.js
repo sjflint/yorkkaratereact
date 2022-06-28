@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import TrainingSession from "../models/trainingSessionModel.cjs";
 import Member from "../models/memberModel.cjs";
 import { updateSubscription } from "./ddController.cjs";
+import Financial from "../models/financialModel.cjs";
 
 // @desc Fetch all training sessions
 // @route GET /api/trainingSessions
@@ -45,6 +46,7 @@ const getMyTrainingSessions = asyncHandler(async (req, res) => {
 const addTrainingSession = asyncHandler(async (req, res) => {
   const session = await TrainingSession.findById(req.body.classId);
   const member = await Member.findById(req.body.memberId);
+  const financials = await Financial.findOne({});
 
   if (session.participants.includes(member._id)) {
     res.json("already added to class");
@@ -62,7 +64,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
     if (req.body.classList.length !== 0) {
       const paymentDetails = {
         _id: member._id,
-        changeAmount: 300,
+        changeAmount: financials.costOfAdditionalClass * 100,
       };
       await updateSubscription(paymentDetails);
     }
@@ -80,6 +82,8 @@ const addTrainingSession = asyncHandler(async (req, res) => {
 const deleteTrainingSession = asyncHandler(async (req, res) => {
   let session = await TrainingSession.findById(req.body.classId);
   let member = await Member.findById(req.body.memberId._id);
+  const financials = await Financial.findOne({});
+
   const today = new Date();
   const changeDate = new Date(req.body.memberId.lastClassChange);
   changeDate.setMonth(changeDate.getMonth() + 1);
@@ -100,11 +104,12 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
           },
           { new: true }
         );
-        if (!member.trainingFees === 21.5) {
+        if (member.trainingFees !== financials.baseLevelTrainingFees * 100) {
           const paymentDetails = {
             _id: member._id,
-            changeAmount: -300,
+            changeAmount: financials.costOfAdditionalClass * -100,
           };
+          console.log(`payment details${paymentDetails}`);
           await updateSubscription(paymentDetails);
         }
       }
@@ -215,6 +220,7 @@ const createTimetableSession = asyncHandler(async (req, res) => {
     juniorSession: req.body.juniorSession,
     times: req.body.times,
     capacity: req.body.capacity,
+    hallHire: req.body.hallHire,
     numberBooked: 0,
     participants: [],
   };
@@ -242,6 +248,7 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     trainingSession.juniorSession = req.body.juniorSession;
     trainingSession.times = req.body.times;
     trainingSession.capacity = Number(req.body.capacity);
+    trainingSession.hallHire = Number(req.body.hallHire);
 
     const updatedTrainingSession = await trainingSession.save();
     console.log(updatedTrainingSession);

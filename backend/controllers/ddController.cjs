@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const Member = require("../models/memberModel.cjs");
 const Attendance = require("../models/attendanceModel.cjs");
 const TrainingSessions = require("../models/trainingSessionModel.cjs");
+const Financial = require("../models/financialModel.cjs");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -38,11 +39,12 @@ const ddSetup = asyncHandler(async (req, res) => {
   );
 
   // Create membership payment
+  const financials = await Financial.findOne({});
   const payment = await client.payments.create(
     {
-      amount: 1500,
+      amount: financials.joiningFee * 100,
       currency: "GBP",
-      description: "Annual membership fee",
+      description: "Joining fee",
       links: {
         mandate: redirectFlow.links.mandate,
       },
@@ -68,12 +70,11 @@ const ddSetup = asyncHandler(async (req, res) => {
   const randomString = "random" + Math.random() + req.body.name;
   const subscription = await client.subscriptions.create(
     {
-      amount: 2150,
+      amount: financials.baseLevelTrainingFees * 100,
       currency: "GBP",
       name: "Monthly training fees",
       interval: 1,
       interval_unit: "monthly",
-      day_of_month: 1,
       links: {
         mandate: redirectFlow.links.mandate,
       },
@@ -165,26 +166,59 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
   console.log("Updating...");
   const newAmount = subscription.amount + paymentDetails.changeAmount;
 
-  const subscriptionRequest = {
-    amount: newAmount,
-  };
-  subscription = await client.subscriptions.update(
-    subscriptionId,
-    subscriptionRequest
-  );
-  console.log(`Previous amount: ${subscription.amount}`);
+  const mandate = await client.mandates.find(member.ddMandate);
+  const chargeDay = mandate.next_possible_charge_date.slice(-2);
 
-  await Member.findOneAndUpdate(
-    { _id: member._id },
-    {
-      trainingFees: newAmount,
+  // create new subscription for the new amount
+  const newSubscription = await client.subscriptions.create({
+    amount: newAmount,
+    currency: "GBP",
+    name: "Monthly training fees",
+    interval: 1,
+    interval_unit: "monthly",
+    day_of_month: chargeDay,
+    links: {
+      mandate: member.ddMandate,
     },
-    { new: true }
-  );
+  });
+
+  if (newSubscription) {
+    // Cancel existing subscription
+    const cancelSubscription = await client.subscriptions.cancel(
+      member.subscriptionId
+    );
+    console.log(`Cancelled Sub status: ${cancelSubscription.status}`);
+    await Member.findOneAndUpdate(
+      { _id: member._id },
+      {
+        trainingFees: newSubscription.amount,
+        subscriptionId: newSubscription.id,
+      },
+      { new: true }
+    );
+    console.log("training fees total updated");
+  }
+
+  // const subscriptionRequest = {
+  //   amount: newAmount,
+  // };
+  // subscription = await client.subscriptions.update(
+  //   subscriptionId,
+  //   subscriptionRequest
+  // );
+  // console.log(`Previous amount: ${subscription.amount}`);
+
+  // await Member.findOneAndUpdate(
+  //   { _id: member._id },
+  //   {
+  //     trainingFees: newAmount,
+  //   },
+  //   { new: true }
+  // );
 
   return {
     status: "Successfully updated",
-    MonthlyTrainingFees: subscription.amount,
+    MonthlyTrainingFees: newSubscription.amount,
   };
 });
 
