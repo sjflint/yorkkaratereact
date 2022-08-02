@@ -20,6 +20,9 @@ import {
   MEMBER_LOGIN_REQUEST,
   MEMBER_LOGIN_SUCCESS,
   MEMBER_LOGOUT,
+  MEMBER_PUBLIC_DETAILS_FAIL,
+  MEMBER_PUBLIC_DETAILS_REQUEST,
+  MEMBER_PUBLIC_DETAILS_SUCCESS,
   MEMBER_REGISTER_FAIL,
   MEMBER_REGISTER_REQUEST,
   MEMBER_REGISTER_SUCCESS,
@@ -69,6 +72,19 @@ export const memberDetailsReducer = (state = { member: {} }, action) => {
     case MEMBER_DETAILS_SUCCESS:
       return { loading: false, member: action.payload };
     case MEMBER_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const memberPublicDetailsReducer = (state = { member: {} }, action) => {
+  switch (action.type) {
+    case MEMBER_PUBLIC_DETAILS_REQUEST:
+      return { ...state, loading: true };
+    case MEMBER_PUBLIC_DETAILS_SUCCESS:
+      return { loading: false, member: action.payload };
+    case MEMBER_PUBLIC_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

@@ -61,7 +61,7 @@ const AccountResetScreen = () => {
         </div>
       )}
       {!loading && !success && (
-        <Form onSubmit={submitHandler} className="text-warning">
+        <Form onSubmit={submitHandler} className="text-muted">
           <Form.Group controlId="firstName" className="mb-3 bg-light p-2">
             <Form.Label>First Name</Form.Label>
             <Form.Control

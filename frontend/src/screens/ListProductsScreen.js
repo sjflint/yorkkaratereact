@@ -386,7 +386,7 @@ const ListProductsScreen = ({ history, match }) => {
           <img src={`${image}`} alt="" />
           <UploadImage singleImageData={singleImageData} type="Product" />
           <p className="text-center">
-            Recommended aspect ratio: 5:3. Image will be cropped to fit
+            Recommended aspect ratio: 1:1. Image will be cropped to fit
           </p>
 
           <Formik
@@ -487,7 +487,7 @@ const ListProductsScreen = ({ history, match }) => {
                 singleImageData={singleImageData}
               />
               <p className="text-center">
-                Recommended aspect ratio: 5:3. Image will be cropped to fit
+                Recommended aspect ratio: 1:1. Image will be cropped to fit
               </p>
             </>
           )}

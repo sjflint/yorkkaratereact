@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
+import { enquiryEmail } from "../emailTemplates/enquiry.js";
 import Enquiry from "../models/enquiryModel.js";
 
 const postEnquiry = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { name, email, phone, ageGroup, message } = req.body;
 
   const enquiry = await Enquiry.create({
@@ -14,6 +14,14 @@ const postEnquiry = asyncHandler(async (req, res) => {
   });
 
   if (enquiry) {
+    // send email
+    const emailDetails = {
+      recipientName: name,
+      recipientEmail: email,
+    };
+
+    await enquiryEmail(emailDetails);
+
     res.status(201).json({
       _id: enquiry._id,
       name: enquiry.name,

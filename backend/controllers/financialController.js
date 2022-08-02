@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Financial from "../models/financialModel.cjs";
 import Member from "../models/memberModel.cjs";
 import MonthlyCosts from "../models/monthlyCosts.js";
@@ -26,8 +27,10 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     baseLevelTrainingFees,
     joiningFee,
     costOfAdditionalClass,
+    costOfExtraFee,
     costOfGrading,
   } = req.body;
+
   const financials = await Financial.findOne({});
 
   const membersList = await Member.find({ ddsuccess: true });
@@ -67,8 +70,32 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
 
     financials.costOfGrading = costOfGrading;
     financials.joiningFee = joiningFee;
+    financials.costOfExtraFee = costOfExtraFee;
 
     await financials.save();
+
+    // send email to notify members of the change
+    membersList.forEach((member) => {
+      genericEmail({
+        recipientEmail: member.email,
+        recipientName: member.firstName,
+        subject: "Update to club fees",
+        message: `<h4>${member.firstName}, we have updated some of our fees.</h4>
+    <p>We would like to let you know that with immediate effect, the following fees are in place:</p>
+    <ul>
+      <li>Base Level Training Fees (to train once a week): £${baseLevelTrainingFees} p/m</li>
+      <li>The cost of increasing your training by one extra class a week: £${costOfAdditionalClass}</li>
+      <li>The cost of attending a one-off, extra class: £${costOfExtraFee}</li>
+      <li>The cost of attending a grading examination: £${costOfGrading}</li>
+    </ul>
+    <p>There is nothing you need to do. Any price changes will automatically be applied to your direct debit.</p>
+    `,
+        link: `http://localhost:3000/profile`,
+        linkText: "View Your account and fees",
+        attachments: [],
+      });
+    });
+
     res.status(201).json("financials updated");
   } else {
     res.status(404);

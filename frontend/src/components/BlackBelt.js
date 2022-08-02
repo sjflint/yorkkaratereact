@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, Card, ListGroup, ListGroupItem } from "react-bootstrap";
 
 const BlackBelt = ({ blackBelt }) => {
   const gradingDates = Object.entries(blackBelt.danGradings);
@@ -43,6 +43,7 @@ const BlackBelt = ({ blackBelt }) => {
               >{`${grading[0]}: ${grading[1]}`}</ListGroupItem>
             );
           })}
+          <Button variant="outline-secondary">View Profile</Button>
         </ListGroup>
       </Card.Body>
     </Card>

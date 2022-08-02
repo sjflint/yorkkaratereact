@@ -9,7 +9,7 @@ import Message from "../components/Message";
 
 const ListOrdersScreen = ({ history }) => {
   const [paid, setPaid] = useState("paid");
-  const [collection, setReady] = useState("all");
+  const [collection, setReady] = useState("notReady");
 
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ const ListOrdersScreen = ({ history }) => {
   useEffect(() => {
     if (!memberInfo) {
       history.push("/login");
-    } else if (!member.isShopAdmin) {
+    } else if (!memberInfo.isShopAdmin) {
       history.push("/profile");
     } else {
       dispatch(listOrders());
@@ -35,11 +35,13 @@ const ListOrdersScreen = ({ history }) => {
   let filteredOrders = null;
   if (orders) {
     if (paid === "all") {
-      filteredOrders = orders;
+      filteredOrders = orders.filter(
+        (order) => order.isPaid === "true" || order.isPaid === "pending"
+      );
     } else if (paid === "paid") {
-      filteredOrders = orders.filter((order) => order.isPaid === true);
+      filteredOrders = orders.filter((order) => order.isPaid === "true");
     } else {
-      filteredOrders = orders.filter((order) => order.isPaid === false);
+      filteredOrders = orders.filter((order) => order.isPaid === "pending");
     }
   }
 
@@ -82,31 +84,31 @@ const ListOrdersScreen = ({ history }) => {
                 <th>Member</th>
                 <th>Date</th>
                 <th>Total</th>
-                {paid === "unpaid" ? (
+                {paid === "pending" ? (
                   <th onClick={() => setPaid("paid")} className="pointer">
-                    Paid (Unpaid) <i className="fas fa-sort"></i>
+                    Payment Status (pending) <i className="fas fa-sort"></i>
                   </th>
                 ) : paid === "paid" ? (
                   <th onClick={() => setPaid("all")} className="pointer">
-                    Paid (Paid) <i className="fas fa-sort"></i>
+                    Payment Status (Paid) <i className="fas fa-sort"></i>
                   </th>
                 ) : (
-                  <th onClick={() => setPaid("unpaid")} className="pointer">
-                    Paid (All) <i className="fas fa-sort"></i>
+                  <th onClick={() => setPaid("pending")} className="pointer">
+                    Payment Status (All) <i className="fas fa-sort"></i>
                   </th>
                 )}
                 {collection === "notReady" ? (
                   <th onClick={() => setReady("ready")} className="pointer">
-                    Ready For Collection (Not Ready){" "}
+                    Collection Status (Not Ready){" "}
                     <i className="fas fa-sort"></i>
                   </th>
                 ) : collection === "ready" ? (
                   <th onClick={() => setReady("all")} className="pointer">
-                    Ready For Collection (Ready) <i className="fas fa-sort"></i>
+                    Collection Status (Ready) <i className="fas fa-sort"></i>
                   </th>
                 ) : (
                   <th onClick={() => setReady("notReady")} className="pointer">
-                    Ready For Collection (All) <i className="fas fa-sort"></i>
+                    Collection Status (All) <i className="fas fa-sort"></i>
                   </th>
                 )}
                 <th>Edit</th>

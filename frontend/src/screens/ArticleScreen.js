@@ -42,53 +42,60 @@ const ArticleScreen = ({ match }) => {
               {errorArticle}
             </Message>
           ) : (
-            <>
-              <Meta title={article.title} description={article.leader} />
-              <Image src={article.image} alt={article.title} />
-              <ListGroup>
-                <h3 className="p-2">{article.title}</h3>
-                <ListGroup.Item className="bg-light">
-                  <Row className="align-items-center">
-                    <Col xs={3} sm={2} className="p-0">
-                      <Image
-                        src={article.authorImg}
-                        alt={article.author}
-                        className="rounded-circle"
-                      />
-                    </Col>
-                    <Col>
-                      <FormatDate date={article.dateCreated} />
-                      <br />
-                      Category: {article.category}
-                      <br />
-                      Author: {article.author}
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
+            article.title && (
+              <>
+                <Meta title={article.title} description={article.leader} />
 
-                <ListGroup.Item className="text-center text-warning">
-                  {article.carouselImages === undefined ? (
-                    <Loader />
-                  ) : article.carouselImages.length === 0 ? (
-                    "No additional images for this article"
-                  ) : (
-                    <ReactImageGallery items={images} />
-                  )}
-                </ListGroup.Item>
+                <ListGroup>
+                  <h3 className="p-2">{article.title}</h3>
+                  <ListGroup.Item className="bg-light">
+                    <Row className="align-items-center">
+                      <Col xs={3} sm={2} className="p-0">
+                        {/* How to find the current author image */}
 
-                <ListGroup.Item>
-                  <p>{article.leader}</p>
-
-                  {paragraphs &&
-                    paragraphs.map((paragraph) => (
-                      <p key={`${paragraph}${Math.random()}`} className="mb-2">
-                        {paragraph}
+                        <Image
+                          src={`${article.authorImg}`}
+                          alt={article.author}
+                          className="rounded-circle"
+                        />
+                      </Col>
+                      <Col>
+                        <FormatDate date={article.dateCreated} />
                         <br />
-                      </p>
-                    ))}
-                </ListGroup.Item>
-              </ListGroup>
-            </>
+                        Category: {article.category}
+                        <br />
+                        Author: {article.author}
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+
+                  <ListGroup.Item className="text-center text-warning">
+                    {article.carouselImages === undefined ? (
+                      <Loader />
+                    ) : article.carouselImages.length === 0 ? (
+                      "No additional images for this article"
+                    ) : (
+                      <ReactImageGallery items={images} />
+                    )}
+                  </ListGroup.Item>
+
+                  <ListGroup.Item>
+                    <p>{article.leader}</p>
+
+                    {paragraphs &&
+                      paragraphs.map((paragraph) => (
+                        <p
+                          key={`${paragraph}${Math.random()}`}
+                          className="mb-2"
+                        >
+                          {paragraph}
+                          <br />
+                        </p>
+                      ))}
+                  </ListGroup.Item>
+                </ListGroup>
+              </>
+            )
           )}
         </Col>
         <Col md={4}>

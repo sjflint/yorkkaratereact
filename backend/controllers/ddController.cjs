@@ -7,6 +7,7 @@ const TrainingSessions = require("../models/trainingSessionModel.cjs");
 const Financial = require("../models/financialModel.cjs");
 
 const dotenv = require("dotenv");
+const { genericEmail } = require("../emailTemplates/genericEmail.cjs");
 dotenv.config();
 
 const client = gocardless(
@@ -94,7 +95,26 @@ const ddSetup = asyncHandler(async (req, res) => {
   );
   console.log("training fees total updated");
 
-  // Send auto email with nodemailer
+  // **************send a welcome email*************
+  genericEmail({
+    recipientEmail: member.email,
+    recipientName: member.firstName,
+    subject: "Welcome to York Karate Dojo",
+    message: `<h4>Welcome to York Karate Dojo, ${member.firstName}</h4>
+    <p>I hope this is the start of a life-long interest in karate and the martial arts. Karate can offer you many opportunities and amazing experiences, such as entering competitions, training with some of the best Japanese instructors, travelling to Japan to train and meeting new friends.</p>
+    <p>The training can be difficult at times, you should be prepared for this, but anything in life that is positive and worth doing is usually difficult. That's exactly why it is worth doing.</p>
+    <p>There are just a few more things you might want to take a look at:</p>
+    <ul>
+    <li>Register for a class! Please sign up for at least one class. Visit your profile to do this <a href='http://localhost:3000/profile'>here</a></li>
+    <li>Purchase sparring mitts and other protection (not required for juniors under 9). Please visit our <a href='http://localhost:3000/shop'>Club Shop</a> to see purchasing options</li>
+    <li>Register With the Japan Karate Shotorenmei (JKS) - our governing body. You can do this <a href='https://www.jksengland.com/members'>here</a>. This is a requirement before taking part in any gradings/competitions</li>
+    </ul>
+    <p>Should you have any questions, please do not hesitate to contact us for further assistance</p>
+    `,
+    link: `http://localhost:3000/profile`,
+    linkText: "View Profile",
+    attachments: [],
+  });
 
   res.status(201).json({
     confirmationURL: "http://localhost:3000/ddsuccess",
@@ -147,6 +167,22 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
     { new: true }
   );
 
+  if (member) {
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Direct Debit Cancelled",
+      message: `<h4>${member.firstName}, your direct debit has been cancelled</h4>
+  <p>We have received an instruction to cancel your direct debit. Consequently, your membership to York Karate Dojo has been suspended and will be cancelled soon.</p>
+  <p>If there has been some kind of mistake and you would like to reinstate your account, please <a href='http://localhost:3000/login'> login to your account</a> to get things back up and running</p>
+  <p>If you are cancelling your membership with us, then we are very sorry to see you go! We know there are many reasons why our members might decide to leave the club but please, if there is something we could have done better then let us know so that we can improve in the future.
+  `,
+      link: `http://localhost:3000/login`,
+      linkText: "Reinstate Account",
+      attachments: [],
+    });
+  }
+
   res.status(201).json({
     Mandate: mandateId,
     Status: mandate.status,
@@ -176,7 +212,8 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
     name: "Monthly training fees",
     interval: 1,
     interval_unit: "monthly",
-    day_of_month: chargeDay,
+    // day_of_month: chargeDay,
+    start_date: subscription.upcoming_payments[0].charge_date,
     links: {
       mandate: member.ddMandate,
     },
@@ -198,23 +235,6 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
     );
     console.log("training fees total updated");
   }
-
-  // const subscriptionRequest = {
-  //   amount: newAmount,
-  // };
-  // subscription = await client.subscriptions.update(
-  //   subscriptionId,
-  //   subscriptionRequest
-  // );
-  // console.log(`Previous amount: ${subscription.amount}`);
-
-  // await Member.findOneAndUpdate(
-  //   { _id: member._id },
-  //   {
-  //     trainingFees: newAmount,
-  //   },
-  //   { new: true }
-  // );
 
   return {
     status: "Successfully updated",
@@ -281,8 +301,33 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
         );
       }
 
+      if (mandateId === "Pending" || mandateId === "Failed") {
+        const payment = await client.payments.create(
+          {
+            amount: member.totalPayment,
+            currency: "GBP",
+            description: "Annual Training Fees",
+            links: {
+              mandate: redirectFlow.links.mandate,
+            },
+            metadata: {},
+          },
+          Math.random() + randomString + "paymentstring"
+        );
+
+        if (payment) {
+          console.log("Annual fee recharged succesfully");
+        } else {
+          console.log("ERROR: payment not charged");
+        }
+      }
+
       // Cancel existing payment
-      if (mandateId === "Cancelled") {
+      if (
+        mandateId === "Cancelled" ||
+        mandateId === "Pending" ||
+        mandateId === "Failed"
+      ) {
         res.status(201).json({
           confirmationURL: "http://localhost:3000/ddupdatesuccess",
         });

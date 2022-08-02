@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const Event = require("../models/eventModel.cjs");
 const Member = require("../models/memberModel.cjs");
 const Financial = require("../models/financialModel.cjs");
+const { genericEmail } = require("../emailTemplates/genericEmail.cjs");
 
 const dotenv = require("dotenv");
 
@@ -72,6 +73,29 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               paymentId: payment.id,
             });
             await gradingCourse.save();
+
+            // Send confirmation email
+            const dateOfEvent = new Date(
+              gradingCourse.dateOfEvent
+            ).toLocaleDateString();
+            console.log(member);
+            console.log(gradingCourse);
+            genericEmail({
+              recipientEmail: member.email,
+              recipientName: member.firstName,
+              subject: gradingCourse.title,
+              message: `<h4>${gradingCourse.title}</h4>
+            <p>Date: ${dateOfEvent}.</p>
+            <p>Location: ${gradingCourse.location}.</p>
+            <p>Thank you for registering for the grading course.</p>
+            <h4>Good luck on the day!</h4>
+            `,
+              link: `http://localhost:3000/event/${gradingCourse._id}`,
+              linkText: "View more details",
+              image: gradingCourse.image,
+              attachments: [],
+            });
+
             res.send("grading application successful!");
           }
         }

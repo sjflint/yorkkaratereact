@@ -4,8 +4,8 @@ import FormatDate from "./FormatDate";
 
 const Event = ({ event }) => {
   return (
-    <Row className="p-2 rounded h-100 align-items-center">
-      <Col md={5} className="bg-primary p-2">
+    <Row className="p-2 rounded h-100 bg-grey">
+      <Col md={5} className="p-2 pt-0">
         <Link to={`/event/${event._id}`}>
           <img src={event.image} className="mb-2" alt="event" />
         </Link>

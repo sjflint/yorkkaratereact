@@ -26,6 +26,7 @@ import {
   memberDeleteReducer,
   memberEditReducer,
   resetPasswordReducer,
+  memberPublicDetailsReducer,
 } from "./reducers/memberReducer";
 import {
   productListReducer,
@@ -117,6 +118,7 @@ const reducer = combineReducers({
   memberLogin: memberLoginReducer,
   memberRegister: memberRegisterReducer,
   memberDetails: memberDetailsReducer,
+  memberPublicDetails: memberPublicDetailsReducer,
   listMembers: listMembersReducer,
   memberDelete: memberDeleteReducer,
   memberEdit: memberEditReducer,

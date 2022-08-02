@@ -22,7 +22,8 @@ import financialRoutes from "./routes/financialRoutes.js";
 import { goCardlessWebhook } from "./utils/goCardlessWebhook.cjs";
 import cors from "cors";
 import mongoose from "mongoose";
-
+import { getFileStream } from "./utils/s3.js";
+import { exampleCron } from "./utils/cronJobs.js";
 // log finder
 // ["log", "warn"].forEach(function (method) {
 //   var old = console[method];
@@ -72,6 +73,14 @@ app.use("/api/financial", financialRoutes);
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
+
+// get any image from s3 bucket
+app.get("/images/:key", (req, res) => {
+  const key = req.params.key;
+  const readStream = getFileStream(key);
+
+  readStream.pipe(res);
+});
 
 const __dirname = path.resolve();
 app.use(

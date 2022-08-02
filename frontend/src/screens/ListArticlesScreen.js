@@ -100,6 +100,7 @@ const ListArticlesScreen = ({ history, match }) => {
   };
 
   const createHandler = (values) => {
+    values.authorId = member._id;
     values.image = image;
     values.carouselImages = multiImage;
     values.body = values.body.split("\n");
@@ -236,7 +237,11 @@ const ListArticlesScreen = ({ history, match }) => {
                       await setEditModal(true);
                     }}
                   >
-                    <img src={`${article.image}`} alt="article" fluid />
+                    <img
+                      src={`${article.carouselImages[0].original}`}
+                      alt="article"
+                      fluid
+                    />
                   </td>
                   <td
                     className="text-center align-middle mouse-hover-pointer max-width-200"

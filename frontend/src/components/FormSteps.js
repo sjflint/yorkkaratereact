@@ -15,8 +15,10 @@ const FormSteps = ({ step1, step2, step3 }) => {
             View Basket
           </small>
         )}
-        <i className="fas fa-walking fa-2x"></i>
-        <i className="fas fa-arrow-right"></i>
+        <div className="d-flex align-items-center">
+          <i className="fas fa-walking fa-2x text-warning"></i>
+          <i className="fas fa-arrow-right text-warning"></i>
+        </div>
       </Col>
       <Col className="d-flex justify-content-around align-items-center" xs={4}>
         {step2 ? (
@@ -29,8 +31,8 @@ const FormSteps = ({ step1, step2, step3 }) => {
           </small>
         )}
         <div className="d-flex align-items-center">
-          <i className="fas fa-walking fa-2x"></i>
-          <i className="fas fa-arrow-right"></i>
+          <i className="fas fa-walking fa-2x text-warning"></i>
+          <i className="fas fa-arrow-right text-warning"></i>
         </div>
       </Col>
       <Col className="d-flex justify-content-around align-items-center" xs={4}>

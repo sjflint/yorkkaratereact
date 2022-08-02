@@ -69,6 +69,8 @@ const addTrainingSession = asyncHandler(async (req, res) => {
       await updateSubscription(paymentDetails);
     }
 
+    // ******************send email conifmring class added and new training fees************************************
+
     res.json("added to class");
   } else {
     res.status(404);
@@ -120,6 +122,9 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
       { lastClassChange: lastClassChange },
       { new: true }
     );
+
+    // ******************send email confimring class deleted and new training fees****************************
+
     res.json("class deleted");
   } else {
     res.status(404);
@@ -165,6 +170,9 @@ const switchTrainingSession = asyncHandler(async (req, res) => {
         { lastClassChange: lastClassChange },
         { new: true }
       );
+
+      // ******************send email confimring class switched and new training fees*********************************
+
       res.json("class switched");
     }
   } else {
@@ -229,7 +237,7 @@ const createTimetableSession = asyncHandler(async (req, res) => {
 
   await TrainingSession.create(trainingSession);
 
-  // await trainingSession.save();
+  // ******************send email to all members letting them know about the new class being set up*********************************
 
   res.status(201).json(trainingSession);
 });
@@ -251,7 +259,9 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     trainingSession.hallHire = Number(req.body.hallHire);
 
     const updatedTrainingSession = await trainingSession.save();
-    console.log(updatedTrainingSession);
+
+    // ******************send email confimring class changes******************************
+
     res.status(201).json(updatedTrainingSession);
   } else {
     res.status(404);

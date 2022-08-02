@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Event from "../models/eventModel.cjs";
+import Member from "../models/memberModel.cjs";
 
 // @desc Fetch all events
 // @route GET /api/events
@@ -61,6 +63,35 @@ const createEvent = asyncHandler(async (req, res) => {
   });
 
   const createdEvent = await event.save();
+
+  // create paragraphs from description
+  let paragraphs = "";
+  event.description.forEach((paragraph) => {
+    paragraphs = `${paragraphs}<p>${paragraph}</p>`;
+  });
+  const dateOfEvent = new Date(event.dateOfEvent).toLocaleDateString();
+
+  // send email to all members
+  const members = await Member.find({ ddsuccess: true });
+  if (members) {
+    members.forEach((member) => {
+      genericEmail({
+        recipientEmail: member.email,
+        recipientName: member.firstName,
+        subject: event.title,
+        message: `<h4>${event.title}</h4>
+      <p>Date: ${dateOfEvent}.</p>
+      <p>Location: ${event.location}.</p>
+      ${paragraphs}
+      `,
+        link: `http://localhost:3000/event/${event._id}`,
+        linkText: "View more details / Register",
+        image: event.image,
+        attachments: [],
+      });
+    });
+  }
+
   res.status(201).json(createdEvent);
 });
 

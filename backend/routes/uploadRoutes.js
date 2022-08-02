@@ -6,6 +6,9 @@ import Event from "../models/eventModel.cjs";
 import Product from "../models/productModel.js";
 import Article from "../models/articleModel.js";
 import sharp from "sharp";
+import { deleteFile, uploadFile } from "../utils/s3.js";
+import fs from "fs";
+import { unlink } from "fs";
 
 const router = express.Router();
 
@@ -30,8 +33,8 @@ const product = {
 
 // Article
 const article = {
-  width: 600,
-  height: 400,
+  width: 900,
+  height: 600,
 };
 
 const storage = multer.diskStorage({
@@ -60,7 +63,7 @@ const checkFileType = (file, cb) => {
 
 const upload = multer({
   storage,
-  limits: { fileSize: 1000000 },
+  // limits: { fileSize: 1000000 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
@@ -69,64 +72,164 @@ const upload = multer({
 router.post("/", upload.single("image"), async (req, res) => {
   switch (req.body.type) {
     case "Profile":
-      sharp(req.file.path)
-        .resize(profile.width, profile.height)
-        .toFile(`${req.file.destination}profile${req.file.filename}`);
+      await sharp(req.file.path)
+        .resize({
+          height: profile.height,
+          width: profile.width,
+          fit: "contain",
+          background: { r: 255, g: 255, b: 255, alpha: 0 },
+        })
+        .toFile(`uploadedImages/processed${req.file.filename}`);
+      const profileS3Upload = {
+        filename: req.file.filename,
+        path: `uploadedImages/processed${req.file.filename}`,
+      };
+
+      const profileResult = await uploadFile(profileS3Upload);
+      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
+      unlink(req.file.path, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
 
       if (req.body.id !== "newUpload") {
+        // delete previous profile image
+        const member = await Member.findById(req.body.id);
+        const imageKey = member.profileImg.slice(8);
+        await deleteFile(imageKey);
+
         await Member.findOneAndUpdate(
           { _id: req.body.id },
-          { profileImg: `/${req.file.destination}profile${req.file.filename}` },
+          { profileImg: `/images/${profileResult.Key}` },
           { new: true }
         );
       }
-      res.send(`/${req.file.destination}profile${req.file.filename}`);
+
+      res.send(`/images/${profileResult.Key}`);
       break;
 
     case "Event":
-      sharp(req.file.path)
-        .resize(event.width, event.height)
-        .toFile(`${req.file.destination}event${req.file.filename}`);
+      await sharp(req.file.path)
+        .resize({
+          height: event.height,
+          width: event.width,
+          fit: "contain",
+          background: { r: 255, g: 255, b: 255, alpha: 0 },
+        })
+        .toFile(`uploadedImages/processed${req.file.filename}`);
+
+      const eventS3Upload = {
+        filename: req.file.filename,
+        path: `uploadedImages/processed${req.file.filename}`,
+      };
+
+      const eventResult = await uploadFile(eventS3Upload);
+      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
+      unlink(req.file.path, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
 
       if (req.body.id !== "newUpload") {
+        // delete previous event image
+        const event = await Event.findById(req.body.id);
+        const imageKey = event.image.slice(8);
+        await deleteFile(imageKey);
+
         await Event.findOneAndUpdate(
           { _id: req.body.id },
-          { image: `/${req.file.destination}event${req.file.filename}` },
+          { image: `/images/${eventResult.Key}` },
           { new: true }
         );
       }
-      res.send(`/${req.file.destination}event${req.file.filename}`);
+      res.send(`/images/${eventResult.Key}`);
 
       break;
 
     case "Product":
-      sharp(req.file.path)
-        .resize(product.width, product.height)
-        .toFile(`${req.file.destination}product${req.file.filename}`);
+      await sharp(req.file.path)
+        .resize({
+          height: product.height,
+          width: product.width,
+          fit: "contain",
+          background: { r: 255, g: 255, b: 255, alpha: 0 },
+        })
+        .toFile(`uploadedImages/processed${req.file.filename}`);
+
+      const productS3Upload = {
+        filename: req.file.filename,
+        path: `uploadedImages/processed${req.file.filename}`,
+      };
+
+      const productResult = await uploadFile(productS3Upload);
+      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
+      unlink(req.file.path, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
 
       if (req.body.id !== "newUpload") {
+        // delete previous product image
+        const product = await Product.findById(req.body.id);
+        const imageKey = product.image.slice(8);
+        await deleteFile(imageKey);
+
         await Product.findOneAndUpdate(
           { _id: req.body.id },
-          { image: `/${req.file.destination}product${req.file.filename}` },
+          { image: `/images/${productResult.Key}` },
           { new: true }
         );
       }
-      res.send(`/${req.file.destination}product${req.file.filename}`);
+      res.send(`/images/${productResult.Key}`);
       break;
 
     case "Article":
-      sharp(req.file.path)
-        .resize(article.width, article.height)
-        .toFile(`${req.file.destination}article${req.file.filename}`);
+      await sharp(req.file.path)
+        .resize({
+          width: article.width,
+          height: article.height,
+          fit: "contain",
+          background: { r: 242, g: 242, b: 242, alpha: 1 },
+        })
+        .toFile(`uploadedImages/processed${req.file.filename}`);
+
+      const articleS3Upload = {
+        filename: req.file.filename,
+        path: `uploadedImages/processed${req.file.filename}`,
+      };
+
+      const articleResult = await uploadFile(articleS3Upload);
+      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
+      unlink(req.file.path, (err) => {
+        if (err) throw err;
+        console.log("file deleted");
+      });
 
       if (req.body.id !== "newUpload") {
+        // delete previous article image
+        const article = await Article.findById(req.body.id);
+        const imageKey = article.image.slice(8);
+        await deleteFile(imageKey);
+
         await Article.findOneAndUpdate(
           { _id: req.body.id },
-          { image: `/${req.file.destination}article${req.file.filename}` },
+          { image: `/images/${articleResult.Key}` },
           { new: true }
         );
       }
-      res.send(`/${req.file.destination}article${req.file.filename}`);
+      res.send(`/images/${articleResult.Key}`);
       break;
   }
 });

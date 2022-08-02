@@ -17,6 +17,9 @@ const AccountInactiveScreen = () => {
   const { ddSetupInfo } = updateDirectDebit;
 
   useEffect(() => {
+    if (member && member.ddsuccess !== false) {
+      history.push("/profile");
+    }
     if (ddSetupInfo && ddSetupInfo !== null) {
       localStorage.removeItem("updateDD");
       window.location.href = `https://pay-sandbox.gocardless.com/flow/${ddSetupInfo.ddRedirect}`;
@@ -38,8 +41,10 @@ const AccountInactiveScreen = () => {
             </h3>
             <p>
               Unfortunately, your account is now inactive because your direct
-              debit was cancelled. Perhaps you did this yourself or maybe your
-              bank cancelled the direct debit.
+              debit was cancelled or failed to be created. Perhaps you cancelled
+              this yourself or maybe your bank cancelled the direct debit or
+              perhaps you indidcated that your account requires two signatures
+              to authorise direct debits.
             </p>
             <h5 className="text-warning">Let's get you back going again!</h5>
             <p>

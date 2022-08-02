@@ -27,7 +27,15 @@ const AdminScreen = ({ history }) => {
     if (!memberInfo) {
       history.push("/login");
     }
-    if (memberInfo && !memberInfo.isAdmin) {
+    if (
+      memberInfo &&
+      (memberInfo.isAdmin ||
+        memberInfo.isShopAdmin ||
+        memberInfo.isInstructor ||
+        memberInfo.isAuthor)
+    ) {
+      console.log("authorised as admin");
+    } else {
       history.push("/");
     }
   }, [history, memberInfo, member]);
@@ -39,10 +47,9 @@ const AdminScreen = ({ history }) => {
         <h3 className="text-center border-bottom border-warning pb-1">
           Administration Panel
         </h3>
-        <h5 className="my-3">
-          Hello {member.isAdmin && memberInfo.firstName}. What do you need to do
-          today?
-        </h5>
+        <p className="my-3">
+          Hello {member && memberInfo.firstName}. What do you need to do today?
+        </p>
 
         {member.isAdmin && (
           <>

@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Article from "../models/articleModel.js";
+import Member from "../models/memberModel.cjs";
 
 // @desc Fetch all articles
 // @route GET /api/articles
@@ -24,6 +25,11 @@ const getArticleById = asyncHandler(async (req, res) => {
   const article = await Article.findById(req.params.id);
 
   if (article) {
+    const member = await Member.findById(article.authorId);
+    if (member) {
+      article.authorImg = member.profileImg;
+    }
+
     res.json(article);
   } else {
     res.status(404);
@@ -56,7 +62,7 @@ const createArticle = asyncHandler(async (req, res) => {
     title: req.body.title,
     leader: req.body.leader,
     author: req.body.author,
-    authorImg: req.body.authorImg,
+    authorId: req.body.authorId,
     category: req.body.category,
     body: req.body.body,
     carouselImages: req.body.carouselImages,

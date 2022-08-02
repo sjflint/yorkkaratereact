@@ -5,6 +5,14 @@ import {
   changeDirectDebit,
 } from "../utils/registerDirectDebit.cjs";
 import Member from "../models/memberModel.cjs";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
+
+// Format first name and last name to uppercase first letter and lower case for the rest
+const formatName = (name) => {
+  const removeNoneAlpha = name.replace(/[^a-z0-9]/gi, "");
+  const nameLowerCase = removeNoneAlpha.toLowerCase().trim();
+  return nameLowerCase.charAt(0).toUpperCase() + nameLowerCase.slice(1);
+};
 
 // @desc Auth member & get token
 // @route GET /api/members/login
@@ -12,8 +20,8 @@ import Member from "../models/memberModel.cjs";
 const authMember = asyncHandler(async (req, res) => {
   let { firstName, lastName, email, password } = req.body;
 
-  firstName = firstName.toLowerCase().trim();
-  lastName = lastName.toLowerCase().trim();
+  firstName = formatName(firstName);
+  lastName = formatName(lastName);
   email = email.toLowerCase().trim();
 
   const member = await Member.findOne({
@@ -44,16 +52,24 @@ const authMember = asyncHandler(async (req, res) => {
 // @route POST /api/members
 // @access Public
 const registerMember = asyncHandler(async (req, res) => {
+  let { firstName, lastName, email } = req.body;
+  firstName = formatName(firstName);
+  lastName = formatName(lastName);
+  email = email.toLowerCase().trim();
+
   const memberExists = await Member.findOne({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
   });
 
   if (memberExists) {
     res.status(400);
     throw new Error("Member already exists");
   }
+  req.body.firstName = firstName;
+  req.body.lastName = lastName;
+  req.body.email = email;
 
   const member = await Member.create(req.body);
 
@@ -63,7 +79,7 @@ const registerMember = asyncHandler(async (req, res) => {
     const ddRedirect = await createDirectDebit(member, session_token);
 
     member.token = generateToken(member._id);
-    member.save();
+    await member.save();
 
     res.status(201).json({
       _id: member._id,
@@ -262,6 +278,20 @@ const updatePassword = asyncHandler(async (req, res) => {
   if (member && (await member.matchPassword(passwordValues.password))) {
     member.password = passwordValues.newPassword;
     await member.save();
+
+    // send email to confirm password change
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Password changed",
+      message: `<h4>${member.firstName}, your password has been changed</h4>
+    <p>We have updated your password for your York Karate account.</p>
+    `,
+      link: `http://localhost:3000/profile`,
+      linkText: "View Account",
+      attachments: [],
+    });
+
     res.json("Password updated");
   } else {
     res.status(401);
@@ -273,9 +303,10 @@ const updatePassword = asyncHandler(async (req, res) => {
 // @route GET /api/members/resetpassword
 // @access Public
 const resetPassword = asyncHandler(async (req, res) => {
-  const firstName = req.body.values.firstName.toLowerCase();
-  const lastName = req.body.values.lastName.toLowerCase();
-  const email = req.body.values.email.toLowerCase();
+  let { firstName, lastName, email } = req.body.values;
+  firstName = formatName(firstName);
+  lastName = formatName(lastName);
+  email = email.toLowerCase().trim();
   const dateOfBirth = req.body.values.dateOfBirth;
 
   const member = await Member.find({
@@ -288,6 +319,19 @@ const resetPassword = asyncHandler(async (req, res) => {
   if (member.length > 0 && member.length < 2) {
     member[0].password = req.body.values.newPassword;
     await member[0].save();
+
+    // send email to confirm password reset
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Password reset",
+      message: `<h4>${member.firstName}, your password has been reset</h4>
+    <p>We have reset your password for your York Karate account.</p>
+    `,
+      link: `http://localhost:3000/profile`,
+      linkText: "View Account",
+      attachments: [],
+    });
 
     res.json("Password updated");
   } else {
@@ -394,6 +438,24 @@ const getMemberById = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc GET public member by ID
+// @route GET /api/members/public/:id
+// @access Public
+const getPublicMemberById = asyncHandler(async (req, res) => {
+  const member = await Member.findById(req.params.id);
+
+  if (member) {
+    res.json({
+      firstName: member.firstName,
+      lastName: member.lastName,
+      profileImg: member.profileImg,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Member not found");
+  }
+});
+
 // @desc Update member profile
 // @route POST /api/members/:id
 // @access Private/Admin
@@ -406,6 +468,20 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
     await Member.findOneAndUpdate({ _id: values.memberId }, values, {
       new: true,
     });
+
+    // send email to confirm profile updated
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Profile Updated",
+      message: `<h4>${member.firstName}, your profile has been updated</h4>
+    <p>We have updated your profile details for your York Karate account.</p>
+    `,
+      link: `http://localhost:3000/profile`,
+      linkText: "View Account",
+      attachments: [],
+    });
+
     res.json("profile updated");
   } else {
     res.status(404);
@@ -426,5 +502,6 @@ export {
   getMembers,
   deleteMember,
   getMemberById,
+  getPublicMemberById,
   updateMemberProfile,
 };

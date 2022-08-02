@@ -93,7 +93,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   }
 
   const filterSearches = async () => {
-    // check if extra participants get added
+    // check if extra participants have been added
     if (record && record.length !== 0) {
       record.extraParticipants.forEach((participant) => {
         participantsArray.push(participant._id);
@@ -105,9 +105,10 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         // find suitable members from search list
         if (memberList && trainingSession._id === classId) {
           memberList.forEach((member) => {
+            console.log(member);
             if (
-              member.kyuGrade < trainingSession.minGradeLevel &&
-              member.kyuGrade > trainingSession.maxGradeLevel
+              member.kyuGrade <= trainingSession.minGradeLevel &&
+              member.kyuGrade >= trainingSession.maxGradeLevel
             ) {
               if (participantsArray.includes(member._id)) {
                 console.log("already attending");

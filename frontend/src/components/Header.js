@@ -102,7 +102,10 @@ const Header = () => {
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
-                  {memberInfo.isAdmin && (
+                  {(memberInfo.isAdmin ||
+                    memberInfo.isShopAdmin ||
+                    memberInfo.isInstructor ||
+                    memberInfo.isAuthor) && (
                     <LinkContainer to="/admin">
                       <NavDropdown.Item>Admin Panel</NavDropdown.Item>
                     </LinkContainer>

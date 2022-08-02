@@ -28,7 +28,9 @@ const MemberOrders = () => {
 
   let filteredOrders;
   if (orders) {
-    filteredOrders = orders.filter((order) => order.isPaid === true);
+    filteredOrders = orders.filter(
+      (order) => order.isPaid !== "false" && order.isCollected !== "true"
+    );
   }
 
   return (
@@ -64,11 +66,7 @@ const MemberOrders = () => {
                   </Col>
                   <Col>
                     Payment Status: <br />{" "}
-                    {order.isPaid ? (
-                      "Paid"
-                    ) : (
-                      <Link to={`/order/${order._id}`}>Not Paid</Link>
-                    )}
+                    {order.isPaid === "true" ? "Paid" : "Pending"}
                   </Col>
                 </Row>
               </Card.Header>

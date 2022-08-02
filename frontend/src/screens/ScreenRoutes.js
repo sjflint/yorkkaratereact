@@ -46,6 +46,8 @@ import AccountInactiveScreen from "./AccountInactiveScreen";
 import AttendanceScreen from "./AttendanceScreen";
 import { AttendanceRegisterScreen } from "./AttendanceRegisterScreen";
 import FinanceScreen from "./FinanceScreen";
+import TrialRegistrationScreen from "./TrialRegistrationScreen";
+import OutstandingFeesScreen from "./OutstandingFeesScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -135,6 +137,9 @@ const ScreenRoutes = () => {
         component={AttendanceRegisterScreen}
       />
       <Route path="/accountinactive" component={AccountInactiveScreen} />
+
+      <Route path="/trialregistration" component={TrialRegistrationScreen} />
+      <Route path="/outstandingFees" component={OutstandingFeesScreen} />
     </>
   );
 };

@@ -11,6 +11,7 @@ const EnquiryForm = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [showError, setShowError] = useState(false);
 
   const dropdownOptions = [
     { key: "Please select an age group", value: "" },
@@ -58,7 +59,7 @@ const EnquiryForm = () => {
           onSubmitProps.resetForm();
         },
         (error) => {
-          console.log(error);
+          setShowError(true);
         }
       );
   };
@@ -136,6 +137,21 @@ const EnquiryForm = () => {
         </Modal.Body>
         <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showError} onHide={() => setShowError(false)}>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">Message Not sent</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Unfortuantely, your message could not be sent. Please check your
+          details and try again.
+        </Modal.Body>
+        <Modal.Footer className="bg-danger">
+          <Button variant="secondary" onClick={() => setShowError(false)}>
             Close
           </Button>
         </Modal.Footer>

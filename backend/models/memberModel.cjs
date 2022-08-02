@@ -20,7 +20,7 @@ const memberSchema = mongoose.Schema(
     emergencyContactPhone: { type: Number, required: true },
     ddsuccess: { type: Boolean, required: true, default: false },
     totalPayment: { type: Number, required: true, default: 15 },
-    kyuGrade: { type: Number, required: true, default: 16 },
+    kyuGrade: { type: Number, required: true },
     danGrade: { type: Number, required: true, default: 0 },
     danGradings: {
       type: Object,
@@ -40,14 +40,15 @@ const memberSchema = mongoose.Schema(
     token: { type: String },
     lastClassChange: { type: Date, required: true, default: new Date(2000, 0) },
     attendanceRecord: { type: Number, required: true, default: 1 },
-    extraClassAdded: { type: Date },
-    additionalPayments: { type: Object },
+    extraClassAdded: { type: Date, required: true, default: new Date(2000, 0) },
+    additionalPayments: { type: Object, required: true, default: {} },
     profileImg: {
       type: String,
       required: true,
       default: "/img/default-profile.jpg",
     },
-    feedback: String,
+    feedback: { type: String },
+    outstandingFees: { type: Number, required: true, default: 0 },
   },
   {
     timestamps: true,

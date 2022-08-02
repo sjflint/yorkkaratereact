@@ -52,6 +52,9 @@ const createTrainingVideo = asyncHandler(async (req, res) => {
   });
 
   const createdTrainingVideo = await trainingVideo.save();
+
+  // ******************send email with new training video***************??????????????????????????
+
   res.status(201).json(createdTrainingVideo);
 });
 

@@ -165,9 +165,9 @@ const GradingRegistrationScreen = ({ history, match }) => {
               <ListGroup.Item className="text-center">
                 Attendance Record:
                 <br />
-                {member.attendanceRecord > member.sessionsRequired ? (
+                {member.attendanceRecord > member.numberOfSessionsRequired ? (
                   <img
-                    src={`/img/Stampcards/${member.gradeLevel}Card${member.sessionsRequired}.png`}
+                    src={`/img/Stampcards/${member.gradeLevel}Card${member.numberOfSessionsRequired}.png`}
                     alt=""
                     className="max-width-300"
                   />

@@ -16,7 +16,6 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
-
 import UploadImage from "../components/uploadImage";
 
 const ListEventsScreen = ({ history, match }) => {

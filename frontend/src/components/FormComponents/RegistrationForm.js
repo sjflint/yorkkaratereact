@@ -65,8 +65,12 @@ const RegistrationForm = () => {
   };
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("Required"),
-    lastName: Yup.string().required("Required"),
+    firstName: Yup.string()
+      .required("Required")
+      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field "),
+    lastName: Yup.string()
+      .required("Required")
+      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field "),
     dateOfBirth: Yup.date().required("Required"),
     medicalStatus: Yup.string().required("Required"),
     medicalDetails: Yup.string(),
@@ -122,6 +126,17 @@ const RegistrationForm = () => {
     values.lastName = values.lastName.toLowerCase();
     values.email = values.email.toLowerCase();
 
+    // calculate starter kyu grade based on whether current age is less than 9
+    const DofB = new Date(values.dateOfBirth);
+    // Calculate current age, as of today
+    const diff_ms = Date.now() - DofB.getTime();
+    const age_dt = new Date(diff_ms);
+    const age = Math.abs(age_dt.getFullYear() - 1970);
+    if (age < 9) {
+      values.kyuGrade = 16;
+    } else {
+      values.kyuGrade = 10;
+    }
     dispatch(register(values));
   };
 
@@ -263,7 +278,7 @@ const RegistrationForm = () => {
               </Col>
             </Row>
 
-            <div className="py-4 border-bottom border-warning text-warning">
+            <div className="py-4 border-bottom border-warning">
               <div className="bg-light mb-2 p-2">
                 <FormikControl
                   control="input"
@@ -318,34 +333,25 @@ const RegistrationForm = () => {
               </Col>
             </Row>
 
-            <Row className="py-4">
-              <Col>
-                <div className="bg-light mb-2 p-2">
-                  <FormikControl
-                    control="checkbox"
-                    label="Terms and Conditions"
-                    name="termsOptions"
-                    options={termsOptions}
-                  />
-                </div>
-              </Col>
-              <Col className="align-self-center text-center">
-                <Button
-                  className="py-0"
-                  variant="outline-secondary"
-                  onClick={handleShow}
-                >
-                  View Terms & Conditions
-                </Button>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-                <Button type="submit" variant="default btn-block w-100">
-                  Register
-                </Button>
-              </Col>
-            </Row>
+            <div className="bg-light my-2 p-2">
+              <FormikControl
+                control="checkbox"
+                label="Terms and Conditions"
+                name="termsOptions"
+                options={termsOptions}
+              />
+              <Button
+                className="py-0 my-2"
+                variant="outline-secondary"
+                onClick={handleShow}
+              >
+                View Terms & Conditions
+              </Button>
+            </div>
+
+            <Button type="submit" variant="default btn-block w-100">
+              Register
+            </Button>
           </Form>
         )}
       </Formik>

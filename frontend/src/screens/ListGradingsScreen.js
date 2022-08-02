@@ -29,7 +29,7 @@ const ListGradingsScreen = ({ history }) => {
   useEffect(() => {
     if (!memberInfo) {
       history.push(`/login`);
-    } else if (!member.isInstructor) {
+    } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {
       dispatch(listEvents());

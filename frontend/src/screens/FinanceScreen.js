@@ -24,6 +24,7 @@ const FinanceScreen = ({ history }) => {
   const [baseFees, setBaseFees] = useState(0);
   const [joiningFee, setJoiningFee] = useState(0);
   const [additionalFees, setAdditionalFees] = useState(0);
+  const [extraFee, setExtraFee] = useState(0);
   const [gradingFees, setGradingFees] = useState(0);
   const [showMonthlyCosts, setShowMonthlyCosts] = useState(false);
   const [name, setName] = useState("");
@@ -41,6 +42,10 @@ const FinanceScreen = ({ history }) => {
     financials,
     error: financialsError,
   } = financialList;
+
+  const financialUpdate = useSelector((state) => state.financialUpdate);
+  const { loading: financialUpdateLoading, error: financialUpdateError } =
+    financialUpdate;
 
   const monthlyCostList = useSelector((state) => state.monthlyCostList);
   const {
@@ -83,6 +88,7 @@ const FinanceScreen = ({ history }) => {
       baseLevelTrainingFees: baseFees,
       joiningFee: joiningFee,
       costOfAdditionalClass: additionalFees,
+      costOfExtraFee: extraFee,
       costOfGrading: gradingFees,
     };
     await dispatch(updateFinancials(newFees));
@@ -269,8 +275,11 @@ const FinanceScreen = ({ history }) => {
           <Card className="mb-5">
             <Card.Header>Set Training/Grading Fees</Card.Header>
             <Card.Body>
-              {financialsLoading ? (
-                <Loader variant="warning" />
+              {financialsLoading || financialUpdateLoading ? (
+                <div className="text-center text-warning">
+                  <Loader variant="warning" />
+                  <small>Please don't navigate or refresh page</small>
+                </div>
               ) : financials ? (
                 <ListGroup variant="flush">
                   <ListGroup.Item>
@@ -322,7 +331,7 @@ const FinanceScreen = ({ history }) => {
                     )}
                   </ListGroup.Item>
                   <ListGroup.Item>
-                    <div>Cost of additional class</div>
+                    <div>Cost of adding an additional class to membership</div>
                     {editFees ? (
                       <InputGroup>
                         <InputGroup.Text>£</InputGroup.Text>
@@ -341,6 +350,30 @@ const FinanceScreen = ({ history }) => {
                           className="mb-0 bg-light"
                           type="number"
                           value={financials.costOfAdditionalClass.toFixed(2)}
+                        />
+                      </InputGroup>
+                    )}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <div>Cost of attending a one-off, extra class</div>
+                    {editFees ? (
+                      <InputGroup>
+                        <InputGroup.Text>£</InputGroup.Text>
+                        <FormControl
+                          className="mb-0 bg-light"
+                          type="number"
+                          value={extraFee}
+                          onChange={(e) => setExtraFee(e.target.value)}
+                        />
+                      </InputGroup>
+                    ) : (
+                      <InputGroup>
+                        <InputGroup.Text>£</InputGroup.Text>
+                        <FormControl
+                          disabled
+                          className="mb-0 bg-light"
+                          type="number"
+                          value={financials.costOfExtraFee.toFixed(2)}
                         />
                       </InputGroup>
                     )}
@@ -452,8 +485,8 @@ const FinanceScreen = ({ history }) => {
 
         <Modal.Body>
           <p>
-            Adjusting any of the fees here will amend direct debits and fees
-            charged for all members and across the whole site.
+            Adjusting the fees here will amend direct debits and fees charged
+            for all members and across the whole site.
           </p>
           <p>Are you sure you wish to proceed?</p>
         </Modal.Body>
@@ -468,6 +501,7 @@ const FinanceScreen = ({ history }) => {
               setEditFees(true);
               setBaseFees(financials.baseLevelTrainingFees);
               setAdditionalFees(financials.costOfAdditionalClass);
+              setExtraFee(financials.costOfExtraFee);
               setGradingFees(financials.costOfGrading);
               setJoiningFee(financials.joiningFee);
               setShowFees(false);

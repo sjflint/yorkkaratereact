@@ -4,10 +4,14 @@ import FormatDate from "./FormatDate";
 
 const Article = ({ article }) => {
   return (
-    <Row className="p-2 rounded h-100 bg-light align-items-center">
-      <Col md="5" className="bg-primary p-2">
+    <Row className="p-2 rounded h-100 bg-grey">
+      <Col md="5" className="p-2 pt-0">
         <Link to={`/article/${article._id}`}>
-          <img src={article.image} alt="article" className="mb-2" />
+          <img
+            src={`${article.carouselImages[0].original}`}
+            alt="article"
+            className="mb-2"
+          />
         </Link>
       </Col>
       <Col md="7">

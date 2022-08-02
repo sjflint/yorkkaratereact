@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Attendance from "../models/attendanceModel.cjs";
+import Finance from "../models/financialModel.cjs";
 import Member from "../models/memberModel.cjs";
 import TrainingSession from "../models/trainingSessionModel.cjs";
 import { serverCreatedPayment } from "./ddController.cjs";
@@ -97,6 +99,10 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
 
   const member = await Member.findById(req.body.memberId);
 
+  const financials = await Finance.findOne({});
+
+  const extraFee = financials.costOfExtraFee * 100;
+
   // Member actions
   const lastExtraClassAdded = member.extraClassAdded.setDate(
     member.extraClassAdded.getDate() + 28
@@ -107,7 +113,7 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
     // Charge DD for extra session
     const paymentDetails = {
       _id: member._id,
-      amount: 500,
+      amount: extraFee,
       description: "Extra class payment",
       recordId: req.body.recordId,
     };
@@ -137,6 +143,21 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
       { extraClassAdded: todaysDate, $inc: { attendanceRecord: +1 } },
       { new: true }
     );
+
+    // send email to confirm new class
+    const date = new Date(record.date).toLocaleDateString();
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Extra class attended",
+      message: `<h4>Extra class attended</h4>
+      <p>Thank you for attending the class ${record.name} on ${date}.</p>
+      <p>If this class is an additional class this month, you will receive notification from goCardless about any additional fees. Perhaps consider reviewing your training schedule and seeing if it might be worth adding an extra class to your weekly program.</p>
+      `,
+      link: "http://localhost:3000/profile?key=third",
+      linkText: "Review your class bookings",
+      attachments: [],
+    });
 
     res.status(201).json("Extra participants added");
   } catch {

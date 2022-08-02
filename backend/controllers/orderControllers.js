@@ -1,5 +1,8 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.cjs";
+import Member from "../models/memberModel.cjs";
+import { orderEmail } from "../emailTemplates/orderEmail.cjs";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 
 // @desc Create new order
 // @route POST /api/orders
@@ -11,6 +14,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("No order items");
   } else {
+    // check stock level, remove from order if out of stock or reduce stock level by 1 if in stock
     const order = new Order({
       orderItems,
       paymentMethod,
@@ -46,6 +50,7 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @access Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
+  const member = await Member.findById(order.member);
 
   if (order.paymentMethod === "DirectDebit") {
     order.isPaid = "pending";
@@ -59,6 +64,17 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     };
 
     const updatedOrder = await order.save();
+    // send email confirming order
+    orderEmail(
+      {
+        recipientEmail: member.email,
+        recipientName: member.firstName,
+        subject: "Order Received",
+        link: `http://localhost:3000/profile`,
+        linkText: "View Account",
+      },
+      order._id
+    );
     res.json(updatedOrder);
   } else if (order.paymentMethod === "PayPal") {
     order.isPaid = "true";
@@ -71,6 +87,19 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     };
 
     const updatedOrder = await order.save();
+
+    // send email confirming order
+    orderEmail(
+      {
+        recipientEmail: member.email,
+        recipientName: member.firstName,
+        subject: "Order Received",
+        link: `http://localhost:3000/profile`,
+        linkText: "View Account",
+      },
+      order._id
+    );
+
     res.json(updatedOrder);
   } else {
     res.status(404);
@@ -84,11 +113,26 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
+  const member = await Member.findById(order.member);
+
   if (order) {
     order.isDelivered = true;
     order.deliveredAt = Date.now();
 
     const updatedOrder = await order.save();
+    // send email to say order ready to collect
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Order ready to collect",
+      message: `<h4>Your Order (${order._id}) is ready</h4>
+    <p>Your order is now ready to collect at training.</p>
+    `,
+      link: `http://localhost:3000/order/${order._id}`,
+      linkText: "View your order",
+      attachments: [],
+    });
+
     res.json(updatedOrder);
   } else {
     res.status(404);
@@ -96,17 +140,32 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Update order to ready for collection
+// @desc Update order to fulfilled
 // @route PUT /api/orders/:id/deliver
 // @access Private/shopAdmin
 const updateOrderToFulfilled = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
+
+  const member = await Member.findById(order.member);
 
   if (order) {
     order.isComplete = true;
     order.completeAt = Date.now();
 
     const updatedOrder = await order.save();
+    // send email to conifrm order collected
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Order fulfilled",
+      message: `<h4>Your Order (${order._id}) is complete</h4>
+    <p>Your order has been completed. If you have any problems with the item(s) you have ordered, please don't hesitate to contact us at any time.</p>
+    `,
+      link: `http://localhost:3000/order/${order._id}`,
+      linkText: "View your order",
+      attachments: [],
+    });
+
     res.json(updatedOrder);
   } else {
     res.status(404);

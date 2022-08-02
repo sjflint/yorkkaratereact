@@ -20,6 +20,9 @@ import {
   MEMBER_LOGIN_REQUEST,
   MEMBER_LOGIN_SUCCESS,
   MEMBER_LOGOUT,
+  MEMBER_PUBLIC_DETAILS_FAIL,
+  MEMBER_PUBLIC_DETAILS_REQUEST,
+  MEMBER_PUBLIC_DETAILS_SUCCESS,
   MEMBER_REGISTER_FAIL,
   MEMBER_REGISTER_REQUEST,
   MEMBER_REGISTER_SUCCESS,
@@ -142,6 +145,29 @@ export const getMemberDetails = (id) => async (dispatch, getState) => {
   }
 };
 
+export const getPublicMemberDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: MEMBER_PUBLIC_DETAILS_REQUEST,
+    });
+
+    const { data } = await axios.get(`/api/members/public/${id}`);
+
+    dispatch({
+      type: MEMBER_PUBLIC_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: MEMBER_PUBLIC_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const listBlackBelts = () => async (dispatch) => {
   try {
     dispatch({ type: BLACKBELT_LIST_REQUEST });
@@ -179,6 +205,8 @@ export const membersList =
           Authorization: `Bearer ${memberInfo.token}`,
         },
       };
+      console.log(pageNumber);
+      console.log(keyword);
 
       const { data } = await axios.get(
         `/api/members?pageNumber=${pageNumber}&keyword=${keyword}`,

@@ -32,7 +32,7 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 });
 
-// // @desc Fetch single article
+// // @desc Fetch single product
 // // @route GET /api/article
 // // @access Public
 const getProductById = asyncHandler(async (req, res) => {
@@ -77,6 +77,9 @@ const createProduct = asyncHandler(async (req, res) => {
   });
 
   const createdProduct = await product.save();
+
+  // *************************send email about our new, exciting product!!!***************************
+
   res.status(201).json(createdProduct);
 });
 

@@ -14,6 +14,7 @@ import {
   deleteMember,
   getMemberById,
   updateMemberProfile,
+  getPublicMemberById,
 } from "../controllers/memberController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 // import multer from "multer";
@@ -29,6 +30,7 @@ router.route("/updatedd").post(updateDirectDebit);
 router.route("/profile").get(protect, getMemberProfile);
 // router.route("/profileimg").post(upload.single("image"), postProfileImg);
 router.route("/blackbelts").get(getBlackBelts);
+router.route("/public/:id").get(getPublicMemberById);
 router
   .route("/:id")
   .delete(protect, admin, deleteMember)

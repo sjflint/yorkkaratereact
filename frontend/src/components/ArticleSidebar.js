@@ -7,7 +7,11 @@ const ArticleSidebar = ({ article }) => {
   return (
     <Card className="p-2 rounded h-100 mb-2">
       <Link to={`/article/${article._id}`}>
-        <Card.Img src={article.image} alt="article" className="mb-2" />
+        <Card.Img
+          src={`${article.carouselImages[0].original}`}
+          alt="article"
+          className="mb-2"
+        />
       </Link>
       <Link to={`/article/${article._id}`} className="text-decoration-none">
         <div className="bg-primary text-white p-1">

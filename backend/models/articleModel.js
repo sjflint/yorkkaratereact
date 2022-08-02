@@ -9,7 +9,12 @@ const articleSchema = mongoose.Schema(
     image: { type: String },
     carouselImages: { type: Array },
     author: { type: String, required: true },
-    authorImg: { type: String, required: true },
+    authorId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" },
+    authorImg: {
+      type: String,
+      required: true,
+      default: "/img/default-profile.jpg",
+    },
     dateCreated: { type: Date, default: Date.now },
   },
   {
