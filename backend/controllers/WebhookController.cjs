@@ -17,7 +17,7 @@ const client = gocardless(
   constants.Environments.Sandbox
 );
 
-// Clear sessions booked for member
+// Clear sessions booked for member.......
 const clearBookedSessions = async (memberId) => {
   const sessions = await TrainingSessions.find({});
 
