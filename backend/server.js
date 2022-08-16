@@ -23,7 +23,8 @@ import { goCardlessWebhook } from "./utils/goCardlessWebhook.cjs";
 import cors from "cors";
 import mongoose from "mongoose";
 import { getFileStream } from "./utils/s3.js";
-import { exampleCron } from "./utils/cronJobs.js";
+import { cronJobs } from "./utils/cronJobs.js";
+
 // log finder
 // ["log", "warn"].forEach(function (method) {
 //   var old = console[method];
@@ -48,6 +49,9 @@ app.use(express.json());
 app.use(cors()); //Delete this before production!!!
 
 mongoose.set("useFindAndModify", false);
+
+// run cron jobs
+cronJobs();
 
 app.get("/", (req, res) => {
   res.send("API is running...");

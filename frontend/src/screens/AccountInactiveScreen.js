@@ -24,7 +24,7 @@ const AccountInactiveScreen = () => {
       localStorage.removeItem("updateDD");
       window.location.href = `https://pay-sandbox.gocardless.com/flow/${ddSetupInfo.ddRedirect}`;
     }
-  }, [history, ddSetupInfo]);
+  }, [history, ddSetupInfo, member]);
 
   return (
     <Container fluid="lg" className="mt-3">

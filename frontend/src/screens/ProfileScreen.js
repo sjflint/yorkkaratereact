@@ -40,10 +40,9 @@ const ProfileScreen = ({ history, match }) => {
   const memberDetails = useSelector((state) => state.memberDetails);
   const { loading, member } = memberDetails;
 
-  const [image, setImage] = useState();
-  const singleImageData = (singleImage) => {
-    setImage(singleImage);
-  };
+  // const singleImageData = (singleImage) => {
+  //   setImage(singleImage);
+  // };
 
   useEffect(() => {
     if (!memberInfo) {
@@ -106,7 +105,6 @@ const ProfileScreen = ({ history, match }) => {
                       className="mb-2 btn btn-default rounded-0"
                       onClick={() => {
                         setProfileImgModal(true);
-                        setImage(member.profileImg);
                       }}
                     >
                       Change Profile Picture
@@ -388,11 +386,10 @@ const ProfileScreen = ({ history, match }) => {
         <Modal.Body>
           {member._id && (
             <>
-              <img src={`${image}`} alt="" />
               <UploadImage
                 img={member.profileImg}
                 id={member._id}
-                singleImageData={singleImageData}
+                // singleImageData={singleImageData}
                 type={"Profile"}
               />
             </>

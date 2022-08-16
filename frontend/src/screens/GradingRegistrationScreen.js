@@ -210,6 +210,20 @@ const GradingRegistrationScreen = ({ history, match }) => {
                       the minimum number of trianing sessions required.
                     </Button>
                   </ListGroupItem>
+                ) : member.outstandingFees > 0 ? (
+                  <>
+                    <p className="text-danger">
+                      Unfortuantely, you are unable to register for this grading
+                      course as there are outstanding payments on your account.
+                    </p>
+
+                    <Button
+                      variant="outline-secondary py-0"
+                      onClick={() => history.push("/outstandingfees")}
+                    >
+                      Make payments
+                    </Button>
+                  </>
                 ) : (
                   <ListGroup.Item>
                     <Button

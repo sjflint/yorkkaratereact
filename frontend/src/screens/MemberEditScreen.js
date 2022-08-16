@@ -21,10 +21,6 @@ const MemberEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch();
 
-  const singleImageData = (singleImage) => {
-    setImage(singleImage);
-  };
-
   const memberId = match.params.id;
 
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -39,8 +35,6 @@ const MemberEditScreen = ({ match, history }) => {
   const memberClassList = useSelector((state) => state.memberClassList);
   const { loading: classListLoading, error: classListError } = memberClassList;
 
-  const [image, setImage] = useState("no image");
-
   useEffect(() => {
     dispatch({ type: EDIT_MEMBER_RESET });
     if (!memberInfo) {
@@ -50,7 +44,6 @@ const MemberEditScreen = ({ match, history }) => {
     }
     dispatch(getMemberDetails(memberId));
     dispatch(listMemberClasses(memberId));
-    setImage(member.profileImg);
   }, [dispatch, memberInfo, history, memberId, member.profileImg]);
 
   const adminOptions = [
@@ -232,15 +225,13 @@ const MemberEditScreen = ({ match, history }) => {
                   <h5>Personal Details</h5>
                   <Row className="pb-4 border-bottom border-warning">
                     <Col md={6}>
-                      <div className="max-width-300 mx-auto mb-3 bg-primary p-2">
-                        <img src={`${image}`} alt="" />
+                      <div className="max-width-300 mx-auto mb-3 bg-light p-2">
                         <UploadImage
-                          img={member.image}
-                          type={"Profile"}
+                          img={member.profileImg}
                           id={member._id}
-                          singleImageData={singleImageData}
+                          type={"Profile"}
                         />
-                        <small className="text-center text-white">
+                        <small className="text-center">
                           Please consider that this image might be displayed
                           across the public website, as well as being displayed
                           to grading examinars.
@@ -470,6 +461,7 @@ const MemberEditScreen = ({ match, history }) => {
                       <MemberTrainingSessions />
                     )}
                   </div>
+
                   <Row className="mt-2">
                     <Col>
                       {success ? (

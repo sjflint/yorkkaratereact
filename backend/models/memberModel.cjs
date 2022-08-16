@@ -45,7 +45,8 @@ const memberSchema = mongoose.Schema(
     profileImg: {
       type: String,
       required: true,
-      default: "/img/default-profile.jpg",
+      default:
+        "https://york-karate-uploads.s3.eu-west-2.amazonaws.com/defaultplaceholder.jpg",
     },
     feedback: { type: String },
     outstandingFees: { type: Number, required: true, default: 0 },

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadImage } from "../actions/uploadImageActions";
+import { uploadImage } from "../actions/uploadFileActions";
+import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 import defaultPlaceholder from "../img/defaultplaceholder.jpg";
-import Loader from "./Loader";
 import Message from "./Message";
-import { UPLOAD_IMG_CLEAR } from "../constants/uploadImageConstants";
+import Uploading from "../img/uploading(1).gif";
 
 // Type options:
 // -Profile
@@ -12,7 +12,11 @@ import { UPLOAD_IMG_CLEAR } from "../constants/uploadImageConstants";
 // -Product
 // -Article
 
-const UploadImage = ({ img, type, id, singleImageData, buttonText }) => {
+const UploadImage = ({ img, type, id, buttonText, singleImageData }) => {
+  const [currentImage, setCurrentImage] = useState(
+    img ? img : defaultPlaceholder
+  );
+
   if (!id) {
     id = "newUpload";
   }
@@ -23,46 +27,41 @@ const UploadImage = ({ img, type, id, singleImageData, buttonText }) => {
 
   const dispatch = useDispatch();
 
-  const [uploadedImage, setUploadedImage] = useState();
-
   const uploadImg = useSelector((state) => state.uploadImg);
   const { loading, error, image } = uploadImg;
 
   const onChange = async (e) => {
     if (e.target.files[0]) {
-      dispatch(uploadImage(e, imageData));
+      await dispatch(uploadImage(e, imageData));
     }
   };
 
   useEffect(() => {
+    dispatch({ type: UPLOAD_IMG_CLEAR });
     if (image) {
-      setUploadedImage(image);
-      if (singleImageData) {
-        singleImageData(image);
-      }
+      setCurrentImage(defaultPlaceholder);
+      setCurrentImage(image);
 
-      dispatch({ type: UPLOAD_IMG_CLEAR });
-    } else if (uploadedImage) {
-    } else if (img) {
-      setUploadedImage(img);
-    } else {
-      setUploadedImage(defaultPlaceholder);
+      singleImageData(image);
     }
-  }, [dispatch, img, image, uploadedImage, singleImageData]);
+  }, [dispatch, image, id, singleImageData]);
 
   return (
     <>
-      <label className="d-block btn btn-default py-2 my-1 text-center custom-fileupload-button">
-        <input type="file" name="image" onChange={onChange} />
-        {buttonText ? buttonText : "Change Image"}
-      </label>
-      {loading && <Loader variant="warning" />}
-      {error && (
+      {loading ? (
+        <img src={Uploading} alt="uploading placeholder" />
+      ) : error ? (
         <Message variant="danger">
           File couldn't be uploaded. File must be png/jpg/jpeg and not be more
           than 1MB in size
         </Message>
+      ) : (
+        <img src={currentImage} alt="" />
       )}
+      <label className="d-block btn btn-default py-2 my-1 text-center custom-fileupload-button">
+        <input type="file" name="image" onChange={onChange} />
+        {buttonText ? buttonText : "Change Image"}
+      </label>
     </>
   );
 };

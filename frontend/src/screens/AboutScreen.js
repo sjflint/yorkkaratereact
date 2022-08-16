@@ -71,7 +71,7 @@ const AboutScreen = () => {
               </Row>
             </section>
           </Container>
-          <Parralax image={"simonkato2.jpg"} />
+          <Parralax image={"websitebanner.png"} />
           <Container>
             <section className="pb-4 border-bottom border-warning">
               <h3 className="text-center my-3">

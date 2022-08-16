@@ -16,8 +16,8 @@ const genericEmail = asyncHandler(async (emailDetails) => {
   // Is there an image to include in the email?
   let image = "logo2021a.png";
   if (emailDetails.image) {
-    const emailImage = emailDetails.image.slice(7);
-    image = emailImage;
+    // const emailImage = emailDetails.image.slice(7);
+    image = emailDetails.image;
   }
 
   const mailOptions = {
@@ -112,7 +112,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
 
       <!-- generic image -->
       <img
-        src="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${image}"
+        src=${image}
         alt=""
         width="100%"
         style="display: block; border: none"

@@ -1,8 +1,10 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.cjs";
+import Product from "../models/productModel.cjs";
 import Member from "../models/memberModel.cjs";
 import { orderEmail } from "../emailTemplates/orderEmail.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
+import { shopAdminEmail } from "../emailTemplates/shopAdminEmail.js";
 
 // @desc Create new order
 // @route POST /api/orders
@@ -15,6 +17,29 @@ const addOrderItems = asyncHandler(async (req, res) => {
     throw new Error("No order items");
   } else {
     // check stock level, remove from order if out of stock or reduce stock level by 1 if in stock
+
+    for (const item of orderItems) {
+      const product = await Product.findById(item.product);
+      const productId = item.product;
+      const size = item.size;
+      const qtyAvailable = product.countInStock[size];
+
+      if (item.qty > qtyAvailable) {
+        res.status(400);
+        throw new Error("Items out of stock. Check basket");
+      } else {
+        const itemKey = `countInStock.${item.size}`;
+        const qty = item.qty * -1;
+        await Product.findOneAndUpdate(
+          { _id: productId },
+          {
+            $inc: { [itemKey]: qty },
+          }
+        );
+      }
+    }
+
+    // create order
     const order = new Order({
       orderItems,
       paymentMethod,
@@ -34,7 +59,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate(
     "member",
-    "name email"
+    "firstName lastName email"
   );
 
   if (order) {
@@ -197,6 +222,46 @@ const getOrders = asyncHandler(async (req, res) => {
   res.json(sortedOrders);
 });
 
+// @desc delete invalid orders and return stock
+// @server only
+const deleteOrders = asyncHandler(async () => {
+  const ordersToDelete = await Order.find({ isPaid: "false" });
+  for (const order of ordersToDelete) {
+    const orderItems = order.orderItems;
+    for (const orderItem of orderItems) {
+      const itemSize = `countInStock.${orderItem.size}`;
+
+      await Product.findOneAndUpdate(
+        { _id: orderItem.product },
+        {
+          $inc: { [itemSize]: orderItem.qty },
+        },
+        { new: true }
+      );
+    }
+  }
+  await Order.deleteMany({ isPaid: "false" });
+});
+
+// @desc email shop admins with orders waiting to be processed
+// @server only
+const emailShopAdmins = asyncHandler(async () => {
+  const shopAdmins = await Member.find({ isShopAdmin: true });
+  let shopAdminEmails = "";
+  for (const shopAdmin of shopAdmins) {
+    shopAdminEmails = `${shopAdminEmails}${shopAdmin.email};`;
+  }
+
+  const ordersWaiting = await Order.find({
+    isPaid: "true",
+    isDelivered: false,
+  });
+  if (ordersWaiting.length > 0) {
+    console.log("sending shop admin email...");
+    shopAdminEmail(shopAdminEmails, ordersWaiting);
+  }
+});
+
 export {
   addOrderItems,
   getOrderById,
@@ -205,4 +270,6 @@ export {
   getOrders,
   updateOrderToDelivered,
   updateOrderToFulfilled,
+  deleteOrders,
+  emailShopAdmins,
 };

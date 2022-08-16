@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Article from "../models/articleModel.js";
+import Article from "../models/articleModel.cjs";
 import Member from "../models/memberModel.cjs";
 
 // @desc Fetch all articles

@@ -180,11 +180,15 @@ const OrderScreen = ({ match }) => {
                               {item.print && `(${item.print})`}
                             </Link>
                           </Col>
-                          <Col md={6} className="text-center">
+                          <Col md={4} className="text-center">
                             Qty <br />
                             {item.qty}
                           </Col>
-                          <Col md={6} className="text-center">
+                          <Col md={4} className="text-center">
+                            Size <br />
+                            {item.size}
+                          </Col>
+                          <Col md={4} className="text-center">
                             <strong>Total: </strong> £
                             {(item.qty * item.price).toFixed(2)}
                           </Col>
@@ -302,6 +306,11 @@ const OrderScreen = ({ match }) => {
         !order.isDelivered ? (
           <ListGroup.Item>
             <p>SHOP ADMIN:</p>
+            <p>
+              Order for: {order.member.firstName} {order.member.lastName}
+            </p>
+            <p>Email: {order.member.email}</p>
+
             <button
               className="btn-sm d-inline btn-default btn"
               onClick={deliverHandler}
@@ -315,6 +324,10 @@ const OrderScreen = ({ match }) => {
           !order.isComplete ? (
           <ListGroup.Item>
             <p>SHOP ADMIN:</p>
+            <p>
+              Order for: {order.member.firstName} {order.member.lastName}
+            </p>
+            <p>Email: {order.member.email}</p>
             <button
               className="btn-sm d-inline btn-default btn"
               onClick={fulfilHandler}

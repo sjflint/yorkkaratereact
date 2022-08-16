@@ -235,7 +235,11 @@ const MemberClasses = () => {
             Your current monthly training fees are: £
             {(member.membershipLevel / 100).toFixed(2)}
           </h5>
-          {financials && (
+          {financialsLoading ? (
+            <Loader variant="warning" />
+          ) : financialsError ? (
+            <Message>{financialsError}</Message>
+          ) : (
             <h5>
               Your monthly training fees will increase by:{" "}
               {sessions && sessions.length === 0

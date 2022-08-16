@@ -71,7 +71,11 @@ import {
   updateDirectDebitReducer,
   updateSubscriptionReducer,
 } from "./reducers/directDebitReducers";
-import { uploadImgReducer } from "./reducers/uploadImageReducer";
+import {
+  uploadFileReducer,
+  uploadImgReducer,
+  uploadVideoReducer,
+} from "./reducers/uploadFileReducer";
 import {
   displayLessonPlanReducer,
   lessonPlanCreateReducer,
@@ -160,6 +164,8 @@ const reducer = combineReducers({
   createDDPayment: createDDPaymentReducer,
   cancelPayment: cancelPaymentReducer,
   uploadImg: uploadImgReducer,
+  uploadVid: uploadVideoReducer,
+  uploadCurrFile: uploadFileReducer,
   financialList: financialListReducer,
   financialUpdate: financialUpdateReducer,
   monthlyCostList: monthlyCostListReducer,

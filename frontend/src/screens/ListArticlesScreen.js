@@ -40,7 +40,18 @@ const ListArticlesScreen = ({ history, match }) => {
       original: singleImage,
       thumbnail: singleImage,
     };
+    console.log(image);
+    console.log(multiImage);
     setMultiImage((multiImage) => [...multiImage, image]);
+  };
+
+  const changeHeaderImage = (img) => {
+    console.log(img.original);
+    console.log(multiImage);
+    let newArray = multiImage.filter((item) => item.original !== img.original);
+    newArray.unshift(img);
+    setMultiImage(newArray);
+    console.log(multiImage);
   };
 
   const dispatch = useDispatch();
@@ -104,9 +115,10 @@ const ListArticlesScreen = ({ history, match }) => {
     values.image = image;
     values.carouselImages = multiImage;
     values.body = values.body.split("\n");
-    console.log(values);
+
     dispatch(createArticle(values));
     setCreateModal(false);
+    setMultiImage([]);
   };
 
   const editHandler = async (values) => {
@@ -122,6 +134,7 @@ const ListArticlesScreen = ({ history, match }) => {
     dispatch(updateArticle(values));
     setEditBody(false);
     setEditModal(false);
+    setMultiImage([]);
   };
 
   let initialValues;
@@ -240,7 +253,6 @@ const ListArticlesScreen = ({ history, match }) => {
                     <img
                       src={`${article.carouselImages[0].original}`}
                       alt="article"
-                      fluid
                     />
                   </td>
                   <td
@@ -318,12 +330,17 @@ const ListArticlesScreen = ({ history, match }) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={createModal} onHide={() => setCreateModal(false)}>
+      <Modal
+        show={createModal}
+        onHide={() => {
+          setCreateModal(false);
+          setMultiImage([]);
+        }}
+      >
         <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Write a new article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={`${image}`} alt="" />
           <UploadImage
             singleImageData={singleImageData}
             type="Article"
@@ -355,10 +372,18 @@ const ListArticlesScreen = ({ history, match }) => {
                         await setCreateModal(false);
                         await setCreateModal(true);
                       }}
-                      className="btn btn-block btn-sm btn-secondary"
+                      className="w-100 btn-sm btn-secondary mt-1 py-0"
                     >
                       Remove Image
                     </Button>
+                    {index !== 0 && (
+                      <Button
+                        className="w-100 btn-sm btn-secondary my-1 py-0"
+                        onClick={() => changeHeaderImage(index)}
+                      >
+                        Set as Title Image
+                      </Button>
+                    )}
                   </Col>
                 ))
               )}
@@ -427,6 +452,7 @@ const ListArticlesScreen = ({ history, match }) => {
         onHide={() => {
           setEditModal(false);
           setEditBody(false);
+          setMultiImage([]);
         }}
       >
         <Modal.Header closeButton className="bg-primary">
@@ -435,11 +461,11 @@ const ListArticlesScreen = ({ history, match }) => {
         <Modal.Body>
           {article && (
             <>
-              <img src={`${image}`} alt="" />
               <UploadImage
                 singleImageData={singleImageData}
                 type={"Article"}
                 buttonText="Add another image"
+                id={article._id}
               />
               <p className="text-center">
                 Recommended aspect ratio: 3:2. Image will be cropped to fit
@@ -458,20 +484,39 @@ const ListArticlesScreen = ({ history, match }) => {
                     </Col>
                   ) : (
                     multiImage.map((image, index) => (
-                      <Col key={index}>
+                      <Col key={index} xs={6}>
                         <img src={`${image.original}`} alt="article" />
-                        <Button
-                          onClick={async () => {
-                            const images = multiImage;
-                            images.splice(index, 1);
-                            setMultiImage(images);
-                            await setEditModal(false);
-                            await setEditModal(true);
-                          }}
-                          className="btn w-100 btn-sm btn-secondary my-2"
-                        >
-                          Remove Image
-                        </Button>
+                        {multiImage.length > 1 && (
+                          <>
+                            <Button
+                              onClick={async () => {
+                                const images = multiImage;
+                                images.splice(index, 1);
+                                setMultiImage(images);
+                                await setEditModal(false);
+                                await setEditModal(true);
+                              }}
+                              className="w-100 btn-sm btn-secondary mt-2 py-0"
+                            >
+                              Remove Image
+                            </Button>
+                            {index !== 0 ? (
+                              <Button
+                                className="w-100 btn-sm btn-secondary my-1 py-0"
+                                onClick={() => changeHeaderImage(image)}
+                              >
+                                Set as Title Image
+                              </Button>
+                            ) : (
+                              <Button
+                                className="w-100 btn-sm btn-secondary my-1 py-0"
+                                disabled
+                              >
+                                Title Image
+                              </Button>
+                            )}
+                          </>
+                        )}
                       </Col>
                     ))
                   )}

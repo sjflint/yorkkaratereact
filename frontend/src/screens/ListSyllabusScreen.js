@@ -42,6 +42,10 @@ import {
   advancedL1,
   advancedL2,
 } from "../clubVariables/gradeLevelSplit";
+import UploadVideo from "../components/UploadVideo";
+import uploading from "../img/uploading(1).gif";
+import UploadImage from "../components/uploadImage";
+import UploadFile from "../components/UploadFile";
 
 const ListSyllabusScreen = ({ history, match }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -55,6 +59,21 @@ const ListSyllabusScreen = ({ history, match }) => {
   const [videoModal, setVideoModal] = useState(false);
   const [videoModalId, setVideoModalId] = useState(false);
   const [category, setCategory] = useState("All");
+  const [newVideo, setNewVideo] = useState();
+  const [image, setImage] = useState();
+  const [file, setFile] = useState();
+
+  const singleImageData = (singleImage) => {
+    setImage(singleImage);
+  };
+
+  const singleVideoData = (singleVideo) => {
+    setNewVideo(singleVideo);
+  };
+
+  const singleFileData = (singleFile) => {
+    setFile(singleFile);
+  };
 
   const dispatch = useDispatch();
 
@@ -114,12 +133,18 @@ const ListSyllabusScreen = ({ history, match }) => {
   };
 
   const createTrainingVideoHandler = (values) => {
+    values.video = newVideo;
+    values.img = image;
+    values.soundFile = file;
     dispatch(createTrainingVideo(values));
     setCreateModal(false);
   };
 
   const editTrainingVideoHandler = async (values) => {
     values.id = updateId;
+    values.video = newVideo;
+    values.img = image;
+    values.soundFile = file;
     dispatch(updateTrainingVideo(values));
     setEditModal(false);
   };
@@ -191,9 +216,6 @@ const ListSyllabusScreen = ({ history, match }) => {
   const validationSchema = Yup.object({
     grade: Yup.array().required("Required"),
     title: Yup.string().required("Required"),
-    img: Yup.string().required("Required"),
-    video: Yup.string().required("Required"),
-    soundFile: Yup.string().required("Required"),
     category: Yup.string().required("Required"),
   });
 
@@ -573,6 +595,21 @@ const ListSyllabusScreen = ({ history, match }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <UploadVideo singleVideoData={singleVideoData} />
+          <p className="text-center">Max video size: 400MB</p>
+          <UploadImage
+            type="VideoPoster"
+            singleImageData={singleImageData}
+            buttonText="Add video Poster/Image"
+          />
+          <p className="text-center">
+            Recommended aspect ratio: 16:9. Image will be cropped to fit
+          </p>
+          <UploadFile
+            singleFileData={singleFileData}
+            buttonText="Add sound file"
+          />
+
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -580,10 +617,6 @@ const ListSyllabusScreen = ({ history, match }) => {
           >
             {({ values }) => (
               <Form>
-                <small>
-                  Please note: The title must be unique and identify the
-                  training video
-                </small>
                 <div className="bg-light p-2 mb-2">
                   <FormikControl
                     control="input"
@@ -592,33 +625,10 @@ const ListSyllabusScreen = ({ history, match }) => {
                     name="title"
                     placeholder="Training Video Title"
                   />
-                </div>
-                <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="link to image"
-                    type="text"
-                    name="img"
-                    placeholder="Image ID number"
-                  />
-                </div>
-                <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="link to video"
-                    type="text"
-                    name="video"
-                    placeholder="Video Link"
-                  />
-                </div>
-                <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="link to sound"
-                    type="text"
-                    name="soundFile"
-                    placeholder="Sound ID number"
-                  />
+                  <small>
+                    Please note: The title must be unique and identify the
+                    training video
+                  </small>
                 </div>
                 <div className="bg-light p-2 mb-2">
                   <FormikControl
@@ -636,9 +646,19 @@ const ListSyllabusScreen = ({ history, match }) => {
                     options={gradeOptions}
                   />
                 </div>
-                <Button type="submit" className="btn-default w-100">
-                  Create
-                </Button>
+                {!newVideo || !image || !file ? (
+                  <Button type="submit" className="btn-default w-100" disabled>
+                    Please upload a video, image and a file
+                  </Button>
+                ) : newVideo === "loading" ? (
+                  <Button className="btn-light w-100 p-0">
+                    <img src={uploading} alt="" className="w-25" />
+                  </Button>
+                ) : (
+                  <Button type="submit" className="btn-default w-100">
+                    Create
+                  </Button>
+                )}
               </Form>
             )}
           </Formik>
@@ -655,6 +675,27 @@ const ListSyllabusScreen = ({ history, match }) => {
           <Modal.Title className="text-white">Edit Training Video</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <UploadVideo
+            id={video._id}
+            vid={video.video}
+            singleVideoData={singleVideoData}
+          />
+          <UploadImage
+            id={video._id}
+            img={video.img}
+            type="VideoPoster"
+            singleImageData={singleImageData}
+            buttonText="Add video Poster/Image"
+          />
+          <p className="text-center">
+            Recommended aspect ratio: 16:9. Image will be cropped to fit
+          </p>
+          <UploadFile
+            id={video._id}
+            singleFileData={singleFileData}
+            buttonText="Change audio file"
+            currFile={video.soundFile}
+          />
           <Formik
             initialValues={editInitialValues}
             validationSchema={validationSchema}
@@ -669,33 +710,6 @@ const ListSyllabusScreen = ({ history, match }) => {
                     type="text"
                     name="title"
                     placeholder="Training Video Title"
-                  />
-                </div>
-                <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="link to image"
-                    type="text"
-                    name="img"
-                    placeholder="Image ID number"
-                  />
-                </div>
-                <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="link to video"
-                    type="text"
-                    name="video"
-                    placeholder="Video Link"
-                  />
-                </div>
-                <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="link to sound"
-                    type="text"
-                    name="soundFile"
-                    placeholder="Sound ID number"
                   />
                 </div>
                 <div className="bg-light p-2 mb-2">

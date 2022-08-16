@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
-import Product from "../models/productModel.js";
+import Product from "../models/productModel.cjs";
+import Member from "../models/memberModel.cjs";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 
 // @desc Fetch all products
 // @route GET /api/products
@@ -78,7 +80,71 @@ const createProduct = asyncHandler(async (req, res) => {
 
   const createdProduct = await product.save();
 
-  // *************************send email about our new, exciting product!!!***************************
+  const members = await Member.find({ ddsuccess: true });
+
+  for (const member of members) {
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "We have a great new product for sale!",
+      message: `<h4>${
+        member.firstName
+      }, we have a new product in our shop that you might be interested in.</h4>
+      <table role="presentation" cellspacing="0" width="100%">
+      <tr>
+      <td>
+        <img
+          src=${product.image}
+          alt=""
+          width=150px
+          style="padding: 10px"
+        />
+      </td>
+      <td style="width: 400px">
+        <h4>
+           ${product.name}
+        </h4>
+        <small>
+          ${product.description}
+        </small>
+        <p>
+          ${product.price.toLocaleString("en-GB", {
+            style: "currency",
+            currency: "GBP",
+          })}
+        </p>
+              
+        <div style="padding-bottom: 20px; margin-top: 20px">
+          <a
+            href="http://localhost:3000/products/${createdProduct._id}"
+            target="_blank"
+            style="
+              box-sizing: border-box;
+              color: #ffffff;
+              text-decoration: none;
+              padding: 12px 18px;
+              border-radius: 4px;
+              border: solid 1px #0b0b0b;
+              font-weight: 700;
+              font-size: 14px;
+              background-color: #0b0b0b;
+              display: block;
+              text-align: center;
+            "
+          >
+            View product
+          </a>
+        </div>
+      
+      </td>
+    </tr>
+    </table>
+          `,
+      link: `http://localhost:3000/shop`,
+      linkText: "Visit shop",
+      attachments: [],
+    });
+  }
 
   res.status(201).json(createdProduct);
 });
@@ -95,7 +161,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       (product.description = req.body.description),
       (product.countInStock = req.body.countInStock),
       (product.price = req.body.price),
-      (product.image = req.body.image),
+      // (product.image = req.body.image),
       (product.category = req.body.category),
       (product.createdBy = req.body.createdBy),
       (product.updatedBy = req.body.updatedBy);

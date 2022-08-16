@@ -45,9 +45,9 @@ const createTrainingVideo = asyncHandler(async (req, res) => {
   const trainingVideo = new TrainingVideo({
     grade: req.body.grade,
     title: req.body.title,
-    img: `https://drive.google.com/uc?export=view&id=${req.body.img}`,
-    video: `https://drive.google.com/file/d/${req.body.video}/preview`,
-    soundFile: `https://drive.google.com/uc?export=view&id=${req.body.soundFile}`,
+    img: req.body.img,
+    video: req.body.video,
+    soundFile: req.body.soundFile,
     category: req.body.category,
   });
 
@@ -67,9 +67,7 @@ const updateTrainingVideo = asyncHandler(async (req, res) => {
   if (trainingVideo) {
     trainingVideo.grade = req.body.grade;
     trainingVideo.title = req.body.title;
-    trainingVideo.img = req.body.img;
-    trainingVideo.video = req.body.video;
-    trainingVideo.soundFile = req.body.soundFile;
+
     trainingVideo.category = req.body.category;
 
     const updatedTrainingVideo = await trainingVideo.save();

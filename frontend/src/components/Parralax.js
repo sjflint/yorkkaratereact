@@ -1,8 +1,10 @@
 const Parralax = ({ image }) => {
   const parStyle = {
     background: `url(../img/${image}) no-repeat center center/cover fixed`,
-    minHeight: "300px",
+    width: "100%",
+    height: "50vh",
     backgroundAttachment: "fixed",
+    margin: "0 auto 0 auto",
   };
   return <div style={parStyle}></div>;
 };

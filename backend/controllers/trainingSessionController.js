@@ -3,6 +3,7 @@ import TrainingSession from "../models/trainingSessionModel.cjs";
 import Member from "../models/memberModel.cjs";
 import { updateSubscription } from "./ddController.cjs";
 import Financial from "../models/financialModel.cjs";
+import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 
 // @desc Fetch all training sessions
 // @route GET /api/trainingSessions
@@ -68,8 +69,18 @@ const addTrainingSession = asyncHandler(async (req, res) => {
       };
       await updateSubscription(paymentDetails);
     }
-
-    // ******************send email conifmring class added and new training fees************************************
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "New class added",
+      message: `<h4>${member.firstName}, we have upgraded your membership to include an extra class per week</h4>
+              <p>We have added the following class to your training schedule:</p>
+              <p>${session.name}<br/>${session.location}<br/>${session.times}   
+            `,
+      link: `http://localhost:3000/profile?key=third`,
+      linkText: "View your training sessions",
+      attachments: [],
+    });
 
     res.json("added to class");
   } else {
@@ -122,8 +133,18 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
       { lastClassChange: lastClassChange },
       { new: true }
     );
-
-    // ******************send email confimring class deleted and new training fees****************************
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Class removed",
+      message: `<h4>${member.firstName}, at your request we have reduced your membership and removed one class per week</h4>
+              <p>We have removed the following class from your training schedule:</p>
+              <p>${session.name}<br/>${session.location}<br/>${session.times}   
+            `,
+      link: `http://localhost:3000/profile?key=third`,
+      linkText: "View your training sessions",
+      attachments: [],
+    });
 
     res.json("class deleted");
   } else {
@@ -170,8 +191,20 @@ const switchTrainingSession = asyncHandler(async (req, res) => {
         { lastClassChange: lastClassChange },
         { new: true }
       );
-
-      // ******************send email confimring class switched and new training fees*********************************
+      genericEmail({
+        recipientEmail: member.email,
+        recipientName: member.firstName,
+        subject: "Class switched",
+        message: `<h4>${member.firstName}, at your request we have switched your training sessions</h4>
+                <p>We have removed the following class from your training schedule:</p>
+                <p>${deleteSession.name}<br/>${deleteSession.location}<br/>${deleteSession.times}   
+                <p>We have added the following class to your training schedule:</p>
+                <p>${addSession.name}<br/>${addSession.location}<br/>${addSession.times}   
+              `,
+        link: `http://localhost:3000/profile?key=third`,
+        linkText: "View your training sessions",
+        attachments: [],
+      });
 
       res.json("class switched");
     }
@@ -233,11 +266,35 @@ const createTimetableSession = asyncHandler(async (req, res) => {
     participants: [],
   };
 
-  console.log(trainingSession);
-
   await TrainingSession.create(trainingSession);
 
-  // ******************send email to all members letting them know about the new class being set up*********************************
+  const members = await Member.find({ ddsuccess: true });
+  let junior = false;
+  if (trainingSession.juniorSession === true) {
+    junior = true;
+  }
+
+  for (const member of members) {
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "New class starting",
+      message: `<h4>${
+        member.firstName
+      }, we have a new training session on the timetable</h4>
+              <p>This new class is for ${
+                junior === true ? "Juniors" : "ages 9+"
+              }. The class details are:</p>
+              <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${
+        trainingSession.times
+      }   
+              <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
+            `,
+      link: `http://localhost:3000/profile?key=third`,
+      linkText: "View your training sessions",
+      attachments: [],
+    });
+  }
 
   res.status(201).json(trainingSession);
 });
@@ -247,6 +304,7 @@ const createTimetableSession = asyncHandler(async (req, res) => {
 // @access Private/Admin
 const updateTimetableSession = asyncHandler(async (req, res) => {
   const trainingSession = await TrainingSession.findById(req.body.id);
+  const members = await Member.find({ ddsuccess: true });
 
   if (trainingSession) {
     trainingSession.name = req.body.name;
@@ -259,8 +317,21 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     trainingSession.hallHire = Number(req.body.hallHire);
 
     const updatedTrainingSession = await trainingSession.save();
-
-    // ******************send email confimring class changes******************************
+    for (const member of members) {
+      genericEmail({
+        recipientEmail: member.email,
+        recipientName: member.firstName,
+        subject: "Class has been amended",
+        message: `<h4>${member.firstName}, we have amended a training session on the timetable</h4>
+              <p>The class details are:</p>
+              <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}   
+              <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
+            `,
+        link: `http://localhost:3000/profile?key=third`,
+        linkText: "View your training sessions",
+        attachments: [],
+      });
+    }
 
     res.status(201).json(updatedTrainingSession);
   } else {

@@ -323,8 +323,7 @@ const ListEventsScreen = ({ history, match }) => {
           <Modal.Title className="text-white">Create a new event</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={`${image}`} alt="" />
-          <UploadImage singleImageData={singleImageData} type="Event" />
+          <UploadImage type="Event" singleImageData={singleImageData} />
           <p className="text-center">
             Recommended aspect ratio: 5:3. Image will be cropped to fit
           </p>
@@ -407,13 +406,7 @@ const ListEventsScreen = ({ history, match }) => {
         <Modal.Body>
           {event && (
             <>
-              <img src={`${image}`} alt="" className="bg-primary p-2" />
-              <UploadImage
-                img={event.image}
-                type={"Event"}
-                id={event._id}
-                singleImageData={singleImageData}
-              />
+              <UploadImage img={event.image} type={"Event"} id={event._id} />
               <p className="text-center">
                 Recommended aspect ratio: 5:3. Image will be cropped to fit
               </p>

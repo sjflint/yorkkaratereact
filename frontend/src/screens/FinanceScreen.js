@@ -55,11 +55,7 @@ const FinanceScreen = ({ history }) => {
   } = monthlyCostList;
 
   const listMembers = useSelector((state) => state.listMembers);
-  const {
-    loading: membersLoading,
-    error: membersError,
-    memberList,
-  } = listMembers;
+  const { memberList } = listMembers;
 
   const trainingSessionsList = useSelector(
     (state) => state.trainingSessionsList
@@ -208,6 +204,8 @@ const FinanceScreen = ({ history }) => {
             <Card.Header>Financials per class</Card.Header>
             {sessionsLoading ? (
               <Loader variant="default" />
+            ) : sessionsError ? (
+              <Message>{sessionsError}</Message>
             ) : (
               trainingSessions.map((trainingSession) => (
                 <Card.Body className="text-center" key={trainingSession._id}>
@@ -280,6 +278,8 @@ const FinanceScreen = ({ history }) => {
                   <Loader variant="warning" />
                   <small>Please don't navigate or refresh page</small>
                 </div>
+              ) : financialUpdateError ? (
+                <Message variant="warning">{financialUpdateError}</Message>
               ) : financials ? (
                 <ListGroup variant="flush">
                   <ListGroup.Item>
@@ -437,8 +437,11 @@ const FinanceScreen = ({ history }) => {
           </Card>
           <Card className="mb-5">
             <Card.Header>Monthly Costs</Card.Header>
-            {monthlyCostsLoading && <Loader variant="warning" />}
-            {monthlyCosts &&
+            {monthlyCostsLoading ? (
+              <Loader variant="warning" />
+            ) : monthlyCostsError ? (
+              <Message>{monthlyCostsError}</Message>
+            ) : (
               monthlyCosts.map((cost) => {
                 return (
                   <Card.Body key={cost._id}>
@@ -464,7 +467,9 @@ const FinanceScreen = ({ history }) => {
                     </ListGroup>
                   </Card.Body>
                 );
-              })}
+              })
+            )}
+
             <Button
               variant="outline-success btn-sm py-0 mb-1"
               onClick={() => updateCost()}

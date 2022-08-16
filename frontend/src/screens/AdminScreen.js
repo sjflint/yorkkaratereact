@@ -51,7 +51,7 @@ const AdminScreen = ({ history }) => {
           Hello {member && memberInfo.firstName}. What do you need to do today?
         </p>
 
-        {member.isAdmin && (
+        {memberInfo.isAdmin && (
           <>
             <h5 className="text-white mb-2 border-bottom border-warning">
               Admin
@@ -117,7 +117,7 @@ const AdminScreen = ({ history }) => {
             </Row>
           </>
         )}
-        {member.isShopAdmin && (
+        {memberInfo.isShopAdmin && (
           <>
             <h5 className="text-white mb-2 border-bottom border-warning">
               Shop Admin
@@ -147,7 +147,7 @@ const AdminScreen = ({ history }) => {
           </>
         )}
 
-        {member.isAuthor && (
+        {memberInfo.isAuthor && (
           <>
             <h5 className="text-white mb-2 border-bottom border-warning">
               Author
@@ -168,7 +168,7 @@ const AdminScreen = ({ history }) => {
           </>
         )}
 
-        {member.isInstructor && (
+        {memberInfo.isInstructor && (
           <>
             <h5 className="text-white mb-2 border-bottom border-warning">
               Instructor

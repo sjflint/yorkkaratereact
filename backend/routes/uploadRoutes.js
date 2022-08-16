@@ -3,53 +3,38 @@ import express from "express";
 import multer from "multer";
 import Member from "../models/memberModel.cjs";
 import Event from "../models/eventModel.cjs";
-import Product from "../models/productModel.js";
-import Article from "../models/articleModel.js";
+import Product from "../models/productModel.cjs";
+import Article from "../models/articleModel.cjs";
 import sharp from "sharp";
-import { deleteFile, uploadFile } from "../utils/s3.js";
-import fs from "fs";
-import { unlink } from "fs";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import dotenv from "dotenv";
+import crypto from "crypto";
+import TrainingVideo from "../models/trainingVideosModel.js";
 
 const router = express.Router();
 
-// Image Dimensions
-// Events
-const event = {
-  width: 800,
-  height: 480,
-};
+dotenv.config();
 
-// Profile
-const profile = {
-  width: 500,
-  height: 500,
-};
+const randomName = () => crypto.randomBytes(16).toString("hex");
 
-// Product
-const product = {
-  width: 1000,
-  height: 1000,
-};
+const bucketName = process.env.AWS_BUCKET_NAME;
+const bucketRegion = process.env.AWS_BUCKET_REGION;
+const accessKey = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
 
-// Article
-const article = {
-  width: 900,
-  height: 600,
-};
-
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, "uploadedImages/");
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
   },
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
+  region: bucketRegion,
 });
 
-const checkFileType = (file, cb) => {
+const checkImageType = (file, cb) => {
   const filetypes = /jpg|jpeg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
@@ -60,177 +45,240 @@ const checkFileType = (file, cb) => {
     cb("Images only!");
   }
 };
+const checkVideoType = (file, cb) => {
+  const filetypes = /mp4/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
 
-const upload = multer({
-  storage,
-  // limits: { fileSize: 1000000 },
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb("mp4 videos only!");
+  }
+};
+const checkFileType = (file, cb) => {
+  const filetypes = /pdf|doc|mp3|mpeg|docx|xlsx|xls|csv|ppt|pptx/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  console.log(file);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb("word/excel/powerpoint/pdf/mp3 files only!");
+  }
+};
+
+const storage = multer.memoryStorage();
+const videoUpload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 400 },
+  fileFilter: function (req, file, cb) {
+    checkVideoType(file, cb);
+  },
+});
+const imageUpload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 },
+  fileFilter: function (req, file, cb) {
+    checkImageType(file, cb);
+  },
+});
+const fileUpload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
+videoUpload.single("video");
+imageUpload.single("image");
+fileUpload.single("file");
+
+router.post("/file", fileUpload.single("file"), async (req, res) => {
+  console.log(req.body);
+  const fileName = randomName() + req.file.originalname;
+
+  const params = {
+    Bucket: bucketName,
+    Body: req.file.buffer,
+    Key: fileName,
+    ContentType: req.file.mimetype,
+  };
+  const command = new PutObjectCommand(params);
+
+  await s3.send(command);
+
+  if (req.body.id !== "newUpload") {
+    // delete old file
+    const trainingVideo = await TrainingVideo.findById(req.body.id);
+
+    const fileToDelete = trainingVideo.soundFile.slice(55);
+
+    const params = {
+      Bucket: bucketName,
+      Key: fileToDelete,
+    };
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
+
+    // add new file
+    await TrainingVideo.findOneAndUpdate(
+      { _id: req.body.id },
+      {
+        soundFile: `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${fileName}`,
+      }
+    );
+  }
+
+  res.send(
+    `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${fileName}`
+  );
+});
+
+router.post("/video", videoUpload.single("video"), async (req, res) => {
+  const videoName = randomName() + req.file.originalname;
+
+  const params = {
+    Bucket: bucketName,
+    Body: req.file.buffer,
+    Key: videoName,
+    ContentType: req.file.mimetype,
+  };
+  const command = new PutObjectCommand(params);
+
+  await s3.send(command);
+
+  if (req.body.id !== "newUpload") {
+    // delete old video
+    const trainingVideo = await TrainingVideo.findById(req.body.id);
+
+    const videoToDelete = trainingVideo.video.slice(55);
+
+    const params = {
+      Bucket: bucketName,
+      Key: videoToDelete,
+    };
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
+
+    // add new video to database
+    await TrainingVideo.findOneAndUpdate(
+      { _id: req.body.id },
+      {
+        video: `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${videoName}`,
+      }
+    );
+  }
+  res.send(
+    `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${videoName}`
+  );
+});
+
+router.post("/image", imageUpload.single("image"), async (req, res) => {
+  let imgHeight;
+  let imgWidth;
+  let db;
+  let dbEntry;
+
+  const uploadImage = async () => {
+    const buffer = await sharp(req.file.buffer)
+      .resize({
+        height: imgHeight,
+        width: imgWidth,
+        fit: "contain",
+        background: { r: 242, g: 242, b: 242, alpha: 1 },
+      })
+      .toBuffer();
+
+    const imageName = randomName() + req.file.originalname;
+
+    const params = {
+      Bucket: bucketName,
+      Body: buffer,
+      Key: imageName,
+      ContentType: req.file.mimetype,
+    };
+
+    const command = new PutObjectCommand(params);
+
+    await s3.send(command);
+
+    if (req.body.id !== "newUpload") {
+      const dbRecord = await db.findById(req.body.id);
+
+      if (dbRecord.carouselImages) {
+        dbRecord.carouselImages.push({
+          original: `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${imageName}`,
+          thumbnail: `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${imageName}`,
+        });
+        dbRecord.save();
+      } else {
+        // delete old image
+        const dbRecord = await db.findById(req.body.id);
+
+        const imageToDelete = dbRecord[dbEntry].slice(55);
+
+        console.log(imageToDelete);
+        const params = {
+          Bucket: bucketName,
+          Key: imageToDelete,
+        };
+        const command = new DeleteObjectCommand(params);
+        await s3.send(command);
+
+        // add new image to database
+        await db.findOneAndUpdate(
+          { _id: req.body.id },
+          {
+            [dbEntry]: `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${imageName}`,
+          }
+        );
+      }
+    }
+    res.send(
+      `https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${imageName}`
+    );
+  };
+
+  // Image types and configs
   switch (req.body.type) {
     case "Profile":
-      await sharp(req.file.path)
-        .resize({
-          height: profile.height,
-          width: profile.width,
-          fit: "contain",
-          background: { r: 255, g: 255, b: 255, alpha: 0 },
-        })
-        .toFile(`uploadedImages/processed${req.file.filename}`);
-      const profileS3Upload = {
-        filename: req.file.filename,
-        path: `uploadedImages/processed${req.file.filename}`,
-      };
-
-      const profileResult = await uploadFile(profileS3Upload);
-      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-      unlink(req.file.path, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-
-      if (req.body.id !== "newUpload") {
-        // delete previous profile image
-        const member = await Member.findById(req.body.id);
-        const imageKey = member.profileImg.slice(8);
-        await deleteFile(imageKey);
-
-        await Member.findOneAndUpdate(
-          { _id: req.body.id },
-          { profileImg: `/images/${profileResult.Key}` },
-          { new: true }
-        );
-      }
-
-      res.send(`/images/${profileResult.Key}`);
+      imgHeight = 1000;
+      imgWidth = 1000;
+      db = Member;
+      dbEntry = "profileImg";
+      uploadImage();
       break;
-
     case "Event":
-      await sharp(req.file.path)
-        .resize({
-          height: event.height,
-          width: event.width,
-          fit: "contain",
-          background: { r: 255, g: 255, b: 255, alpha: 0 },
-        })
-        .toFile(`uploadedImages/processed${req.file.filename}`);
-
-      const eventS3Upload = {
-        filename: req.file.filename,
-        path: `uploadedImages/processed${req.file.filename}`,
-      };
-
-      const eventResult = await uploadFile(eventS3Upload);
-      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-      unlink(req.file.path, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-
-      if (req.body.id !== "newUpload") {
-        // delete previous event image
-        const event = await Event.findById(req.body.id);
-        const imageKey = event.image.slice(8);
-        await deleteFile(imageKey);
-
-        await Event.findOneAndUpdate(
-          { _id: req.body.id },
-          { image: `/images/${eventResult.Key}` },
-          { new: true }
-        );
-      }
-      res.send(`/images/${eventResult.Key}`);
-
+      imgHeight = 600;
+      imgWidth = 900;
+      db = Event;
+      dbEntry = "image";
+      uploadImage();
       break;
-
     case "Product":
-      await sharp(req.file.path)
-        .resize({
-          height: product.height,
-          width: product.width,
-          fit: "contain",
-          background: { r: 255, g: 255, b: 255, alpha: 0 },
-        })
-        .toFile(`uploadedImages/processed${req.file.filename}`);
-
-      const productS3Upload = {
-        filename: req.file.filename,
-        path: `uploadedImages/processed${req.file.filename}`,
-      };
-
-      const productResult = await uploadFile(productS3Upload);
-      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-      unlink(req.file.path, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-
-      if (req.body.id !== "newUpload") {
-        // delete previous product image
-        const product = await Product.findById(req.body.id);
-        const imageKey = product.image.slice(8);
-        await deleteFile(imageKey);
-
-        await Product.findOneAndUpdate(
-          { _id: req.body.id },
-          { image: `/images/${productResult.Key}` },
-          { new: true }
-        );
-      }
-      res.send(`/images/${productResult.Key}`);
+      imgHeight = 1000;
+      imgWidth = 1000;
+      db = Product;
+      dbEntry = "image";
+      uploadImage();
       break;
-
     case "Article":
-      await sharp(req.file.path)
-        .resize({
-          width: article.width,
-          height: article.height,
-          fit: "contain",
-          background: { r: 242, g: 242, b: 242, alpha: 1 },
-        })
-        .toFile(`uploadedImages/processed${req.file.filename}`);
-
-      const articleS3Upload = {
-        filename: req.file.filename,
-        path: `uploadedImages/processed${req.file.filename}`,
-      };
-
-      const articleResult = await uploadFile(articleS3Upload);
-      unlink(`uploadedImages/processed${req.file.filename}`, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-      unlink(req.file.path, (err) => {
-        if (err) throw err;
-        console.log("file deleted");
-      });
-
-      if (req.body.id !== "newUpload") {
-        // delete previous article image
-        const article = await Article.findById(req.body.id);
-        const imageKey = article.image.slice(8);
-        await deleteFile(imageKey);
-
-        await Article.findOneAndUpdate(
-          { _id: req.body.id },
-          { image: `/images/${articleResult.Key}` },
-          { new: true }
-        );
-      }
-      res.send(`/images/${articleResult.Key}`);
+      imgHeight = 600;
+      imgWidth = 900;
+      db = Article;
+      dbEntry = "image";
+      uploadImage();
       break;
+    case "VideoPoster":
+      imgHeight = 1080;
+      imgWidth = 1920;
+      db = TrainingVideo;
+      dbEntry = "img";
+      uploadImage();
   }
 });
 

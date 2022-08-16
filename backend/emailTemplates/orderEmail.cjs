@@ -22,7 +22,7 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
       // Is there an image to include in the email?
       let image = "logo2021a.png";
       if (emailDetails.image) {
-        const emailImage = emailDetails.image.slice(7);
+        const emailImage = emailDetails.image;
         image = emailImage;
       }
 
@@ -48,7 +48,7 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
     <tr>
     <td>
       <img
-        src="https://york-karate-uploads.s3.eu-west-2.amazonaws.com${image}"
+        src=${image}
         alt=""
         width="100"
       />
@@ -164,7 +164,7 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
 
       <!-- generic image -->
       <img
-        src="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/${image}"
+        src=${image}
         alt=""
         width="100%"
         style="display: block; border: none"

@@ -199,6 +199,7 @@ const getMemberProfile = asyncHandler(async (req, res) => {
       licenseNumber: member.licenseNumber,
       attendanceRecord: member.attendanceRecord,
       numberOfSessionsRequired: numberOfSessionsRequired,
+      outstandingFees: member.outstandingFees,
     });
   } else {
     res.status(404);

@@ -42,7 +42,6 @@ const ListProductsScreen = ({ history, match }) => {
 
   const singleImageData = (singleImage) => {
     setImage(singleImage);
-    console.log(singleImage);
   };
 
   const dispatch = useDispatch();
@@ -383,8 +382,7 @@ const ListProductsScreen = ({ history, match }) => {
           <Modal.Title className="text-white">Create a new product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={`${image}`} alt="" />
-          <UploadImage singleImageData={singleImageData} type="Product" />
+          <UploadImage type="Product" singleImageData={singleImageData} />
           <p className="text-center">
             Recommended aspect ratio: 1:1. Image will be cropped to fit
           </p>
@@ -479,12 +477,10 @@ const ListProductsScreen = ({ history, match }) => {
         <Modal.Body>
           {product && (
             <>
-              <img src={`${image}`} alt="" />
               <UploadImage
                 img={product.image}
                 type={"Product"}
                 id={product._id}
-                singleImageData={singleImageData}
               />
               <p className="text-center">
                 Recommended aspect ratio: 1:1. Image will be cropped to fit
@@ -598,6 +594,10 @@ const ListProductsScreen = ({ history, match }) => {
                 >
                   Update
                 </Button>
+                <small className="text-warning">
+                  PLEASE NOTE: Following any updates to the product, you will
+                  need to reset the product's stock level
+                </small>
               </Form>
             )}
           </Formik>

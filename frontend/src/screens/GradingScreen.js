@@ -35,8 +35,6 @@ const GradingScreen = ({ match, history }) => {
     }
   }, [dispatch, memberInfo, history, match.params.id]);
 
-  const dateToday = Date.now();
-
   if (grading && grading.title) {
     console.log(grading.participants);
     grading.participants.sort((a, b) =>

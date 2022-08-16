@@ -10,7 +10,6 @@ import {
 import { Link } from "react-router-dom";
 import Video from "../components/Video";
 import poster2Img from "../img/poster2.png";
-import yorkkarateMp4 from "../img/yorkkarate.mp4";
 import yorkkarateOgv from "../img/yorkkarate.ogv";
 import yorkkarateWebmHd from "../img/yorkkarate.webmhd.webm";
 import respectImg from "../img/respect.jpg";
@@ -50,7 +49,7 @@ const HomeScreen = () => {
               <div className="p-2 bg-primary">
                 <Video
                   poster={poster2Img}
-                  mp4={yorkkarateMp4}
+                  mp4="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/ageuke.mp4"
                   ogv={yorkkarateOgv}
                   webmhd={yorkkarateWebmHd}
                 />

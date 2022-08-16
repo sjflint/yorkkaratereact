@@ -9,6 +9,7 @@ import {
 } from "../actions/TrainingVideoActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Video from "../components/Video";
 
 const TrainingVideoScreen = ({ match }) => {
   const [volume, setVolume] = useState("stop");
@@ -101,15 +102,7 @@ const TrainingVideoScreen = ({ match }) => {
             <>
               <ListGroup variant="flush" className="bg-primary p-2">
                 <ListGroup.Item>
-                  <div>
-                    <iframe
-                      src={video.video}
-                      width="100%"
-                      height="400"
-                      allow="autoplay"
-                      title={video._id}
-                    ></iframe>
-                  </div>
+                  <Video poster={video.img} mp4={video.video} />
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <h4>{video.title}</h4>

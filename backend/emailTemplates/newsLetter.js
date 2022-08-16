@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import asyncHandler from "express-async-handler";
 import Event from "../models/eventModel.cjs";
-import Article from "../models/articleModel.js";
+import Article from "../models/articleModel.cjs";
 import Member from "../models/memberModel.cjs";
 
 dotenv.config();
@@ -32,12 +32,12 @@ const newsLetterEmail = asyncHandler(async () => {
   let eventsHTML = "";
   for (let i = 0; i < 4; i++) {
     if (filteredEvents[i]) {
-      const image = filteredEvents[i].image.slice(7);
+      const image = filteredEvents[i].image;
       eventsHTML = `${eventsHTML} 
       <tr>
         <td>
           <img
-            src="https://york-karate-uploads.s3.eu-west-2.amazonaws.com${image}"
+            src=${image}
             alt=""
             width=150px
             style="padding: 10px"
@@ -85,12 +85,12 @@ const newsLetterEmail = asyncHandler(async () => {
   let articleHTML = "";
   for (let i = 0; i < 4; i++) {
     if (articles[i]) {
-      const image = articles[i].carouselImages[0].original.slice(7);
+      const image = articles[i].carouselImages[0].original;
       articleHTML = `${articleHTML}
     <tr>
       <td>
         <img
-          src="https://york-karate-uploads.s3.eu-west-2.amazonaws.com${image}"
+          src=${image}
           alt=""
           width=150px
           style="padding: 10px"
