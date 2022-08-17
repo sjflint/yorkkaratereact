@@ -126,7 +126,7 @@ const reducer = combineReducers({
   listMembers: listMembersReducer,
   memberDelete: memberDeleteReducer,
   memberEdit: memberEditReducer,
-  updateProfile: updateProfileReducer,
+  updateProfileDetails: updateProfileReducer,
   updatePassword: updatePasswordReducer,
   resetPassword: resetPasswordReducer,
   trainingSessionsList: listTrainingSessionsReducer,

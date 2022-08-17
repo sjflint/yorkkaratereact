@@ -233,6 +233,8 @@ const getMemberPaymentDetails = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
+  console.log(values);
+
   const member = await Member.findById(values.memberId);
 
   if (member && values.licenseNumber) {
@@ -245,22 +247,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     );
     res.json("JKS Number updated");
   } else if (member) {
-    await Member.findOneAndUpdate(
-      { _id: member._id },
-      {
-        addressLine1: values.addressLine1,
-        addressLine2: values.addressLine2,
-        addressLine3: values.addressLine3,
-        addressLine4: values.addressLine4,
-        postCode: values.postCode,
-        email: values.email,
-        phone: values.phone,
-        emergencyContactName: values.emergencyContactName,
-        emergencyContactEmail: values.emergencyContactEmail,
-        emergencyContactPhone: values.emergencyContactPhone,
-      },
-      { new: true }
-    );
+    await Member.findOneAndUpdate({ _id: member._id }, values, { new: true });
     res.json("profile updated");
   } else {
     res.status(404);

@@ -118,6 +118,9 @@ const GradingRegistrationScreen = ({ history, match }) => {
     window.location.reload(false);
   };
 
+  let dateToday = new Date("2022, 10, 24");
+  dateToday.setDate(dateToday.getDate() + 8);
+
   return (
     <Container className="mt-3">
       {loadingEvent ? (
@@ -187,6 +190,8 @@ const GradingRegistrationScreen = ({ history, match }) => {
               </Message>
             ) : (
               <>
+                {console.log(`date today  (+7): ${new Date(dateToday)}`)}
+                {console.log(`event date: ${new Date(event.dateOfEvent)}`)}
                 {applicationSuccess === true ? (
                   <ListGroup.Item variant="success" className="text-center">
                     You have applied for this grading course!
@@ -223,6 +228,13 @@ const GradingRegistrationScreen = ({ history, match }) => {
                     >
                       Make payments
                     </Button>
+                  </>
+                ) : dateToday > new Date(event.dateOfEvent) ? (
+                  <>
+                    <p className="text-danger">
+                      Unfortuantely, the deadline to register for this grading
+                      course has passed.
+                    </p>
                   </>
                 ) : (
                   <ListGroup.Item>
