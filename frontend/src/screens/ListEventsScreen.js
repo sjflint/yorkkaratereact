@@ -17,6 +17,7 @@ import { Formik, Form } from "formik";
 import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
 import UploadImage from "../components/uploadImage";
+import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 
 const ListEventsScreen = ({ history, match }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -199,6 +200,7 @@ const ListEventsScreen = ({ history, match }) => {
             onClick={() => {
               setCreateModal(true);
               setImage(imagePlaceholder);
+              dispatch({ type: UPLOAD_IMG_CLEAR });
             }}
           >
             <i className="fas fa-plus"></i> Create Event
@@ -406,7 +408,12 @@ const ListEventsScreen = ({ history, match }) => {
         <Modal.Body>
           {event && (
             <>
-              <UploadImage img={event.image} type={"Event"} id={event._id} />
+              <UploadImage
+                img={event.image}
+                type={"Event"}
+                id={event._id}
+                singleImageData={singleImageData}
+              />
               <p className="text-center">
                 Recommended aspect ratio: 5:3. Image will be cropped to fit
               </p>

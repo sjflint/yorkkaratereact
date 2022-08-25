@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadVideo } from "../actions/uploadFileActions";
-import { UPLOAD_VIDEO_CLEAR } from "../constants/uploadFileConstants";
+
 import Message from "./Message";
 import defaultPlaceholder from "../img/defaultplaceholder.jpg";
 import Uploading from "../img/uploading(1).gif";
@@ -25,6 +25,7 @@ const UploadVideo = ({ id, vid, singleVideoData }) => {
   };
 
   useEffect(() => {
+    // dispatch({ type: UPLOAD_VIDEO_CLEAR });
     if (video) {
       setCurrentVideo(defaultPlaceholder);
       setCurrentVideo(video);
@@ -33,7 +34,6 @@ const UploadVideo = ({ id, vid, singleVideoData }) => {
         singleVideoData(video);
       }
     }
-    dispatch({ type: UPLOAD_VIDEO_CLEAR });
   }, [dispatch, video, id, singleVideoData]);
   return (
     <div>

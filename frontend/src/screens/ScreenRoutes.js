@@ -123,7 +123,20 @@ const ScreenRoutes = () => {
         exact
       />
       <Route path="/admin/editclasses" component={ListClassesScreen} />
-      <Route path="/instructor/editsyllabus" component={ListSyllabusScreen} />
+      <Route
+        path="/instructor/editsyllabus"
+        component={ListSyllabusScreen}
+        exact
+      />
+      <Route
+        path="/instructor/editsyllabus/search/:keyword?"
+        component={ListSyllabusScreen}
+      />
+      <Route
+        path="/instructor/editsyllabus/:pageNumber"
+        component={ListSyllabusScreen}
+        exact
+      />
       <Route path="/grading/:id" component={GradingRegistrationScreen} />
       <Route path="/gradingdetails/:id" component={GradingScreen} />
       <Route

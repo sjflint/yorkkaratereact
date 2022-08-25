@@ -17,16 +17,12 @@ const OutstandingFeesScreen = ({ history }) => {
   const { memberInfo } = memberLogin;
 
   const memberDetails = useSelector((state) => state.memberDetails);
-  const { loading, error, member } = memberDetails;
+  const { member } = memberDetails;
 
   const updateProfileDetails = useSelector(
     (state) => state.updateProfileDetails
   );
-  const {
-    loading: paymentLoading,
-    error: paymentError,
-    success,
-  } = updateProfileDetails;
+  const { success } = updateProfileDetails;
 
   // check for payment success and update member record
   // show succes message
@@ -55,22 +51,23 @@ const OutstandingFeesScreen = ({ history }) => {
     }
 
     dispatch(getMemberDetails(memberInfo._id));
-  }, [dispatch]);
+  }, [dispatch, memberInfo, history]);
 
-  const successPaymentHandler = useCallback(async (paymentResult) => {
-    if (paymentResult.status === "COMPLETED") {
-      const values = {
-        memberId: memberInfo._id,
-        outstandingFees: 0,
-      };
-      console.log(values);
-      await dispatch(updateProfile(values));
-      setPaymentSuccess(true);
-      console.log("payment successful");
-      // updatemember database to remove outstanding fee
-      // display payment success message
-    }
-  }, []);
+  const successPaymentHandler = useCallback(
+    async (paymentResult) => {
+      if (paymentResult.status === "COMPLETED") {
+        const values = {
+          memberId: memberInfo._id,
+          outstandingFees: 0,
+        };
+        console.log(values);
+        await dispatch(updateProfile(values));
+        setPaymentSuccess(true);
+        console.log("payment successful");
+      }
+    },
+    [dispatch, memberInfo._id]
+  );
 
   return (
     <>

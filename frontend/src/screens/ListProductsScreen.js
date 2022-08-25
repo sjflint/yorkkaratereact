@@ -28,6 +28,7 @@ import imagePlaceholder from "../img/defaultplaceholder.jpg";
 
 import UploadImage from "../components/uploadImage";
 import ProductPaginate from "../components/ProductPaginate";
+import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 
 const ListProductsScreen = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
@@ -230,6 +231,7 @@ const ListProductsScreen = ({ history, match }) => {
           onClick={() => {
             setCreateModal(true);
             setImage(imagePlaceholder);
+            dispatch({ type: UPLOAD_IMG_CLEAR });
           }}
         >
           <i className="fas fa-plus"></i> Create Product
@@ -481,6 +483,7 @@ const ListProductsScreen = ({ history, match }) => {
                 img={product.image}
                 type={"Product"}
                 id={product._id}
+                singleImageData={singleImageData}
               />
               <p className="text-center">
                 Recommended aspect ratio: 1:1. Image will be cropped to fit

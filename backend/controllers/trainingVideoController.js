@@ -5,8 +5,50 @@ import TrainingVideo from "../models/trainingVideosModel.js";
 // @route GET /api/trainingVideos
 // @access Public
 const getTrainingVideos = asyncHandler(async (req, res) => {
-  const trainingVideos = await TrainingVideo.find({});
-  res.json(trainingVideos);
+  const keyword = req.query.keyword
+    ? {
+        $or: [
+          {
+            title: {
+              $regex: req.query.keyword,
+              $options: "i",
+            },
+          },
+          {
+            category: {
+              $regex: req.query.keyword,
+              $options: "i",
+            },
+          },
+        ],
+      }
+    : {};
+
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const count = await TrainingVideo.countDocuments();
+  const trainingVideos = await TrainingVideo.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+  res.json({ trainingVideos, page, pages: Math.ceil(count / pageSize) });
+});
+
+// Fetch videos for member grade ???????
+// @desc Fetch all videos for a certain grade
+// @route GET /api/getTrainingVideos/grade
+// @access Public
+const getTrainingVideosByGrade = asyncHandler(async (req, res) => {
+  const trainingVideos = await TrainingVideo.find({
+    grade: req.params.grade,
+  });
+
+  if (trainingVideos) {
+    res.json(trainingVideos);
+  } else {
+    res.status(404);
+    throw Error("Videos not found");
+  }
 });
 
 // @desc Fetch single video
@@ -84,4 +126,5 @@ export {
   deleteTrainingVideo,
   updateTrainingVideo,
   createTrainingVideo,
+  getTrainingVideosByGrade,
 };

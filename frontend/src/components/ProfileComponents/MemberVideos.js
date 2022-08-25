@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ListGroup, Row, Col, Modal, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import dojoImg from "../../img/dojo.jpeg";
-import { listTrainingVideos } from "../../actions/TrainingVideoActions";
+import { listTrainingVideosByGrade } from "../../actions/TrainingVideoActions";
 import Loader from "../Loader";
 import Message from "../Message";
 import BeltCard from "../BeltCard";
@@ -14,95 +14,58 @@ const MemberVideos = () => {
   const handleCloseKyu = () => setShowKyu(false);
   const handleShowKyu = () => setShowKyu(true);
 
-  const trainingVideoList = useSelector((state) => state.trainingVideoList);
-  const { loadingTrainingVideos, error, trainingVideos } = trainingVideoList;
+  const trainingVideoListByGrade = useSelector(
+    (state) => state.trainingVideoListByGrade
+  );
+  const { loadingTrainingVideos, error, trainingVideos } =
+    trainingVideoListByGrade;
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { member } = memberDetails;
 
   useEffect(() => {
-    dispatch(listTrainingVideos());
-  }, [dispatch]);
+    if (member && member.kyuGrade > 0) {
+      const grade = member.kyuGrade - 1;
+      dispatch(listTrainingVideosByGrade(grade));
+    }
 
-  let numberMarker;
-  switch (member.kyuGrade && member.kyuGrade !== 0) {
-    case 1:
-      numberMarker = "st";
-      break;
-    case 2:
-      numberMarker = "nd";
-      break;
-    case 3:
-      numberMarker = "rd";
-      break;
-    default:
-      numberMarker = "th";
-  }
-  switch (member.danGrade && member.danGrade !== 0) {
-    case 1:
-      numberMarker = "st";
-      break;
-    case 2:
-      numberMarker = "nd";
-      break;
-    case 3:
-      numberMarker = "rd";
-      break;
-    default:
-      numberMarker = "th";
-  }
+    if (member && member.kyuGrade === 0) {
+      const grade = (member.danGrade + 1) * -1;
+
+      dispatch(listTrainingVideosByGrade(grade));
+    }
+  }, [dispatch, member]);
+
+  const marker = (num) => {
+    return num === 1 ? "st" : num === 2 ? "nd" : "th";
+  };
 
   let grade;
-  let nextGrade;
+
+  let nextGradePrefix;
+
   if (member && member.kyuGrade === 0) {
-    grade = `${member.danGrade}${numberMarker} dan`;
-    nextGrade = `${member.danGrade + 1}${numberMarker} dan`;
+    const currGrade = member.danGrade;
+    grade = `${currGrade + marker(currGrade)} dan`;
+
+    nextGradePrefix = `${
+      member.danGrade + 1 + marker(member.danGrade + 1)
+    } dan`;
   } else {
-    grade = `${member.kyuGrade}${numberMarker} kyu`;
-    nextGrade = `${member.kyuGrade - 1}${numberMarker} kyu`;
+    const currGrade = member.kyuGrade;
+    grade = `${currGrade + marker(currGrade)} kyu`;
+    if (currGrade - 1 === 0) {
+    } else {
+      nextGradePrefix = `${
+        member.kyuGrade - 1 + marker(member.kyuGrade - 1)
+      } kyu`;
+    }
   }
 
-  let filteredVideos = [];
-  let kihonVideos = [];
-  let kihonKumiteVideos = [];
-  let shobuKumiteVideos = [];
-  let kataVideos = [];
-
-  if (trainingVideos) {
-    trainingVideos.map((trainingVideo) => {
-      if (trainingVideo.grade.includes(nextGrade)) {
-        filteredVideos.push(trainingVideo);
-      }
-      return filteredVideos;
-    });
-  }
-
-  filteredVideos.map((trainingVideo) => {
-    if (trainingVideo.category === "Kihon") {
-      kihonVideos.push(trainingVideo);
-    }
-    if (trainingVideo.category === "Kihon Kumite") {
-      kihonKumiteVideos.push(trainingVideo);
-    }
-    if (trainingVideo.category === "Shobu Kumite") {
-      shobuKumiteVideos.push(trainingVideo);
-    }
-
-    return filteredVideos;
-  });
-
-  if (trainingVideos) {
-    trainingVideos.map((trainingVideo) => {
-      if (
-        trainingVideo.grade.includes(nextGrade) &&
-        trainingVideo.category === "Kata"
-      ) {
-        kataVideos.push(trainingVideo);
-      }
-
-      return kataVideos;
-    });
-  }
+  let kihonVideos = 0;
+  let kihonKumiteVideos = 0;
+  let shobuKumiteVideos = 0;
+  let kataVideos = 0;
 
   return (
     <>
@@ -133,7 +96,7 @@ const MemberVideos = () => {
             </ListGroup.Item>
             <ListGroup.Item>
               <strong>Next Grade: </strong>
-              {nextGrade}
+              {nextGradePrefix}
             </ListGroup.Item>
             <ListGroup.Item>
               <Button
@@ -175,28 +138,33 @@ const MemberVideos = () => {
         ) : (
           <>
             <ListGroup.Item>
-              <h5 className="my-3 text-warning">Kihon for {nextGrade}</h5>
+              <h5 className="my-3 text-warning">Kihon for {nextGradePrefix}</h5>
               <p>
                 Kihon is the basic movememnts performed solo. The examiner is
                 looking for the perfect execution of the given techniques. Take
                 the time to study each technique in great detail.
               </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
-                {kihonVideos.length !== 0 ? (
-                  kihonVideos.map((trainingVideo) => (
-                    <Col
-                      sm={12}
-                      md={6}
-                      key={trainingVideo._id}
-                      className="p-1 text-center text-white"
-                    >
-                      <a href={`/trainingVideos/${trainingVideo._id}`}>
-                        <img src={trainingVideo.img} alt="" />
-                      </a>
-                      <p>{trainingVideo.title}</p>
-                    </Col>
-                  ))
-                ) : (
+                {trainingVideos &&
+                  trainingVideos.map((trainingVideo) => {
+                    trainingVideo.category === "Kihon" && kihonVideos++;
+                    return (
+                      trainingVideo.category === "Kihon" && (
+                        <Col
+                          sm={12}
+                          md={6}
+                          key={trainingVideo._id}
+                          className="p-1 text-center text-white"
+                        >
+                          <a href={`/trainingVideos/${trainingVideo._id}`}>
+                            <img src={trainingVideo.img} alt="" />
+                          </a>
+                          <p>{trainingVideo.title}</p>
+                        </Col>
+                      )
+                    );
+                  })}
+                {kihonVideos === 0 && (
                   <Col>
                     <h5 className="text-center mb-0 text-warning">
                       No kihon videos at your current level
@@ -207,7 +175,7 @@ const MemberVideos = () => {
             </ListGroup.Item>
             <ListGroup.Item>
               <h5 className="my-3 text-warning">
-                Kihon Kumite for {nextGrade}
+                Kihon Kumite for {nextGradePrefix}
               </h5>
               <p>
                 Kihon Kumite is the practical test of your basic kihon
@@ -216,24 +184,30 @@ const MemberVideos = () => {
                 positions.
               </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
-                {kihonKumiteVideos.length !== 0 ? (
-                  kihonKumiteVideos.map((trainingVideo) => (
-                    <Col
-                      sm={12}
-                      md={6}
-                      key={trainingVideo._id}
-                      className="p-1 text-center text-white"
-                    >
-                      <a href={`/trainingVideos/${trainingVideo._id}`}>
-                        <img src={trainingVideo.img} alt="" />
-                      </a>
-                      <p>{trainingVideo.title}</p>
-                    </Col>
-                  ))
-                ) : (
+                {trainingVideos &&
+                  trainingVideos.map((trainingVideo) => {
+                    trainingVideo.category === "Kihon Kumite" &&
+                      kihonKumiteVideos++;
+                    return (
+                      trainingVideo.category === "Kihon Kumite" && (
+                        <Col
+                          sm={12}
+                          md={6}
+                          key={trainingVideo._id}
+                          className="p-1 text-center text-white"
+                        >
+                          <a href={`/trainingVideos/${trainingVideo._id}`}>
+                            <img src={trainingVideo.img} alt="" />
+                          </a>
+                          <p>{trainingVideo.title}</p>
+                        </Col>
+                      )
+                    );
+                  })}
+                {kihonKumiteVideos === 0 && (
                   <Col>
                     <h5 className="text-center mb-0 text-warning">
-                      No kumite videos at your current level
+                      No Kihon Kumite videos at your current level
                     </h5>
                   </Col>
                 )}
@@ -241,7 +215,7 @@ const MemberVideos = () => {
             </ListGroup.Item>
             <ListGroup.Item>
               <h5 className="my-3 text-warning">
-                Shobu Kumite for {nextGrade}
+                Shobu Kumite for {nextGradePrefix}
               </h5>
               <p>
                 Shobu Kumite tests your ability to apply what you have learnt in
@@ -252,21 +226,27 @@ const MemberVideos = () => {
                 compete in karate competitions.
               </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
-                {shobuKumiteVideos.length !== 0 ? (
-                  shobuKumiteVideos.map((trainingVideo) => (
-                    <Col
-                      sm={12}
-                      md={6}
-                      key={trainingVideo._id}
-                      className="p-1 text-center text-white"
-                    >
-                      <a href={`/trainingVideos/${trainingVideo._id}`}>
-                        <img src={trainingVideo.img} alt="" />
-                      </a>
-                      <p>{trainingVideo.title}</p>
-                    </Col>
-                  ))
-                ) : (
+                {trainingVideos &&
+                  trainingVideos.map((trainingVideo) => {
+                    trainingVideo.category === "Shobu Kumite" &&
+                      shobuKumiteVideos++;
+                    return (
+                      trainingVideo.category === "Shobu Kumite" && (
+                        <Col
+                          sm={12}
+                          md={6}
+                          key={trainingVideo._id}
+                          className="p-1 text-center text-white"
+                        >
+                          <a href={`/trainingVideos/${trainingVideo._id}`}>
+                            <img src={trainingVideo.img} alt="" />
+                          </a>
+                          <p>{trainingVideo.title}</p>
+                        </Col>
+                      )
+                    );
+                  })}
+                {shobuKumiteVideos === 0 && (
                   <Col>
                     <h5 className="text-center mb-0 text-warning">
                       No kumite videos at your current level
@@ -277,7 +257,7 @@ const MemberVideos = () => {
             </ListGroup.Item>
             <ListGroup.Item>
               <h5 className="my-3 text-warning">
-                Kata for {nextGrade} and below
+                Kata for {nextGradePrefix} and below
               </h5>
               <p>
                 Kata is the essence of karate. You must learn the precise
@@ -288,21 +268,26 @@ const MemberVideos = () => {
                 your karate skill.
               </p>
               <Row className="bg-dark border-warning border-bottom border-top py-3 no-gutters">
-                {kataVideos.length !== 0 ? (
-                  kataVideos.map((trainingVideo) => (
-                    <Col
-                      sm={12}
-                      md={6}
-                      key={trainingVideo._id}
-                      className="p-1 text-center text-white"
-                    >
-                      <a href={`/trainingVideos/${trainingVideo._id}`}>
-                        <img src={trainingVideo.img} alt="" />
-                      </a>
-                      <p>{trainingVideo.title}</p>
-                    </Col>
-                  ))
-                ) : (
+                {trainingVideos &&
+                  trainingVideos.map((trainingVideo) => {
+                    trainingVideo.category === "Kata" && kataVideos++;
+                    return (
+                      trainingVideo.category === "Kata" && (
+                        <Col
+                          sm={12}
+                          md={6}
+                          key={trainingVideo._id}
+                          className="p-1 text-center text-white"
+                        >
+                          <a href={`/trainingVideos/${trainingVideo._id}`}>
+                            <img src={trainingVideo.img} alt="" />
+                          </a>
+                          <p>{trainingVideo.title}</p>
+                        </Col>
+                      )
+                    );
+                  })}
+                {kataVideos === 0 && (
                   <Col>
                     <h5 className="text-center mb-0 text-warning">
                       No kata videos at your current level

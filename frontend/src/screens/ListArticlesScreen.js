@@ -20,6 +20,7 @@ import imagePlaceholder from "../img/defaultplaceholder.jpg";
 
 import UploadImage from "../components/uploadImage";
 import ArticlePaginate from "../components/ArticlePaginate";
+import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 
 const ListArticlesScreen = ({ history, match }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -204,6 +205,7 @@ const ListArticlesScreen = ({ history, match }) => {
           onClick={() => {
             setCreateModal(true);
             setImage(imagePlaceholder);
+            dispatch({ type: UPLOAD_IMG_CLEAR });
           }}
         >
           <i className="fas fa-plus"></i> Write Article
@@ -259,7 +261,7 @@ const ListArticlesScreen = ({ history, match }) => {
                     className="text-center align-middle mouse-hover-pointer max-width-200"
                     onClick={async () => {
                       setUpdateId(article._id);
-
+                      dispatch({ type: UPLOAD_IMG_CLEAR });
                       await dispatch(listArticle(article._id));
                       await setImage(article.image);
                       await setMultiImage(article.carouselImages);
@@ -278,7 +280,7 @@ const ListArticlesScreen = ({ history, match }) => {
                       className="btn btn-sm"
                       onClick={async () => {
                         setUpdateId(article._id);
-
+                        dispatch({ type: UPLOAD_IMG_CLEAR });
                         await dispatch(listArticle(article._id));
                         await setImage(article.image);
                         await setMultiImage(article.carouselImages);

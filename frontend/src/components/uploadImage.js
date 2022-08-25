@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadImage } from "../actions/uploadFileActions";
-import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 import defaultPlaceholder from "../img/defaultplaceholder.jpg";
 import Message from "./Message";
 import Uploading from "../img/uploading(1).gif";
@@ -37,11 +36,10 @@ const UploadImage = ({ img, type, id, buttonText, singleImageData }) => {
   };
 
   useEffect(() => {
-    dispatch({ type: UPLOAD_IMG_CLEAR });
     if (image) {
       setCurrentImage(defaultPlaceholder);
       setCurrentImage(image);
-
+      console.log(image);
       singleImageData(image);
     }
   }, [dispatch, image, id, singleImageData]);

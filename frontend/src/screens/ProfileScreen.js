@@ -22,6 +22,7 @@ import UploadImage from "../components/uploadImage";
 import jksLicense from "../img/jkslicense.png";
 import insideJksLicense from "../img/insidelicense.png";
 import { updateProfile } from "../actions/memberActions";
+import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 
 const ProfileScreen = ({ history, match }) => {
   const search = useLocation().search;
@@ -40,9 +41,9 @@ const ProfileScreen = ({ history, match }) => {
   const memberDetails = useSelector((state) => state.memberDetails);
   const { loading, member } = memberDetails;
 
-  // const singleImageData = (singleImage) => {
-  //   setImage(singleImage);
-  // };
+  const singleImageData = (img) => {
+    console.log(`Uploading Img ${img}`);
+  };
 
   useEffect(() => {
     if (!memberInfo) {
@@ -65,7 +66,15 @@ const ProfileScreen = ({ history, match }) => {
     } else {
       setJksModal(false);
     }
-  }, [dispatch, history, memberInfo, member, ddSuccess, loading]);
+  }, [
+    dispatch,
+    history,
+    memberInfo,
+    member,
+    ddSuccess,
+    loading,
+    member.profileImg,
+  ]);
 
   // set page history and active menu selection
   const keyValue = new URLSearchParams(search).get("key");
@@ -105,6 +114,7 @@ const ProfileScreen = ({ history, match }) => {
                       className="mb-2 btn btn-default rounded-0"
                       onClick={() => {
                         setProfileImgModal(true);
+                        dispatch({ type: UPLOAD_IMG_CLEAR });
                       }}
                     >
                       Change Profile Picture
@@ -389,7 +399,7 @@ const ProfileScreen = ({ history, match }) => {
               <UploadImage
                 img={member.profileImg}
                 id={member._id}
-                // singleImageData={singleImageData}
+                singleImageData={singleImageData}
                 type={"Profile"}
               />
             </>

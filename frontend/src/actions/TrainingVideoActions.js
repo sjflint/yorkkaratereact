@@ -15,21 +15,49 @@ import {
   TRAINING_VIDEO_UPDATE_REQUEST,
   TRAINING_VIDEO_UPDATE_SUCCESS,
   TRAINING_VIDEO_UPDATE_FAIL,
+  TRAINING_VIDEO_LIST_BYGRADE_REQUEST,
+  TRAINING_VIDEO_LIST_BYGRADE_SUCCESS,
+  TRAINING_VIDEO_LIST_BYGRADE_FAIL,
 } from "../constants/trainingVideoConstants";
 
-export const listTrainingVideos = () => async (dispatch) => {
-  try {
-    dispatch({ type: TRAINING_VIDEO_LIST_REQUEST });
+export const listTrainingVideos =
+  (pageNumber = "", keyword = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: TRAINING_VIDEO_LIST_REQUEST });
 
-    const { data } = await axios.get("/api/trainingvideos");
+      const { data } = await axios.get(
+        `/api/trainingvideos?pageNumber=${pageNumber}&keyword=${keyword}`
+      );
+
+      dispatch({
+        type: TRAINING_VIDEO_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: TRAINING_VIDEO_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const listTrainingVideosByGrade = (grade) => async (dispatch) => {
+  try {
+    dispatch({ type: TRAINING_VIDEO_LIST_BYGRADE_REQUEST });
+
+    const { data } = await axios.get(`/api/trainingvideos/grade/${grade}`);
 
     dispatch({
-      type: TRAINING_VIDEO_LIST_SUCCESS,
+      type: TRAINING_VIDEO_LIST_BYGRADE_SUCCESS,
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: TRAINING_VIDEO_LIST_FAIL,
+      type: TRAINING_VIDEO_LIST_BYGRADE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

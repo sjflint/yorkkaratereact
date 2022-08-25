@@ -50,8 +50,8 @@ const FinanceScreen = ({ history }) => {
   const monthlyCostList = useSelector((state) => state.monthlyCostList);
   const {
     loading: monthlyCostsLoading,
-    monthlyCosts,
     error: monthlyCostsError,
+    monthlyCosts,
   } = monthlyCostList;
 
   const listMembers = useSelector((state) => state.listMembers);
@@ -436,38 +436,42 @@ const FinanceScreen = ({ history }) => {
             </Card.Body>
           </Card>
           <Card className="mb-5">
-            <Card.Header>Monthly Costs</Card.Header>
-            {monthlyCostsLoading ? (
-              <Loader variant="warning" />
-            ) : monthlyCostsError ? (
-              <Message>{monthlyCostsError}</Message>
-            ) : (
-              monthlyCosts.map((cost) => {
-                return (
-                  <Card.Body key={cost._id}>
-                    <ListGroup variant="flush">
-                      <ListGroup.Item>
-                        <div>{cost.name}</div>
-                        <InputGroup>
-                          <InputGroup.Text>£</InputGroup.Text>
-                          <FormControl
-                            className="mb-0 bg-light"
-                            type="number"
-                            value={cost.cost.toFixed(2)}
-                            disabled
-                          />
-                        </InputGroup>
-                      </ListGroup.Item>
-                      <Button
-                        variant="outline-secondary btn-sm py-0 mb-1"
-                        onClick={() => updateCost(cost)}
-                      >
-                        Edit
-                      </Button>
-                    </ListGroup>
-                  </Card.Body>
-                );
-              })
+            {monthlyCosts && (
+              <>
+                <Card.Header>Monthly Costs</Card.Header>
+                {monthlyCostsLoading ? (
+                  <Loader variant="warning" />
+                ) : monthlyCostsError ? (
+                  <Message>{monthlyCostsError}</Message>
+                ) : (
+                  monthlyCosts.map((cost) => {
+                    return (
+                      <Card.Body key={cost._id}>
+                        <ListGroup variant="flush">
+                          <ListGroup.Item>
+                            <div>{cost.name}</div>
+                            <InputGroup>
+                              <InputGroup.Text>£</InputGroup.Text>
+                              <FormControl
+                                className="mb-0 bg-light"
+                                type="number"
+                                value={cost.cost.toFixed(2)}
+                                disabled
+                              />
+                            </InputGroup>
+                          </ListGroup.Item>
+                          <Button
+                            variant="outline-secondary btn-sm py-0 mb-1"
+                            onClick={() => updateCost(cost)}
+                          >
+                            Edit
+                          </Button>
+                        </ListGroup>
+                      </Card.Body>
+                    );
+                  })
+                )}
+              </>
             )}
 
             <Button

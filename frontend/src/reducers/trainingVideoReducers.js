@@ -16,6 +16,9 @@ import {
   TRAINING_VIDEO_UPDATE_SUCCESS,
   TRAINING_VIDEO_UPDATE_FAIL,
   TRAINING_VIDEO_UPDATE_RESET,
+  TRAINING_VIDEO_LIST_BYGRADE_REQUEST,
+  TRAINING_VIDEO_LIST_BYGRADE_SUCCESS,
+  TRAINING_VIDEO_LIST_BYGRADE_FAIL,
 } from "../constants/trainingVideoConstants";
 
 export const trainingVideoListReducer = (
@@ -26,8 +29,32 @@ export const trainingVideoListReducer = (
     case TRAINING_VIDEO_LIST_REQUEST:
       return { loadingTrainingVideos: true, trainingVideos: [] };
     case TRAINING_VIDEO_LIST_SUCCESS:
-      return { loadingTrainingVideos: false, trainingVideos: action.payload };
+      return {
+        loadingTrainingVideos: false,
+        trainingVideos: action.payload,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      };
     case TRAINING_VIDEO_LIST_FAIL:
+      return { loadingTrainingVideos: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const trainingVideoListByGradeReducer = (
+  state = { trainingVideos: [] },
+  action
+) => {
+  switch (action.type) {
+    case TRAINING_VIDEO_LIST_BYGRADE_REQUEST:
+      return { loadingTrainingVideos: true, trainingVideos: [] };
+    case TRAINING_VIDEO_LIST_BYGRADE_SUCCESS:
+      return {
+        loadingTrainingVideos: false,
+        trainingVideos: action.payload,
+      };
+    case TRAINING_VIDEO_LIST_BYGRADE_FAIL:
       return { loadingTrainingVideos: false, error: action.payload };
     default:
       return state;

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const SearchBox = ({ history, path }) => {
+const SearchBox = ({ history, path, placeholder }) => {
+  if (!placeholder) {
+    placeholder = "";
+  }
   const [keyword, setKeyword] = useState("");
 
   const submitHandler = (e) => {
@@ -20,7 +23,7 @@ const SearchBox = ({ history, path }) => {
         type="text"
         name="q"
         onChange={(e) => setKeyword(e.target.value)}
-        placeholder="Search members..."
+        placeholder={`Search ${placeholder}...`}
         className="mr-sm-2 ml-sm-2"
       ></Form.Control>
       <Button type="submit" variant="outline-secondary" className="p-2">

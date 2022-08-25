@@ -205,8 +205,6 @@ export const membersList =
           Authorization: `Bearer ${memberInfo.token}`,
         },
       };
-      console.log(pageNumber);
-      console.log(keyword);
 
       const { data } = await axios.get(
         `/api/members?pageNumber=${pageNumber}&keyword=${keyword}`,

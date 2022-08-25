@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getMemberDetails } from "../actions/memberActions";
 import {
   listTrainingVideo,
-  listTrainingVideos,
+  listTrainingVideosByGrade,
 } from "../actions/TrainingVideoActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -22,18 +21,27 @@ const TrainingVideoScreen = ({ match }) => {
   const { loadingTrainingVideo, errorTrainingVideo, video } =
     displayTrainingVideo;
 
-  const trainingVideoList = useSelector((state) => state.trainingVideoList);
+  const trainingVideoListByGrade = useSelector(
+    (state) => state.trainingVideoListByGrade
+  );
   const { loadingTrainingVideos, errorTrainingVideos, trainingVideos } =
-    trainingVideoList;
+    trainingVideoListByGrade;
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { member } = memberDetails;
 
   useEffect(() => {
     dispatch(listTrainingVideo(match.params.id));
-    dispatch(listTrainingVideos());
-    dispatch(getMemberDetails("profile"));
-  }, [dispatch, match]);
+    if (member && member.kyuGrade > 0) {
+      const grade = member.kyuGrade - 1;
+      dispatch(listTrainingVideosByGrade(grade));
+    }
+
+    if (member && member.kyuGrade === 0) {
+      const grade = (member.danGrade + 1) * -1;
+      dispatch(listTrainingVideosByGrade(grade));
+    }
+  }, [dispatch, match, member]);
 
   const playAudio = () => {
     const audioEl = document.getElementById("soundFile");
@@ -41,52 +49,6 @@ const TrainingVideoScreen = ({ match }) => {
 
     audioEl.play();
   };
-
-  let numberMarker;
-  switch (member.kyuGrade && member.kyuGrade !== 0) {
-    case 1:
-      numberMarker = "st";
-      break;
-    case 2:
-      numberMarker = "nd";
-      break;
-    case 3:
-      numberMarker = "rd";
-      break;
-    default:
-      numberMarker = "th";
-  }
-  switch (member.danGrade && member.danGrade !== 0) {
-    case 1:
-      numberMarker = "st";
-      break;
-    case 2:
-      numberMarker = "nd";
-      break;
-    case 3:
-      numberMarker = "rd";
-      break;
-    default:
-      numberMarker = "th";
-  }
-
-  let nextGrade;
-  if (member && member.kyuGrade === 0) {
-    nextGrade = `${member.danGrade + 1}${numberMarker} dan`;
-  } else {
-    nextGrade = `${member.kyuGrade - 1}${numberMarker} kyu`;
-  }
-
-  let filteredVideos = [];
-
-  if (trainingVideos) {
-    trainingVideos.map((trainingVideo) => {
-      if (trainingVideo.grade.includes(nextGrade)) {
-        filteredVideos.push(trainingVideo);
-      }
-      return filteredVideos;
-    });
-  }
 
   return (
     <Container fluid="lg" className="mt-3">
@@ -100,7 +62,7 @@ const TrainingVideoScreen = ({ match }) => {
             </Message>
           ) : (
             <>
-              <ListGroup variant="flush" className="bg-primary p-2">
+              <ListGroup variant="flush" className="bg-primary p-1">
                 <ListGroup.Item>
                   <Video poster={video.img} mp4={video.video} />
                 </ListGroup.Item>
@@ -160,29 +122,32 @@ const TrainingVideoScreen = ({ match }) => {
               )}
 
               <ListGroup variant="flush">
-                {filteredVideos.map((trainingVideo) => (
-                  <ListGroup.Item key={trainingVideo._id}>
-                    <Row className="no-gutters align-items-center">
-                      <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
-                        <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                          <img src={trainingVideo.img} alt="" />
-                        </Link>
-                      </Col>
+                {trainingVideos.map(
+                  (trainingVideo) =>
+                    trainingVideo._id !== match.params.id && (
+                      <ListGroup.Item key={trainingVideo._id}>
+                        <Row className="no-gutters align-items-center">
+                          <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
+                            <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                              <img src={trainingVideo.img} alt="" />
+                            </Link>
+                          </Col>
 
-                      <Col className="ml-2">
-                        <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                          <p className="mb-1">{trainingVideo.title}</p>
-                        </Link>
-                        <Link to={`/trainingvideos/${trainingVideo._id}`}>
-                          <small>
-                            <span>Category</span> <br />{" "}
-                            {trainingVideo.category} <br />
-                          </small>
-                        </Link>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                ))}
+                          <Col className="ml-2">
+                            <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                              <p className="mb-1">{trainingVideo.title}</p>
+                            </Link>
+                            <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                              <small>
+                                <span>Category</span> <br />{" "}
+                                {trainingVideo.category} <br />
+                              </small>
+                            </Link>
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                    )
+                )}
               </ListGroup>
             </>
           )}

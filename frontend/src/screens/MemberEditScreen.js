@@ -21,6 +21,10 @@ const MemberEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch();
 
+  const singleImageData = (img) => {
+    console.log(`Uploading Img ${img}`);
+  };
+
   const memberId = match.params.id;
 
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -37,6 +41,7 @@ const MemberEditScreen = ({ match, history }) => {
 
   useEffect(() => {
     dispatch({ type: EDIT_MEMBER_RESET });
+
     if (!memberInfo) {
       history.push("/login");
     } else if (!memberInfo.isAdmin) {
@@ -230,6 +235,7 @@ const MemberEditScreen = ({ match, history }) => {
                           img={member.profileImg}
                           id={member._id}
                           type={"Profile"}
+                          singleImageData={singleImageData}
                         />
                         <small className="text-center">
                           Please consider that this image might be displayed

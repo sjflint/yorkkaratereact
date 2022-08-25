@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadFile } from "../actions/uploadFileActions";
-import { UPLOAD_FILE_CLEAR } from "../constants/uploadFileConstants";
 import Message from "./Message";
 import defaultPlaceholder from "../img/defaultplaceholder.jpg";
 import Uploading from "../img/uploading(1).gif";
@@ -31,7 +30,6 @@ const UploadFile = ({ id, currFile, singleFileData, buttonText }) => {
         singleFileData(file);
       }
     }
-    dispatch({ type: UPLOAD_FILE_CLEAR });
   }, [dispatch, file, id, singleFileData]);
   return (
     <div>
