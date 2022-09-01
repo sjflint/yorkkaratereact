@@ -66,4 +66,13 @@ const instructor = (req, res, next) => {
   }
 };
 
-export { protect, admin, author, shopAdmin, instructor };
+const adminOrInstructor = (req, res, next) => {
+  if (req.member.isInstructor || req.member.isAdmin) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorised as an instructor");
+  }
+};
+
+export { protect, admin, author, shopAdmin, instructor, adminOrInstructor };

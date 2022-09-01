@@ -10,8 +10,9 @@ import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 // @access Public
 const getTrainingSessions = asyncHandler(async (req, res) => {
   const trainingSessions = await TrainingSession.find({})
-    .populate("participants", "id firstName lastName email phone")
+    .populate("participants", "id firstName lastName email phone medicalStatus")
     .sort({
+      day: 1,
       times: 1,
     });
   res.json(trainingSessions);
@@ -253,6 +254,31 @@ const deleteTimetableSession = asyncHandler(async (req, res) => {
 // @route POST /api/trainingsessions
 // @access Private/Admin
 const createTimetableSession = asyncHandler(async (req, res) => {
+  let day;
+  switch (req.body.dayOfWeek) {
+    case "Monday":
+      day = 0;
+      break;
+    case "Tuesday":
+      day = 1;
+      break;
+    case "Wednesday":
+      day = 2;
+      break;
+    case "Thursday":
+      day = 3;
+      break;
+    case "Friday":
+      day = 4;
+      break;
+    case "Saturday":
+      day = 5;
+      break;
+    case "Sunday":
+      day = 6;
+      break;
+  }
+
   const trainingSession = {
     name: req.body.name,
     location: req.body.location,
@@ -264,6 +290,7 @@ const createTimetableSession = asyncHandler(async (req, res) => {
     hallHire: req.body.hallHire,
     numberBooked: 0,
     participants: [],
+    day: day,
   };
 
   await TrainingSession.create(trainingSession);
@@ -303,6 +330,30 @@ const createTimetableSession = asyncHandler(async (req, res) => {
 // @route PUT /api/trainingsessions/:id
 // @access Private/Admin
 const updateTimetableSession = asyncHandler(async (req, res) => {
+  let day;
+  switch (req.body.dayOfWeek) {
+    case "Monday":
+      day = 0;
+      break;
+    case "Tuesday":
+      day = 1;
+      break;
+    case "Wednesday":
+      day = 2;
+      break;
+    case "Thursday":
+      day = 3;
+      break;
+    case "Friday":
+      day = 4;
+      break;
+    case "Saturday":
+      day = 5;
+      break;
+    case "Sunday":
+      day = 6;
+      break;
+  }
   const trainingSession = await TrainingSession.findById(req.body.id);
   const members = await Member.find({ ddsuccess: true });
 
@@ -315,6 +366,7 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     trainingSession.times = req.body.times;
     trainingSession.capacity = Number(req.body.capacity);
     trainingSession.hallHire = Number(req.body.hallHire);
+    trainingSession.day = day;
 
     const updatedTrainingSession = await trainingSession.save();
     for (const member of members) {

@@ -93,9 +93,7 @@ const AdminScreen = ({ history }) => {
                 <Link to="/admin/emailmembers">
                   <Card>
                     <Card.Img variant="top" src={emailImg} className="p-3" />
-                    <Card.Footer className="text-center">
-                      Contact (Incomplete)
-                    </Card.Footer>
+                    <Card.Footer className="text-center">Contact</Card.Footer>
                   </Card>
                 </Link>
               </Col>

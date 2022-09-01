@@ -6,6 +6,9 @@ import {
   EDIT_MEMBER_REQUEST,
   EDIT_MEMBER_RESET,
   EDIT_MEMBER_SUCCESS,
+  FORMER_BLACKBELT_LIST_FAIL,
+  FORMER_BLACKBELT_LIST_REQUEST,
+  FORMER_BLACKBELT_LIST_SUCCESS,
   LIST_MEMBERS_FAIL,
   LIST_MEMBERS_REQUEST,
   LIST_MEMBERS_RESET,
@@ -98,6 +101,22 @@ export const blackBeltListReducer = (state = { blackBelts: [] }, action) => {
     case BLACKBELT_LIST_SUCCESS:
       return { loading: false, blackBelts: action.payload };
     case BLACKBELT_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const formerBlackBeltListReducer = (
+  state = { formerBlackBelts: [] },
+  action
+) => {
+  switch (action.type) {
+    case FORMER_BLACKBELT_LIST_REQUEST:
+      return { loading: true, formerBlackBelts: [] };
+    case FORMER_BLACKBELT_LIST_SUCCESS:
+      return { loading: false, formerBlackBelts: action.payload };
+    case FORMER_BLACKBELT_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

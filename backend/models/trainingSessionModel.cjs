@@ -8,6 +8,7 @@ const trainingSessionSchema = mongoose.Schema(
     maxGradeLevel: { type: Number, required: true },
     juniorSession: { type: Boolean, required: true },
     times: { type: String, required: true },
+    day: { type: Number, required: true },
     capacity: { type: Number, required: true },
     hallHire: { type: Number, required: true },
     numberBooked: { type: Number, required: true, default: 0 },

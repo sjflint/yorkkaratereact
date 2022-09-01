@@ -6,6 +6,9 @@ import {
   EDIT_MEMBER_FAIL,
   EDIT_MEMBER_REQUEST,
   EDIT_MEMBER_SUCCESS,
+  FORMER_BLACKBELT_LIST_FAIL,
+  FORMER_BLACKBELT_LIST_REQUEST,
+  FORMER_BLACKBELT_LIST_SUCCESS,
   LIST_MEMBERS_FAIL,
   LIST_MEMBERS_REQUEST,
   LIST_MEMBERS_RESET,
@@ -181,6 +184,27 @@ export const listBlackBelts = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BLACKBELT_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listFormerBlackBelts = () => async (dispatch) => {
+  try {
+    dispatch({ type: FORMER_BLACKBELT_LIST_REQUEST });
+
+    const { data } = await axios.get("/api/members/formerblackbelts");
+
+    dispatch({
+      type: FORMER_BLACKBELT_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: FORMER_BLACKBELT_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

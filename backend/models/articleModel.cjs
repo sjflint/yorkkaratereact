@@ -4,7 +4,7 @@ const articleSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     leader: { type: String, required: true, maxlength: 150 },
-    body: { type: Array, required: true },
+    body: { type: String, required: true },
     category: { type: String, required: true },
     image: { type: String },
     carouselImages: { type: Array },

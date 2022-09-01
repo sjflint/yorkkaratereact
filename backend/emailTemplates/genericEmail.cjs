@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 dotenv.config();
 
 const genericEmail = asyncHandler(async (emailDetails) => {
+  console.log(emailDetails);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -14,7 +15,8 @@ const genericEmail = asyncHandler(async (emailDetails) => {
   });
 
   // Is there an image to include in the email?
-  let image = "logo2021a.png";
+  let image =
+    "https://york-karate-uploads.s3.eu-west-2.amazonaws.com/secondarylogo.png";
   if (emailDetails.image) {
     // const emailImage = emailDetails.image.slice(7);
     image = emailDetails.image;

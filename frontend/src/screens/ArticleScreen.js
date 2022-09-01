@@ -28,7 +28,6 @@ const ArticleScreen = ({ match }) => {
   const articleId = article._id;
   const moreArticles = articles.filter((article) => article._id !== articleId);
 
-  const paragraphs = article.body;
   const images = article.carouselImages;
 
   return (
@@ -51,8 +50,6 @@ const ArticleScreen = ({ match }) => {
                   <ListGroup.Item className="bg-light">
                     <Row className="align-items-center">
                       <Col xs={3} sm={2} className="p-0">
-                        {/* How to find the current author image */}
-
                         <Image
                           src={`${article.authorImg}`}
                           alt={article.author}
@@ -82,16 +79,7 @@ const ArticleScreen = ({ match }) => {
                   <ListGroup.Item>
                     <p>{article.leader}</p>
 
-                    {paragraphs &&
-                      paragraphs.map((paragraph) => (
-                        <p
-                          key={`${paragraph}${Math.random()}`}
-                          className="mb-2"
-                        >
-                          {paragraph}
-                          <br />
-                        </p>
-                      ))}
+                    <p style={{ whiteSpace: "pre-line" }}>{article.body}</p>
                   </ListGroup.Item>
                 </ListGroup>
               </>

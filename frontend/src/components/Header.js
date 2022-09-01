@@ -68,10 +68,6 @@ const Header = () => {
                 <LinkContainer to="/venues">
                   <NavDropdown.Item href="/venues">Venues</NavDropdown.Item>
                 </LinkContainer>
-                <NavDropdown.Divider />
-                <LinkContainer to="/afterschool">
-                  <NavDropdown.Item>After School Program</NavDropdown.Item>
-                </LinkContainer>
               </NavDropdown>
               <LinkContainer to="/events">
                 <Nav.Link>Events</Nav.Link>

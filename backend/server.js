@@ -19,6 +19,7 @@ import lessonPlanRoutes from "./routes/lessonPlanRoutes.js";
 import gradingRoutes from "./routes/gradingRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import financialRoutes from "./routes/financialRoutes.js";
+import emailRoutes from "./routes/emailRoutes.js";
 import { goCardlessWebhook } from "./utils/goCardlessWebhook.cjs";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -73,6 +74,7 @@ app.use("/api/lessonplans", lessonPlanRoutes);
 app.use("/api/grading", gradingRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/financial", financialRoutes);
+app.use("/api/email", emailRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

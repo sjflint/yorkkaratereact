@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import HomeScreen from "./HomeScreen";
 import NewsScreen from "./NewsScreen";
 import ArticleScreen from "./ArticleScreen";
@@ -12,7 +12,6 @@ import VenuesScreen from "./VenuesScreen";
 import TimetableScreen from "./TimetableScreen";
 import CompleteDDSetup from "./CompleteDDSetup";
 import CompleteUpdateDD from "./CompleteUpdateDD";
-import AfterSchoolScreen from "./AfterSchoolScreen";
 import MemberApplicationScreen from "./memberApplicationScreen";
 import WelfareFundraisingScreen from "./WelfareFundraisingScreen";
 import BlackBeltScreen from "./BlackBeltsScreen";
@@ -48,10 +47,12 @@ import { AttendanceRegisterScreen } from "./AttendanceRegisterScreen";
 import FinanceScreen from "./FinanceScreen";
 import TrialRegistrationScreen from "./TrialRegistrationScreen";
 import OutstandingFeesScreen from "./OutstandingFeesScreen";
+import EmailMembersScreen from "./EmailMembersScreen";
+import LostScreen from "./LostScreen";
 
 const ScreenRoutes = () => {
   return (
-    <>
+    <Switch>
       <Route path="/" component={HomeScreen} exact />
       <Route path="/home" component={HomeScreen} />
       <Route path="/news" component={NewsScreen} exact />
@@ -75,7 +76,6 @@ const ScreenRoutes = () => {
       <Route path="/timetable" component={TimetableScreen} />
       <Route path="/completeddsetup" component={CompleteDDSetup} />
       <Route path="/completeupdatedd" component={CompleteUpdateDD} />
-      <Route path="/afterschool" component={AfterSchoolScreen} />
       <Route path="/memberapplication" component={MemberApplicationScreen} />
       <Route
         path="/welfareandfundraising"
@@ -149,11 +149,14 @@ const ScreenRoutes = () => {
         path="/instructor/attendance/:className/search/:keyword?"
         component={AttendanceRegisterScreen}
       />
+
       <Route path="/accountinactive" component={AccountInactiveScreen} />
 
       <Route path="/trialregistration" component={TrialRegistrationScreen} />
       <Route path="/outstandingFees" component={OutstandingFeesScreen} />
-    </>
+      <Route path="/admin/emailmembers" component={EmailMembersScreen} />
+      <Route component={LostScreen} />
+    </Switch>
   );
 };
 

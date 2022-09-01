@@ -6,7 +6,7 @@ import Message from "../components/Message";
 import Product from "../components/Product";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import ProductCarousel from "../components/ProductCarousel";
-import logo from "../img/logo2021(transparent-black).png";
+import logo from "../img/logo2021.png";
 import ProductPaginate from "../components/ProductPaginate";
 import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
 import { Link } from "react-router-dom";
@@ -33,20 +33,38 @@ const ShopScreen = ({ match }) => {
           exit={{ opacity: 0 }}
         >
           <Container fluid="lg">
-            <div className="d-flex align-items-center justify-content-between border-bottom border-warning mb-2">
-              <h3>Shop</h3>
+            <div className="d-flex align-items-center justify-content-between border-bottom border-warning mb-2 pb-2">
+              <h3 className="mb-0">Shop</h3>
               <Link to="/basket">
                 <Button variant="default">
                   <i className="fas fa-shopping-cart"></i> Checkout
                 </Button>
               </Link>
             </div>
-            <Row className="bg-primary p-2 text-center">
+            <Row className="mx-1 text-center align-items-center bg-primary">
+              <Col>
+                <img src={logo} alt="logo" className="max-width-200" />
+              </Col>
+              <Col>
+                <h5 className="text-center text-warning">
+                  Bespoke training items available using the club logo
+                </h5>
+              </Col>
+
+              <Col>
+                <img
+                  src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
+                  className="fluid max-width-100"
+                  alt="paypal-logo"
+                />
+              </Col>
+            </Row>
+            <Row className="bg-secondary p-2 text-center g-0">
               <Col xs={12} sm={3}>
                 <Button
-                  variant="dark"
+                  variant="outline-dark"
                   onClick={() => setFilterBy("uniform/gi")}
-                  className="w-100"
+                  className="w-100 rounded-0"
                 >
                   Karate Suits
                 </Button>
@@ -54,27 +72,27 @@ const ShopScreen = ({ match }) => {
 
               <Col xs={12} sm={3}>
                 <Button
-                  variant="dark"
+                  variant="outline-dark"
                   onClick={() => setFilterBy("equipment/protection")}
-                  className="w-100"
+                  className="w-100 rounded-0"
                 >
                   Equipment
                 </Button>
               </Col>
               <Col xs={12} sm={3}>
                 <Button
-                  variant="dark"
+                  variant="outline-dark"
                   onClick={() => setFilterBy("clothing")}
-                  className="w-100"
+                  className="w-100 rounded-0"
                 >
                   Clothing
                 </Button>
               </Col>
               <Col xs={12} sm={3}>
                 <Button
-                  variant="dark"
+                  variant="outline-dark"
                   onClick={() => setFilterBy("")}
-                  className="w-100"
+                  className="w-100 rounded-0"
                 >
                   All Products
                 </Button>
@@ -90,30 +108,15 @@ const ShopScreen = ({ match }) => {
             ) : (
               <>
                 {!filterBy && (
-                  <Row className="align-items-center bg-light p-4">
+                  <Row className="align-items-center bg-light">
+                    <Col xs={12} sm={3}></Col>
                     <Col xs={12} sm={6}>
                       <h3 className="text-center text-white">
                         Featured Products
                       </h3>
                       <ProductCarousel />
                     </Col>
-                    <Col xs={12} sm={6}>
-                      <Row className="mx-1 text-center">
-                        <Col sm={12} xs={6} className="p-2">
-                          <img src={logo} alt="logo" className="fluid" />
-                          <h5 className="text-center text-warning">
-                            Bespoke training items available using the club logo
-                          </h5>
-                        </Col>
-                        <Col sm={12} xs={6} className="p-2 mt-3">
-                          <img
-                            src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
-                            className="fluid max-width-300"
-                            alt="paypal-logo"
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
+                    <Col xs={12} sm={3}></Col>
                   </Row>
                 )}
                 {!filterBy ? (

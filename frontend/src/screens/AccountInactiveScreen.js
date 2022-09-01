@@ -37,7 +37,7 @@ const AccountInactiveScreen = () => {
           </Col>
           <Col className="text-center">
             <h3 className="border-bottom border-warning pb-1">
-              {member.nameFirst} {member.nameSecond}'s Account is Inactive
+              {member.firstName} {member.lastName}'s Account is Inactive
             </h3>
             <p>
               Unfortunately, your account is now inactive because your direct

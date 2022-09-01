@@ -7,6 +7,8 @@ import {
   FormControl,
   FormGroup,
   FormLabel,
+  Row,
+  Col,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -21,11 +23,9 @@ import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import * as Yup from "yup";
-
-import { Formik, Form } from "formik";
+import { Formik, Form, FieldArray } from "formik";
 import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
-
 import UploadImage from "../components/uploadImage";
 import ProductPaginate from "../components/ProductPaginate";
 import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
@@ -38,7 +38,6 @@ const ListProductsScreen = ({ history, match }) => {
   const [stockModal, setStockModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [updateId, setUpdateId] = useState();
-  const [editDescription, setEditDescription] = useState(false);
   const [image, setImage] = useState();
 
   const singleImageData = (singleImage) => {
@@ -103,30 +102,20 @@ const ListProductsScreen = ({ history, match }) => {
 
   const createProductHandler = (values) => {
     values.image = image;
-    values.description = values.description.split("\n");
-
-    values.sizes = values.sizes.split(";");
     if (values.heldInStock === "true") {
       values.countInStock = values.sizes.reduce(
         (o, key) => ({ ...o, [key]: 0 }),
         {}
       );
     }
-
     dispatch(createProduct(values));
     setCreateModal(false);
   };
 
   const editProductHandler = async (values) => {
     values.id = updateId;
-    values.sizes = values.sizes.split(";");
     values.image = image;
 
-    if (editDescription === false) {
-      values.description = product.description;
-    } else {
-      values.description = values.description.split("\n");
-    }
     if (values.heldInStock === "true") {
       values.countInStock = values.sizes.reduce(
         (o, key) => ({ ...o, [key]: 0 }),
@@ -135,9 +124,8 @@ const ListProductsScreen = ({ history, match }) => {
     } else {
       values.countInStock = null;
     }
-
     dispatch(updateProduct(values));
-    setEditDescription(false);
+
     setEditModal(false);
   };
 
@@ -156,18 +144,6 @@ const ListProductsScreen = ({ history, match }) => {
   };
 
   let initialValues;
-  if (member) {
-    initialValues = {
-      sizes: "",
-      name: "",
-      description: "",
-      price: "",
-      image: "",
-      category: "",
-      todaysDate: new Date(),
-      heldInStock: "",
-    };
-  }
 
   // Dropdown options for category
   const dropdownOptions = [
@@ -183,22 +159,17 @@ const ListProductsScreen = ({ history, match }) => {
   ];
 
   const validationSchema = Yup.object({
-    sizes: Yup.string().required("Required"),
     name: Yup.string().required("Required"),
     price: Yup.number(),
-
+    sizes: Yup.array().min(1),
     category: Yup.string().required("Required"),
     heldInStock: Yup.string().required("Is this product held in Stock?"),
   });
 
   let editInitialValues = {};
-  let paragraphs;
+  let heldInStock;
 
-  if (product.description !== undefined) {
-    paragraphs = product.description;
-
-    const productDescription = paragraphs.join("\n");
-    let heldInStock;
+  if (product.name) {
     if (product.countInStock) {
       heldInStock = "true";
     } else {
@@ -206,15 +177,28 @@ const ListProductsScreen = ({ history, match }) => {
     }
 
     editInitialValues = {
-      sizes: product.sizes.join(";"),
+      sizes: product.sizes,
       name: product.name,
-      description: productDescription,
+      description: product.description,
       price: product.price.toFixed(2),
       image: product.image,
       category: product.category,
       countInStock: product.countInStock,
       todaysDate: new Date(),
       heldInStock: heldInStock,
+    };
+  }
+
+  if (member) {
+    initialValues = {
+      name: "",
+      description: "",
+      price: "",
+      image: "",
+      category: "",
+      todaysDate: new Date(),
+      heldInStock: "",
+      sizes: [""],
     };
   }
 
@@ -272,7 +256,6 @@ const ListProductsScreen = ({ history, match }) => {
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
                       setUpdateId(product._id);
-
                       await dispatch(listProduct(product._id));
                       await setImage(product.image);
                       await setEditModal(true);
@@ -288,7 +271,6 @@ const ListProductsScreen = ({ history, match }) => {
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
                       setUpdateId(product._id);
-
                       await dispatch(listProduct(product._id));
                       await setImage(product.image);
                       await setEditModal(true);
@@ -302,7 +284,6 @@ const ListProductsScreen = ({ history, match }) => {
                       className="btn btn-sm"
                       onClick={async () => {
                         setUpdateId(product._id);
-
                         await dispatch(listProduct(product._id));
                         await setImage(product.image);
                         await setEditModal(true);
@@ -318,7 +299,6 @@ const ListProductsScreen = ({ history, match }) => {
                         className="btn btn-sm"
                         onClick={async () => {
                           setUpdateId(product._id);
-
                           await dispatch(listProduct(product._id));
                           await setImage(product.image);
                           await setStockModal(true);
@@ -415,13 +395,41 @@ const ListProductsScreen = ({ history, match }) => {
                   />
                 </div>
                 <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="Sizes"
-                    type="text"
-                    name="sizes"
-                    placeholder="Add sizes, seperated by ;"
-                  />
+                  <FieldArray name="sizes">
+                    {({ push, remove }) => (
+                      <>
+                        {values.sizes.map((_, index) => (
+                          <Row className="mt-2">
+                            <Col xs={8}>
+                              <FormikControl
+                                control="input"
+                                label="Add Size"
+                                type="text"
+                                name={`sizes[${index}]`}
+                                placeholder="Add size e.g. Small"
+                              />
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                              <Button
+                                variant="outline-danger"
+                                onClick={() => remove(index)}
+                                className="py-1 px-2 mt-4"
+                              >
+                                <i className="fa-solid fa-trash"></i> Remove
+                              </Button>
+                            </Col>
+                          </Row>
+                        ))}
+                        <Button
+                          variant="outline-secondary"
+                          className="py-0 mt-2"
+                          onClick={() => push("")}
+                        >
+                          + Add another size
+                        </Button>
+                      </>
+                    )}
+                  </FieldArray>
                 </div>
                 <div className="bg-light p-2 mb-2">
                   <FormikControl
@@ -470,7 +478,6 @@ const ListProductsScreen = ({ history, match }) => {
         show={editModal}
         onHide={() => {
           setEditModal(false);
-          setEditDescription(false);
         }}
       >
         <Modal.Header closeButton className="bg-dark">
@@ -519,16 +526,43 @@ const ListProductsScreen = ({ history, match }) => {
                   </div>
                 </div>
                 <div className="bg-light p-2 mb-2">
-                  <FormikControl
-                    control="input"
-                    label="Sizes"
-                    type="text"
-                    name="sizes"
-                    placeholder="Add sizes, seperated by ;"
-                  />
-                  <small className="text-muted">
-                    include size, followed by ; (e.g. small;medium;large)
-                  </small>
+                  <FieldArray name="sizes">
+                    {({ push, remove }) => (
+                      <>
+                        {values.sizes.map((_, index) => (
+                          <>
+                            <Row className="mt-2">
+                              <Col xs={8}>
+                                <FormikControl
+                                  control="input"
+                                  label="Add Size"
+                                  type="text"
+                                  name={`sizes[${index}]`}
+                                  placeholder="Add size e.g. Small"
+                                />
+                              </Col>
+                              <Col xs={4} className="mt-3">
+                                <Button
+                                  variant="outline-danger"
+                                  onClick={() => remove(index)}
+                                  className="py-1 px-2 mt-4"
+                                >
+                                  <i className="fa-solid fa-trash"></i> Remove
+                                </Button>
+                              </Col>
+                            </Row>
+                          </>
+                        ))}
+                        <Button
+                          variant="outline-secondary"
+                          className="py-0 mt-2"
+                          onClick={() => push("")}
+                        >
+                          + Add another size
+                        </Button>
+                      </>
+                    )}
+                  </FieldArray>
                 </div>
                 <div className="bg-light p-2 mb-2">
                   <FormikControl
@@ -549,47 +583,14 @@ const ListProductsScreen = ({ history, match }) => {
                 <div className="bg-light p-2 mb-2">
                   <h5 className="mt-3">Description</h5>
 
-                  {!editDescription && (
-                    <>
-                      {paragraphs &&
-                        paragraphs.map((paragraph) => (
-                          <p
-                            key={`${paragraph}${Math.random()}`}
-                            className="mb-2 "
-                          >
-                            {paragraph}
-                            <br />
-                          </p>
-                        ))}
-
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => setEditDescription(true)}
-                        className="mb-4 btn-sm"
-                      >
-                        Edit Description?
-                      </Button>
-                    </>
-                  )}
-                  {editDescription && (
-                    <>
-                      <FormikControl
-                        control="input"
-                        as="textarea"
-                        label="Please provide a description"
-                        name="description"
-                        placeholder="Please enter a new description..."
-                        rows="10"
-                      />
-                      <Button
-                        onClick={() => setEditDescription(false)}
-                        variant="danger"
-                        className="mb-2 btn-sm"
-                      >
-                        Cancel Edit Description?
-                      </Button>
-                    </>
-                  )}
+                  <FormikControl
+                    control="input"
+                    as="textarea"
+                    label="Please provide a description"
+                    name="description"
+                    placeholder="Please enter a new description..."
+                    rows="10"
+                  />
                 </div>
                 <Button
                   type="submit"
@@ -610,7 +611,6 @@ const ListProductsScreen = ({ history, match }) => {
             variant="secondary"
             onClick={() => {
               setEditModal(false);
-              setEditDescription(false);
             }}
           >
             Cancel

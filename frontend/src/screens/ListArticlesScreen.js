@@ -13,11 +13,9 @@ import { ARTICLE_CREATE_RESET } from "../constants/articleConstants";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import * as Yup from "yup";
-
 import { Formik, Form } from "formik";
 import FormikControl from "../components/FormComponents/FormikControl";
 import imagePlaceholder from "../img/defaultplaceholder.jpg";
-
 import UploadImage from "../components/uploadImage";
 import ArticlePaginate from "../components/ArticlePaginate";
 import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
@@ -28,31 +26,32 @@ const ListArticlesScreen = ({ history, match }) => {
   const [editModal, setEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [updateId, setUpdateId] = useState();
-  const [editBody, setEditBody] = useState(false);
   const [image, setImage] = useState();
   const [multiImage, setMultiImage] = useState([]);
 
   const pageNumber = match.params.pageNumber || 1;
 
   const singleImageData = (singleImage) => {
+    console.log("running");
     setImage(singleImage);
 
     const image = {
       original: singleImage,
       thumbnail: singleImage,
     };
-    console.log(image);
-    console.log(multiImage);
-    setMultiImage((multiImage) => [...multiImage, image]);
+
+    if (multiImage.some((x) => x.original === singleImage)) {
+      console.log("image already added");
+    } else {
+      setMultiImage([...multiImage, image]);
+      console.log("image added to array");
+    }
   };
 
   const changeHeaderImage = (img) => {
-    console.log(img.original);
-    console.log(multiImage);
     let newArray = multiImage.filter((item) => item.original !== img.original);
     newArray.unshift(img);
     setMultiImage(newArray);
-    console.log(multiImage);
   };
 
   const dispatch = useDispatch();
@@ -115,7 +114,6 @@ const ListArticlesScreen = ({ history, match }) => {
     values.authorId = member._id;
     values.image = image;
     values.carouselImages = multiImage;
-    values.body = values.body.split("\n");
 
     dispatch(createArticle(values));
     setCreateModal(false);
@@ -126,14 +124,8 @@ const ListArticlesScreen = ({ history, match }) => {
     values.carouselImages = multiImage;
     values.id = updateId;
 
-    if (editBody === false) {
-      values.body = article.body;
-    } else {
-      values.body = values.body.split("\n");
-    }
-
     dispatch(updateArticle(values));
-    setEditBody(false);
+
     setEditModal(false);
     setMultiImage([]);
   };
@@ -147,7 +139,7 @@ const ListArticlesScreen = ({ history, match }) => {
       category: "",
       image: "",
       carouselImages: "",
-      author: `${member.nameFirst} ${member.nameSecond}`,
+      author: `${member.firstName} ${member.lastName}`,
       authorImg: member.profileImg,
     };
   }
@@ -175,23 +167,16 @@ const ListArticlesScreen = ({ history, match }) => {
   });
 
   let editInitialValues = {};
-  let paragraphs;
 
-  if (article.body !== undefined) {
-    paragraphs = article.body;
-
-    const articleBody = paragraphs.join("\n");
-
-    editInitialValues = {
-      title: article.title,
-      leader: article.leader,
-      body: articleBody,
-      category: article.category,
-      author: article.author,
-      authorImg: article.authorImg,
-      dateCreated: article.dateCreated,
-    };
-  }
+  editInitialValues = {
+    title: article.title,
+    leader: article.leader,
+    body: article.body,
+    category: article.category,
+    author: article.author,
+    authorImg: article.authorImg,
+    dateCreated: article.dateCreated,
+  };
 
   return (
     <Container fluid="lg" className="mt-3">
@@ -248,7 +233,7 @@ const ListArticlesScreen = ({ history, match }) => {
 
                       await dispatch(listArticle(article._id));
                       await setImage(article.image);
-                      await setMultiImage(article.carouselImages);
+                      setMultiImage(article.carouselImages);
                       await setEditModal(true);
                     }}
                   >
@@ -264,7 +249,7 @@ const ListArticlesScreen = ({ history, match }) => {
                       dispatch({ type: UPLOAD_IMG_CLEAR });
                       await dispatch(listArticle(article._id));
                       await setImage(article.image);
-                      await setMultiImage(article.carouselImages);
+                      setMultiImage(article.carouselImages);
                       await setEditModal(true);
                     }}
                   >
@@ -283,7 +268,7 @@ const ListArticlesScreen = ({ history, match }) => {
                         dispatch({ type: UPLOAD_IMG_CLEAR });
                         await dispatch(listArticle(article._id));
                         await setImage(article.image);
-                        await setMultiImage(article.carouselImages);
+                        setMultiImage(article.carouselImages);
                         await setEditModal(true);
                       }}
                     >
@@ -378,12 +363,19 @@ const ListArticlesScreen = ({ history, match }) => {
                     >
                       Remove Image
                     </Button>
-                    {index !== 0 && (
+                    {index !== 0 ? (
                       <Button
                         className="w-100 btn-sm btn-secondary my-1 py-0"
-                        onClick={() => changeHeaderImage(index)}
+                        onClick={() => changeHeaderImage(image)}
                       >
                         Set as Title Image
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-100 btn-sm btn-secondary my-1 py-0"
+                        disabled
+                      >
+                        Title Image
                       </Button>
                     )}
                   </Col>
@@ -453,7 +445,7 @@ const ListArticlesScreen = ({ history, match }) => {
         show={editModal}
         onHide={() => {
           setEditModal(false);
-          setEditBody(false);
+
           setMultiImage([]);
         }}
       >
@@ -563,46 +555,15 @@ const ListArticlesScreen = ({ history, match }) => {
                 <div className="bg-light p-2 mb-2">
                   <h5 className="mt-3">Body</h5>
 
-                  {!editBody && (
-                    <>
-                      {paragraphs &&
-                        paragraphs.map((paragraph) => (
-                          <p
-                            key={`${paragraph}${Math.random()}`}
-                            className="mb-2"
-                          >
-                            {paragraph}
-                            <br />
-                          </p>
-                        ))}
-
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => setEditBody(true)}
-                        className="mb-4 btn-sm py-0"
-                      >
-                        Edit Body?
-                      </Button>
-                    </>
-                  )}
-                  {editBody && (
-                    <>
-                      <FormikControl
-                        control="input"
-                        as="textarea"
-                        name="body"
-                        placeholder="All the details. Try to write fluently and without being boring!"
-                        rows="15"
-                      />
-                      <Button
-                        onClick={() => setEditBody(false)}
-                        variant="danger"
-                        className="mb-2 btn-sm"
-                      >
-                        Cancel Edit Body?
-                      </Button>
-                    </>
-                  )}
+                  <div className="bg-light p-2 mb-2">
+                    <FormikControl
+                      control="input"
+                      as="textarea"
+                      name="body"
+                      placeholder="All the details. Try to write fluently and without being boring!"
+                      rows="15"
+                    />
+                  </div>
                 </div>
                 <Button
                   type="submit"
@@ -620,7 +581,6 @@ const ListArticlesScreen = ({ history, match }) => {
             variant="secondary"
             onClick={() => {
               setEditModal(false);
-              setEditBody(false);
             }}
           >
             Cancel

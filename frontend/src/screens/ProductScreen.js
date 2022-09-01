@@ -73,7 +73,9 @@ const ProductScreen = ({ history, match }) => {
                   {product.price && `Price: £${product.price.toFixed(2)}`}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <p>{product.description}</p>
+                  <p style={{ whiteSpace: "pre-line" }}>
+                    {product.description}
+                  </p>
                 </ListGroup.Item>
 
                 {product.countInStock ? (

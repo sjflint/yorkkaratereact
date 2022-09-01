@@ -77,70 +77,6 @@ const TimetableScreen = () => {
           Timetable
         </h3>
 
-        <h5>
-          Not sure which class is best for you? Search for relevant classes
-        </h5>
-        <div className="mb-3 border-bottom border-warning">
-          <Form onSubmit={onSubmit}>
-            <Row className="py-2 mx-1">
-              <Col md={5} className="mb-1">
-                <Form.Control
-                  as="select"
-                  value={ageGroup}
-                  onChange={handleAgeGroup}
-                >
-                  <option value="under9">Aged under 9 years old</option>
-
-                  <option value="9andover">Aged 9 years old or above</option>
-                </Form.Control>
-              </Col>
-
-              <Col md={5} className="mb-1">
-                <Form.Control as="select" value={grade} onChange={handleGrade}>
-                  <option value="16">Beginner</option>
-                  <option value="15">15 kyu</option>
-                  <option value="14">14 kyu</option>
-                  <option value="13">13 kyu</option>
-                  <option value="12">12 kyu</option>
-                  <option value="11">11 kyu</option>
-                  <option value="10">10 kyu</option>
-                  <option value="9">9 kyu</option>
-                  <option value="8">8 kyu</option>
-                  <option value="7">7 kyu</option>
-                  <option value="6">6 kyu</option>
-                  <option value="5">5 kyu</option>
-                  <option value="4">4 kyu</option>
-                  <option value="3">3 kyu</option>
-                  <option value="2">2 kyu</option>
-                  <option value="1">1 kyu</option>
-                  <option value="0">Black belt</option>
-                </Form.Control>
-              </Col>
-              <Col md={2}>
-                <Button variant="default" type="submit">
-                  <i className="fas fa-search"></i>
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-          <p>What is a kyu grade?</p>
-          <p>
-            A kyu, in Japanese martial arts, designates grade (level) of
-            proficiency. The levels go in reverse, that is to say that 1st kyu
-            is the highest and 15th kyu the lowest. When black belt is achieved,
-            the rank system switches to dan and counts up. 1st dan is the first
-            level of black belt and 10th dan is the highest level. <br />
-            Every kyu grade has a different belt colour, unlike dan grades that
-            are all black.
-          </p>
-          <Button
-            variant="outline-secondary"
-            className="py-0 mb-2"
-            onClick={handleShowKyu}
-          >
-            See the different kyu colours
-          </Button>
-        </div>
         {loading ? (
           <Loader variant="warning" />
         ) : error ? (
@@ -217,6 +153,77 @@ const TimetableScreen = () => {
             </Col>
           </Row>
         )}
+        <div className="p-5 bg-primary text-white">
+          <p className="text-white">
+            Not sure which class is best for you? Search for relevant classes
+          </p>
+          <div className="mb-3 border-bottom border-warning">
+            <Form onSubmit={onSubmit}>
+              <Row className="py-2 mx-1">
+                <Col md={5} className="mb-1">
+                  <Form.Control
+                    as="select"
+                    value={ageGroup}
+                    onChange={handleAgeGroup}
+                  >
+                    <option value="under9">Aged under 9 years old</option>
+
+                    <option value="9andover">Aged 9 years old or above</option>
+                  </Form.Control>
+                </Col>
+
+                <Col md={5} className="mb-1">
+                  <Form.Control
+                    as="select"
+                    value={grade}
+                    onChange={handleGrade}
+                  >
+                    <option value="16">Beginner</option>
+                    <option value="15">15 kyu</option>
+                    <option value="14">14 kyu</option>
+                    <option value="13">13 kyu</option>
+                    <option value="12">12 kyu</option>
+                    <option value="11">11 kyu</option>
+                    <option value="10">10 kyu</option>
+                    <option value="9">9 kyu</option>
+                    <option value="8">8 kyu</option>
+                    <option value="7">7 kyu</option>
+                    <option value="6">6 kyu</option>
+                    <option value="5">5 kyu</option>
+                    <option value="4">4 kyu</option>
+                    <option value="3">3 kyu</option>
+                    <option value="2">2 kyu</option>
+                    <option value="1">1 kyu</option>
+                    <option value="0">Black belt</option>
+                  </Form.Control>
+                </Col>
+                <Col md={2}>
+                  <Button variant="default" type="submit">
+                    <i className="fas fa-search"></i>
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+            <p>What is a kyu grade?</p>
+            <p>
+              A kyu, in Japanese martial arts, designates grade (level) of
+              proficiency. The levels go in reverse, that is to say that 1st kyu
+              is the highest and 15th kyu the lowest. When black belt is
+              achieved, the rank system switches to dan and counts up. 1st dan
+              is the first level of black belt and 10th dan is the highest
+              level. <br />
+              Every kyu grade has a different belt colour, unlike dan grades
+              that are all black.
+            </p>
+            <Button
+              variant="default"
+              className="py-0 mb-2"
+              onClick={handleShowKyu}
+            >
+              See the different kyu colours
+            </Button>
+          </div>
+        </div>
       </Container>
 
       <Modal show={show} onHide={() => setShow(false)}>

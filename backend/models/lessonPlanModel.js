@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const lessonPlanSchema = mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
+  gradeLevel: { type: String, required: true },
   kihon: [
     {
       type: mongoose.Schema.Types.ObjectId,

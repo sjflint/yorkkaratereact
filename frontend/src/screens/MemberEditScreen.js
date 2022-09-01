@@ -44,7 +44,7 @@ const MemberEditScreen = ({ match, history }) => {
 
     if (!memberInfo) {
       history.push("/login");
-    } else if (!memberInfo.isAdmin) {
+    } else if (!memberInfo.isAdmin && !memberInfo.isInstructor) {
       history.push("/profile");
     }
     dispatch(getMemberDetails(memberId));
@@ -98,6 +98,7 @@ const MemberEditScreen = ({ match, history }) => {
       isShopAdmin: member.isShopAdmin.toString(),
       isAuthor: member.isAuthor.toString(),
       isInstructor: member.isInstructor.toString(),
+      squadMember: member.squadMember.toString(),
       firstName: member.firstName,
       lastName: member.lastName,
       dateOfBirth: member.dateOfBirth.substring(0, 10),
@@ -123,6 +124,7 @@ const MemberEditScreen = ({ match, history }) => {
     isShopAdmin: Yup.boolean().required("Required"),
     isAuthor: Yup.boolean().required("Required"),
     isInstructor: Yup.boolean().required("Required"),
+    squadMember: Yup.boolean().required("Required"),
     firstName: Yup.string().required("Required"),
     lastName: Yup.string().required("Required"),
     dateOfBirth: Yup.date().required("Required"),
@@ -169,7 +171,6 @@ const MemberEditScreen = ({ match, history }) => {
     }
 
     if (member) {
-      console.log(member.kyuGrade);
       if (member.kyuGrade > 10) {
         values.gradeLevel = "Junior";
       } else if (member.kyuGrade > 6) {
@@ -203,6 +204,12 @@ const MemberEditScreen = ({ match, history }) => {
 
   return (
     <Container className="mt-3">
+      {!memberInfo.isAdmin && (
+        <Message variant="warning">
+          Viewing as Instructor. Please note: Only admins can edit member's
+          details. Any changes you make will not be saved or updated.
+        </Message>
+      )}
       {loading ? (
         <Loader variant="warning" />
       ) : error ? (
@@ -368,58 +375,68 @@ const MemberEditScreen = ({ match, history }) => {
                     </div>
                   </div>
                   <div className="py-4 border-bottom border-warning">
-                    <h5>Membership Status</h5>
-                    <Row>
-                      <Col md={5}>
-                        <div className="border border-warning p-2">
+                    <h5>Membership Status and Permissions</h5>
+                    <Row className="mt-2">
+                      {member && member.kyuGrade === 0 ? (
+                        <Col md={4}>
+                          <div className="border border-warning p-1">
+                            <h5 className="text-center">
+                              Current Dan Grade:{" "}
+                              {`${member.danGrade}${numberMarker} Dan`}
+                            </h5>
+                            {danGrade && gradingDate ? (
+                              <ListGroup>
+                                <ListGroup.Item
+                                  variant="success"
+                                  className="text-center strong"
+                                >
+                                  Dan Grade set to{" "}
+                                  {`${danGrade}${numberMarker2} Dan`}
+                                </ListGroup.Item>
+                              </ListGroup>
+                            ) : (
+                              <Button
+                                variant="outline-secondary"
+                                className="text-center w-100 py-0"
+                                onClick={() => setShowModal(true)}
+                              >
+                                Add Dan grading
+                              </Button>
+                            )}
+                          </div>
+                        </Col>
+                      ) : (
+                        <Col md={4}>
+                          <div className="border border-warning p-1">
+                            <FormikControl
+                              control="input"
+                              label="Kyu Grade"
+                              type="number"
+                              name="kyuGrade"
+                            />
+                          </div>
+                          <p className="text-center my-2">
+                            If not a kyu grade, enter 0 for the kyu grade value
+                          </p>
+                        </Col>
+                      )}
+                      <Col md={4}>
+                        <div className="border border-warning p-1">
                           <FormikControl
-                            control="input"
-                            label="Kyu Grade"
-                            type="number"
-                            name="kyuGrade"
+                            control="radio"
+                            label="Squad member?"
+                            name="squadMember"
+                            options={adminOptions}
                           />
                         </div>
                       </Col>
-                      <Col md={2} className="align-self-center">
-                        <h3 className="text-center my-2">Or</h3>
-                      </Col>
-                      <Col md={5}>
-                        <div className="border border-warning p-2">
-                          <h5 className="text-center">
-                            Current Dan Grade:{" "}
-                            {`${member.danGrade}${numberMarker} Dan`}
-                          </h5>
-                          {danGrade && gradingDate ? (
-                            <ListGroup>
-                              <ListGroup.Item
-                                variant="success"
-                                className="text-center strong"
-                              >
-                                Dan Grade set to{" "}
-                                {`${danGrade}${numberMarker2} Dan`}
-                              </ListGroup.Item>
-                            </ListGroup>
-                          ) : (
-                            <Button
-                              variant="outline-secondary"
-                              className="text-center w-100 py-0"
-                              onClick={() => setShowModal(true)}
-                            >
-                              Add Dan grading
-                            </Button>
-                          )}
-                        </div>
-                      </Col>
-                      <p className="text-center my-2">
-                        If not a kyu grade, enter 0 for the kyu grade value
-                      </p>
                     </Row>
-                    <Row className="mt-2">
+                    <Row className="mt-2 g-0">
                       <Col md={3}>
                         <div className="border border-warning p-1">
                           <FormikControl
                             control="radio"
-                            label="Is this user an Admin?"
+                            label="Admin user?"
                             name="isAdmin"
                             options={adminOptions}
                           />
@@ -429,7 +446,7 @@ const MemberEditScreen = ({ match, history }) => {
                         <div className="border border-warning p-1">
                           <FormikControl
                             control="radio"
-                            label="Is this user a Shop Admin?"
+                            label="Shop Admin user?"
                             name="isShopAdmin"
                             options={adminOptions}
                           />
@@ -439,7 +456,7 @@ const MemberEditScreen = ({ match, history }) => {
                         <div className="border border-warning p-1">
                           <FormikControl
                             control="radio"
-                            label="Is this user an Instructor?"
+                            label="Instructor user?"
                             name="isInstructor"
                             options={adminOptions}
                           />
@@ -449,7 +466,7 @@ const MemberEditScreen = ({ match, history }) => {
                         <div className="border border-warning p-1">
                           <FormikControl
                             control="radio"
-                            label="Is this user an Author?"
+                            label="Author user?"
                             name="isAuthor"
                             options={adminOptions}
                           />
@@ -469,21 +486,32 @@ const MemberEditScreen = ({ match, history }) => {
                   </div>
 
                   <Row className="mt-2">
-                    <Col>
-                      {success ? (
-                        <Button className="btn btn-success w-100" disabled>
-                          Updated
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="default"
-                          type="submit"
-                          className="w-100"
-                        >
-                          Update
-                        </Button>
-                      )}
-                    </Col>
+                    {!memberInfo.isAdmin ? (
+                      <Button
+                        variant="default"
+                        type="submit"
+                        className="w-100"
+                        disabled
+                      >
+                        Update disabled
+                      </Button>
+                    ) : (
+                      <Col>
+                        {success ? (
+                          <Button className="btn btn-success w-100" disabled>
+                            Updated
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="default"
+                            type="submit"
+                            className="w-100"
+                          >
+                            Update
+                          </Button>
+                        )}
+                      </Col>
+                    )}
                   </Row>
                 </Form>
               )}

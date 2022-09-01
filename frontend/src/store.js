@@ -28,6 +28,7 @@ import {
   memberEditReducer,
   resetPasswordReducer,
   memberPublicDetailsReducer,
+  formerBlackBeltListReducer,
 } from "./reducers/memberReducer";
 import {
   productListReducer,
@@ -98,6 +99,7 @@ import {
   monthlyCostListReducer,
   monthlyCostUpdateReducer,
 } from "./reducers/financialReducers";
+import { sendEmailReducer } from "./reducers/emailReducer";
 
 const reducer = combineReducers({
   attendanceList: attendanceListReducer,
@@ -142,6 +144,7 @@ const reducer = combineReducers({
   deleteClassList: deleteClassListReducer,
   switchClassList: switchClassListReducer,
   blackBeltList: blackBeltListReducer,
+  formerBlackBeltList: formerBlackBeltListReducer,
   productList: productListReducer,
   displayProduct: displayProductReducer,
   basket: basketReducer,
@@ -173,6 +176,7 @@ const reducer = combineReducers({
   monthlyCostList: monthlyCostListReducer,
   monthlyCostUpdate: monthlyCostUpdateReducer,
   monthlyCostDelete: monthlyCostDeleteReducer,
+  sendEmail: sendEmailReducer,
 });
 
 const memberInfoFromStorage = localStorage.getItem("memberInfo")

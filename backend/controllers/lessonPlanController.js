@@ -24,7 +24,7 @@ const deleteLessonPlan = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Create Training Video
+// @desc Create Lesson Plan
 // @route POST /api/lessonplans
 // @access Private/Instructor
 const createLessonPlan = asyncHandler(async (req, res) => {
@@ -36,6 +36,7 @@ const createLessonPlan = asyncHandler(async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     additionalInfo: req.body.additionalInfo,
+    gradeLevel: req.body.gradeLevel,
   });
 
   const createdLessonPlan = await lessonPlan.save();
@@ -54,6 +55,7 @@ const updateLessonPlan = asyncHandler(async (req, res) => {
     lessonPlan.shobuKumite = req.body.shobuKumite;
     lessonPlan.kata = req.body.kata;
     lessonPlan.additionalInfo = req.body.additionalInfo;
+    lessonPlan.gradeLevel = req.body.gradeLevel;
 
     const updatedLessonPlan = await lessonPlan.save();
     res.status(201).json(updatedLessonPlan);

@@ -37,11 +37,12 @@ const MemberDetails = () => {
   // Update details form
   // Formik init, val and submit
   const initialValues = {
-    addressLine1: member.AddressLine1,
-    addressLine2: member.AddressLine2,
-    addressLine3: member.AddressLine3,
-    addressLine4: member.AddressLine4,
-    postCode: member.postcode,
+    bio: member.bio,
+    addressLine1: member.addressLine1,
+    addressLine2: member.addressLine2,
+    addressLine3: member.addressLine3,
+    addressLine4: member.addressLine4,
+    postCode: member.postCode,
     email: member.email,
     confirmEmail: "",
     phone: `0${member.phone}`,
@@ -51,6 +52,7 @@ const MemberDetails = () => {
   };
 
   const validationSchema = Yup.object({
+    bio: Yup.string().required("Required"),
     addressLine1: Yup.string().required("Required"),
     addressLine2: Yup.string(),
     addressLine3: Yup.string(),
@@ -169,7 +171,7 @@ const MemberDetails = () => {
         <>
           <img src={dojoImg} alt="dojo" />
           <h2 className="mt-2 border-bottom border-warning text-warning text-center">
-            Welcome {member.nameFirst}!
+            Welcome {member.firstName}!
           </h2>
           <p>
             This is your virtual dojo. Here you will find all of your details,
@@ -177,7 +179,6 @@ const MemberDetails = () => {
             can book classes, amend bookings, change your payment details and
             much more.
           </p>
-          <h2 className="text-center text-white">Your details</h2>
 
           <ListGroup variant="flush">
             <Row>
@@ -186,7 +187,7 @@ const MemberDetails = () => {
                   <strong>Name</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  {`${member.nameFirst} ${member.nameSecond}`}
+                  {`${member.firstName} ${member.lastName}`}
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-light text-warning">
                   <strong>Email</strong>
@@ -205,7 +206,10 @@ const MemberDetails = () => {
                   <strong>Membership Level</strong>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  £{(member.membershipLevel / 100).toFixed(2)}
+                  {(member.trainingFees / 100).toLocaleString("en-GB", {
+                    style: "currency",
+                    currency: "GBP",
+                  })}
                 </ListGroup.Item>
               </Col>
 
@@ -238,7 +242,7 @@ const MemberDetails = () => {
                     className="btn-block w-100 mb-2"
                     onClick={() => setShowModal(true)}
                   >
-                    <i className="fas fa-tools"></i> Update contact details
+                    <i className="fas fa-tools"></i> Update details
                   </Button>
                 </Col>
                 <Col>
@@ -268,7 +272,15 @@ const MemberDetails = () => {
             onSubmit={saveHandler}
           >
             {({ values }) => (
-              <Form className="text-warning">
+              <Form>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="textarea"
+                    label="Bio"
+                    name="bio"
+                    placeholder="Please enter a brief description of yourself"
+                  />
+                </div>
                 <div className="py-3 border-bottom border-warning mb-3">
                   <div className="bg-light mb-2 p-2">
                     <FormikControl
@@ -405,7 +417,7 @@ const MemberDetails = () => {
             onSubmit={updatePasswordHandler}
           >
             {({ passwordValues }) => (
-              <Form className="text-warning">
+              <Form>
                 {loadingPasswordUpdate ? (
                   <Loader variant="warning" />
                 ) : errorPasswordUpdate ? (

@@ -16,29 +16,13 @@ const intermediateL2 = ["3rd kyu", "2nd kyu", "1st kyu"];
 const advancedL1 = ["1st dan"];
 const advancedL2 = ["2nd dan"];
 
-const junior = [
-  "15th kyu",
-  "14th kyu",
-  "13th kyu",
-  "12th kyu",
-  "11th kyu",
-  "10th kyu",
-];
+const junior = ["15", "14", "13", "12", "11", "10"];
 
-const novice = ["9th kyu", "8th kyu", "7th kyu", "6th kyu"];
+const novice = ["9", "8", "7", "6"];
 
-const intermediate = ["5th kyu", "4th kyu", "3rd kyu", "2nd kyu", "1st kyu"];
+const intermediate = ["5", "4", "3", "2", "1"];
 
-const advanced = [
-  "1st dan",
-  "2nd dan",
-  "3rd dan",
-  "4th dan",
-  "5th dan",
-  "6th dan",
-  "7th dan",
-  "8th dan",
-];
+const advanced = ["-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8"];
 
 export {
   junior,

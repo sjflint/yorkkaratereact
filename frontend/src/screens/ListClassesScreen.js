@@ -106,6 +106,8 @@ const ListClassesScreen = ({ history }) => {
     values.name = `${values.dayOfWeek} - ${values.description}`;
     values.times = `${values.startTime} - ${values.endTime}`;
 
+    console.log(values);
+
     dispatch(createTrainingSession(values));
     setCreateModal(false);
   };
@@ -259,12 +261,13 @@ const ListClassesScreen = ({ history }) => {
     <div className="mt-3">
       <Container fluid="lg">
         <div className="d-flex justify-content-between">
-          <Link
-            className="btn btn-outline-secondary py-0"
+          <Button
+            variant="outline-secondary"
+            className="py-0"
             onClick={() => history.goBack()}
           >
             <i className="fas fa-arrow-left"></i> Return
-          </Link>
+          </Button>
 
           <Button
             variant="outline-secondary"

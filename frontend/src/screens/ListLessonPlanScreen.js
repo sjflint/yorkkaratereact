@@ -110,6 +110,7 @@ const ListLessonPlanScreen = ({ history }) => {
 
   const createLessonPlanHandler = (values) => {
     values.additionalInfo = values.additionalInfo.split("\n");
+    values.gradeLevel = syllabusLevel;
     dispatch(createLessonPlan(values));
     setCreateModal(false);
   };
@@ -121,6 +122,7 @@ const ListLessonPlanScreen = ({ history }) => {
     } else {
       values.additionalInfo = values.additionalInfo.split("\n");
     }
+    values.gradeLevel = syllabusLevel;
     dispatch(updateLessonPlan(values));
     setEditModal(false);
   };
@@ -177,17 +179,21 @@ const ListLessonPlanScreen = ({ history }) => {
   const kataDropdownOptions = filteredKataVideos;
 
   // filter videos by grade and category, based on class level input from user
-  let syllabusVideos = trainingVideos;
+  let syllabusVideos = trainingVideos.trainingVideos;
   let arrayOfSyllabusVideos = [];
-  if (syllabusLevel.length !== 0) {
-    syllabusLevel.split(",").map((grade) => {
-      syllabusVideos = trainingVideos.filter((video) =>
-        video.grade.includes(grade)
-      );
-      return (arrayOfSyllabusVideos = syllabusVideos.concat(
-        arrayOfSyllabusVideos
-      ));
-    });
+  if (trainingVideos.trainingVideos) {
+    console.log(trainingVideos);
+    let gradeLevelVideos = [];
+    if (syllabusLevel.length !== 0) {
+      syllabusLevel.split(",").map((grade) => {
+        gradeLevelVideos = syllabusVideos.filter((video) =>
+          video.grade.includes(grade)
+        );
+        return (arrayOfSyllabusVideos = gradeLevelVideos.concat(
+          arrayOfSyllabusVideos
+        ));
+      });
+    }
   }
 
   let newSyllabusVideos = new Set(arrayOfSyllabusVideos);
@@ -311,6 +317,7 @@ const ListLessonPlanScreen = ({ history }) => {
                       onClick={async () => {
                         setUpdateId(lessonPlan._id);
                         await dispatch(listLessonPlan(lessonPlan._id));
+                        setSyllabusLevel(lessonPlan.gradeLevel);
                         await setEditModal(true);
                       }}
                     >
@@ -379,6 +386,7 @@ const ListLessonPlanScreen = ({ history }) => {
                       initialValues.kihonKumite = [];
                       initialValues.shobuKumite = [];
                       initialValues.kata = [];
+                      console.log(e.target.value);
                       setSyllabusLevel(e.target.value);
                     }}
                   >
@@ -620,24 +628,20 @@ const ListLessonPlanScreen = ({ history }) => {
               {lessonPlan.kihon.length !== 0 && (
                 <>
                   <h3 className="text-center text-white bg-dark p-2">Kihon</h3>
-                  <Row>
-                    {lessonPlan.kihon &&
-                      lessonPlan.kihon.map((technique) => {
-                        return trainingVideos.map((video) => {
-                          if (technique === video._id) {
-                            return (
-                              <Col
-                                sm={12}
-                                lg={6}
-                                className="mb-2 pb-2 border-warning border-bottom"
-                                key={video._id}
-                              >
+
+                  {syllabusVideos &&
+                    lessonPlan.kihon.map((technique) => {
+                      return syllabusVideos.map((video) => {
+                        if (technique === video._id) {
+                          return (
+                            <Row className="mb-2 pb-2 border-warning border-bottom">
+                              <Col sm={6} key={video._id}>
                                 <div className="px-3">
                                   <h4>{video.title}</h4>
                                   <small>
                                     Category - {video.category}
                                     <br />
-                                    grade level -{" "}
+                                    grade level:{" "}
                                     {`${
                                       video.grade[video.grade.length - 1]
                                     } - ${video.grade[0]}`}
@@ -677,23 +681,26 @@ const ListLessonPlanScreen = ({ history }) => {
                                   id="soundFile"
                                   onEnded={() => setVolume("stop")}
                                 ></audio>
-                                <Button
-                                  variant="outline-secondary btn-sm w-100"
-                                  onClick={() => {
-                                    setVideoModal(true);
-                                    setVideoModalId(video.video);
-                                  }}
-                                >
-                                  View Video
-                                </Button>
                               </Col>
-                            );
-                          } else {
-                            return null;
-                          }
-                        });
-                      })}
-                  </Row>
+                              <Col sm={6}>
+                                <img src={video.img} alt="" />
+                              </Col>
+                              <Button
+                                variant="outline-secondary btn-sm w-100"
+                                onClick={() => {
+                                  setVideoModal(true);
+                                  setVideoModalId(video.video);
+                                }}
+                              >
+                                View Video
+                              </Button>
+                            </Row>
+                          );
+                        } else {
+                          return null;
+                        }
+                      });
+                    })}
                 </>
               )}
 
@@ -702,23 +709,19 @@ const ListLessonPlanScreen = ({ history }) => {
                   <h3 className="text-center text-white bg-dark p-2">
                     Kihon Kumite
                   </h3>
-                  <Row>
-                    {lessonPlan.kihonKumite.map((technique) => {
-                      return trainingVideos.map((video) => {
-                        if (technique === video._id) {
-                          return (
-                            <Col
-                              sm={12}
-                              lg={6}
-                              className="mb-2 pb-2 border-warning border-bottom"
-                              key={video._id}
-                            >
+
+                  {lessonPlan.kihonKumite.map((technique) => {
+                    return trainingVideos.map((video) => {
+                      if (technique === video._id) {
+                        return (
+                          <Row className="mb-2 pb-2 border-warning border-bottom">
+                            <Col sm={6} key={video._id}>
                               <div className="px-3 py-1">
                                 <h4>{video.title}</h4>
                                 <small>
                                   Category - {video.category}
                                   <br />
-                                  grade level -{" "}
+                                  grade level:{" "}
                                   {`${video.grade[video.grade.length - 1]} - ${
                                     video.grade[0]
                                   }`}
@@ -758,85 +761,89 @@ const ListLessonPlanScreen = ({ history }) => {
                                 id="soundFile"
                                 onEnded={() => setVolume("stop")}
                               ></audio>
-                              <Button
-                                variant="outline-secondary btn-sm w-100"
-                                onClick={() => {
-                                  setVideoModal(true);
-                                  setVideoModalId(video.video);
-                                }}
-                              >
-                                View Video
-                              </Button>
                             </Col>
-                          );
-                        } else {
-                          return null;
-                        }
-                      });
-                    })}
-                  </Row>
+                            <Col sm={6}>
+                              <img src={video.img} alt="" />
+                            </Col>
+                            <Button
+                              variant="outline-secondary btn-sm w-100"
+                              onClick={() => {
+                                setVideoModal(true);
+                                setVideoModalId(video.video);
+                              }}
+                            >
+                              View Video
+                            </Button>
+                          </Row>
+                        );
+                      } else {
+                        return null;
+                      }
+                    });
+                  })}
                 </>
               )}
 
               {lessonPlan.kata.length !== 0 && (
                 <>
                   <h3 className="text-center text-white bg-dark p-2">Kata</h3>
-                  <Row>
-                    {lessonPlan.kata.map((technique) => {
-                      return trainingVideos.map((video) => {
+
+                  {syllabusVideos &&
+                    lessonPlan.kata.map((technique) => {
+                      return syllabusVideos.map((video) => {
                         if (technique === video._id) {
                           return (
-                            <Col
-                              sm={12}
-                              lg={6}
-                              className="mb-2 pb-2 border-warning border-bottom"
-                              key={video._id}
-                            >
-                              <div className="px-3 py-1">
-                                <h4>{video.title}</h4>
-                                <small>
-                                  Category - {video.category}
-                                  <br />
-                                  grade level -{" "}
-                                  {`${video.grade[video.grade.length - 1]} - ${
-                                    video.grade[0]
-                                  }`}
-                                </small>
-                              </div>
-                              {volume === "stop" ? (
-                                <>
+                            <Row className="mb-2 pb-2 border-warning border-bottom">
+                              <Col sm={6} key={video._id}>
+                                <div className="px-3 py-1">
+                                  <h4>{video.title}</h4>
+                                  <small>
+                                    Category - {video.category}
+                                    <br />
+                                    Grade Level:{" "}
+                                    {`${video.grade[0]} to ${
+                                      video.grade[video.grade.length - 1]
+                                    }`}
+                                  </small>
+                                </div>
+                                {volume === "stop" ? (
+                                  <>
+                                    <div
+                                      className="btn btn-light mt-2"
+                                      onClick={playAudio}
+                                    >
+                                      <i
+                                        className="fa-solid fa-play"
+                                        style={{ color: "green" }}
+                                      >
+                                        {" "}
+                                      </i>{" "}
+                                      Pronunciation
+                                    </div>
+                                  </>
+                                ) : (
                                   <div
                                     className="btn btn-light mt-2"
                                     onClick={playAudio}
                                   >
                                     <i
-                                      className="fa-solid fa-play"
+                                      className="fa-solid fa-volume-high"
                                       style={{ color: "green" }}
                                     >
                                       {" "}
                                     </i>{" "}
                                     Pronunciation
                                   </div>
-                                </>
-                              ) : (
-                                <div
-                                  className="btn btn-light mt-2"
-                                  onClick={playAudio}
-                                >
-                                  <i
-                                    className="fa-solid fa-volume-high"
-                                    style={{ color: "green" }}
-                                  >
-                                    {" "}
-                                  </i>{" "}
-                                  Pronunciation
-                                </div>
-                              )}
-                              <audio
-                                src={video.soundFile}
-                                id="soundFile"
-                                onEnded={() => setVolume("stop")}
-                              ></audio>
+                                )}
+                                <audio
+                                  src={video.soundFile}
+                                  id="soundFile"
+                                  onEnded={() => setVolume("stop")}
+                                ></audio>
+                              </Col>
+                              <Col sm={6}>
+                                <img src={video.img} alt="" />
+                              </Col>
                               <Button
                                 variant="outline-secondary btn-sm w-100"
                                 onClick={() => {
@@ -846,14 +853,13 @@ const ListLessonPlanScreen = ({ history }) => {
                               >
                                 View Video
                               </Button>
-                            </Col>
+                            </Row>
                           );
                         } else {
                           return null;
                         }
                       });
                     })}
-                  </Row>
                 </>
               )}
               {lessonPlan.shobuKumite.length !== 0 && (
@@ -861,23 +867,18 @@ const ListLessonPlanScreen = ({ history }) => {
                   <h3 className="text-center text-white bg-dark p-2">
                     Shobu Kumite
                   </h3>
-                  <Row>
-                    {lessonPlan.shobuKumite.map((technique) => {
-                      return trainingVideos.map((video) => {
-                        if (technique === video._id) {
-                          return (
-                            <Col
-                              sm={12}
-                              lg={6}
-                              className="mb-2 pb-2 border-warning border-bottom"
-                              key={video._id}
-                            >
+                  {lessonPlan.shobuKumite.map((technique) => {
+                    return trainingVideos.map((video) => {
+                      if (technique === video._id) {
+                        return (
+                          <Row className="mb-2 pb-2 border-warning border-bottom">
+                            <Col sm={6} key={video._id}>
                               <div className="px-3 py-1">
                                 <h4>{video.title}</h4>
                                 <small>
                                   Category - {video.category}
                                   <br />
-                                  grade level -{" "}
+                                  grade level:{" "}
                                   {`${video.grade[video.grade.length - 1]} - ${
                                     video.grade[0]
                                   }`}
@@ -917,23 +918,26 @@ const ListLessonPlanScreen = ({ history }) => {
                                 id="soundFile"
                                 onEnded={() => setVolume("stop")}
                               ></audio>
-                              <Button
-                                variant="outline-secondary btn-sm w-100"
-                                onClick={() => {
-                                  setVideoModal(true);
-                                  setVideoModalId(video.video);
-                                }}
-                              >
-                                View Video
-                              </Button>
                             </Col>
-                          );
-                        } else {
-                          return null;
-                        }
-                      });
-                    })}{" "}
-                  </Row>
+                            <Col sm={6}>
+                              <img src={video.img} alt="" />
+                            </Col>
+                            <Button
+                              variant="outline-secondary btn-sm w-100"
+                              onClick={() => {
+                                setVideoModal(true);
+                                setVideoModalId(video.video);
+                              }}
+                            >
+                              View Video
+                            </Button>
+                          </Row>
+                        );
+                      } else {
+                        return null;
+                      }
+                    });
+                  })}{" "}
                 </>
               )}
             </>

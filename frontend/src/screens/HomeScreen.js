@@ -20,13 +20,11 @@ import familyTrainingImg from "../img/family-training.jpg";
 import InfoCard from "../components/InfoCard";
 import EnquiryForm from "../components//FormComponents/EnquiryForm";
 import Meta from "../components/Meta";
-import showcase from "../img/showcase.png";
 
 const HomeScreen = () => {
   return (
     <>
       <Meta />
-      <img src={showcase} className="pt-0" alt="banner" />
 
       <section id="mini-promo" className="py-4 border-bottom border-warning">
         <Container>

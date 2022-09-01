@@ -178,7 +178,12 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                   return (
                     <tr key={participant._id}>
                       <td>
-                        {participant.firstName} {participant.lastName}
+                        <Link to={`/admin/members/${participant._id}/edit`}>
+                          {participant.firstName} {participant.lastName}{" "}
+                          {participant.medicalStatus === "Yes medical" && (
+                            <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
+                          )}
+                        </Link>
                       </td>
                       {record.participants &&
                       record.participants.includes(

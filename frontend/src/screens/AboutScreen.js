@@ -1,18 +1,31 @@
-import { Col, Container, ListGroup, Row } from "react-bootstrap";
-import cameronKankuImg from "../img/cameron1.jpg";
-import simonProfileImg from "../img/simon-profile.jpg";
-
+import { Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import katoSenseiImg from "../img/katosensei.jpg";
 import kagawa2Img from "../img/kagawa2.jpg";
-import Parralax from "../components/Parralax";
+import kagawa from "../img/simontomkagawa.jpg";
+import simonKato from "../img/simonkato.jpg";
+import submarkLogo from "../img/logosubmark(transparent).png";
 import Video from "../components/Video";
 import poster3Img from "../img/poster3.png";
 import jksjapanMp4 from "../img/jksjapan.mp4";
 import jksjapanWebmHd from "../img/jksjapan.webmhd.webm";
 import Meta from "../components/Meta";
 import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { listBlackBelts } from "../actions/memberActions";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 const AboutScreen = () => {
+  const dispatch = useDispatch();
+
+  const blackBeltList = useSelector((state) => state.blackBeltList);
+  const { loading, error, blackBelts } = blackBeltList;
+
+  useEffect(() => {
+    dispatch(listBlackBelts());
+  }, [dispatch]);
+
   return (
     <div className="mt-3">
       <AnimatePresence>
@@ -23,28 +36,23 @@ const AboutScreen = () => {
         >
           <Meta title="York Karate | About" />
           <Container>
-            <h3 className="text-center border-bottom border-warning pb-1">
+            <h3 className="text-center pb-2 border-bottom border-warning">
               About York Karate Dojo
             </h3>
 
-            <section className="pb-4 border-bottom border-warning">
+            <section className="pb-4">
               <p>
-                York karate Dojo was formed when Sensei Simon Flint departed
-                Haxby Karate Club to establish himself as a full-time karate
-                instructor. York Karate Dojo was formed in April 2012 and in
-                only a few months, the club had grown to include nearly 200
-                members training every week. To this day, the club is the
-                largest in the city and the most successful in terms of black
-                belt grading success and medal wins at both national and
-                international level.
+                York Karate Dojo was formed in April 2012 and in only a few
+                months, the club had grown to include nearly 200 members
+                training every week. To this day, the club is the largest in the
+                city and the most successful in terms of black belt grading
+                success and medal wins at both national and international level.
               </p>
 
               <Row className="text-center bg-primary align-items-center">
                 <Col lg={8} md={6}>
                   <ListGroup className="px-3 py-2">
-                    <h4 className="text-white">
-                      The aims of York Karate Dojo are:
-                    </h4>
+                    <h4 className="text-white">The aims of York Karate Dojo</h4>
                     <ListGroup.Item>
                       Further the objectives of Shotokan Karate, and the Japan
                       Karate Shotorenmei (JKS) through excellent standards of
@@ -63,7 +71,7 @@ const AboutScreen = () => {
                 </Col>
                 <Col lg={4} md={6} className="p-4 bg-primary">
                   <img
-                    src={cameronKankuImg}
+                    src={submarkLogo}
                     alt="about-York-Karate"
                     className="rounded-circle"
                   />
@@ -71,35 +79,91 @@ const AboutScreen = () => {
               </Row>
             </section>
           </Container>
-          <Parralax image={"websitebanner.png"} />
           <Container>
-            <section className="pb-4 border-bottom border-warning">
-              <h3 className="text-center my-3">
-                Sensei Simon Flint - Club founder and instructor
+            <h3 className="text-center my-3 border-bottom border-warning pb-2">
+              Meet the instructors
+            </h3>
+            {loading && <Loader variant="warning" />}
+            {error && (
+              <>
+                <Message variant="warning">
+                  <h3>Error</h3>
+                  <p>
+                    Oops! We seem to have lost the instructors. Perhaps try
+                    refreshing the page.
+                  </p>
+                </Message>
+              </>
+            )}
+            {blackBelts &&
+              blackBelts.map((instructor) => {
+                if (instructor.isInstructor) {
+                  return (
+                    <>
+                      <section className="pb-4">
+                        <Row className="no-gutters my-3 p-3">
+                          <Col md={6}>
+                            <img
+                              src={instructor.profileImg}
+                              alt="profile"
+                              className="rounded-0"
+                            />
+                          </Col>
+                          <Col md={6}>
+                            <ListGroup className="list-group-flush">
+                              <ListGroupItem>
+                                {instructor.firstName} {instructor.lastName}{" "}
+                              </ListGroupItem>
+                              <ListGroupItem>
+                                Current Grade: {instructor.danGrade}
+                                {instructor.danGrade === 1
+                                  ? "st"
+                                  : instructor.danGrade === 2
+                                  ? "nd"
+                                  : instructor.danGrade === 3
+                                  ? "rd"
+                                  : "th"}{" "}
+                                dan
+                              </ListGroupItem>
+                              {Object.entries(instructor.danGradings).map(
+                                (grading) => {
+                                  return (
+                                    <ListGroupItem key={Math.random()}>
+                                      {`${grading[0]}: ${grading[1]}`}
+                                    </ListGroupItem>
+                                  );
+                                }
+                              )}
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                        <p style={{ whiteSpace: "pre-line" }}>
+                          {instructor.bio}
+                        </p>
+                      </section>
+                    </>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+          </Container>
+          <section className="pb-4">
+            <Container>
+              <h3 className="text-center my-3 border-bottom border-warning pb-2">
+                The japanese influence
               </h3>
-              <Row className="no-gutters my-3 bg-primary p-3">
-                <Col md={6}>
-                  <img
-                    src={simonProfileImg}
-                    alt="simon-profile"
-                    className="rounded-0"
-                  />
-                </Col>
-                <Col md={6}>
-                  <img
-                    src="../img/simonkagawa.jpg"
-                    alt="simon-medal"
-                    className="rounded-0"
-                  />
-                </Col>
-              </Row>
-
               <p>
-                Simon started training in karate at the age of 8. His training
-                was sporadic during his teenage years but on returning from
-                university, he restarted karate with renewed zeal. He graded to
-                shodan (1st level black belt) at the age of 23, under the
-                examination of sensei Sadashige Kato (9th dan).
+                Both shihan Kato and Shihan Kagawa have been instrumental in
+                providing inspiration and direction to Simon. Their style of
+                karate and philosophy runs deep in the approach that Simon takes
+                to his own karate, and consequently the karate taught at the
+                club.
+              </p>
+              <p>
+                Sadly, Kato shihan is no longer with us. However, Kagawa shihan
+                is the current chief instructor of the Japan Karate Shotorenmei
+                (see below)
               </p>
               <Row className="my-3 text-center bg-primary p-3">
                 <Col md={6} className="mb-3">
@@ -118,38 +182,28 @@ const AboutScreen = () => {
                     </small>
                   </Col>
                 </Col>
+                <Col md={6} className="mb-3">
+                  <Col>
+                    <img src={simonKato} alt="kato-sensei" />
+                    <small className="text-white">
+                      Simon with Kato Shihan - (2007)
+                    </small>
+                  </Col>
+                </Col>
+                <Col md={6}>
+                  <Col>
+                    <img src={kagawa} alt="kagawa-sensei" />
+                    <small className="text-white">
+                      Simon & Tom with Kagawa Shihan (2009)
+                    </small>
+                  </Col>
+                </Col>
               </Row>
-              <p>
-                At the age of 25, Simon graded to nidan (2nd level) and then
-                sandan (3rd level) at the age of 28. Both gradings were
-                conducted by the JKS World Chief Instructor Sensei Masao Kagawa.
-                At 32, Simon travelled to Tokyo, Japan, and completed his yondan
-                (4th level) black belt grading under a panel of the most senior
-                JKS instructors in the world.
-              </p>
-              <p>
-                On returning to karate training in his early twenties, Simon
-                entered the world of sport karate and represents JKS England. He
-                competed at the JKS World Championships in 2011. Simon also
-                competed in many national championships, reaching the finals at
-                the JKS National championships and winning bronze medal at the
-                JKS Ireland championships.
-              </p>
-              <p>
-                Simon has been teaching karate for over a decade and York Karate
-                Dojo has quickly established a reputation for producing students
-                with exceptional technical ability, boasting an unequalled 100%
-                pass rate for black belt gradings and training elite level
-                competitors. One student from York Karate Dojo, Harry
-                Hardcastle, is a current member of the Karate All Styles England
-                Squad, the first from York to ever reach such a standard.
-              </p>
-            </section>
-          </Container>
-          <Parralax image={"parralax1.jpg"} />
-          <section className="pb-4 border-bottom border-top border-warning">
+            </Container>
+          </section>
+          <section className="pb-4">
             <Container>
-              <h3 className="text-center my-3">
+              <h3 className="text-center my-3 border-bottom border-warning pb-2">
                 What is the Japan Karate Shotorenmei?
               </h3>
               <div className="bg-primary p-3">

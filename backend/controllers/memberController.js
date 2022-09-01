@@ -5,6 +5,7 @@ import {
   changeDirectDebit,
 } from "../utils/registerDirectDebit.cjs";
 import Member from "../models/memberModel.cjs";
+import FormerBlackBelts from "../models/formerBlackBeltsModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 
 // Format first name and last name to uppercase first letter and lower case for the rest
@@ -168,39 +169,7 @@ const getMemberProfile = asyncHandler(async (req, res) => {
     if (age > 8 && grade < 2) {
       gradeLevel = "Advanced";
     }
-
-    res.json({
-      _id: member._id,
-      nameFirst: member.firstName,
-      nameSecond: member.lastName,
-      isAdmin: member.isAdmin,
-      isShopAdmin: member.isShopAdmin,
-      isAuthor: member.isAuthor,
-      isInstructor: member.isInstructor,
-      AddressLine1: member.addressLine1,
-      AddressLine2: member.addressLine2,
-      AddressLine3: member.addressLine3,
-      AddressLine4: member.addressLine4,
-      postcode: member.postCode,
-      email: member.email,
-      phone: member.phone,
-      emergencyContactName: member.emergencyContactName,
-      emergencyContactEmail: member.emergencyContactEmail,
-      emergencyContactPhone: member.emergencyContactPhone,
-      userName: member.name,
-      gradeLevel: gradeLevel,
-      membershipLevel: member.trainingFees,
-      age: age,
-      lastClassChange: member.lastClassChange,
-      profileImg: member.profileImg,
-      ddsuccess: member.ddsuccess,
-      kyuGrade: member.kyuGrade,
-      danGrade: member.danGrade,
-      licenseNumber: member.licenseNumber,
-      attendanceRecord: member.attendanceRecord,
-      numberOfSessionsRequired: numberOfSessionsRequired,
-      outstandingFees: member.outstandingFees,
-    });
+    res.json(member);
   } else {
     res.status(404);
     throw new Error("User not found");
@@ -232,8 +201,6 @@ const getMemberPaymentDetails = asyncHandler(async (req, res) => {
 // @access Public
 const updateProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
-
-  console.log(values);
 
   const member = await Member.findById(values.memberId);
 
@@ -341,6 +308,8 @@ const getBlackBelts = asyncHandler(async (req, res) => {
     profileImg: 1,
     firstName: 1,
     lastName: 1,
+    bio: 1,
+    isInstructor: 1,
   };
 
   const blackBeltMembers = await Member.find(query, options).sort({
@@ -348,6 +317,17 @@ const getBlackBelts = asyncHandler(async (req, res) => {
   });
 
   res.json(blackBeltMembers);
+});
+
+// @desc Get former club black belts
+// @route GET /api/members/formerblackbelts
+// @access Public
+const getFormerBlackBelts = asyncHandler(async (req, res) => {
+  const formerBlackBeltMembers = await FormerBlackBelts.find({}).sort({
+    dateLeft: -1,
+  });
+
+  res.json(formerBlackBeltMembers);
 });
 
 // @desc Find all members
@@ -403,9 +383,24 @@ const getMembers = asyncHandler(async (req, res) => {
 const deleteMember = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.params.id);
 
-  if (member) {
+  const removeMember = async (member) => {
     await member.remove();
     res.json({ message: "Member deleted" });
+  };
+
+  // if member is a black belt, create record for former black belts.
+  if (member.danGrade > 0) {
+    await FormerBlackBelts.create({
+      firstName: member.firstName,
+      lastName: member.lastName,
+      danGrade: member.danGrade,
+      danGradings: member.danGradings,
+      profileImg: member.profileImg,
+    });
+    console.log("former black belt created");
+    removeMember(member);
+  } else if (member) {
+    removeMember(member);
   } else {
     res.status(404);
     throw new Error("Member not found");
@@ -437,6 +432,11 @@ const getPublicMemberById = asyncHandler(async (req, res) => {
       firstName: member.firstName,
       lastName: member.lastName,
       profileImg: member.profileImg,
+      createdAt: member.createdAt,
+      kyuGrade: member.kyuGrade,
+      danGrade: member.danGrade,
+      isInstructor: member.isInstructor,
+      bio: member.bio,
     });
   } else {
     res.status(404);
@@ -492,4 +492,5 @@ export {
   getMemberById,
   getPublicMemberById,
   updateMemberProfile,
+  getFormerBlackBelts,
 };
