@@ -25,7 +25,6 @@ const ListEventsScreen = ({ history, match }) => {
   const [editModal, setEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [updateId, setUpdateId] = useState();
-  const [editDescription, setEditDescription] = useState(false);
   const [image, setImage] = useState();
 
   const singleImageData = (singleImage) => {
@@ -89,22 +88,13 @@ const ListEventsScreen = ({ history, match }) => {
 
   const createEventHandler = (values) => {
     values.image = image;
-    values.description = values.description.split("\n");
     dispatch(createEvent(values));
     setCreateModal(false);
   };
 
   const editEventHandler = async (values) => {
     values.id = updateId;
-
-    if (editDescription === false) {
-      values.description = event.description;
-    } else {
-      values.description = values.description.split("\n");
-    }
-
     dispatch(updateEvent(values));
-    setEditDescription(false);
     setEditModal(false);
   };
 
@@ -113,7 +103,7 @@ const ListEventsScreen = ({ history, match }) => {
     initialValues = {
       image: "",
       title: "",
-      author: `${member.nameFirst} ${member.nameSecond}`,
+      author: `${member.firstName} ${member.lastName}`,
       dateOfEvent: "",
       location: "",
       description: "",
@@ -148,7 +138,6 @@ const ListEventsScreen = ({ history, match }) => {
   });
 
   let editInitialValues = {};
-  let paragraphs;
 
   if (event.title !== undefined) {
     const eventDate = new Date(event.dateOfEvent);
@@ -171,17 +160,13 @@ const ListEventsScreen = ({ history, match }) => {
       day = eventDate.getDate();
     }
 
-    paragraphs = event.description;
-
-    const eventDescription = paragraphs.join("\n");
-
     editInitialValues = {
       title: event.title,
       author: event.author,
       dateOfEvent: `${year}-${month}-${day}`,
       todaysDate: new Date(),
       location: event.location,
-      description: eventDescription,
+      description: event.description,
       register: event.register,
       dateCreated: event.dateCreated,
     };
@@ -399,7 +384,6 @@ const ListEventsScreen = ({ history, match }) => {
         show={editModal}
         onHide={() => {
           setEditModal(false);
-          setEditDescription(false);
         }}
       >
         <Modal.Header closeButton className="bg-dark">
@@ -456,48 +440,14 @@ const ListEventsScreen = ({ history, match }) => {
                 <div className="mb-2 p-2 bg-light">
                   <h5 className="mt-2">Description</h5>
 
-                  {!editDescription && (
-                    <>
-                      {paragraphs &&
-                        paragraphs.map((paragraph) => (
-                          <p
-                            key={`${paragraph}${Math.random()}`}
-                            className="mb-2 "
-                          >
-                            {paragraph}
-                            <br />
-                          </p>
-                        ))}
-
-                      <Button
-                        variant="outline-secondary btn-sm"
-                        onClick={() => setEditDescription(true)}
-                        className="mb-4 btn-sm d-block"
-                      >
-                        Edit Description?
-                      </Button>
-                    </>
-                  )}
-                  {editDescription && (
-                    <>
-                      <FormikControl
-                        control="input"
-                        as="textarea"
-                        label="Please provide a description"
-                        name="description"
-                        placeholder="Please enter a new description..."
-                        rows="10"
-                      />
-
-                      <Button
-                        onClick={() => setEditDescription(false)}
-                        variant="danger"
-                        className="mb-2 btn-sm"
-                      >
-                        Cancel Edit Description?
-                      </Button>
-                    </>
-                  )}
+                  <FormikControl
+                    control="input"
+                    as="textarea"
+                    label="Please provide a description"
+                    name="description"
+                    placeholder="Please enter a new description..."
+                    rows="10"
+                  />
                 </div>
 
                 <Button type="submit" className="w-100 btn-default">
@@ -512,7 +462,6 @@ const ListEventsScreen = ({ history, match }) => {
             variant="secondary"
             onClick={() => {
               setEditModal(false);
-              setEditDescription(false);
             }}
           >
             Cancel

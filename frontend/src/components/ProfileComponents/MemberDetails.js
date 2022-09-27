@@ -19,6 +19,7 @@ const MemberDetails = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPassword, setShowPassword] = useState("password");
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { loading, error, member } = memberDetails;
@@ -213,7 +214,7 @@ const MemberDetails = () => {
                 </ListGroup.Item>
               </Col>
 
-              {member.nameFirst && member.gradeLevel !== "Advanced" && (
+              {member.firstName && member.gradeLevel !== "Advanced" && (
                 <Col sm={5} className="p-2 text-center">
                   <h5 className="mb-0 border-bottom border-warning">
                     Attendance Card
@@ -279,6 +280,7 @@ const MemberDetails = () => {
                     label="Bio"
                     name="bio"
                     placeholder="Please enter a brief description of yourself"
+                    rows="10"
                   />
                 </div>
                 <div className="py-3 border-bottom border-warning mb-3">
@@ -434,9 +436,26 @@ const MemberDetails = () => {
                           control="input"
                           label="Please enter current Password"
                           name="password"
-                          type="password"
+                          type={showPassword}
                           placeholder="Enter Password"
                         />
+                        {showPassword === "password" ? (
+                          <small
+                            onClick={() => setShowPassword("text")}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <i className="fa-solid fa-eye inside-input"></i>{" "}
+                            Show Passwords
+                          </small>
+                        ) : (
+                          <small
+                            onClick={() => setShowPassword("password")}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <i className="fa-solid fa-eye-slash"></i> Hide
+                            Passwords
+                          </small>
+                        )}
                       </div>
                     </div>
 
@@ -445,18 +464,52 @@ const MemberDetails = () => {
                         control="input"
                         label="Please set a new password"
                         name="newPassword"
-                        type="password"
+                        type={showPassword}
                         placeholder="Set Password"
                       />
+                      {showPassword === "password" ? (
+                        <small
+                          onClick={() => setShowPassword("text")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <i className="fa-solid fa-eye inside-input"></i> Show
+                          Passwords
+                        </small>
+                      ) : (
+                        <small
+                          onClick={() => setShowPassword("password")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <i className="fa-solid fa-eye-slash"></i> Hide
+                          Passwords
+                        </small>
+                      )}
                     </div>
                     <div className="bg-light mb-2 p-2">
                       <FormikControl
                         control="input"
                         label="Please confirm new password"
                         name="confirmNewPassword"
-                        type="password"
+                        type={showPassword}
                         placeholder="Confirm password"
                       />
+                      {showPassword === "password" ? (
+                        <small
+                          onClick={() => setShowPassword("text")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <i className="fa-solid fa-eye inside-input"></i> Show
+                          Passwords
+                        </small>
+                      ) : (
+                        <small
+                          onClick={() => setShowPassword("password")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <i className="fa-solid fa-eye-slash"></i> Hide
+                          Passwords
+                        </small>
+                      )}
                     </div>
 
                     <Row>

@@ -20,6 +20,7 @@ import gradingRoutes from "./routes/gradingRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import financialRoutes from "./routes/financialRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
+import trialRoutes from "./routes/trialRoutes.js";
 import { goCardlessWebhook } from "./utils/goCardlessWebhook.cjs";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -54,15 +55,11 @@ mongoose.set("useFindAndModify", false);
 // run cron jobs
 cronJobs();
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
-
 app.use("/", goCardlessWebhook);
 app.use("/api/articles", articleRoutes);
 app.use("/api/trainingvideos", trainingVideosRoutes);
 app.use("/api/members", memberRoutes);
-app.use("/sendEnquiry", enquiryRoutes);
+app.use("/api/enquiry", enquiryRoutes);
 app.use("/sendFeedback", feedbackRoutes);
 app.use("/ddroutes", ddRoutes);
 app.use("/api/trainingsessions", trainingSessionRoutes);
@@ -75,6 +72,7 @@ app.use("/api/grading", gradingRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/financial", financialRoutes);
 app.use("/api/email", emailRoutes);
+app.use("/api/trialregistration", trialRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
@@ -94,8 +92,20 @@ app.use(
   express.static(path.join(__dirname, "/uploadedImages"))
 );
 
-app.use(errorHandler);
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
+
 app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

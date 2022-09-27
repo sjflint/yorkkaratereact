@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Members from "../models/memberModel.cjs";
+import Enquiry from "../models/enquiryModel.js";
 import TrainingSessions from "../models/trainingSessionModel.cjs";
 
 // possible recipient groups:
@@ -10,20 +11,16 @@ import TrainingSessions from "../models/trainingSessionModel.cjs";
 // -Specific class
 
 const sendEmail = asyncHandler(async (req, res) => {
-  let paragraphs = "";
-  const messages = req.body.message;
-  messages.forEach((message) => {
-    paragraphs = `${paragraphs}<p>${message}</p>`;
-  });
-
   const members = await Members.find({});
+  console.log(req.body.email);
+  console.log(req.body._id);
   let recipients = [];
   const emailDetails = {
     recipientEmail: recipients,
     recipientName: "Dear club members,",
     subject: req.body.subject,
     message: `<h4>${req.body.subject}</h4>
-                  ${paragraphs}`,
+                  <p style="white-space: pre-line;">${req.body.message}</p>`,
     link: req.body.link,
     linkText: req.body.linkText,
     attachments: req.body.attachments,
@@ -59,6 +56,15 @@ const sendEmail = asyncHandler(async (req, res) => {
         recipients.push(participant.email)
       );
       genericEmail(emailDetails);
+      return res.status(201).json("email sent");
+
+    case "enquiry":
+      emailDetails.recipientEmail = req.body.email;
+      emailDetails.recipientName = "Thank you for your enquiry";
+      genericEmail(emailDetails);
+      const enquiry = await Enquiry.findById(req.body._id);
+      enquiry.responded = true;
+      await enquiry.save();
       return res.status(201).json("email sent");
   }
 });

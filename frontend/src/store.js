@@ -100,6 +100,12 @@ import {
   monthlyCostUpdateReducer,
 } from "./reducers/financialReducers";
 import { sendEmailReducer } from "./reducers/emailReducer";
+import {
+  trialGetReducer,
+  trialPayReducer,
+  trialRegisterReducer,
+} from "./reducers/trialRegisterReducers";
+import { enquiryListReducer } from "./reducers/enquiryReducer";
 
 const reducer = combineReducers({
   attendanceList: attendanceListReducer,
@@ -177,6 +183,10 @@ const reducer = combineReducers({
   monthlyCostUpdate: monthlyCostUpdateReducer,
   monthlyCostDelete: monthlyCostDeleteReducer,
   sendEmail: sendEmailReducer,
+  trialRegister: trialRegisterReducer,
+  trialGet: trialGetReducer,
+  trialPay: trialPayReducer,
+  enquiryList: enquiryListReducer,
 });
 
 const memberInfoFromStorage = localStorage.getItem("memberInfo")

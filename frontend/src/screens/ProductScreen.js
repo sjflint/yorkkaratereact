@@ -10,14 +10,15 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listProduct } from "../actions/productActions";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-const ProductScreen = ({ history, match }) => {
+const ProductScreen = ({ match }) => {
   const [size, setSize] = useState("");
   const [qty, setQty] = useState(1);
   const [print, setPrint] = useState("");
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -44,9 +45,9 @@ const ProductScreen = ({ history, match }) => {
   return (
     <Container className="mt-3">
       <div className="d-flex align-items-center justify-content-between border-bottom border-warning mb-2">
-        <Link className="btn btn-default my-3 mr-2" to="/shop">
+        <div className="btn btn-default my-3 mr-2" onClick={history.goBack}>
           <i className="fas fa-chevron-left"></i> Back to Shop
-        </Link>
+        </div>
         <h3>Club Shop</h3>
         <Link className="btn btn-default my-3" to="/basket">
           <i className="fas fa-shopping-cart"></i> Checkout

@@ -202,6 +202,8 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
   console.log("Updating...");
   const newAmount = subscription.amount + paymentDetails.changeAmount;
 
+  console.log(`New amount: ${newAmount}`);
+
   const mandate = await client.mandates.find(member.ddMandate);
   const chargeDay = mandate.next_possible_charge_date.slice(-2);
 
@@ -259,7 +261,11 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
   if (redirectFlow) {
     const member = await Member.findById(req.body._id);
     if (member) {
-      const mandateId = await member.ddMandate;
+      let mandateId;
+      if (member.ddMandate) {
+        mandateId = member.ddMandate;
+      }
+
       await Member.findOneAndUpdate(
         { _id: member._id },
         { ddMandate: redirectFlow.links.mandate, ddsuccess: true },
@@ -301,7 +307,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
         );
       }
 
-      if (mandateId === "Pending" || mandateId === "Failed") {
+      if (!mandateId || mandateId === "Failed") {
         const payment = await client.payments.create(
           {
             amount: member.totalPayment,
@@ -326,7 +332,8 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
       if (
         mandateId === "Cancelled" ||
         mandateId === "Pending" ||
-        mandateId === "Failed"
+        mandateId === "Failed" ||
+        !mandateId
       ) {
         res.status(201).json({
           confirmationURL: "http://localhost:3000/ddupdatesuccess",

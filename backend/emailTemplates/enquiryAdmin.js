@@ -1,34 +1,41 @@
-const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
-const asyncHandler = require("express-async-handler");
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import asyncHandler from "express-async-handler";
+import Enquiry from "../models/enquiryModel.js";
+import Member from "../models/memberModel.cjs";
 
 dotenv.config();
 
-const genericEmail = asyncHandler(async (emailDetails) => {
-  console.log(emailDetails);
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "info@yorkkarate.net",
-      pass: process.env.GMAIL_SECRET,
-    },
-  });
+const emailEnquiryAdmin = asyncHandler(async () => {
+  const enquiries = await Enquiry.find({ responded: false });
 
-  // Is there an image to include in the email?
-  let image =
-    "https://york-karate-uploads.s3.eu-west-2.amazonaws.com/secondarylogo.png";
-  if (emailDetails.image) {
-    // const emailImage = emailDetails.image.slice(7);
-    image = emailDetails.image;
-  }
+  console.log(enquiries);
+  if (enquiries.length > 0) {
+    const adminMembers = await Member.find({ isAdmin: true });
+    if (adminMembers) {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "info@yorkkarate.net",
+          pass: process.env.GMAIL_SECRET,
+        },
+      });
 
-  const mailOptions = {
-    from: "info@yorkkarate.net",
-    to: emailDetails.recipientEmail,
-    subject: emailDetails.subject,
-    text: emailDetails.subject,
-    attachments: emailDetails.attachments,
-    html: `
+      // Is there an image to include in the email?
+      let image = "logo2021a.png";
+
+      // recipients admins
+      let recipients = [];
+      adminMembers.forEach((member) => {
+        recipients.push(`${member.email};`);
+      });
+
+      const mailOptions = {
+        from: "info@yorkkarate.net",
+        to: recipients,
+        subject: "enquiries awaiting response",
+        text: "enquiries awaiting response",
+        html: `
     <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -64,20 +71,17 @@ const genericEmail = asyncHandler(async (emailDetails) => {
       </table>
 
       <!-- Body -->
-      <table
-        style="text-align: center; background-color: #f7f7f9; padding: 10px"
-        role="presentation"
-        cellspacing="0"
-        width="100%"
-      >
-        <tr>
-          <td style="text-align: left;">
-            ${emailDetails.message}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div
+      <h4
+      style="
+        text-align: left;
+        padding: 10px;
+        margin: 0;
+        background-color: #f7f7f9;
+      "
+    >
+     There are enquiries awaiting to be replied to.
+    </h4>
+    <div
               style="
                 padding-bottom: 20px;
                 margin-top: 20px;
@@ -85,7 +89,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
               "
             >
               <a
-                href='${emailDetails.link}'
+                href='http://localhost:3000/admin/emailmembers'
                 target="_blank"
                 style="
                   box-sizing: border-box;
@@ -99,18 +103,9 @@ const genericEmail = asyncHandler(async (emailDetails) => {
                   background-color: #0b0b0b;
                 "
               >
-                ${emailDetails.linkText}
+                View Enquiries
               </a>
             </div>
-          </td>
-        </tr>
-        <tr>
-          <td style="text-align: left">
-            <p>Regards</p>
-            <p>York Karate Dojo</p>
-          </td>
-        </tr>
-      </table>
 
       <!-- generic image -->
       <img
@@ -176,15 +171,21 @@ const genericEmail = asyncHandler(async (emailDetails) => {
 </html>
 
     `,
-  };
+      };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(`Email sent ${info.response}`);
+        }
+      });
     } else {
-      console.log(`Email sent ${info.response}`);
+      console.log("ERROR: cant find member");
     }
-  });
+  } else {
+    console.log("No enquiries to respond to");
+  }
 });
 
-module.exports = { genericEmail };
+export { emailEnquiryAdmin };

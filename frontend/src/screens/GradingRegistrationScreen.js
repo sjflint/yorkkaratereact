@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Button,
   Col,
@@ -21,11 +22,12 @@ import jksLicense from "../img/jkslicense.png";
 import insideJksLicense from "../img/insidelicense.png";
 import { updateProfile } from "../actions/memberActions";
 
-const GradingRegistrationScreen = ({ history, match }) => {
+const GradingRegistrationScreen = ({ match }) => {
   const [applicationError, setApplicationError] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [jksModal, setJksModal] = useState(false);
   const [value, setValue] = useState("");
+  const history = useHistory();
 
   const dispatch = useDispatch();
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -149,22 +151,21 @@ const GradingRegistrationScreen = ({ history, match }) => {
           <ListGroup variant="flush" className="mt-3">
             <h3 className="p2">Your Details</h3>
             <ListGroup.Item>
-              Name: {member.nameFirst} {member.nameSecond}
+              Name: {member.firstName} {member.lastName}
             </ListGroup.Item>
-            {member.danGrade > 0 ||
-              (member.kyuGrade === 1 ? (
-                <ListGroup.Item>
-                  Grade: {grade}
-                  <p className="text-danger">
-                    This grading course is only for kyu grades. Unfortunatley,
-                    you are not eligible.
-                  </p>
-                </ListGroup.Item>
-              ) : (
-                <ListGroup.Item>Grade: {grade}</ListGroup.Item>
-              ))}
+            {member.danGrade > 0 || member.kyuGrade === 1 ? (
+              <ListGroup.Item>
+                Grade: {grade}
+                <p className="text-danger">
+                  This grading course is only for kyu grades. Unfortunatley, you
+                  are not eligible.
+                </p>
+              </ListGroup.Item>
+            ) : (
+              <ListGroup.Item>Grade: {grade}</ListGroup.Item>
+            )}
 
-            {member.nameFirst && member.gradeLevel !== "Advanced" && (
+            {member.firstName && member.gradeLevel !== "Advanced" && (
               <ListGroup.Item className="text-center">
                 Attendance Record:
                 <br />
@@ -235,6 +236,15 @@ const GradingRegistrationScreen = ({ history, match }) => {
                       Unfortuantely, the deadline to register for this grading
                       course has passed.
                     </p>
+                  </>
+                ) : !member.numberOfSessionsRequired ? (
+                  <>
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => history.push("/events")}
+                    >
+                      View All events
+                    </Button>
                   </>
                 ) : (
                   <ListGroup.Item>

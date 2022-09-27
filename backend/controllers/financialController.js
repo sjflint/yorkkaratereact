@@ -31,6 +31,12 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     costOfGrading,
   } = req.body;
 
+  baseLevelTrainingFees = Number(baseLevelTrainingFees * 100);
+  joiningFee = Number(joiningFee * 100);
+  costOfAdditionalClass = Number(costOfAdditionalClass * 100);
+  costOfExtraFee = Number(costOfExtraFee * 100);
+  costOfGrading = Number(costOfGrading * 100);
+
   const financials = await Financial.findOne({});
 
   const membersList = await Member.find({ ddsuccess: true });
@@ -40,11 +46,16 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
       // if cost of additional class increases, update all members direct debits
       for (const member of membersList) {
         const additionalPayment =
-          member.trainingFees / 100 - financials.baseLevelTrainingFees;
+          member.trainingFees - financials.baseLevelTrainingFees;
+        console.log(`additionalPayment = ${additionalPayment}`);
         const numberOfClasses =
           additionalPayment / financials.costOfAdditionalClass;
+        console.log(`number of class = ${numberOfClasses}`);
         const changeAmount =
-          (costOfAdditionalClass - financials.costOfAdditionalClass) * 100;
+          costOfAdditionalClass - financials.costOfAdditionalClass;
+        console.log(
+          `changeAmount = New cost of additonal class(${costOfAdditionalClass}) - old cost of additinal class ${financials.costOfAdditionalClass}`
+        );
 
         const paymentDetails = {
           _id: member._id,
@@ -61,7 +72,7 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
         const paymentDetails = {
           _id: member._id,
           changeAmount:
-            (baseLevelTrainingFees - financials.baseLevelTrainingFees) * 100,
+            baseLevelTrainingFees - financials.baseLevelTrainingFees,
         };
         await updateSubscription(paymentDetails);
       }

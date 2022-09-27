@@ -4,6 +4,7 @@ import Attendance from "../models/attendanceModel.cjs";
 import Finance from "../models/financialModel.cjs";
 import Member from "../models/memberModel.cjs";
 import TrainingSession from "../models/trainingSessionModel.cjs";
+import TrialClass from "../models/trialRegistrationModel.js";
 import { serverCreatedPayment } from "./ddController.cjs";
 
 // @desc get Attendance Record
@@ -49,12 +50,20 @@ const addAttendeeRecord = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    await Member.findByIdAndUpdate(
-      req.body.id,
-      { $inc: { attendanceRecord: 1 } },
-      { new: true }
-    );
-    res.status(201).json("participants updated");
+    const trialMember = await TrialClass.findById(req.body.id);
+
+    if (trialMember) {
+      trialMember.completed = true;
+      trialMember.save();
+      res.status(201).json("participants updated");
+    } else {
+      await Member.findByIdAndUpdate(
+        req.body.id,
+        { $inc: { attendanceRecord: 1 } },
+        { new: true }
+      );
+      res.status(201).json("participants updated");
+    }
   } else {
     res.status(404).json("requested record is not found");
   }
@@ -79,12 +88,20 @@ const removeAttendeeRecord = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    await Member.findByIdAndUpdate(
-      req.body.id,
-      { $inc: { attendanceRecord: -1 } },
-      { new: true }
-    );
-    res.status(201).json("participants updated");
+    const trialMember = await TrialClass.findById(req.body.id);
+
+    if (trialMember) {
+      trialMember.completed = false;
+      trialMember.save();
+      res.status(201).json("participants updated");
+    } else {
+      await Member.findByIdAndUpdate(
+        req.body.id,
+        { $inc: { attendanceRecord: -1 } },
+        { new: true }
+      );
+      res.status(201).json("participants updated");
+    }
   } else {
     res.status(404).json("requested record is not found");
   }

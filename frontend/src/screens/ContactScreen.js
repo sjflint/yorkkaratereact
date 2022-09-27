@@ -1,12 +1,13 @@
 import React from "react";
 import EnquiryForm from "../components/FormComponents/EnquiryForm";
 import { Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const ContactScreen = () => {
   return (
     <Container className="mt-3">
       <Row>
-        <Col md={6}>
+        <Col md={6} className="p-2">
           <h3>Benefits of training with York Karate Dojo:</h3>
           <ListGroup className="mb-4">
             <ListGroupItem className="list-group-item d-flex justify-content-between align-items-center">
@@ -65,9 +66,20 @@ const ContactScreen = () => {
             </ListGroupItem>
           </ListGroup>
         </Col>
-        <Col md={6}>
-          <h3>Let us know how we can help and we will get back to you:</h3>
+        <Col md={6} className="bg-dark p-2">
+          <h3 className="text-white">
+            Let us know how we can help and we will get back to you:
+          </h3>
           <EnquiryForm />
+          <small className="text-white">
+            Would You like to try a session first to see what you think?
+          </small>
+          <Link
+            to={"/trialregistration"}
+            className="btn btn-default btn-block w-100"
+          >
+            Book A Trial session Today
+          </Link>
         </Col>
       </Row>
     </Container>

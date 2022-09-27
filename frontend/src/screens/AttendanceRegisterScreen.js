@@ -71,6 +71,18 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     await dispatch(updateAttendance(classId));
   };
 
+  const removeTrialAttendeeHandler = async (id, recordId, className) => {
+    await dispatch(attendeeRemove(id, recordId));
+    await dispatch(updateAttendance(classId));
+    // set trial attendee complete === false
+  };
+
+  const addTrialAttendeeHandler = async (id, recordId, className) => {
+    await dispatch(attendeeAdd(id, recordId));
+    await dispatch(updateAttendance(classId));
+    // set trial attendee complete === true
+  };
+
   const addExtraAttendeeHandler = async (memberId) => {
     await dispatch(attendeeExtraAdd(memberId, record._id));
     await dispatch(updateAttendance(classId));
@@ -79,15 +91,22 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
   let filteredMembersList = [];
   let participantsArray = [];
+  let trialParticipantsArray = [];
+  let newArray = [];
 
   if (trainingSessions) {
     trainingSessions.forEach((trainingSession) => {
       // build array of participant id's
-
       if (trainingSession._id === classId) {
-        trainingSession.participants.forEach((id) =>
-          participantsArray.push(id._id)
-        );
+        trainingSession.participants.forEach((id) => {
+          participantsArray.push(id._id);
+          newArray.push(id);
+        });
+        trainingSession.trialParticipants.forEach((id) => {
+          participantsArray.push(id._id);
+          !newArray.includes(id) && newArray.push(id);
+        });
+        trainingSession.participants = newArray;
       }
     });
   }
@@ -175,59 +194,121 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
             trainingSessions.map((trainingSession) => {
               if (trainingSession._id === classId) {
                 return trainingSession.participants.map((participant) => {
-                  return (
-                    <tr key={participant._id}>
-                      <td>
-                        <Link to={`/admin/members/${participant._id}/edit`}>
+                  if (participant.dateOfBirth) {
+                    return (
+                      <tr key={participant._id}>
+                        <td>
+                          <Link to={`/admin/members/${participant._id}/edit`}>
+                            {participant.firstName} {participant.lastName}{" "}
+                            {participant.medicalStatus === "Yes medical" && (
+                              <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
+                            )}
+                          </Link>
+                        </td>
+                        {record.participants &&
+                        record.participants.includes(
+                          participant._id.toString()
+                        ) ? (
+                          <>
+                            <td>
+                              <i className="fa-solid fa-circle-check text-success fa-3x"></i>
+                            </td>
+                            <td>
+                              <Button
+                                variant="outline-danger"
+                                className="btn-sm"
+                                onClick={() =>
+                                  removeAttendeeHandler(
+                                    participant._id,
+                                    record._id
+                                  )
+                                }
+                              >
+                                Mark as Not Present
+                              </Button>
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td>
+                              <Button
+                                variant="outline-success"
+                                className="btn-sm"
+                                onClick={() =>
+                                  addAttendeeHandler(
+                                    participant._id,
+                                    record._id
+                                  )
+                                }
+                              >
+                                Mark as Present
+                              </Button>
+                            </td>
+                            <td>
+                              <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    );
+                  } else {
+                    return (
+                      <tr key={participant._id}>
+                        <td>
                           {participant.firstName} {participant.lastName}{" "}
                           {participant.medicalStatus === "Yes medical" && (
                             <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
                           )}
-                        </Link>
-                      </td>
-                      {record.participants &&
-                      record.participants.includes(
-                        participant._id.toString()
-                      ) ? (
-                        <>
-                          <td>
-                            <i className="fa-solid fa-circle-check text-success fa-3x"></i>
-                          </td>
-                          <td>
-                            <Button
-                              variant="outline-danger"
-                              className="btn-sm"
-                              onClick={() =>
-                                removeAttendeeHandler(
-                                  participant._id,
-                                  record._id
-                                )
-                              }
-                            >
-                              Mark as Not Present
-                            </Button>
-                          </td>
-                        </>
-                      ) : (
-                        <>
-                          <td>
-                            <Button
-                              variant="outline-success"
-                              className="btn-sm"
-                              onClick={() =>
-                                addAttendeeHandler(participant._id, record._id)
-                              }
-                            >
-                              Mark as Present
-                            </Button>
-                          </td>
-                          <td>
-                            <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  );
+                          <br />
+                          (Trial)
+                        </td>
+                        {record.participants &&
+                        record.participants.includes(
+                          participant._id.toString()
+                        ) ? (
+                          <>
+                            <td>
+                              <i className="fa-solid fa-circle-check text-success fa-3x"></i>
+                            </td>
+                            <td>
+                              <Button
+                                variant="outline-danger"
+                                className="btn-sm"
+                                onClick={() =>
+                                  removeTrialAttendeeHandler(
+                                    participant._id,
+                                    record._id
+                                  )
+                                }
+                              >
+                                Mark as Not Present
+                              </Button>
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td>
+                              <Button
+                                variant="outline-success"
+                                className="btn-sm"
+                                onClick={() =>
+                                  addTrialAttendeeHandler(
+                                    participant._id,
+                                    record._id
+                                  )
+                                }
+                              >
+                                Mark as Present
+                              </Button>
+                            </td>
+                            <td>
+                              <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    );
+                  }
                 });
               } else {
                 return null;

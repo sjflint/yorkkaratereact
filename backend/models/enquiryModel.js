@@ -8,6 +8,7 @@ const enquirySchema = mongoose.Schema(
     ageGroup: { type: String, required: true },
     message: { type: String, required: true },
     dateCreated: { type: Date, default: Date.now },
+    responded: { type: Boolean, default: false },
   },
   {
     timestamp: true,

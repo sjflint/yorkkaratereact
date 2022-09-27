@@ -12,7 +12,7 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 router
   .route("/")
   .post(protect, admin, updateFinancialDetails)
-  .get(protect, admin, getFinancialDetails);
+  .get(getFinancialDetails);
 
 router
   .route("/monthlycosts")

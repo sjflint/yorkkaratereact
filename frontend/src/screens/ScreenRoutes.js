@@ -49,6 +49,7 @@ import TrialRegistrationScreen from "./TrialRegistrationScreen";
 import OutstandingFeesScreen from "./OutstandingFeesScreen";
 import EmailMembersScreen from "./EmailMembersScreen";
 import LostScreen from "./LostScreen";
+import TrialRegistrationPayScreen from "./TrialRegistrationPayScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -152,7 +153,16 @@ const ScreenRoutes = () => {
 
       <Route path="/accountinactive" component={AccountInactiveScreen} />
 
-      <Route path="/trialregistration" component={TrialRegistrationScreen} />
+      <Route
+        path="/trialregistration"
+        component={TrialRegistrationScreen}
+        exact
+      />
+      <Route
+        path="/trialregistration/pay/:id"
+        component={TrialRegistrationPayScreen}
+        exact
+      />
       <Route path="/outstandingFees" component={OutstandingFeesScreen} />
       <Route path="/admin/emailmembers" component={EmailMembersScreen} />
       <Route component={LostScreen} />

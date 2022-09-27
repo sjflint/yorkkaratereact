@@ -16,8 +16,7 @@ const EnquiryForm = () => {
   const dropdownOptions = [
     { key: "Please select an age group", value: "" },
     { key: "Under 9 years old", value: "under 9 years old" },
-    { key: "9 - 15 years old", value: "9 - 15 years old" },
-    { key: "16 years +", value: "16 years +" },
+    { key: "9 years old or above", value: "9 years old or above" },
   ];
   const initialValues = {
     name: "",
@@ -42,7 +41,7 @@ const EnquiryForm = () => {
 
     axios
       .post(
-        "/sendEnquiry",
+        "/api/enquiry",
         {
           name: values.name,
           email: values.email,
@@ -121,9 +120,9 @@ const EnquiryForm = () => {
             />
           </div>
 
-          <button type="submit" className="mt-1 btn-block btn-default btn">
+          <Button type="submit" className="mt-1" variant="outline-light">
             Submit
-          </button>
+          </Button>
         </Form>
       </Formik>
 
@@ -131,9 +130,13 @@ const EnquiryForm = () => {
         <Modal.Header closeButton className="bg-dark">
           <Modal.Title className="text-white">Message Sent</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          Thank you for contacting York Karate. We will review your enquiry and
-          reply to you in due course.
+        <Modal.Body className="text-center">
+          <i className="fa-solid fa-circle-check fa-3x text-success mb-3"></i>
+          <h5>Your message was sent sucessfully.</h5>
+          <p>
+            Thank you for contacting York Karate. We will review your enquiry
+            and reply to you in due course.
+          </p>
         </Modal.Body>
         <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={handleClose}>

@@ -22,9 +22,6 @@ import {
   admin,
   adminOrInstructor,
 } from "../middleware/authMiddleware.js";
-// import multer from "multer";
-
-// const upload = multer();
 
 router
   .route("/")

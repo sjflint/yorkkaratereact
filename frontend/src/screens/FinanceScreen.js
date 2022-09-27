@@ -136,7 +136,7 @@ const FinanceScreen = ({ history }) => {
   let totalIncome;
   if (memberList) {
     memberList.forEach((member) => {
-      totalFees.push(member.trainingFees);
+      member.trainingFees && totalFees.push(Number(member.trainingFees));
     });
     const initialValue = 0;
     totalIncome = totalFees.reduce((prev, curr) => prev + curr, initialValue);
@@ -165,7 +165,7 @@ const FinanceScreen = ({ history }) => {
                 >
                   <div>Income:</div>
                   <div>
-                    {Number(totalIncome).toLocaleString("en-GB", {
+                    {Number(totalIncome / 100).toLocaleString("en-GB", {
                       style: "currency",
                       currency: "GBP",
                     })}
@@ -178,7 +178,7 @@ const FinanceScreen = ({ history }) => {
                   {" "}
                   <div>Costs:</div>
                   <div>
-                    {Number(totalCost).toLocaleString("en-GB", {
+                    {Number(totalCost / 100).toLocaleString("en-GB", {
                       style: "currency",
                       currency: "GBP",
                     })}
@@ -191,7 +191,7 @@ const FinanceScreen = ({ history }) => {
                   {" "}
                   <div>Profit/Loss:</div>
                   <div>
-                    {(totalIncome - totalCost).toLocaleString("en-GB", {
+                    {((totalIncome - totalCost) / 100).toLocaleString("en-GB", {
                       style: "currency",
                       currency: "GBP",
                     })}
@@ -298,7 +298,9 @@ const FinanceScreen = ({ history }) => {
                       <InputGroup>
                         <InputGroup.Text>£</InputGroup.Text>
                         <FormControl
-                          value={financials.baseLevelTrainingFees.toFixed(2)}
+                          value={(
+                            financials.baseLevelTrainingFees / 100
+                          ).toFixed(2)}
                           className="mb-0 bg-light"
                           type="number"
                           disabled
@@ -322,7 +324,7 @@ const FinanceScreen = ({ history }) => {
                       <InputGroup>
                         <InputGroup.Text>£</InputGroup.Text>
                         <FormControl
-                          value={financials.joiningFee.toFixed(2)}
+                          value={(financials.joiningFee / 100).toFixed(2)}
                           className="mb-0 bg-light"
                           type="number"
                           disabled
@@ -349,7 +351,9 @@ const FinanceScreen = ({ history }) => {
                           disabled
                           className="mb-0 bg-light"
                           type="number"
-                          value={financials.costOfAdditionalClass.toFixed(2)}
+                          value={(
+                            financials.costOfAdditionalClass / 100
+                          ).toFixed(2)}
                         />
                       </InputGroup>
                     )}
@@ -373,7 +377,7 @@ const FinanceScreen = ({ history }) => {
                           disabled
                           className="mb-0 bg-light"
                           type="number"
-                          value={financials.costOfExtraFee.toFixed(2)}
+                          value={(financials.costOfExtraFee / 100).toFixed(2)}
                         />
                       </InputGroup>
                     )}
@@ -395,7 +399,7 @@ const FinanceScreen = ({ history }) => {
                         <InputGroup.Text>£</InputGroup.Text>
                         <FormControl
                           disabled
-                          value={financials.costOfGrading.toFixed(2)}
+                          value={(financials.costOfGrading / 100).toFixed(2)}
                           className="mb-0 bg-light"
                           type="number"
                         />
@@ -508,11 +512,11 @@ const FinanceScreen = ({ history }) => {
             variant="primary"
             onClick={() => {
               setEditFees(true);
-              setBaseFees(financials.baseLevelTrainingFees);
-              setAdditionalFees(financials.costOfAdditionalClass);
-              setExtraFee(financials.costOfExtraFee);
-              setGradingFees(financials.costOfGrading);
-              setJoiningFee(financials.joiningFee);
+              setBaseFees(financials.baseLevelTrainingFees / 100);
+              setAdditionalFees(financials.costOfAdditionalClass / 100);
+              setExtraFee(financials.costOfExtraFee / 100);
+              setGradingFees(financials.costOfGrading / 100);
+              setJoiningFee(financials.joiningFee / 100);
               setShowFees(false);
             }}
           >

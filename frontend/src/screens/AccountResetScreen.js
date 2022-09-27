@@ -17,6 +17,7 @@ const AccountResetScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [showPassword, setShowPassword] = useState("password");
 
   const resetPassword = useSelector((state) => state.resetPassword);
   const { loading, error, success } = resetPassword;
@@ -105,20 +106,50 @@ const AccountResetScreen = () => {
           <Form.Group controlId="password" className="mb-3 bg-light p-2">
             <Form.Label>Enter New Password</Form.Label>
             <Form.Control
-              type="password"
+              type={showPassword}
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
+            {showPassword === "password" ? (
+              <small
+                onClick={() => setShowPassword("text")}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="fa-solid fa-eye inside-input"></i> Show Passwords
+              </small>
+            ) : (
+              <small
+                onClick={() => setShowPassword("password")}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="fa-solid fa-eye-slash"></i> Hide Passwords
+              </small>
+            )}
           </Form.Group>
           <Form.Group controlId="new password" className="mb-3 bg-light p-2">
             <Form.Label>Confirm New Password</Form.Label>
             <Form.Control
-              type="password"
+              type={showPassword}
               placeholder="Confirm New password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
+            {showPassword === "password" ? (
+              <small
+                onClick={() => setShowPassword("text")}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="fa-solid fa-eye inside-input"></i> Show Passwords
+              </small>
+            ) : (
+              <small
+                onClick={() => setShowPassword("password")}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="fa-solid fa-eye-slash"></i> Hide Passwords
+              </small>
+            )}
           </Form.Group>
           <Button
             type="submit"

@@ -7,6 +7,7 @@ import {
 import Member from "../models/memberModel.cjs";
 import FormerBlackBelts from "../models/formerBlackBeltsModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
+import Financial from "../models/financialModel.cjs";
 
 // Format first name and last name to uppercase first letter and lower case for the rest
 const formatName = (name) => {
@@ -59,18 +60,24 @@ const registerMember = asyncHandler(async (req, res) => {
   email = email.toLowerCase().trim();
 
   const memberExists = await Member.findOne({
+    email: email,
     firstName: firstName,
     lastName: lastName,
-    email: email,
   });
 
   if (memberExists) {
     res.status(400);
     throw new Error("Member already exists");
   }
+
+  const financials = await Financial.findOne({});
+
   req.body.firstName = firstName;
   req.body.lastName = lastName;
   req.body.email = email;
+  req.body.trainingFees = Number(financials.baseLevelTrainingFees);
+
+  console.log(req.body);
 
   const member = await Member.create(req.body);
 
@@ -133,42 +140,43 @@ const getMemberProfile = asyncHandler(async (req, res) => {
     const age = Math.floor((new Date() - member.dateOfBirth) / 60000 / 525600);
     const kyuGrade = member.kyuGrade;
     const danGrade = member.danGrade;
-    let gradeLevel;
+
     let grade;
-    let numberOfSessionsRequired;
     if (kyuGrade === 0) {
-      grade = danGrade;
+      grade = danGrade * -1;
     } else {
       grade = kyuGrade;
     }
 
     if (age < 9 && grade > 1) {
-      gradeLevel = "Intermediate";
-      numberOfSessionsRequired = 24;
+      member.gradeLevel = "Intermediate";
+      member.numberOfSessionsRequired = 24;
     }
     if (age < 9 && grade > 6) {
-      gradeLevel = "Novice";
-      numberOfSessionsRequired = 16;
+      member.gradeLevel = "Novice";
+      member.numberOfSessionsRequired = 16;
     }
     if (age < 9 && grade > 10) {
-      gradeLevel = "Junior";
-      numberOfSessionsRequired = 10;
+      member.gradeLevel = "Junior";
+      member.numberOfSessionsRequired = 10;
     }
     if (age < 9 && grade < 2) {
-      gradeLevel = "Advanced";
+      member.gradeLevel = "Advanced";
+      member.numberOfSessionsRequired = 0;
     }
 
     if (age > 8 && grade > 1) {
-      gradeLevel = "Intermediate";
-      numberOfSessionsRequired = 24;
+      member.gradeLevel = "Intermediate";
+      member.numberOfSessionsRequired = 24;
     }
     if (age > 8 && grade > 6) {
-      gradeLevel = "Novice";
-      numberOfSessionsRequired = 16;
+      member.gradeLevel = "Novice";
+      member.numberOfSessionsRequired = 16;
     }
     if (age > 8 && grade < 2) {
-      gradeLevel = "Advanced";
+      member.gradeLevel = "Advanced";
     }
+
     res.json(member);
   } else {
     res.status(404);

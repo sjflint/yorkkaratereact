@@ -12,6 +12,7 @@ const LoginScreen = ({ location, history }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState("password");
 
   const dispatch = useDispatch();
 
@@ -74,11 +75,26 @@ const LoginScreen = ({ location, history }) => {
         <Form.Group controlId="password" className="mb-3 bg-light p-2">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            type="password"
+            type={showPassword}
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
+          {showPassword === "password" ? (
+            <small
+              onClick={() => setShowPassword("text")}
+              style={{ cursor: "pointer" }}
+            >
+              <i className="fa-solid fa-eye inside-input"></i> Show Password
+            </small>
+          ) : (
+            <small
+              onClick={() => setShowPassword("password")}
+              style={{ cursor: "pointer" }}
+            >
+              <i className="fa-solid fa-eye-slash"></i> Hide Password
+            </small>
+          )}
         </Form.Group>
 
         <div className="d-flex justify-content-around">

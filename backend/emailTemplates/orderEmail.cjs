@@ -38,7 +38,8 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
         paymentStatus = "paid";
       }
       orderItems.forEach((item) => {
-        const image = item.image.slice(7);
+        const image = item.image;
+        console.log(image);
         const itemPrice = item.price.toLocaleString("en-GB", {
           style: "currency",
           currency: "GBP",

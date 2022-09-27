@@ -44,7 +44,7 @@ const AgeGroupsScreen = () => {
             </Col>
           </Row>
         </Tab>
-        <Tab eventKey="9-15years" title="9 - 15 year old" className="mb-3">
+        <Tab eventKey="9-15years" title="9 years old or above" className="mb-3">
           <Row className="align-items-start">
             <Col md="6">
               <p className="lead border-bottom border-warning pb-2">
@@ -65,29 +65,29 @@ const AgeGroupsScreen = () => {
                 seriously as they want, either as a fun after school activity or
                 with the intention of reaching black belt and beyond.
               </p>
+              <p className="lead border-bottom border-warning pb-2">
+                York Karate Dojo is also a great place to either start your
+                karate training, or restart it after being out of action for a
+                few years.
+              </p>
+              <p>
+                The first thing to know about karate is it's great fun! Learning
+                a martial art is very rewarding and in time, you begin to
+                appreciate all of it's nuances, intricacies and challenges.
+              </p>
+              <p>
+                It is great fitness as you use your entire body and every
+                muscle, not to mention practical and relevant in our modern
+                society. We also teach karate with a view to it's traditions and
+                more subtle philosophical underpinnings.
+              </p>
             </Col>
             <Col md="6" className="bg-primary p-2">
               <img src={georgeIMG} alt="" />
             </Col>
           </Row>
         </Tab>
-        <Tab eventKey="Adult" title="Adult" className="mb-3">
-          <p className="lead border-bottom border-warning pb-2">
-            York Karate Dojo is a great place to either start your karate
-            training, or restart it after being out of action for a few years.
-          </p>
-          <p>
-            The first thing to know about karate is it's great fun! Learning a
-            martial art is very rewarding and in time, you begin to appreciate
-            all of it's nuances, intricacies and challenges.
-          </p>
-          <p>
-            It is great fitness as you use your entire body and every muscle,
-            not to mention practical and relevant in our modern society. We also
-            teach karate with a view to it's traditions and more subtle
-            philosophical underpinnings.
-          </p>
-        </Tab>
+
         <Tab eventKey="beltLevel" title="Belt Levels" className="mb-3">
           <h5>Belt levels</h5>
           <p className="lead border-bottom border-warning pb-2">

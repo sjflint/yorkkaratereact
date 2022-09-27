@@ -255,6 +255,7 @@ const ListProductsScreen = ({ history, match }) => {
                     style={{ maxWidth: "40px" }}
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
+                      dispatch({ type: UPLOAD_IMG_CLEAR });
                       setUpdateId(product._id);
                       await dispatch(listProduct(product._id));
                       await setImage(product.image);
@@ -270,6 +271,7 @@ const ListProductsScreen = ({ history, match }) => {
                   <td
                     className="text-center align-middle mouse-hover-pointer"
                     onClick={async () => {
+                      dispatch({ type: UPLOAD_IMG_CLEAR });
                       setUpdateId(product._id);
                       await dispatch(listProduct(product._id));
                       await setImage(product.image);
@@ -283,6 +285,7 @@ const ListProductsScreen = ({ history, match }) => {
                       variant="success"
                       className="btn btn-sm"
                       onClick={async () => {
+                        dispatch({ type: UPLOAD_IMG_CLEAR });
                         setUpdateId(product._id);
                         await dispatch(listProduct(product._id));
                         await setImage(product.image);

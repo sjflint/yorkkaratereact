@@ -18,6 +18,12 @@ const trainingSessionSchema = mongoose.Schema(
         ref: "Member",
       },
     ],
+    trialParticipants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "TrialClass",
+      },
+    ],
   },
   {
     timestamp: true,

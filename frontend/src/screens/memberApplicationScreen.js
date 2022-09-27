@@ -22,9 +22,12 @@ const memberApplicationScreen = () => {
               </Card.Title>
               <Card.Text>
                 Don't pay for anything until you try the class first. Contact us
-                to book a completely free taster session. No commitment.
+                to book a taster session. No commitment.
               </Card.Text>
-              <Link to={"/contact"} className="btn btn-default btn-block">
+              <Link
+                to={"/trialregistration"}
+                className="btn btn-default btn-block"
+              >
                 Book Your Trial session
               </Link>
               <Card.Title className="mt-4 border-bottom border-warning">

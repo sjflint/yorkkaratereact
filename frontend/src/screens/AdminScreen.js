@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import membersImg from "../img/members.png";
 import eventsImg from "../img/events.png";
 import financialImg from "../img/financial.png";
@@ -15,15 +15,30 @@ import gradingImg from "../img/grading.png";
 import registerImg from "../img/register.png";
 import { Link } from "react-router-dom";
 import Meta from "../components/Meta";
+import { listEnquiries } from "../actions/enquiryActions";
+import { listOrders } from "../actions/orderActions";
 
 const AdminScreen = ({ history }) => {
+  const dispatch = useDispatch();
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { member } = memberDetails;
 
+  const enquiryList = useSelector((state) => state.enquiryList);
+  const {
+    loading: enquiryLoading,
+    error: enquiryError,
+    enquiries,
+  } = enquiryList;
+
+  const orderList = useSelector((state) => state.orderList);
+  const { loading, error, orders } = orderList;
+
   useEffect(() => {
+    dispatch(listEnquiries());
+    dispatch(listOrders());
     if (!memberInfo) {
       history.push("/login");
     }
@@ -39,6 +54,15 @@ const AdminScreen = ({ history }) => {
       history.push("/");
     }
   }, [history, memberInfo, member]);
+
+  let openOrders = [];
+  if (orders) {
+    orders.map((order) => {
+      if (order.isPaid === "true" && !order.isDelivered) {
+        openOrders.push(order);
+      }
+    });
+  }
 
   return (
     <div className="mt-3">
@@ -91,7 +115,12 @@ const AdminScreen = ({ history }) => {
 
               <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/admin/emailmembers">
-                  <Card>
+                  <Card className="notification-container">
+                    {enquiries && enquiries.length > 0 && (
+                      <div className="notification d-flex align-items-center justify-content-center">
+                        {enquiries.length}
+                      </div>
+                    )}
                     <Card.Img variant="top" src={emailImg} className="p-3" />
                     <Card.Footer className="text-center">Contact</Card.Footer>
                   </Card>
@@ -124,6 +153,7 @@ const AdminScreen = ({ history }) => {
               <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/shopadmin/editproducts">
                   <Card>
+                    {/* Notifications for products out of stock */}
                     <Card.Img variant="top" src={productsImg} className="p-3" />
                     <Card.Footer className="text-center">Products</Card.Footer>
                   </Card>
@@ -133,6 +163,12 @@ const AdminScreen = ({ history }) => {
               <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/shopadmin/editorders">
                   <Card>
+                    {/* Notifications for orders to be processed */}
+                    {orders && openOrders.length > 0 && (
+                      <div className="notification d-flex align-items-center justify-content-center">
+                        {openOrders.length}
+                      </div>
+                    )}
                     <Card.Img variant="top" src={ordersImg} className="p-3" />
                     <Card.Footer className="text-center">Orders</Card.Footer>
                   </Card>
@@ -154,6 +190,7 @@ const AdminScreen = ({ history }) => {
               <Col xs={6} sm={3} md={3} className="mb-2">
                 <Link to="/author/editarticles">
                   <Card>
+                    {/* Notification for events that have passed??? */}
                     <Card.Img variant="top" src={articlesImg} className="p-3" />
                     <Card.Footer className="text-center">Articles</Card.Footer>
                   </Card>

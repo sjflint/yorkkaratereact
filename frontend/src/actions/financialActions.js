@@ -21,17 +21,7 @@ export const listFinancials = () => async (dispatch, getState) => {
   try {
     dispatch({ type: FINANCIAL_LIST_REQUEST });
 
-    const {
-      memberLogin: { memberInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${memberInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.get(`/api/financial`, config);
+    const { data } = await axios.get(`/api/financial`);
 
     dispatch({
       type: FINANCIAL_LIST_SUCCESS,

@@ -36,4 +36,9 @@ const postEnquiry = asyncHandler(async (req, res) => {
   }
 });
 
-export { postEnquiry };
+const getEnquirys = asyncHandler(async (req, res) => {
+  const enquiries = await Enquiry.find({ responded: false });
+  res.send(enquiries);
+});
+
+export { postEnquiry, getEnquirys };

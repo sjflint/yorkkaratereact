@@ -233,7 +233,7 @@ const MemberClasses = () => {
         <Modal.Body>
           <h5>
             Your current monthly training fees are: £
-            {(member.membershipLevel / 100).toFixed(2)}
+            {(member.trainingFees / 100).toFixed(2)}
           </h5>
           {financialsLoading ? (
             <Loader variant="warning" />

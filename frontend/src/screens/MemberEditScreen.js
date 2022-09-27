@@ -194,7 +194,9 @@ const MemberEditScreen = ({ match, history }) => {
     }
 
     if (values.medicalDetails !== "") {
-      values.medicalStatus = true;
+      values.medicalStatus = "Yes medical";
+    } else {
+      values.medicalStatus = "false";
     }
 
     await dispatch(editMember(values));

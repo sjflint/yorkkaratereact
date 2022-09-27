@@ -24,7 +24,6 @@ const EventScreen = ({ match }) => {
   }, [dispatch, match]);
 
   const eventId = event._id;
-  const paragraphs = event.description;
 
   const moreEvents = events.filter((event) => event._id !== eventId);
 
@@ -73,13 +72,7 @@ const EventScreen = ({ match }) => {
                 )}
                 <ListGroup.Item>
                   <h5>Event Description</h5>
-                  {paragraphs &&
-                    paragraphs.map((paragraph) => (
-                      <p key={`${paragraph}${Math.random()}`} className="mb-0 ">
-                        {paragraph}
-                        <br />
-                      </p>
-                    ))}
+                  <p style={{ whiteSpace: "pre-line" }}>{event.description}</p>
                 </ListGroup.Item>
                 <div className="mt-2 mb-5 border-bottom border-warning">
                   <Link

@@ -5,6 +5,16 @@ import asyncHandler from "express-async-handler";
 dotenv.config();
 
 const enquiryEmail = asyncHandler(async (emailDetails) => {
+  const nameArray = emailDetails.recipientName.split(" ");
+  console.log(nameArray);
+  // let firstName =
+  // Format first name and last name to uppercase first letter and lower case for the rest
+  const formatName = (name) => {
+    const removeNoneAlpha = name.replace(/[^a-z0-9]/gi, "");
+    const nameLowerCase = removeNoneAlpha.toLowerCase().trim();
+    return nameLowerCase.charAt(0).toUpperCase() + nameLowerCase.slice(1);
+  };
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -41,7 +51,7 @@ const enquiryEmail = asyncHandler(async (emailDetails) => {
       <div style="padding: 10px">
         <h3>Thank you for contacting York Karate Dojo</h3>
         <p style="text-align: left">
-          Dear ${emailDetails.recipientName},<br /><br />
+          Dear ${formatName(nameArray[0])},<br /><br />
           Thank you for contacting York Karate Dojo. We will endeavour to
           respond to you within the next couple of days.
         </p>
@@ -72,7 +82,8 @@ const enquiryEmail = asyncHandler(async (emailDetails) => {
     </div>
     <div style="text-align: center; max-width: 600px; margin: auto">
       <img
-        src="https://www.yorkkarate.net/img/showcase.png"
+        src="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/secondarylogo.png";
+
         alt=""
         width="600"
       />

@@ -7,6 +7,7 @@ import Product from "../components/Product";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import ProductCarousel from "../components/ProductCarousel";
 import logo from "../img/logo2021.png";
+import secondaryLogo from "../img/logosubmark(transparent).png";
 import ProductPaginate from "../components/ProductPaginate";
 import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
 import { Link } from "react-router-dom";
@@ -66,7 +67,7 @@ const ShopScreen = ({ match }) => {
                   onClick={() => setFilterBy("uniform/gi")}
                   className="w-100 rounded-0"
                 >
-                  Karate Suits
+                  Suits
                 </Button>
               </Col>
 
@@ -94,7 +95,7 @@ const ShopScreen = ({ match }) => {
                   onClick={() => setFilterBy("")}
                   className="w-100 rounded-0"
                 >
-                  All Products
+                  All
                 </Button>
               </Col>
             </Row>
@@ -108,15 +109,25 @@ const ShopScreen = ({ match }) => {
             ) : (
               <>
                 {!filterBy && (
-                  <Row className="align-items-center bg-light">
-                    <Col xs={12} sm={3}></Col>
-                    <Col xs={12} sm={6}>
-                      <h3 className="text-center text-white">
-                        Featured Products
-                      </h3>
+                  <Row className="align-items-center bg-primary mx-3 text-center p-2">
+                    <Col xs={12} sm={3} md={4}>
+                      <img
+                        src={secondaryLogo}
+                        alt=""
+                        className="max-width-100"
+                      />
+                    </Col>
+                    <Col xs={12} sm={6} md={4} className="bg-light">
+                      <h3 className="text-center">Featured Products</h3>
                       <ProductCarousel />
                     </Col>
-                    <Col xs={12} sm={3}></Col>
+                    <Col xs={12} sm={3} md={4}>
+                      <img
+                        src={secondaryLogo}
+                        alt=""
+                        className="max-width-100"
+                      />
+                    </Col>
                   </Row>
                 )}
                 {!filterBy ? (

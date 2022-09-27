@@ -207,6 +207,21 @@ td {
   font-size: small;
 }
 
+.notification {
+  margin-top: -5px;
+  margin-left: -10px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: red;
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  color: white;
+}
+.notification-container {
+  position: relative;
+}
+
 @media (max-width: 1000px) {
   #club-name {
     display: none;

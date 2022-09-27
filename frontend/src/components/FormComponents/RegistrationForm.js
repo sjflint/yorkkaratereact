@@ -23,6 +23,7 @@ const RegistrationForm = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [showPassword, setShowPassword] = useState("password");
 
   useEffect(() => {
     if (memberInfo) {
@@ -315,9 +316,25 @@ const RegistrationForm = () => {
                     control="input"
                     label="Please set a password"
                     name="password"
-                    type="password"
+                    type={showPassword}
                     placeholder="Set Password"
                   />
+                  {showPassword === "password" ? (
+                    <small
+                      onClick={() => setShowPassword("text")}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <i className="fa-solid fa-eye inside-input"></i> Show
+                      Passwords
+                    </small>
+                  ) : (
+                    <small
+                      onClick={() => setShowPassword("password")}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <i className="fa-solid fa-eye-slash"></i> Hide Passwords
+                    </small>
+                  )}
                 </div>
               </Col>
               <Col>
@@ -326,9 +343,25 @@ const RegistrationForm = () => {
                     control="input"
                     label="Please confirm password"
                     name="confirmPassword"
-                    type="password"
+                    type={showPassword}
                     placeholder="Confirm password"
                   />
+                  {showPassword === "password" ? (
+                    <small
+                      onClick={() => setShowPassword("text")}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <i className="fa-solid fa-eye inside-input"></i> Show
+                      Passwords
+                    </small>
+                  ) : (
+                    <small
+                      onClick={() => setShowPassword("password")}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <i className="fa-solid fa-eye-slash"></i> Hide Passwords
+                    </small>
+                  )}
                 </div>
               </Col>
             </Row>

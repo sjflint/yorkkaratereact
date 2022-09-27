@@ -10,7 +10,14 @@ import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 // @access Public
 const getTrainingSessions = asyncHandler(async (req, res) => {
   const trainingSessions = await TrainingSession.find({})
-    .populate("participants", "id firstName lastName email phone medicalStatus")
+    .populate(
+      "participants",
+      "id firstName lastName email phone medicalStatus dateOfBirth"
+    )
+    .populate(
+      "trialParticipants",
+      "id firstName lastName email phone medicalStatus"
+    )
     .sort({
       day: 1,
       times: 1,
