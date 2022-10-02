@@ -4,6 +4,9 @@ import Member from "../models/memberModel.cjs";
 import { updateSubscription } from "./ddController.cjs";
 import Financial from "../models/financialModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // @desc Fetch all training sessions
 // @route GET /api/trainingSessions
@@ -85,7 +88,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
               <p>We have added the following class to your training schedule:</p>
               <p>${session.name}<br/>${session.location}<br/>${session.times}   
             `,
-      link: `http://localhost:3000/profile?key=third`,
+      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "View your training sessions",
       attachments: [],
     });
@@ -149,7 +152,7 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
               <p>We have removed the following class from your training schedule:</p>
               <p>${session.name}<br/>${session.location}<br/>${session.times}   
             `,
-      link: `http://localhost:3000/profile?key=third`,
+      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "View your training sessions",
       attachments: [],
     });
@@ -209,7 +212,7 @@ const switchTrainingSession = asyncHandler(async (req, res) => {
                 <p>We have added the following class to your training schedule:</p>
                 <p>${addSession.name}<br/>${addSession.location}<br/>${addSession.times}   
               `,
-        link: `http://localhost:3000/profile?key=third`,
+        link: `${process.env.DOMAIN_LINK}/profile?key=third`,
         linkText: "View your training sessions",
         attachments: [],
       });
@@ -324,7 +327,7 @@ const createTimetableSession = asyncHandler(async (req, res) => {
       }   
               <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
             `,
-      link: `http://localhost:3000/profile?key=third`,
+      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "View your training sessions",
       attachments: [],
     });
@@ -386,7 +389,7 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
               <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}   
               <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
             `,
-        link: `http://localhost:3000/profile?key=third`,
+        link: `${process.env.DOMAIN_LINK}/profile?key=third`,
         linkText: "View your training sessions",
         attachments: [],
       });

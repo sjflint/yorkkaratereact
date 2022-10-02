@@ -52,7 +52,7 @@ const EmailMembersScreen = ({ history }) => {
       // get what info we need for this page
       dispatch(listTrainingSessions());
     }
-  }, [memberInfo, dispatch, file, history]);
+  }, [memberInfo, dispatch, file, history, sendNewEmail]);
 
   // Form details
   let classOptions = [{ key: "Please select", value: "" }];
@@ -94,8 +94,8 @@ const EmailMembersScreen = ({ history }) => {
     classId: "",
     subject: "",
     message: "",
-    link: "",
-    linkText: "",
+    link: "www.yorkkarate.net",
+    linkText: "yorkkarate.net",
     id: "",
   };
 
@@ -290,6 +290,7 @@ const EmailMembersScreen = ({ history }) => {
                       </>
                     )}
                   </Row>
+
                   {values.recipientGroup === "grade" ? (
                     <Row>
                       <Col md={6}>
@@ -324,6 +325,7 @@ const EmailMembersScreen = ({ history }) => {
                       </Row>
                     ))
                   )}
+
                   <div className="bg-light mb-2 p-2">
                     <FormikControl
                       control="input"
@@ -343,6 +345,7 @@ const EmailMembersScreen = ({ history }) => {
                     />
                   </div>
                 </div>
+
                 <Row className="py-4 border-bottom border-warning">
                   <p className="mb-1 mt-2">
                     Add link for further information, or to register etc...
@@ -370,6 +373,7 @@ const EmailMembersScreen = ({ history }) => {
                     </div>
                   </Col>
                 </Row>
+
                 <Row className="py-4 border-bottom border-warning">
                   {!file || file === "loading" ? (
                     <Col md={6}>
@@ -392,6 +396,7 @@ const EmailMembersScreen = ({ history }) => {
                     </Col>
                   )}
                 </Row>
+
                 <Row>
                   <Col md={3}></Col>
                   <Col md={6}>

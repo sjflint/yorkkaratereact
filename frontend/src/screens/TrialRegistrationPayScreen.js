@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,13 +28,10 @@ const TrialRegistrationPayScreen = ({ match }) => {
   const trainingSessionsList = useSelector(
     (state) => state.trainingSessionsList
   );
-  const { loading, error, trainingSessions } = trainingSessionsList;
+  const { trainingSessions } = trainingSessionsList;
 
   const trialGet = useSelector((state) => state.trialGet);
   const { loading: trialLoading, applicant, error: trialError } = trialGet;
-
-  const trialPay = useSelector((state) => state.trialPay);
-  const { success } = trialPay;
 
   useEffect(() => {
     dispatch(listFinancials());
@@ -64,10 +61,11 @@ const TrialRegistrationPayScreen = ({ match }) => {
           setSdkReady(true);
         }
     }
-  }, [dispatch, applicant, trialClassId]);
+  }, [dispatch, applicant, trialClassId, sdkReady]);
 
-  const successPaymentHandler = () => {
-    dispatch(payTrial(trialClassId));
+  const successPaymentHandler = async () => {
+    await dispatch(payTrial(trialClassId));
+
     setPaySuccess(true);
     console.log("payment success");
   };
@@ -80,10 +78,12 @@ const TrialRegistrationPayScreen = ({ match }) => {
     });
   }
 
-  return financialsLoading ? (
+  return financialsLoading || trialLoading ? (
     <Loader variant="warning" />
   ) : financialsError ? (
     <Message variant="warning">{financialsError}</Message>
+  ) : trialError ? (
+    <Message variant="warning">{trialError}</Message>
   ) : (
     <>
       {financials && applicant && (
@@ -103,7 +103,7 @@ const TrialRegistrationPayScreen = ({ match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item>
                   Cost:{" "}
-                  {financials.costOfExtraFee.toLocaleString("en-GB", {
+                  {(financials.costOfExtraFee / 100).toLocaleString("en-GB", {
                     style: "currency",
                     currency: "GBP",
                   })}
@@ -116,8 +116,8 @@ const TrialRegistrationPayScreen = ({ match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <small className="text-warning">
-                    If you fail to attend the session with four weeks, you will
-                    not be entitled to a refund.
+                    If you fail to attend the session within four weeks, you
+                    will not be entitled to a refund.
                   </small>
                 </ListGroup.Item>
               </ListGroup>
@@ -129,7 +129,7 @@ const TrialRegistrationPayScreen = ({ match }) => {
                 <div className="text-center">
                   {console.log(sdkReady)}
                   <PayPalButton
-                    amount={financials.costOfExtraFee.toFixed(2)}
+                    amount={financials.costOfExtraFee.toFixed(2) / 100}
                     onSuccess={successPaymentHandler}
                     currency={"GBP"}
                   />

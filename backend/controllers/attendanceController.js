@@ -171,7 +171,7 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
       <p>Thank you for attending the class ${record.name} on ${date}.</p>
       <p>If this class is an additional class this month, you will receive notification from goCardless about any additional fees. Perhaps consider reviewing your training schedule and seeing if it might be worth adding an extra class to your weekly program.</p>
       `,
-      link: "http://localhost:3000/profile?key=third",
+      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "Review your class bookings",
       attachments: [],
     });

@@ -60,7 +60,7 @@ const UploadFile = ({ id, currFile, singleFileData, buttonText }) => {
           </div>
         )}
 
-        <label className="d-block btn btn-default py-2 my-1 text-center custom-fileupload-button">
+        <label className="d-block btn btn-default py-0 my-1 text-center custom-fileupload-button">
           <input type="file" name="video" onChange={onChange} />
           {buttonText ? buttonText : "Upload File"}
         </label>

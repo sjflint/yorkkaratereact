@@ -48,7 +48,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               gradingId: req.params.id,
             },
           },
-          // `${member._id}${req.params.id} - payment ID`
+
           `${Math.random()} - payment ID`
         );
 
@@ -78,8 +78,6 @@ const postGradingApplication = asyncHandler(async (req, res) => {
             const dateOfEvent = new Date(
               gradingCourse.dateOfEvent
             ).toLocaleDateString();
-            console.log(member);
-            console.log(gradingCourse);
             genericEmail({
               recipientEmail: member.email,
               recipientName: member.firstName,
@@ -90,7 +88,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
             <p>Thank you for registering for the grading course.</p>
             <h4>Good luck on the day!</h4>
             `,
-              link: `http://localhost:3000/event/${gradingCourse._id}`,
+              link: `${process.env.DOMAIN_LINK}/event/${gradingCourse._id}`,
               linkText: "View more details",
               image: gradingCourse.image,
               attachments: [],

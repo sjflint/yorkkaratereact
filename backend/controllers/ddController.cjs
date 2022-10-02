@@ -105,19 +105,19 @@ const ddSetup = asyncHandler(async (req, res) => {
     <p>The training can be difficult at times, you should be prepared for this, but anything in life that is positive and worth doing is usually difficult. That's exactly why it is worth doing.</p>
     <p>There are just a few more things you might want to take a look at:</p>
     <ul>
-    <li>Register for a class! Please sign up for at least one class. Visit your profile to do this <a href='http://localhost:3000/profile'>here</a></li>
-    <li>Purchase sparring mitts and other protection (not required for juniors under 9). Please visit our <a href='http://localhost:3000/shop'>Club Shop</a> to see purchasing options</li>
+    <li>Register for a class! Please sign up for at least one class. Visit your profile to do this <a href='${process.env.DOMAIN_LINK}/profile'>here</a></li>
+    <li>Purchase sparring mitts and other protection (not required for juniors under 9). Please visit our <a href='${process.env.DOMAIN_LINK}/shop'>Club Shop</a> to see purchasing options</li>
     <li>Register With the Japan Karate Shotorenmei (JKS) - our governing body. You can do this <a href='https://www.jksengland.com/members'>here</a>. This is a requirement before taking part in any gradings/competitions</li>
     </ul>
     <p>Should you have any questions, please do not hesitate to contact us for further assistance</p>
     `,
-    link: `http://localhost:3000/profile`,
+    link: `${process.env.DOMAIN_LINK}/profile`,
     linkText: "View Profile",
     attachments: [],
   });
 
   res.status(201).json({
-    confirmationURL: "http://localhost:3000/ddsuccess",
+    confirmationURL: `${process.env.DOMAIN_LINK}/ddsuccess`,
   });
 
   console.log(`Mandate: ${redirectFlow.links.mandate}`);
@@ -174,10 +174,10 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
       subject: "Direct Debit Cancelled",
       message: `<h4>${member.firstName}, your direct debit has been cancelled</h4>
   <p>We have received an instruction to cancel your direct debit. Consequently, your membership to York Karate Dojo has been suspended and will be cancelled soon.</p>
-  <p>If there has been some kind of mistake and you would like to reinstate your account, please <a href='http://localhost:3000/login'> login to your account</a> to get things back up and running</p>
+  <p>If there has been some kind of mistake and you would like to reinstate your account, please <a href='${process.env.DOMAIN_LINK}/login'> login to your account</a> to get things back up and running</p>
   <p>If you are cancelling your membership with us, then we are very sorry to see you go! We know there are many reasons why our members might decide to leave the club but please, if there is something we could have done better then let us know so that we can improve in the future.
   `,
-      link: `http://localhost:3000/login`,
+      link: `${process.env.DOMAIN_LINK}/login`,
       linkText: "Reinstate Account",
       attachments: [],
     });
@@ -336,14 +336,14 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
         !mandateId
       ) {
         res.status(201).json({
-          confirmationURL: "http://localhost:3000/ddupdatesuccess",
+          confirmationURL: `${process.env.DOMAIN_LINK}/ddupdatesuccess`,
         });
       } else {
         console.log(`Cancelling mandate: ${mandateId}`);
         const mandate = await client.mandates.cancel(mandateId);
         if (mandate) {
           res.status(201).json({
-            confirmationURL: "http://localhost:3000/ddupdatesuccess",
+            confirmationURL: `${process.env.DOMAIN_LINK}/ddupdatesuccess`,
             status: mandate.status,
           });
         } else {

@@ -1,3 +1,5 @@
+const { header, defaultImg } = require("./emailParams.cjs");
+
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const asyncHandler = require("express-async-handler");
@@ -20,7 +22,7 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
       });
 
       // Is there an image to include in the email?
-      let image = "logo2021a.png";
+      let image = defaultImg;
       if (emailDetails.image) {
         const emailImage = emailDetails.image;
         image = emailImage;
@@ -39,7 +41,6 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
       }
       orderItems.forEach((item) => {
         const image = item.image;
-        console.log(image);
         const itemPrice = item.price.toLocaleString("en-GB", {
           style: "currency",
           currency: "GBP",
@@ -79,30 +80,9 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
   </head>
 
   <body>
-    <div id="email" style="width: 600px">
-      <!-- Header -->
-      <table role="presentation" cellspacing="0" width="100%">
-        <tr>
-          <td>
-            <div
-              style="
-                padding: 10px 0 10px 0;
-                max-width: 600px;
-                margin: 20px auto 0 auto;
-                background: black;
-                text-align: center;
-              "
-            >
-              <img
-                src="https://www.yorkkarate.net/img/newlogov1.2.png"
-                width="150"
-              />
-            </div>
-          </td>
-        </tr>
-      </table>
-
-      <!-- Body -->
+  ${header}
+    <div id="email" style="width: 600px">    
+  <!-- Body -->
       <h4
       style="
         text-align: left;
@@ -137,7 +117,7 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
         "
       >
         <a
-          href="http://localhost:3000/profile?key=second"
+          href="${process.env.DOMAIN_LINK}/profile?key=second"
           target="_blank"
           style="
             box-sizing: border-box;
@@ -170,59 +150,8 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
         width="100%"
         style="display: block; border: none"
       />
-
-      <!-- Footer -->
-      <table role="presentation" cellspacing="0" width="100%">
-        <tr>
-          <td>
-            <div
-              style="
-                max-width: 600px;
-                margin: 0 auto 20px auto;
-                padding: 10px 0 10px 0;
-                text-align: center;
-                color: #fff;
-                background: black;
-                text-decoration: none;
-              "
-            >
-              <h4>info@yorkkarate.net | 07814545013 | www.yorkkarate.net</h4>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div
-              style="
-                max-width: 600px;
-                text-align: center;
-                margin: 0 auto 20px auto;
-                padding: 10px 0 10px 0;
-              "
-            >
-              <img
-                src="https://www.yorkkarate.net/img/logojksengland.png"
-                alt=""
-                width="80px"
-                style="margin: 0 10px 0 10px"
-              />
-              <img
-                src="https://www.yorkkarate.net/img/logowkf.png"
-                alt=""
-                width="80px"
-                style="margin: 0 10px 0 10px"
-              />
-              <img
-                src="https://www.yorkkarate.net/img/logoekf.png"
-                alt=""
-                width="80px"
-                style="margin: 0 10px 0 10px"
-              />
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
+      </div>
+      ${footer}
   </body>
 </html>
 

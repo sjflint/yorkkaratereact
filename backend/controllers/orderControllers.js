@@ -5,6 +5,9 @@ import Member from "../models/memberModel.cjs";
 import { orderEmail } from "../emailTemplates/orderEmail.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import { shopAdminEmail } from "../emailTemplates/shopAdminEmail.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // @desc Create new order
 // @route POST /api/orders
@@ -95,7 +98,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
         recipientEmail: member.email,
         recipientName: member.firstName,
         subject: "Order Received",
-        link: `http://localhost:3000/profile`,
+        link: `${process.env.DOMAIN_LINK}/profile`,
         linkText: "View Account",
       },
       order._id
@@ -119,7 +122,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
         recipientEmail: member.email,
         recipientName: member.firstName,
         subject: "Order Received",
-        link: `http://localhost:3000/profile`,
+        link: `${process.env.DOMAIN_LINK}/profile`,
         linkText: "View Account",
       },
       order._id
@@ -153,7 +156,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
       message: `<h4>Your Order (${order._id}) is ready</h4>
     <p>Your order is now ready to collect at training.</p>
     `,
-      link: `http://localhost:3000/order/${order._id}`,
+      link: `${process.env.DOMAIN_LINK}/order/${order._id}`,
       linkText: "View your order",
       attachments: [],
     });
@@ -186,7 +189,7 @@ const updateOrderToFulfilled = asyncHandler(async (req, res) => {
       message: `<h4>Your Order (${order._id}) is complete</h4>
     <p>Your order has been completed. If you have any problems with the item(s) you have ordered, please don't hesitate to contact us at any time.</p>
     `,
-      link: `http://localhost:3000/order/${order._id}`,
+      link: `${process.env.DOMAIN_LINK}/order/${order._id}`,
       linkText: "View your order",
       attachments: [],
     });

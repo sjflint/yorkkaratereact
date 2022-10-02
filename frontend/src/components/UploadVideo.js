@@ -52,9 +52,8 @@ const UploadVideo = ({ id, vid, singleVideoData }) => {
         )}
 
         {/* Change a video for an exisitng record */}
-        {/* Check display of grading videos in profile */}
 
-        <label className="d-block btn btn-default py-2 my-1 text-center custom-fileupload-button">
+        <label className="d-block btn btn-default py-0 my-1 text-center custom-fileupload-button">
           <input type="file" name="video" onChange={onChange} />
           Upload Video
         </label>

@@ -2,6 +2,9 @@ import asyncHandler from "express-async-handler";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Event from "../models/eventModel.cjs";
 import Member from "../models/memberModel.cjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // @desc Fetch all events
 // @route GET /api/events
@@ -84,7 +87,7 @@ const createEvent = asyncHandler(async (req, res) => {
       <p>Location: ${event.location}.</p>
       ${paragraphs}
       `,
-        link: `http://localhost:3000/event/${event._id}`,
+        link: `${process.env.DOMAIN_LINK}/event/${event._id}`,
         linkText: "View more details / Register",
         image: event.image,
         attachments: [],

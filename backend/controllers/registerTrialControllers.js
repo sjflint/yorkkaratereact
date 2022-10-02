@@ -2,6 +2,9 @@ import asyncHandler from "express-async-handler";
 import TrialClass from "../models/trialRegistrationModel.js";
 import TrainingSession from "../models/trainingSessionModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const registerTrial = asyncHandler(async (req, res) => {
   // Format first name and last name to uppercase first letter and lower case for the rest
@@ -76,7 +79,7 @@ const payTrial = asyncHandler(async (req, res) => {
     <h5>Do you have questions?</h5>
     <p>Perhaps take a look at our frequently asked questions on the trial registration page, if you haven't already</p>
     `,
-      link: `http://localhost:3000/trialregistration`,
+      link: `${process.env.DOMAIN_LINK}/trialregistration`,
       linkText: "Some frequently asked questions",
       attachments: [],
     });
@@ -130,7 +133,7 @@ const checkTrialComplete = async () => {
         <h5>What next?</h5>
         <p>Please register by completing our quick and easy online application form. Use the link below to jump straight to where you need to be:</p>
         `,
-          link: `http://localhost:3000/register`,
+          link: `${process.env.DOMAIN_LINK}/register`,
           linkText: "Register",
           attachments: [],
         });

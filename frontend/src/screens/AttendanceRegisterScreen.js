@@ -91,7 +91,6 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
   let filteredMembersList = [];
   let participantsArray = [];
-  let trialParticipantsArray = [];
   let newArray = [];
 
   if (trainingSessions) {

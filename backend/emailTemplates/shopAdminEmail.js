@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import asyncHandler from "express-async-handler";
+import { defaultImg, footer, header } from "./emailParams.cjs";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const shopAdminEmail = asyncHandler(async (shopAdminEmails, ordersWaiting) => {
             <td>Created at:<br/> ${order.createdAt.toLocaleDateString()}</td>
             <td>
               <a
-              href="http://localhost:3000/order/${order._id}"
+              href="${process.env.DOMAIN_LINK}/order/${order._id}"
               target="_blank"
               style="
                 box-sizing: border-box;
@@ -58,17 +59,7 @@ const shopAdminEmail = asyncHandler(async (shopAdminEmails, ordersWaiting) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <div
-      style="
-        padding: 10px 0 10px 0;
-        max-width: 600px;
-        margin: 20px auto 0 auto;
-        background: black;
-        text-align: center;
-      "
-    >
-      <img src="https://www.yorkkarate.net/img/newlogov1.2.png" width="150" />
-    </div>
+    ${header}
     <div style="max-width: 600px; margin: auto; background: white">
       <div style="padding: 10px">
         <h3>Current Orders waiting to be fulfilled</h3>
@@ -84,56 +75,12 @@ const shopAdminEmail = asyncHandler(async (shopAdminEmails, ordersWaiting) => {
     </div>
     <div style="text-align: center; max-width: 600px; margin: auto">
       <img
-        src="https://www.yorkkarate.net/img/showcase.png"
+        src=${defaultImg}
         alt=""
         width="600"
       />
     </div>
-    <div
-      style="
-        max-width: 600px;
-        margin: 0 auto 20px auto;
-        padding: 10px 0 10px 0;
-        text-align: center;
-        color: #fff;
-        background: black;
-        text-decoration: none;
-      "
-    >
-      <h4>info@yorkkarate.net | 07814545013 | www.yorkkarate.net</h4>
-    </div>
-    <div style="
-    max-width: 600px;
-    text-align: center;
-    margin: 0 auto 20px auto;
-    padding: 10px 0 10px 0;
-    "
-    >
-    <img
-    src="https://www.yorkkarate.net/img/logojksengland.png"
-    alt=""
-    width="80px" 
-    style="
-    margin: 0 10px 0 10px
-    "  
-  />
-    <img
-    src="https://www.yorkkarate.net/img/logowkf.png"
-    alt=""   
-    width="80px"
-    style="
-    margin: 0 10px 0 10px
-    "  
-  />
-    <img
-    src="https://www.yorkkarate.net/img/logoekf.png"
-    alt=""   
-    width="80px"
-    style="
-    margin: 0 10px 0 10px
-    "  
-  />
-    </div>
+    ${footer}
   </body>
 </html>
     `,

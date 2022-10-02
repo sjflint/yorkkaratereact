@@ -8,6 +8,9 @@ import Member from "../models/memberModel.cjs";
 import FormerBlackBelts from "../models/formerBlackBeltsModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Financial from "../models/financialModel.cjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Format first name and last name to uppercase first letter and lower case for the rest
 const formatName = (name) => {
@@ -76,8 +79,6 @@ const registerMember = asyncHandler(async (req, res) => {
   req.body.lastName = lastName;
   req.body.email = email;
   req.body.trainingFees = Number(financials.baseLevelTrainingFees);
-
-  console.log(req.body);
 
   const member = await Member.create(req.body);
 
@@ -250,7 +251,7 @@ const updatePassword = asyncHandler(async (req, res) => {
       message: `<h4>${member.firstName}, your password has been changed</h4>
     <p>We have updated your password for your York Karate account.</p>
     `,
-      link: `http://localhost:3000/profile`,
+      link: `${process.env.DOMAIN_LINK}/profile`,
       linkText: "View Account",
       attachments: [],
     });
@@ -291,7 +292,7 @@ const resetPassword = asyncHandler(async (req, res) => {
       message: `<h4>${member.firstName}, your password has been reset</h4>
     <p>We have reset your password for your York Karate account.</p>
     `,
-      link: `http://localhost:3000/profile`,
+      link: `${process.env.DOMAIN_LINK}/profile`,
       linkText: "View Account",
       attachments: [],
     });
@@ -473,7 +474,7 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
       message: `<h4>${member.firstName}, your profile has been updated</h4>
     <p>We have updated your profile details for your York Karate account.</p>
     `,
-      link: `http://localhost:3000/profile`,
+      link: `${process.env.DOMAIN_LINK}/profile`,
       linkText: "View Account",
       attachments: [],
     });

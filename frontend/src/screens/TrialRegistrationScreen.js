@@ -1,29 +1,17 @@
-import { useEffect } from "react";
-import { Col, Container, ListGroup, Row, Button } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { Col, Container, ListGroup, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { listFinancials } from "../actions/financialActions";
-import { listTrainingSessions } from "../actions/trainingSessionActions";
 import TrialRegistrationForm from "../components/FormComponents/TrialRegistrationForm";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-// create redux route to submit values to DB and push user to payment page
-
 const TrialRegistrationScreen = () => {
-  const dispatch = useDispatch();
-
   const financialList = useSelector((state) => state.financialList);
   const {
     loading: financialsLoading,
     financials,
     error: financialsError,
   } = financialList;
-
-  useEffect(() => {
-    // dispatch(listFinancials());
-    // dispatch(listTrainingSessions());
-  }, [dispatch]);
 
   return (
     <div>

@@ -1,3 +1,4 @@
+const { footer, header, defaultImg } = require("./emailParams.cjs");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const asyncHandler = require("express-async-handler");
@@ -5,7 +6,6 @@ const asyncHandler = require("express-async-handler");
 dotenv.config();
 
 const genericEmail = asyncHandler(async (emailDetails) => {
-  console.log(emailDetails);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -15,8 +15,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
   });
 
   // Is there an image to include in the email?
-  let image =
-    "https://york-karate-uploads.s3.eu-west-2.amazonaws.com/secondarylogo.png";
+  let image = defaultImg;
   if (emailDetails.image) {
     // const emailImage = emailDetails.image.slice(7);
     image = emailDetails.image;
@@ -40,30 +39,9 @@ const genericEmail = asyncHandler(async (emailDetails) => {
   </head>
 
   <body>
+  ${header}
+  <!-- Body -->
     <div id="email" style="width: 600px">
-      <!-- Header -->
-      <table role="presentation" cellspacing="0" width="100%">
-        <tr>
-          <td>
-            <div
-              style="
-                padding: 10px 0 10px 0;
-                max-width: 600px;
-                margin: 20px auto 0 auto;
-                background: black;
-                text-align: center;
-              "
-            >
-              <img
-                src="https://www.yorkkarate.net/img/newlogov1.2.png"
-                width="150"
-              />
-            </div>
-          </td>
-        </tr>
-      </table>
-
-      <!-- Body -->
       <table
         style="text-align: center; background-color: #f7f7f9; padding: 10px"
         role="presentation"
@@ -96,7 +74,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
                   border: solid 1px #0b0b0b;
                   font-weight: 700;
                   font-size: 14px;
-                  background-color: #0b0b0b;
+                  color: #0b0b0b;
                 "
               >
                 ${emailDetails.linkText}
@@ -121,56 +99,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
       />
 
       <!-- Footer -->
-      <table role="presentation" cellspacing="0" width="100%">
-        <tr>
-          <td>
-            <div
-              style="
-                max-width: 600px;
-                margin: 0 auto 20px auto;
-                padding: 10px 0 10px 0;
-                text-align: center;
-                color: #fff;
-                background: black;
-                text-decoration: none;
-              "
-            >
-              <h4>info@yorkkarate.net | 07814545013 | www.yorkkarate.net</h4>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div
-              style="
-                max-width: 600px;
-                text-align: center;
-                margin: 0 auto 20px auto;
-                padding: 10px 0 10px 0;
-              "
-            >
-              <img
-                src="https://www.yorkkarate.net/img/logojksengland.png"
-                alt=""
-                width="80px"
-                style="margin: 0 10px 0 10px"
-              />
-              <img
-                src="https://www.yorkkarate.net/img/logowkf.png"
-                alt=""
-                width="80px"
-                style="margin: 0 10px 0 10px"
-              />
-              <img
-                src="https://www.yorkkarate.net/img/logoekf.png"
-                alt=""
-                width="80px"
-                style="margin: 0 10px 0 10px"
-              />
-            </div>
-          </td>
-        </tr>
-      </table>
+      ${footer}
     </div>
   </body>
 </html>

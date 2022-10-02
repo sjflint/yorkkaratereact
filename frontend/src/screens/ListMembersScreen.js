@@ -76,59 +76,57 @@ const ListMembersScreen = ({ history, match }) => {
             </thead>
             <tbody>
               {memberList.map((member) => {
-                {
-                  return (
-                    member.ddMandate && (
-                      <tr key={member._id}>
-                        {member.ddMandate === "Cancelled" ? (
-                          <td>
+                return (
+                  member.ddMandate && (
+                    <tr key={member._id}>
+                      {member.ddMandate === "Cancelled" ? (
+                        <td>
+                          {member.firstName} {member.lastName}
+                        </td>
+                      ) : (
+                        <td>
+                          <Link to={`/admin/members/${member._id}/edit`}>
                             {member.firstName} {member.lastName}
-                          </td>
-                        ) : (
-                          <td>
-                            <Link to={`/admin/members/${member._id}/edit`}>
-                              {member.firstName} {member.lastName}
-                            </Link>
-                          </td>
-                        )}
+                          </Link>
+                        </td>
+                      )}
 
-                        <td>
-                          <a href={`mailto:${member.email}`}> {member.email}</a>
-                        </td>
-                        <td>
-                          <a href={`tel:0${member.phone}`}>0{member.phone}</a>
-                        </td>
-                        <td>
-                          {member.ddMandate === "Cancelled"
-                            ? "Cancelled"
-                            : "Active"}
-                        </td>
-                        <td>
-                          {member.ddMandate === "Cancelled" ? (
-                            <Button
-                              variant="danger"
-                              className="btn-sm"
-                              onClick={() => {
-                                setShow(true);
-                                setDeleteId(member._id);
-                              }}
-                            >
-                              <i className="fas fa-trash"></i>
+                      <td>
+                        <a href={`mailto:${member.email}`}> {member.email}</a>
+                      </td>
+                      <td>
+                        <a href={`tel:0${member.phone}`}>0{member.phone}</a>
+                      </td>
+                      <td>
+                        {member.ddMandate === "Cancelled"
+                          ? "Cancelled"
+                          : "Active"}
+                      </td>
+                      <td>
+                        {member.ddMandate === "Cancelled" ? (
+                          <Button
+                            variant="danger"
+                            className="btn-sm"
+                            onClick={() => {
+                              setShow(true);
+                              setDeleteId(member._id);
+                            }}
+                          >
+                            <i className="fas fa-trash"></i>
+                          </Button>
+                        ) : (
+                          <LinkContainer
+                            to={`/admin/members/${member._id}/edit`}
+                          >
+                            <Button variant="success" className="btn-sm">
+                              <i className="fas fa-edit"></i>
                             </Button>
-                          ) : (
-                            <LinkContainer
-                              to={`/admin/members/${member._id}/edit`}
-                            >
-                              <Button variant="success" className="btn-sm">
-                                <i className="fas fa-edit"></i>
-                              </Button>
-                            </LinkContainer>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  );
-                }
+                          </LinkContainer>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                );
               })}
             </tbody>
           </Table>

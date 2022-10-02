@@ -27,14 +27,10 @@ const AdminScreen = ({ history }) => {
   const { member } = memberDetails;
 
   const enquiryList = useSelector((state) => state.enquiryList);
-  const {
-    loading: enquiryLoading,
-    error: enquiryError,
-    enquiries,
-  } = enquiryList;
+  const { enquiries } = enquiryList;
 
   const orderList = useSelector((state) => state.orderList);
-  const { loading, error, orders } = orderList;
+  const { orders } = orderList;
 
   useEffect(() => {
     dispatch(listEnquiries());
@@ -53,11 +49,11 @@ const AdminScreen = ({ history }) => {
     } else {
       history.push("/");
     }
-  }, [history, memberInfo, member]);
+  }, [history, memberInfo, member, dispatch]);
 
   let openOrders = [];
   if (orders) {
-    orders.map((order) => {
+    orders.forEach((order) => {
       if (order.isPaid === "true" && !order.isDelivered) {
         openOrders.push(order);
       }

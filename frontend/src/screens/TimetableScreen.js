@@ -198,7 +198,7 @@ const TimetableScreen = () => {
                   </Form.Control>
                 </Col>
                 <Col md={2}>
-                  <Button variant="default" type="submit">
+                  <Button variant="default" type="submit" className="w-100">
                     <i className="fas fa-search"></i>
                   </Button>
                 </Col>

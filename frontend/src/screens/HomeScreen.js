@@ -13,9 +13,7 @@ import poster2Img from "../img/poster2.png";
 import yorkkarateOgv from "../img/yorkkarate.ogv";
 import yorkkarateWebmHd from "../img/yorkkarate.webmhd.webm";
 import respectImg from "../img/respect.jpg";
-import sportRoundhouseKickImg from "../img/sport-roundhousekick.jpg";
 import sportKumiteTrainingImg from "../img/sportkumitetraining.jpg";
-import ekfTrainingImg from "../img/ekftraining.jpg";
 import familyTrainingImg from "../img/family-training.jpg";
 import InfoCard from "../components/InfoCard";
 import EnquiryForm from "../components//FormComponents/EnquiryForm";
@@ -29,7 +27,7 @@ const HomeScreen = () => {
       <section id="mini-promo" className="py-4 border-bottom border-warning">
         <Container>
           <Row className="p-3 align-items-center mb-2 bg-light">
-            <Col xs={2}>
+            <Col xs={4} sm={2}>
               <img
                 id="simon-profile-round"
                 src={simonProfileImg}
@@ -37,7 +35,7 @@ const HomeScreen = () => {
                 className="border border-warning"
               />
             </Col>
-            <Col>
+            <Col xs={8} sm={10}>
               <h3>Welcome to York Karate Dojo</h3>
             </Col>
           </Row>
@@ -47,7 +45,6 @@ const HomeScreen = () => {
               <div className="p-2 bg-primary">
                 <Video
                   poster={poster2Img}
-                  mp4="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/ageuke.mp4"
                   ogv={yorkkarateOgv}
                   webmhd={yorkkarateWebmHd}
                 />
@@ -69,10 +66,9 @@ const HomeScreen = () => {
                 and belief or learning to appreciate the importance of respect
                 and discipline. <br />
                 <br />
-                Our club motto is Respect - Discipline - Dedication:{" "}
-                <li>Respect others</li>
-                <li>Discipline yourself</li>
-                <li>Dedicate your energy to your dreams and ambitions</li>
+                <p>Our club motto is</p>
+                <p className="fw-bold mb-0">'Nana Korobi, ya oki'</p>
+                <p className="fst-italic">fall down 7 times, stand up 8.</p>
                 Simon Flint <br />
                 Instructor
               </p>
@@ -123,13 +119,6 @@ const HomeScreen = () => {
       <section className="py-4 border-bottom border-warning" id="sport-karate">
         <Container>
           <Row className="no-gutters">
-            <Col md={6} className="p-2 bg-primary">
-              <img
-                src={sportRoundhouseKickImg}
-                alt="sport-karate-roundhouse-kick"
-                className="h-100 sport-img flex-fill"
-              />
-            </Col>
             <Col md={6} className="align-self-center px-2">
               <h3 className="text-center">
                 Grassroots and elite level competition training
@@ -143,11 +132,12 @@ const HomeScreen = () => {
                 of our members.
               </p>
             </Col>
-            <Col md={6} className="bg-primary p-2">
-              <img src={sportKumiteTrainingImg} alt="sparring-class" />
-            </Col>
-            <Col md={6} className="bg-primary p-2">
-              <img src={ekfTrainingImg} alt="" />
+            <Col md={6} className="p-2 bg-primary">
+              <img
+                src={sportKumiteTrainingImg}
+                alt="sport-karate-roundhouse-kick"
+                className="h-100 sport-img flex-fill"
+              />
             </Col>
           </Row>
         </Container>
@@ -158,9 +148,6 @@ const HomeScreen = () => {
       >
         <Container>
           <Row>
-            <Col md={6}>
-              <img src={familyTrainingImg} alt="" className="bg-light p-2" />
-            </Col>
             <Col md={6} className="align-self-center">
               <h3 className="text-center text-white">
                 Fun training for all the family
@@ -172,6 +159,9 @@ const HomeScreen = () => {
                 watching your child grow can be hugely satisfying - providing
                 you aren't too competitive with one and another!
               </p>
+            </Col>
+            <Col md={6}>
+              <img src={familyTrainingImg} alt="" className="bg-light p-2" />
             </Col>
           </Row>
         </Container>
@@ -323,7 +313,7 @@ const HomeScreen = () => {
           <h3 className="text-center mb-3">Connect with us on social media</h3>
 
           <Row className="text-center text-warning mb-3">
-            <Col xs={4}>
+            <Col sm={4}>
               <a
                 href="https://www.facebook.com/YorkKarate"
                 target="_blank"
@@ -334,7 +324,7 @@ const HomeScreen = () => {
                 <h5 className="mt-2 text-warning">Facebook</h5>
               </a>
             </Col>
-            <Col xs={4}>
+            <Col sm={4}>
               <a
                 href="https://www.instagram.com/yorkkarate"
                 target="_blank"
@@ -345,7 +335,7 @@ const HomeScreen = () => {
                 <h5 className="mt-2 text-warning">Instagram</h5>
               </a>
             </Col>
-            <Col xs={4}>
+            <Col sm={4}>
               <a
                 href="https://www.youtube.com/channel/UC3uCY2UeiuTub4qsquGFdng?view_as=subscriber"
                 target="_blank"

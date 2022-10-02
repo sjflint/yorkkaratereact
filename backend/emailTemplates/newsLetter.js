@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 import Event from "../models/eventModel.cjs";
 import Article from "../models/articleModel.cjs";
 import Member from "../models/memberModel.cjs";
+import { footer, header } from "./emailParams.cjs";
 
 dotenv.config();
 
@@ -56,7 +57,7 @@ const newsLetterEmail = asyncHandler(async () => {
                 
           <div style="padding-bottom: 20px; margin-top: 20px">
             <a
-              href="http://localhost:3000/event/${filteredEvents[i]._id}"
+              href="${process.env.DOMAIN_LINK}/event/${filteredEvents[i]._id}"
               target="_blank"
               style="
                 box-sizing: border-box;
@@ -116,7 +117,7 @@ const newsLetterEmail = asyncHandler(async () => {
          "
          >
           <a
-            href="http://localhost:3000/article/${articles[i]._id}"
+            href="${process.env.DOMAIN_LINK}/article/${articles[i]._id}"
             target="_blank"
             style="
               box-sizing: border-box;
@@ -164,30 +165,9 @@ const newsLetterEmail = asyncHandler(async () => {
       </head>
     
       <body>
-        <div id="email" style="width: 600px">
-          <!-- Header -->
-          <table role="presentation" cellspacing="0" width="100%">
-            <tr>
-              <td>
-                <div
-                  style="
-                    padding: 10px 0 10px 0;
-                    max-width: 600px;
-                    margin: 20px auto 0 auto;
-                    background: black;
-                    text-align: center;
-                  "
-                >
-                  <img
-                    src="https://www.yorkkarate.net/img/newlogov1.2.png"
-                    width="150"
-                  />
-                </div>
-              </td>
-            </tr>
-          </table>
-    
-          <!-- Body -->
+        ${header}
+      <div id="email" style="width: 600px">  
+      <!-- Body -->
           <h3 style="text-align: center">
             York Karate Dojo News (${date.toLocaleDateString()})
           </h3>
@@ -233,59 +213,9 @@ const newsLetterEmail = asyncHandler(async () => {
           >
           ${articleHTML}
           </table>
-            
+          </div>    
           <!-- Footer -->
-          <table role="presentation" cellspacing="0" width="100%">
-            <tr>
-              <td>
-                <div
-                  style="
-                    max-width: 600px;
-                    margin: 0 auto 20px auto;
-                    padding: 10px 0 10px 0;
-                    text-align: center;
-                    color: #fff;
-                    background: black;
-                    text-decoration: none;
-                  "
-                >
-                  <h4>info@yorkkarate.net | 07814545013 | www.yorkkarate.net</h4>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div
-                  style="
-                    max-width: 600px;
-                    text-align: center;
-                    margin: 0 auto 20px auto;
-                    padding: 10px 0 10px 0;
-                  "
-                >
-                  <img
-                    src="https://www.yorkkarate.net/img/logojksengland.png"
-                    alt=""
-                    width="80px"
-                    style="margin: 0 10px 0 10px"
-                  />
-                  <img
-                    src="https://www.yorkkarate.net/img/logowkf.png"
-                    alt=""
-                    width="80px"
-                    style="margin: 0 10px 0 10px"
-                  />
-                  <img
-                    src="https://www.yorkkarate.net/img/logoekf.png"
-                    alt=""
-                    width="80px"
-                    style="margin: 0 10px 0 10px"
-                  />
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
+          ${footer}
       </body>
     </html>    
     `,

@@ -66,10 +66,10 @@ const processMandate = asyncHandler(async (event) => {
         subject: "Direct Debit Cancelled",
         message: `<h4>${member.firstName}, your direct debit has been cancelled</h4>
                     <p>We have received notification that your direct debit has been cancelled. Consequently, your membership to York Karate Dojo has been suspended and will be cancelled soon.</p>
-                    <p>If there has been a mistake and you would like to reinstate your account, please <a href='http://localhost:3000/login'> login to your account</a> to get things back up and running</p>
+                    <p>If there has been a mistake and you would like to reinstate your account, please <a href='${process.env.DOMAIN_LINK}/login'> login to your account</a> to get things back up and running</p>
                     <p>If you are cancelling your membership with us, then we are very sorry to see you go! We know there are many reasons why our members might decide to leave the club but please, if there is something we could have done better then let us know so that we can improve in the future.</p>
                   `,
-        link: `http://localhost:3000/login`,
+        link: `${process.env.DOMAIN_LINK}/login`,
         linkText: "Reinstate Account",
         attachments: [],
       });
@@ -84,10 +84,10 @@ const processMandate = asyncHandler(async (event) => {
         subject: "Direct Debit Failed",
         message: `<h4>${member.firstName}, your direct debit failed when being setup.</h4>
                     <p>We have received notification that your direct debit failed to be created during your application. Consequently, your membership to York Karate Dojo has been cancelled.</p>
-                    <p>If there has been a mistake and you wish to become a member of York Karate Dojo, please <a href='http://localhost:3000/register'> register again</a> and create a new account</p>
+                    <p>If there has been a mistake and you wish to become a member of York Karate Dojo, please <a href='${process.env.DOMAIN_LINK}/register'> register again</a> and create a new account</p>
                     <p>If you have changed your mind to join us, then we are very sorry to see you go! Please let us know what we could have done better.</p>
                   `,
-        link: `http://localhost:3000/register`,
+        link: `${process.env.DOMAIN_LINK}/register`,
         linkText: "Reinstate Account",
         attachments: [],
       });
@@ -126,7 +126,7 @@ const processMandate = asyncHandler(async (event) => {
                       <p>You will have received an email from goCardless with details of how to setup the direct debit.</p>
                       <p>If you think you might have made a mistake, and your account requires only one signature to setup direct debits, please click the link below to login to your account and create a new direct debit.</p>
                     `,
-          link: `http://localhost:3000/login`,
+          link: `${process.env.DOMAIN_LINK}/login`,
           linkText: "Reinstate Account",
           attachments: [],
         });
@@ -157,7 +157,7 @@ const processMandate = asyncHandler(async (event) => {
                     <p>We have received notification that your direct debit has now been approved and is setup.</p>
                     <p>Your account is now active. If you previously booked classes before your account was suspended, you will need to do this again. Please click the link below to login to your account.</p>
                   `,
-        link: `http://localhost:3000/login`,
+        link: `${process.env.DOMAIN_LINK}/login`,
         linkText: "Account Login",
         attachments: [],
       });
@@ -212,10 +212,10 @@ const processPayment = async (event) => {
               subject: "Membership Fee failed",
               message: `<h4>${member.firstName}, your membership has been suspended</h4>
                     <p>We have received notification that we could not collect your membership fee . Consequently, your membership to York Karate Dojo has been suspended and will be cancelled soon.</p>
-                    <p>If there has been a mistake and you would like to reinstate your account, please <a href='http://localhost:3000/login'> login to your account</a> to get things back up and running</p>
+                    <p>If there has been a mistake and you would like to reinstate your account, please <a href='${process.env.DOMAIN_LINK}/login'> login to your account</a> to get things back up and running</p>
                     <p>If you are cancelling your membership with us, then we are very sorry to see you go! We know there are many reasons why our members might decide to leave the club but please, if there is something we could have done better then let us know so that we can improve in the future.</p>
                   `,
-              link: `http://localhost:3000/login`,
+              link: `${process.env.DOMAIN_LINK}/login`,
               linkText: "Reinstate Account",
               attachments: [],
             });
@@ -248,10 +248,10 @@ const processPayment = async (event) => {
                 subject: "Grading payment failed",
                 message: `<h4>${member.firstName}, your grading payment failed</h4>
                       <p>We have received notification that we could not collect your grading payment. Consequently, your application to grade has been rejected.</p>
-                      <p>If the deadline has not passed, you could try again <a href='http://localhost:3000/event/${gradingCourse._id}'>here</a></p>
+                      <p>If the deadline has not passed, you could try again <a href='${process.env.DOMAIN_LINK}/event/${gradingCourse._id}'>here</a></p>
                       <p>If the deadline has passed, but you would still like to grade, please contact us urgently.</p>
                     `,
-                link: `http://localhost:3000/event/${gradingCourse._id}`,
+                link: `${process.env.DOMAIN_LINK}/event/${gradingCourse._id}`,
                 linkText: "Apply again for the grading course",
                 attachments: [],
               });
@@ -272,10 +272,10 @@ const processPayment = async (event) => {
                 subject: "Grading payment failed",
                 message: `<h4>${member.firstName}, your grading payment failed</h4>
                       <p>We have received notification that we could not collect your grading payment. Consequently, your grading result has been temporarily reversed.</p>
-                      <p>To reinstate the result, please pay the outstanding balance by <a href='http://localhost:3000/outstandingfees'>clicking here</a></p>
+                      <p>To reinstate the result, please pay the outstanding balance by <a href='${process.env.DOMAIN_LINK}/outstandingfees'>clicking here</a></p>
                       <p>Once the payment has been made, the grading result will be reinstated.</p>
                     `,
-                link: `http://localhost:3000/outstandingfees`,
+                link: `${process.env.DOMAIN_LINK}/outstandingfees`,
                 linkText: "Apply again for the grading course",
                 attachments: [],
               });
@@ -298,10 +298,10 @@ const processPayment = async (event) => {
               subject: "Shop payment failed",
               message: `<h4>${member.firstName}, your payment to the York Karate Shop failed</h4>
                     <p>We have received notification that we could not collect your shop payment. Consequently, your order has been cancelled.</p>
-                    <p>To reorder, please visit our shop <a href='http://localhost:3000/shop'>here</a></p>
+                    <p>To reorder, please visit our shop <a href='${process.env.DOMAIN_LINK}/shop'>here</a></p>
                     <p>Once the payment has been made, the grading result will be reinstated.</p>
                   `,
-              link: `http://localhost:3000/shop`,
+              link: `${process.env.DOMAIN_LINK}/shop`,
               linkText: "Visit our shop",
               attachments: [],
             });
@@ -328,10 +328,10 @@ const processPayment = async (event) => {
               subject: "Training Fees not paid",
               message: `<h4>${member.firstName}, your membership has been suspended</h4>
                     <p>We have received notification that we could not collect your training fees. Consequently, your membership to York Karate Dojo has been suspended and will be cancelled soon.</p>
-                    <p>If there has been a mistake and you would like to reinstate your account, please <a href='http://localhost:3000/login'> login to your account</a> to get things back up and running</p>
+                    <p>If there has been a mistake and you would like to reinstate your account, please <a href='${process.env.DOMAIN_LINK}/login'> login to your account</a> to get things back up and running</p>
                     <p>If you are cancelling your membership with us, then we are very sorry to see you go! We know there are many reasons why our members might decide to leave the club but please, if there is something we could have done better then let us know so that we can improve in the future.</p>
                   `,
-              link: `http://localhost:3000/login`,
+              link: `${process.env.DOMAIN_LINK}/login`,
               linkText: "Reinstate Account",
               attachments: [],
             });
@@ -353,10 +353,10 @@ const processPayment = async (event) => {
               subject: "Payment failed",
               message: `<h4>${member.firstName}, your payment for your extra class failed</h4>
                     <p>We have received notification that we could not collect the additional fee for the extra class you attended.</p>
-                    <p>To make this payment, and any other payments that may be outstanding, please visit <a href='http://localhost:3000/outstandingfees'>here</a></p>
+                    <p>To make this payment, and any other payments that may be outstanding, please visit <a href='${process.env.DOMAIN_LINK}/outstandingfees'>here</a></p>
                     
                   `,
-              link: `http://localhost:3000/outstandingfees`,
+              link: `${process.env.DOMAIN_LINK}/outstandingfees`,
               linkText: "Pay outstanding balance",
               attachments: [],
             });

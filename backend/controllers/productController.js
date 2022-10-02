@@ -2,6 +2,9 @@ import asyncHandler from "express-async-handler";
 import Product from "../models/productModel.cjs";
 import Member from "../models/memberModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // @desc Fetch all products
 // @route GET /api/products
@@ -116,7 +119,7 @@ const createProduct = asyncHandler(async (req, res) => {
               
         <div style="padding-bottom: 20px; margin-top: 20px">
           <a
-            href="http://localhost:3000/products/${createdProduct._id}"
+            href="${process.env.DOMAIN_LINK}/products/${createdProduct._id}"
             target="_blank"
             style="
               box-sizing: border-box;
@@ -140,7 +143,7 @@ const createProduct = asyncHandler(async (req, res) => {
     </tr>
     </table>
           `,
-      link: `http://localhost:3000/shop`,
+      link: `${process.env.DOMAIN_LINK}/shop`,
       linkText: "Visit shop",
       attachments: [],
     });

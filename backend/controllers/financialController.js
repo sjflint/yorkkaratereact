@@ -4,6 +4,9 @@ import Financial from "../models/financialModel.cjs";
 import Member from "../models/memberModel.cjs";
 import MonthlyCosts from "../models/monthlyCosts.js";
 import { updateSubscription } from "./ddController.cjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // @desc Fetch all financial details
 // @route GET /api/financial
@@ -101,7 +104,7 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     </ul>
     <p>There is nothing you need to do. Any price changes will automatically be applied to your direct debit.</p>
     `,
-        link: `http://localhost:3000/profile`,
+        link: `${process.env.DOMAIN_LINK}/profile`,
         linkText: "View Your account and fees",
         attachments: [],
       });
