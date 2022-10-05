@@ -8,9 +8,10 @@ node_modules/
 
 # testing
 /coverage
+ngrok.exe
 
 # production
-/frontend/build
+# /frontend/build
 
 # misc
 .DS_Store
