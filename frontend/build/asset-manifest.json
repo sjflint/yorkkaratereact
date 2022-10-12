@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.bf2a8f5b.css",
-    "main.js": "/static/js/main.c22a7df5.js",
+    "main.css": "/static/css/main.b95f3964.css",
+    "main.js": "/static/js/main.6a429d83.js",
     "static/js/787.d8c6ec95.chunk.js": "/static/js/787.d8c6ec95.chunk.js",
     "static/media/yorkkarate.ogv": "/static/media/yorkkarate.2b84db796720cb9baaed.ogv",
     "static/media/yorkkarate.webmhd.webm": "/static/media/yorkkarate.webmhd.3f6befa8005827b15318.webm",
@@ -20,7 +20,6 @@
     "static/media/logo2021a.png": "/static/media/logo2021a.17b005337cf977ac80aa.png",
     "static/media/termsAndConditions.pdf": "/static/media/termsAndConditions.21c4c150026b3f4102a7.pdf",
     "static/media/simontomkagawa.jpg": "/static/media/simontomkagawa.d7bd3e908b6d497f5a3d.jpg",
-    "static/media/temple.jpg": "/static/media/temple.cf7e0eeb490120b07bbb.jpg",
     "static/media/George.jpg": "/static/media/George.d22928d03da17fc15e8f.jpg",
     "static/media/logosubmark(transparent).png": "/static/media/logosubmark(transparent).8c279b58928fa7e8e98a.png",
     "static/media/parentsCodeOfConduct.pdf": "/static/media/parentsCodeOfConduct.62e51b06ea3c9f89a1fd.pdf",
@@ -43,6 +42,7 @@
     "static/media/riskAssessment.pdf": "/static/media/riskAssessment.460c4a4e9594628decee.pdf",
     "static/media/archbishoptrimmed.jpg": "/static/media/archbishoptrimmed.17753d5323d9b6c7dec0.jpg",
     "static/media/email.png": "/static/media/email.ce3e067a5d5518e46721.png",
+    "static/media/kihonkumite.jpg": "/static/media/kihonkumite.e2afd70316b82a2881d7.jpg",
     "static/media/st.chadshalltrimmed.jpg": "/static/media/st.chadshalltrimmed.0c6701d91d5ed65f4a0f.jpg",
     "static/media/simon-profile.jpg": "/static/media/simon-profile.c0b8f948d4a372decf59.jpg",
     "static/media/sportkumitetraining.jpg": "/static/media/sportkumitetraining.e1fe101d02003f8cb40a.jpg",
@@ -63,12 +63,12 @@
     "static/media/directdebit.jpg": "/static/media/directdebit.110570104769b35a2141.jpg",
     "static/media/broken.svg": "/static/media/broken.adec36f7e7a896c2953b8dfa66f346b0.svg",
     "index.html": "/index.html",
-    "main.bf2a8f5b.css.map": "/static/css/main.bf2a8f5b.css.map",
-    "main.c22a7df5.js.map": "/static/js/main.c22a7df5.js.map",
+    "main.b95f3964.css.map": "/static/css/main.b95f3964.css.map",
+    "main.6a429d83.js.map": "/static/js/main.6a429d83.js.map",
     "787.d8c6ec95.chunk.js.map": "/static/js/787.d8c6ec95.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bf2a8f5b.css",
-    "static/js/main.c22a7df5.js"
+    "static/css/main.b95f3964.css",
+    "static/js/main.6a429d83.js"
   ]
 }
