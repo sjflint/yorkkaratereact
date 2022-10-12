@@ -151,7 +151,7 @@ const RegistrationForm = () => {
         {({ values }) => (
           <Form>
             <Row className="py-4 border-bottom border-warning">
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -162,7 +162,7 @@ const RegistrationForm = () => {
                   />
                 </div>
               </Col>
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -175,7 +175,7 @@ const RegistrationForm = () => {
               </Col>
             </Row>
             <Row className="py-4 border-bottom border-warning">
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -185,7 +185,7 @@ const RegistrationForm = () => {
                   />
                 </div>
               </Col>
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="radio"
@@ -207,7 +207,7 @@ const RegistrationForm = () => {
             </Row>
 
             <Row className="py-4 border-bottom border-warning">
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -248,7 +248,7 @@ const RegistrationForm = () => {
                 </div>
               </Col>
 
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -310,7 +310,7 @@ const RegistrationForm = () => {
             </div>
 
             <Row className="py-4 border-bottom border-warning">
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -337,7 +337,7 @@ const RegistrationForm = () => {
                   )}
                 </div>
               </Col>
-              <Col>
+              <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
                     control="input"
@@ -373,16 +373,18 @@ const RegistrationForm = () => {
                 name="termsOptions"
                 options={termsOptions}
               />
-              <Button
-                className="py-0 my-2"
-                variant="outline-secondary"
-                onClick={handleShow}
-              >
-                View Terms & Conditions
-              </Button>
+              <div className="text-center">
+                <Button
+                  className="py-0 my-2"
+                  variant="outline-secondary"
+                  onClick={handleShow}
+                >
+                  View Terms & Conditions
+                </Button>
+              </div>
             </div>
 
-            <Button type="submit" variant="default btn-block w-100">
+            <Button type="submit" variant="default btn-block w-100 py-0">
               Register
             </Button>
           </Form>

@@ -54,7 +54,7 @@ const UploadImage = ({ img, type, id, buttonText, singleImageData }) => {
           than 1MB in size
         </Message>
       ) : (
-        <img src={currentImage} alt="" />
+        <img src={currentImage} alt="" className="w-100" />
       )}
       <label className="d-block btn btn-default py-0 my-1 text-center custom-fileupload-button">
         <input type="file" name="image" onChange={onChange} />

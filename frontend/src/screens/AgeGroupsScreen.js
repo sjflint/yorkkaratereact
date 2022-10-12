@@ -10,8 +10,12 @@ const AgeGroupsScreen = () => {
       <h3 className="text-center border-bottom border-warning pb-1">
         Age groups & belt levels
       </h3>
-      <Tabs defaultActiveKey="under9" className="mb-1 justify-content-center">
-        <Tab eventKey="under9" title="Under 9 years old" className="mb-3">
+      <Tabs
+        defaultActiveKey="under9"
+        className="mb-1 justify-content-center"
+        justify
+      >
+        <Tab eventKey="under9" title="Under 9 years" className="mb-3">
           <Row className="align-items-start">
             <Col md="6">
               <p className="lead border-bottom border-warning pb-2">
@@ -44,7 +48,7 @@ const AgeGroupsScreen = () => {
             </Col>
           </Row>
         </Tab>
-        <Tab eventKey="9-15years" title="9 years old or above" className="mb-3">
+        <Tab eventKey="9-15years" title="9 years or older" className="mb-3">
           <Row className="align-items-start">
             <Col md="6">
               <p className="lead border-bottom border-warning pb-2">
@@ -101,7 +105,6 @@ const AgeGroupsScreen = () => {
             <BeltCard grade="13th Kyu" beltColor="Orange" />
             <BeltCard grade="12th Kyu" beltColor="Orange-White" />
             <BeltCard grade="11th Kyu" beltColor="Orange-Yellow" />
-            <BeltCard grade="10th Kyu" beltColor="Orange-Black" />
             <BeltCard grade="9th Kyu" beltColor="Red" />
             <BeltCard grade="8th Kyu" beltColor="Red-Black" />
             <BeltCard grade="7th Kyu" beltColor="Yellow" />

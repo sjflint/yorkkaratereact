@@ -237,7 +237,8 @@ td {
     display: none;
   }
   #img-logo {
-    display: block;
+    display: inline-block;
+    max-width: 200px;
   }
   #showcase {
     height: 300px;

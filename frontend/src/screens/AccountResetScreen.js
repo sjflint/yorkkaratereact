@@ -154,7 +154,7 @@ const AccountResetScreen = () => {
           <Button
             type="submit"
             variant="outline-secondary"
-            className="p-2 w-100"
+            className="p-2 w-100 py-0"
           >
             Reset Password
           </Button>

@@ -49,37 +49,36 @@ const EventScreen = ({ match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item>Location: {event.location}</ListGroup.Item>
                 <ListGroup.Item>Event added by: {event.author}</ListGroup.Item>
+
+                <ListGroup.Item>
+                  <h5>Event Description</h5>
+                  <p style={{ whiteSpace: "pre-line" }}>{event.description}</p>
+                </ListGroup.Item>
                 {event.register === "/grading" ||
                 event.register === "/squadselection" ? (
-                  <ListGroup.Item>
+                  <ListGroup.Item className="text-center">
                     <a href={`${event.register}/${event._id}`} rel="noreferrer">
-                      <Button variant="outline-warning" className="w-100">
+                      <Button variant="outline-secondary" className="w-75 py-0">
                         Register
                       </Button>
                     </a>
                   </ListGroup.Item>
                 ) : (
-                  <ListGroup.Item>
+                  <ListGroup.Item className="text-center">
                     <a href={event.register} target="_blank" rel="noreferrer">
-                      <Button
-                        variant="outline-warning"
-                        className="w-100 btn-sm"
-                      >
+                      <Button variant="outline-secondary" className="w-75 py-0">
                         Register
                       </Button>
                     </a>
                   </ListGroup.Item>
                 )}
-                <ListGroup.Item>
-                  <h5>Event Description</h5>
-                  <p style={{ whiteSpace: "pre-line" }}>{event.description}</p>
-                </ListGroup.Item>
                 <div className="mt-2 mb-5 border-bottom border-warning">
                   <Link
-                    className="btn btn-outline-secondary btn-sm mb-5 w-100"
+                    className="btn btn-secondary btn-sm mb-5 w-100 text-left"
                     to="/events"
                   >
-                    Return to event listings
+                    <i className="fa-solid fa-arrow-left"></i> Return to event
+                    listings
                   </Link>
                 </div>
               </ListGroup>

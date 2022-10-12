@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import templeIMG from "../img/temple.jpg";
+import kihonKumiteIMG from "../img/kihonkumite.jpg";
 
 const memberApplicationScreen = () => {
   return (
@@ -11,7 +11,7 @@ const memberApplicationScreen = () => {
       </h3>
       <Row className="no-gutters text-center bg-primary align-items-center p-3">
         <Col sm={5}>
-          <img src={templeIMG} alt="" className="max-width-300" />
+          <img src={kihonKumiteIMG} alt="" className="max-width-300" />
         </Col>
         <Col sm={7} className="d-flex">
           <Card className="text-white bg-primary flex-fill">
@@ -26,7 +26,7 @@ const memberApplicationScreen = () => {
               </Card.Text>
               <Link
                 to={"/trialregistration"}
-                className="btn btn-default btn-block"
+                className="btn btn-default btn-block btn-sm"
               >
                 Book Your Trial session
               </Link>
@@ -40,7 +40,10 @@ const memberApplicationScreen = () => {
                   <li>+ £3.00 p/m for each additional class per week</li>
                 </ul>
               </Card.Text>
-              <Link to={"/register"} className="btn btn-default btn-block">
+              <Link
+                to={"/register"}
+                className="btn btn-default btn-block btn-sm"
+              >
                 Proceed with application
               </Link>
             </Card.Body>

@@ -349,7 +349,7 @@ const ListArticlesScreen = ({ history, match }) => {
                 </Col>
               ) : (
                 multiImage.map((image, index) => (
-                  <Col key={index}>
+                  <Col key={index} xs={12} sm={6}>
                     <img src={`${image.original}`} alt="article" />
                     <Button
                       onClick={async () => {

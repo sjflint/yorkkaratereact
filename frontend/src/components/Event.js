@@ -33,7 +33,10 @@ const Event = ({ event }) => {
             <small>
               Date added: <FormatDate date={event.dateCreated} />
             </small>
-            <Button variant="outline-secondary" className="w-100 btn-sm">
+            <Button
+              variant="outline-secondary"
+              className="w-75 btn-sm py-0 mt-3"
+            >
               View more details
             </Button>
           </Card.Footer>

@@ -20,7 +20,7 @@ const TrialRegistrationForm = () => {
   const trainingSessionsList = useSelector(
     (state) => state.trainingSessionsList
   );
-  const { loading, error, trainingSessions } = trainingSessionsList;
+  const { error, trainingSessions } = trainingSessionsList;
 
   const trialRegister = useSelector((state) => state.trialRegister);
   const {
@@ -36,7 +36,7 @@ const TrialRegistrationForm = () => {
     if (applicant) {
       history.push(`/trialregistration/pay/${applicant.trialClassId}`);
     }
-  }, [dispatch, applicant]);
+  }, [dispatch, applicant, history]);
 
   let classOptions = [];
 
@@ -136,7 +136,7 @@ const TrialRegistrationForm = () => {
 
   return errorFormSubmit ? (
     <Message variant="danger">{errorFormSubmit}</Message>
-  ) : loading ? (
+  ) : loadingFormSubmit ? (
     <Loader variant="warning" />
   ) : (
     <>
@@ -232,12 +232,16 @@ const TrialRegistrationForm = () => {
               ) : null}
             </div>
             <div className="bg-light mb-2 p-2">
-              <FormikControl
-                control="radio"
-                label="Please select the class you wish to attend"
-                name="classSelection"
-                options={classOptions}
-              />
+              {error ? (
+                <Message variant="warning">{error}</Message>
+              ) : (
+                <FormikControl
+                  control="radio"
+                  label="Please select the class you wish to attend"
+                  name="classSelection"
+                  options={classOptions}
+                />
+              )}
             </div>
 
             <button type="submit" className="mt-1 btn-block btn-default btn">

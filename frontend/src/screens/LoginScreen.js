@@ -98,12 +98,16 @@ const LoginScreen = ({ location, history }) => {
         </Form.Group>
 
         <div className="d-flex justify-content-around">
-          <Button type="submit" variant="outline-secondary" className="px-5">
+          <Button
+            type="submit"
+            variant="outline-secondary btn-sm"
+            className="px-5"
+          >
             Sign In
           </Button>
 
           <Link to={"/reset-account"}>
-            <Button variant="outline-danger">Forgotten password?</Button>
+            <Button variant="outline-danger btn-sm">Forgotten password?</Button>
           </Link>
         </div>
       </Form>

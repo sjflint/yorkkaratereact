@@ -46,7 +46,7 @@ const checkImageType = (file, cb) => {
   }
 };
 const checkVideoType = (file, cb) => {
-  const filetypes = /mp4/;
+  const filetypes = /mp4|wmv|mov|/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
@@ -80,7 +80,7 @@ const videoUpload = multer({
 });
 const imageUpload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 },
+  limits: { fileSize: 10240 * 10240 },
   fileFilter: function (req, file, cb) {
     checkImageType(file, cb);
   },
@@ -191,6 +191,7 @@ router.post("/image", imageUpload.single("image"), async (req, res) => {
         fit: "contain",
         background: { r: 242, g: 242, b: 242, alpha: 1 },
       })
+      .withMetadata()
       .toBuffer();
 
     const imageName = randomName() + req.file.originalname;

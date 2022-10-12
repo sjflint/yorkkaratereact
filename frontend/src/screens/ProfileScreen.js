@@ -109,18 +109,18 @@ const ProfileScreen = ({ history, match }) => {
             <Col sm={3} xs={4} className="py-1">
               <Nav variant="tabs" className="flex-column">
                 {member && (
-                  <>
+                  <div className="d-flex flex-column">
                     <img src={member.profileImg} alt="" className="rounded-0" />
-                    <button
-                      className="mb-2 btn btn-default rounded-0"
+                    <Button
+                      className="mb-2 btn-default rounded-0 btn-sm p-1"
                       onClick={() => {
                         setProfileImgModal(true);
                         dispatch({ type: UPLOAD_IMG_CLEAR });
                       }}
                     >
                       Change Profile Picture
-                    </button>
-                  </>
+                    </Button>
+                  </div>
                 )}
 
                 <Nav.Item
@@ -129,10 +129,14 @@ const ProfileScreen = ({ history, match }) => {
                 >
                   <Nav.Link eventKey="first">
                     <Row>
-                      <Col xs={3} className="align-self-center">
-                        <i className="fas fa-id-card mr-3"></i>
+                      <Col sm={4}>
+                        <div className="text-center">
+                          <i className="fas fa-id-card fa-2x"></i>
+                        </div>
                       </Col>
-                      <Col>Your Details</Col>
+                      <Col sm={8} className="align-self-center">
+                        <h6 className="text-center mb-0">Your Details</h6>
+                      </Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -142,10 +146,14 @@ const ProfileScreen = ({ history, match }) => {
                 >
                   <Nav.Link eventKey="second">
                     <Row>
-                      <Col xs={3} className="align-self-center">
-                        <i className="fas fa-store mr-3"></i>
+                      <Col sm={4}>
+                        <div className="text-center">
+                          <i className="fas fa-store fa-2x"></i>
+                        </div>
                       </Col>
-                      <Col>Shop Orders</Col>
+                      <Col sm={8} className="align-self-center">
+                        <h6 className="text-center mb-0">Shop Orders</h6>
+                      </Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -155,10 +163,14 @@ const ProfileScreen = ({ history, match }) => {
                 >
                   <Nav.Link eventKey="third">
                     <Row>
-                      <Col xs={3} className="align-self-center">
-                        <i className="fas fa-calendar-alt mr-3"></i>
+                      <Col sm={4}>
+                        <div className="text-center">
+                          <i className="fas fa-calendar-alt fa-2x"></i>
+                        </div>
                       </Col>
-                      <Col>Classes</Col>
+                      <Col sm={8} className="align-self-center">
+                        <h6 className="text-center mb-0">Classes</h6>
+                      </Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -168,10 +180,14 @@ const ProfileScreen = ({ history, match }) => {
                 >
                   <Nav.Link eventKey="fourth">
                     <Row>
-                      <Col xs={3} className="align-self-center">
-                        <i className="fas fa-video mr-3"></i>
+                      <Col sm={4}>
+                        <div className="text-center">
+                          <i className="fas fa-video fa-2x"></i>
+                        </div>
                       </Col>
-                      <Col>Videos</Col>
+                      <Col sm={8} className="align-self-center">
+                        <h6 className="text-center mb-0">Videos</h6>
+                      </Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -181,10 +197,14 @@ const ProfileScreen = ({ history, match }) => {
                 >
                   <Nav.Link eventKey="fifth">
                     <Row>
-                      <Col xs={3} className="align-self-center">
-                        <i className="fas fa-award mr-3 ml-1"></i>
+                      <Col sm={4}>
+                        <div className="text-center">
+                          <i className="fas fa-award fa-2x"></i>
+                        </div>
                       </Col>
-                      <Col>Events</Col>
+                      <Col sm={8} className="align-self-center">
+                        <h6 className="text-center mb-0">Events</h6>
+                      </Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
@@ -194,10 +214,14 @@ const ProfileScreen = ({ history, match }) => {
                 >
                   <Nav.Link eventKey="sixth">
                     <Row>
-                      <Col xs={3} className="align-self-center">
-                        <i className="far fa-credit-card mr-3"></i>
+                      <Col sm={4}>
+                        <div className="text-center">
+                          <i className="far fa-credit-card fa-2x"></i>
+                        </div>
                       </Col>
-                      <Col>Payment details</Col>
+                      <Col sm={8} className="align-self-center">
+                        <h6 className="text-center mb-0">Payment details</h6>
+                      </Col>
                     </Row>
                   </Nav.Link>
                 </Nav.Item>
