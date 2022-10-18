@@ -46,6 +46,13 @@ const ProfileScreen = ({ history, match }) => {
     console.log(`Uploading Img ${img}`);
   };
 
+  const myClassList = useSelector((state) => state.myClassList);
+  const {
+    loading: classListLoading,
+    error: classListError,
+    sessions,
+  } = myClassList;
+
   useEffect(() => {
     if (!memberInfo) {
       history.push("/login");
@@ -168,8 +175,13 @@ const ProfileScreen = ({ history, match }) => {
                           <i className="fas fa-calendar-alt fa-2x"></i>
                         </div>
                       </Col>
-                      <Col sm={8} className="align-self-center">
-                        <h6 className="text-center mb-0">Classes</h6>
+                      <Col sm={8} className="align-self-center text-center">
+                        <h6 className="text-center mb-0">
+                          Classes
+                          {sessions && !sessions[0] && (
+                            <i className="fa-solid fa-triangle-exclamation text-danger fa-2x"></i>
+                          )}
+                        </h6>
                       </Col>
                     </Row>
                   </Nav.Link>

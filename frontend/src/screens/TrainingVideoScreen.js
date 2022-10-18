@@ -128,21 +128,21 @@ const TrainingVideoScreen = ({ match }) => {
                       <ListGroup.Item key={trainingVideo._id}>
                         <Row className="no-gutters align-items-center">
                           <Col key={trainingVideo._id} lg={7} sm={4} xs={6}>
-                            <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                            <a href={`/trainingvideos/${trainingVideo._id}`}>
                               <img src={trainingVideo.img} alt="" />
-                            </Link>
+                            </a>
                           </Col>
 
                           <Col className="ml-2">
-                            <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                            <a href={`/trainingvideos/${trainingVideo._id}`}>
                               <p className="mb-1">{trainingVideo.title}</p>
-                            </Link>
-                            <Link to={`/trainingvideos/${trainingVideo._id}`}>
+                            </a>
+                            <a href={`/trainingvideos/${trainingVideo._id}`}>
                               <small>
                                 <span>Category</span> <br />{" "}
                                 {trainingVideo.category} <br />
                               </small>
-                            </Link>
+                            </a>
                           </Col>
                         </Row>
                       </ListGroup.Item>

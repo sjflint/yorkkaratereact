@@ -16,7 +16,6 @@ const header = `
   style="
     padding: 10px 0 10px 0;
     max-width: 600px;
-    margin: 20px auto 0 auto;
     background: black;
     text-align: center;
   "
@@ -28,7 +27,6 @@ const header = `
 const footer = `<div
 style="
   max-width: 600px;
-  margin: 0 auto 20px auto;
   padding: 10px 0 10px 0;
   text-align: center;
   color: #fff;
@@ -42,7 +40,6 @@ style="
 style="
   max-width: 600px;
   text-align: center;
-  margin: 0 auto 20px auto;
   padding: 10px 0 10px 0;
 "
 >

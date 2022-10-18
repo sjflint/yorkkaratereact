@@ -120,10 +120,10 @@ const TrialRegistrationForm = () => {
     classSelection: "",
   };
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("Required"),
-    lastName: Yup.string().required("required"),
-    email: Yup.string().required("Required").email(),
-    phone: Yup.string().required("Required").phone("GB", true),
+    firstName: Yup.string().required("Required").trim(),
+    lastName: Yup.string().required("required").trim(),
+    email: Yup.string().required("Required").email().trim(),
+    phone: Yup.string().required("Required").phone("GB", true).trim(),
     experienceLevel: Yup.string().required("Required"),
     ageGroup: Yup.string().required("Required"),
     medicalStatus: "",

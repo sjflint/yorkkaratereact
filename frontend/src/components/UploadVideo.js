@@ -45,7 +45,7 @@ const UploadVideo = ({ id, vid, singleVideoData }) => {
           </>
         ) : error ? (
           <Message variant="danger">
-            File couldn't be uploaded. File must be mp4 and not more than 400MB
+            File couldn't be uploaded. File must be mp4 and not more than 1GB
           </Message>
         ) : (
           <Video mp4={`${currentVideo}#t=2`} />

@@ -57,7 +57,7 @@ const checkVideoType = (file, cb) => {
   }
 };
 const checkFileType = (file, cb) => {
-  const filetypes = /pdf|doc|mp3|mpeg|docx|xlsx|xls|csv|ppt|pptx/;
+  const filetypes = /pdf|doc|mp3|mpeg|docx|xlsx|xls|csv|ppt|pptx|m4a/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
@@ -73,14 +73,14 @@ const checkFileType = (file, cb) => {
 const storage = multer.memoryStorage();
 const videoUpload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 * 400 },
+  limits: { fileSize: 1048576 * 1000 },
   fileFilter: function (req, file, cb) {
     checkVideoType(file, cb);
   },
 });
 const imageUpload = multer({
   storage: storage,
-  limits: { fileSize: 10240 * 10240 },
+  limits: { fileSize: 3145728 },
   fileFilter: function (req, file, cb) {
     checkImageType(file, cb);
   },

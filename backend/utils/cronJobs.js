@@ -44,3 +44,7 @@ export const cronJobs = () => {
     emailEnquiryAdmin();
   });
 };
+
+// remove cancelled member records from db
+// check black belt deletions if account reinstated
+// dates on newsletter email

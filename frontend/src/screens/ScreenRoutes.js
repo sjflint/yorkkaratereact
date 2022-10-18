@@ -45,11 +45,12 @@ import AccountInactiveScreen from "./AccountInactiveScreen";
 import AttendanceScreen from "./AttendanceScreen";
 import { AttendanceRegisterScreen } from "./AttendanceRegisterScreen";
 import FinanceScreen from "./FinanceScreen";
-import TrialRegistrationScreen from "./TrialRegistrationScreen";
 import OutstandingFeesScreen from "./OutstandingFeesScreen";
 import EmailMembersScreen from "./EmailMembersScreen";
 import LostScreen from "./LostScreen";
 import TrialRegistrationPayScreen from "./TrialRegistrationPayScreen";
+import trialRegistrationForm from "./trialRegistrationForm";
+import FaqScreen from "./FrequentlyAskedQuestions";
 
 const ScreenRoutes = () => {
   return (
@@ -153,9 +154,10 @@ const ScreenRoutes = () => {
 
       <Route path="/accountinactive" component={AccountInactiveScreen} />
 
+      <Route path="/faq" component={FaqScreen} exact />
       <Route
-        path="/trialregistration"
-        component={TrialRegistrationScreen}
+        path="/trialregistrationform"
+        component={trialRegistrationForm}
         exact
       />
       <Route

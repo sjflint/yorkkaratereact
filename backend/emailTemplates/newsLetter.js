@@ -169,7 +169,7 @@ const newsLetterEmail = asyncHandler(async () => {
       <div id="email" style="width: 600px">  
       <!-- Body -->
           <h3 style="text-align: center">
-            York Karate Dojo News (${date.toLocaleDateString()})
+            York Karate Dojo News (${date.toLocaleDateString("en-GB")})
           </h3>
           <h4
           style="
@@ -229,5 +229,7 @@ const newsLetterEmail = asyncHandler(async () => {
     }
   });
 });
+
+// newsLetterEmail();
 
 export { newsLetterEmail };

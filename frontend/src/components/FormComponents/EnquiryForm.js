@@ -26,9 +26,9 @@ const EnquiryForm = () => {
     ageGroup: "",
   };
   const validationSchema = Yup.object({
-    name: Yup.string().required("Required"),
-    email: Yup.string().required("Required").email(),
-    phone: Yup.string().required("Required").phone("GB", true),
+    name: Yup.string().required("Required").trim(),
+    email: Yup.string().required("Required").email().trim(),
+    phone: Yup.string().required("Required").phone("GB", true).trim(),
     message: Yup.string().required("Required"),
     ageGroup: Yup.string().required("Required"),
   });

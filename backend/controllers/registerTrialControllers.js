@@ -74,12 +74,12 @@ const payTrial = asyncHandler(async (req, res) => {
       message: `<h4>Thank you for registering for a trial class</h4>
     <p>The class you selected was ${trainingSession.name} at ${trainingSession.times}.</p>
     <p>The location is: ${trainingSession.location}</p>
-    <p>You should wear comfortable sports type clothing for the session, such as tracksuit bottoms and a t-shirt. Please arrive around 10 minutes before the start time. If it is your child who is attending the class, we would recommend you stay with them for their first session.</p>
+    <p>You should wear comfortable sports type clothing for the session, such as tracksuit bottoms and a t-shirt. Please arrive around 10 minutes before the start time. We would recommend you stay with your child for their first session.</p>
     <p>We look forward to meeting you.</p>
     <h5>Do you have questions?</h5>
     <p>Perhaps take a look at our frequently asked questions on the trial registration page, if you haven't already</p>
     `,
-      link: `${process.env.DOMAIN_LINK}/trialregistration`,
+      link: `${process.env.DOMAIN_LINK}/faq`,
       linkText: "Some frequently asked questions",
       attachments: [],
     });

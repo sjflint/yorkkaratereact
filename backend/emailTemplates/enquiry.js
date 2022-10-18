@@ -60,7 +60,7 @@ const enquiryEmail = asyncHandler(async (emailDetails) => {
             >
               <a href=${
                 process.env.DOMAIN_LINK
-              }/trialregistration target="_blank"
+              }/trialregistrationform target="_blank"
               style=" box-sizing: border-box; color: #ffffff; text-decoration: none;
               padding: 12px 18px; border-radius: 4px; border: solid 1px #0b0b0b;
               font-weight: 700; font-size: 14px; color: #0b0b0b; ">
@@ -68,8 +68,8 @@ const enquiryEmail = asyncHandler(async (emailDetails) => {
             </div>
           </div>
         </div>
-        <div style="text-align: center; max-width: 600px; margin: auto">
-          <img src="${defaultImg}" alt="" width="600px" />
+        <div style="text-align: center; max-width: 600px;">
+          <img src="${defaultImg}" alt="" width="100%" />
         </div>
      ${footer}
       </body>

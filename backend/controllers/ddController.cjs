@@ -43,7 +43,7 @@ const ddSetup = asyncHandler(async (req, res) => {
   const financials = await Financial.findOne({});
   const payment = await client.payments.create(
     {
-      amount: financials.joiningFee * 100,
+      amount: financials.joiningFee,
       currency: "GBP",
       description: "Joining fee",
       links: {
@@ -71,7 +71,7 @@ const ddSetup = asyncHandler(async (req, res) => {
   const randomString = "random" + Math.random() + req.body.name;
   const subscription = await client.subscriptions.create(
     {
-      amount: financials.baseLevelTrainingFees * 100,
+      amount: financials.baseLevelTrainingFees,
       currency: "GBP",
       name: "Monthly training fees",
       interval: 1,
@@ -105,13 +105,13 @@ const ddSetup = asyncHandler(async (req, res) => {
     <p>The training can be difficult at times, you should be prepared for this, but anything in life that is positive and worth doing is usually difficult. That's exactly why it is worth doing.</p>
     <p>There are just a few more things you might want to take a look at:</p>
     <ul>
-    <li>Register for a class! Please sign up for at least one class. Visit your profile to do this <a href='${process.env.DOMAIN_LINK}/profile'>here</a></li>
-    <li>Purchase sparring mitts and other protection (not required for juniors under 9). Please visit our <a href='${process.env.DOMAIN_LINK}/shop'>Club Shop</a> to see purchasing options</li>
+    <li>Register for a class! Please sign up for at least one class. Visit your profile to do this <a href='${process.env.DOMAIN_LINK}/login'>here</a></li>
+    <li>Purchase a karate suit, sparring mitts and other protection (mitts and protection not required for juniors under 9). Please visit our <a href='${process.env.DOMAIN_LINK}/shop'>Club Shop</a> to see purchasing options</li>
     <li>Register With the Japan Karate Shotorenmei (JKS) - our governing body. You can do this <a href='https://www.jksengland.com/members'>here</a>. This is a requirement before taking part in any gradings/competitions</li>
     </ul>
     <p>Should you have any questions, please do not hesitate to contact us for further assistance</p>
     `,
-    link: `${process.env.DOMAIN_LINK}/profile`,
+    link: `${process.env.DOMAIN_LINK}/login`,
     linkText: "View Profile",
     attachments: [],
   });

@@ -65,6 +65,12 @@ const ContactScreen = () => {
               </span>
             </ListGroupItem>
           </ListGroup>
+          <Link
+            className="btn btn-outline-primary btn-block w-100 py-0"
+            to={"/faq"}
+          >
+            View our Frequently Asked Questions
+          </Link>
         </Col>
         <Col md={6} className="bg-dark p-2">
           <h3 className="text-white">
@@ -75,7 +81,7 @@ const ContactScreen = () => {
             Would You like to try a session first to see what you think?
           </small>
           <Link
-            to={"/trialregistration"}
+            to={"/trialregistrationform"}
             className="btn btn-default btn-block w-100"
           >
             Book A Trial session Today

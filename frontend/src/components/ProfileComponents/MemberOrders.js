@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { listMyOrders } from "../../actions/orderActions";
@@ -93,6 +93,12 @@ const MemberOrders = () => {
           ))}
         </>
       )}
+      <div className="text-center">
+        <Link to="/shop" className="w-50 py-1 btn btn-sm btn-outline-primary">
+          <i className="fa-solid fa-store fa-2x"></i>{" "}
+          <p className="d-inline">Go Shopping!</p>
+        </Link>
+      </div>
     </>
   );
 };

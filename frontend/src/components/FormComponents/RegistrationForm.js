@@ -68,10 +68,12 @@ const RegistrationForm = () => {
   const validationSchema = Yup.object({
     firstName: Yup.string()
       .required("Required")
-      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field "),
+      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field ")
+      .trim(),
     lastName: Yup.string()
       .required("Required")
-      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field "),
+      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field ")
+      .trim(),
     dateOfBirth: Yup.date().required("Required"),
     medicalStatus: Yup.string().required("Required"),
     medicalDetails: Yup.string(),
@@ -80,31 +82,35 @@ const RegistrationForm = () => {
     addressLine3: Yup.string(),
     addressLine4: Yup.string().required("Required"),
     postCode: Yup.string().required("Required"),
-    email: Yup.string().required().email(),
+    email: Yup.string().required().email().trim(),
     confirmEmail: Yup.string()
       .required()
-      .oneOf([Yup.ref("email"), null], "email does not match"),
-    phone: Yup.string().required("Required").phone("GB", true),
+      .oneOf([Yup.ref("email"), null], "email does not match")
+      .trim(),
+    phone: Yup.string().required("Required").phone("GB", true).trim(),
     emergencyContactName: Yup.string()
       .required("Required")
       .notOneOf(
         [Yup.ref("firstName"), null],
         "Name cannot be the same as the applicant"
-      ),
+      )
+      .trim(),
     emergencyContactEmail: Yup.string()
       .required("Required")
       .notOneOf(
         [Yup.ref("email"), null],
         "Email cannot be the same as the applicant"
       )
-      .email(),
+      .email()
+      .trim(),
     emergencyContactPhone: Yup.string()
       .required("Required")
       .phone("GB", true)
       .notOneOf(
         [Yup.ref("phone"), null],
         "Phone number cannot be the same as the applicant"
-      ),
+      )
+      .trim(),
     termsOptions: Yup.array().length(
       1,
       "Please agree to our Terms & Conditions"
@@ -115,11 +121,11 @@ const RegistrationForm = () => {
       .matches(
         /(?=.*[0-9])(?=.*[a-z])/,
         "password must contain a combination of numbers and letters"
-      ),
-    confirmPassword: Yup.string().oneOf(
-      [Yup.ref("password"), null],
-      "Passwords must match"
-    ),
+      )
+      .trim(),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .trim(),
   });
 
   const onSubmit = (values) => {
@@ -150,6 +156,10 @@ const RegistrationForm = () => {
       >
         {({ values }) => (
           <Form>
+            <small>
+              Please complete this section using the details of who will take
+              part in the training.
+            </small>
             <Row className="py-4 border-bottom border-warning">
               <Col md={6}>
                 <div className="bg-light mb-2 p-2">
@@ -206,6 +216,10 @@ const RegistrationForm = () => {
               </Col>
             </Row>
 
+            <small>
+              If you are completing this form for a child, please use your
+              contact details here.{" "}
+            </small>
             <Row className="py-4 border-bottom border-warning">
               <Col md={6}>
                 <div className="bg-light mb-2 p-2">

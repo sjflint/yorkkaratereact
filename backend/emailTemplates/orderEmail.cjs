@@ -1,4 +1,4 @@
-const { header, defaultImg } = require("./emailParams.cjs");
+const { header, defaultImg, footer } = require("./emailParams.cjs");
 
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");

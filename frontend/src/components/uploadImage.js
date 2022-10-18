@@ -51,7 +51,7 @@ const UploadImage = ({ img, type, id, buttonText, singleImageData }) => {
       ) : error ? (
         <Message variant="danger">
           File couldn't be uploaded. File must be png/jpg/jpeg and not be more
-          than 1MB in size
+          than 3MB in size
         </Message>
       ) : (
         <img src={currentImage} alt="" className="w-100" />
