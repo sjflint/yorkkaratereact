@@ -60,6 +60,9 @@ const MemberClasses = () => {
     canSwitch = false;
   }
 
+  const getAge = (birthDate) =>
+    Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
+
   useEffect(() => {
     dispatch(listTrainingSessions());
     dispatch(listMyClasses());
@@ -80,9 +83,11 @@ const MemberClasses = () => {
     });
   }
 
+  // get age
+  const memberAge = getAge(member.dateOfBirth);
   if (filteredSessions && member) {
     filteredSessions = filteredSessions.filter((trainingSessions) => {
-      if (member.age < 9) {
+      if (memberAge < 9) {
         return trainingSessions.juniorSession === true;
       } else if (
         member.kyuGrade <= trainingSessions.minGradeLevel &&
@@ -244,7 +249,7 @@ const MemberClasses = () => {
               Your monthly training fees will increase by:{" "}
               {sessions && sessions.length === 0
                 ? "£0.00"
-                : `£${financials.costOfAdditionalClass.toFixed(2)}`}
+                : `£${(financials.costOfAdditionalClass / 100).toFixed(2)}`}
             </h5>
           )}
           <Row>

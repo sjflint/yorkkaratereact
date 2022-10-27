@@ -76,7 +76,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
     if (req.body.classList.length !== 0) {
       const paymentDetails = {
         _id: member._id,
-        changeAmount: financials.costOfAdditionalClass * 100,
+        changeAmount: financials.costOfAdditionalClass,
       };
       await updateSubscription(paymentDetails);
     }
@@ -128,10 +128,10 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
           },
           { new: true }
         );
-        if (member.trainingFees !== financials.baseLevelTrainingFees * 100) {
+        if (member.trainingFees !== financials.baseLevelTrainingFees) {
           const paymentDetails = {
             _id: member._id,
-            changeAmount: financials.costOfAdditionalClass * -100,
+            changeAmount: financials.costOfAdditionalClass * -1,
           };
           console.log(`payment details${paymentDetails}`);
           await updateSubscription(paymentDetails);

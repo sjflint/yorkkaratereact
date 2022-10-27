@@ -35,7 +35,7 @@ const s3 = new S3Client({
 });
 
 const checkImageType = (file, cb) => {
-  const filetypes = /jpg|jpeg|png/;
+  const filetypes = /jpg|jpeg|png|heif|heic/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
