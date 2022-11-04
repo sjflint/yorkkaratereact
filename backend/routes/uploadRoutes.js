@@ -90,6 +90,7 @@ const imageUpload = multer({
   storage: multerS3({
     s3: s3,
     bucket: bucketName,
+    contentLength: 3000000,
     metadata: function (req, file, cb) {
       cb(null, { fieldName: file.fieldname });
     },

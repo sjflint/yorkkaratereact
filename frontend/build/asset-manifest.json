@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.b95f3964.css",
-    "main.js": "/static/js/main.14db2625.js",
+    "main.css": "/static/css/main.d1991994.css",
+    "main.js": "/static/js/main.809cfd40.js",
     "static/js/787.d8c6ec95.chunk.js": "/static/js/787.d8c6ec95.chunk.js",
     "static/media/yorkkarate.ogv": "/static/media/yorkkarate.2b84db796720cb9baaed.ogv",
     "static/media/yorkkarate.webmhd.webm": "/static/media/yorkkarate.webmhd.3f6befa8005827b15318.webm",
@@ -63,12 +63,12 @@
     "static/media/directdebit.jpg": "/static/media/directdebit.110570104769b35a2141.jpg",
     "static/media/broken.svg": "/static/media/broken.adec36f7e7a896c2953b8dfa66f346b0.svg",
     "index.html": "/index.html",
-    "main.b95f3964.css.map": "/static/css/main.b95f3964.css.map",
-    "main.14db2625.js.map": "/static/js/main.14db2625.js.map",
+    "main.d1991994.css.map": "/static/css/main.d1991994.css.map",
+    "main.809cfd40.js.map": "/static/js/main.809cfd40.js.map",
     "787.d8c6ec95.chunk.js.map": "/static/js/787.d8c6ec95.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b95f3964.css",
-    "static/js/main.14db2625.js"
+    "static/css/main.d1991994.css",
+    "static/js/main.809cfd40.js"
   ]
 }
