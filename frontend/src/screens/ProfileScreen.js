@@ -117,7 +117,11 @@ const ProfileScreen = ({ history, match }) => {
               <Nav variant="tabs" className="flex-column">
                 {member && (
                   <div className="d-flex flex-column">
-                    <img src={member.profileImg} alt="" className="rounded-0" />
+                    <img
+                      src={member.profileImg}
+                      alt=""
+                      className="rounded-0 profile-img"
+                    />
                     <Button
                       className="mb-2 btn-default rounded-0 btn-sm p-1"
                       onClick={() => {

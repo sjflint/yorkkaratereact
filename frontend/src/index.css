@@ -125,6 +125,12 @@ input[type="file"] {
   aspect-ratio: 16 / 9;
 }
 
+.profile-img {
+  object-fit: contain;
+  aspect-ratio: 1/1;
+  background-color: rgb(242, 242, 242, 1);
+}
+
 /* mouse hover */
 .mouse-hover-pointer:hover {
   cursor: pointer;
