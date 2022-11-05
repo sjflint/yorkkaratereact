@@ -1,12 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d1991994.css",
-    "main.js": "/static/js/main.809cfd40.js",
+    "main.js": "/static/js/main.0a87188d.js",
     "static/js/787.d8c6ec95.chunk.js": "/static/js/787.d8c6ec95.chunk.js",
-    "static/media/yorkkarate.ogv": "/static/media/yorkkarate.2b84db796720cb9baaed.ogv",
-    "static/media/yorkkarate.webmhd.webm": "/static/media/yorkkarate.webmhd.3f6befa8005827b15318.webm",
-    "static/media/jksjapan.webmhd.webm": "/static/media/jksjapan.webmhd.4923c4b2caa37db129ac.webm",
-    "static/media/jksjapan.mp4": "/static/media/jksjapan.dfe3e6ad8d9ba98085a4.mp4",
     "static/media/insidelicense.png": "/static/media/insidelicense.7dde9fa2fecd9e24ee27.png",
     "static/media/poster2.png": "/static/media/poster2.7de3d72187ef9ce8e5c8.png",
     "static/media/poster3.png": "/static/media/poster3.227dc347e9070350d975.png",
@@ -64,11 +60,11 @@
     "static/media/broken.svg": "/static/media/broken.adec36f7e7a896c2953b8dfa66f346b0.svg",
     "index.html": "/index.html",
     "main.d1991994.css.map": "/static/css/main.d1991994.css.map",
-    "main.809cfd40.js.map": "/static/js/main.809cfd40.js.map",
+    "main.0a87188d.js.map": "/static/js/main.0a87188d.js.map",
     "787.d8c6ec95.chunk.js.map": "/static/js/787.d8c6ec95.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d1991994.css",
-    "static/js/main.809cfd40.js"
+    "static/js/main.0a87188d.js"
   ]
 }
