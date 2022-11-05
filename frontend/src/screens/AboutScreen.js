@@ -6,8 +6,6 @@ import simonKato from "../img/simonkato.jpg";
 import submarkLogo from "../img/logosubmark(transparent).png";
 import Video from "../components/Video";
 import poster3Img from "../img/poster3.png";
-import jksjapanMp4 from "../img/jksjapan.mp4";
-import jksjapanWebmHd from "../img/jksjapan.webmhd.webm";
 import Meta from "../components/Meta";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -196,8 +194,7 @@ const AboutScreen = () => {
           <div className="bg-primary p-3">
             <Video
               poster={poster3Img}
-              mp4={jksjapanMp4}
-              webmhd={jksjapanWebmHd}
+              mp4="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/jksjapan.mp4"
             >
               Your browser does not support HTML video.
             </Video>

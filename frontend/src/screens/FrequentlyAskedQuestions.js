@@ -43,8 +43,8 @@ const FaqScreen = () => {
 
             <ListGroup>
               <ListGroup.Item>
-                Training Fees for once a week are{" "}
-                {Number(financials.baseLevelTrainingFees).toLocaleString(
+                Training Fees to train once a week are{" "}
+                {Number(financials.baseLevelTrainingFees / 100).toLocaleString(
                   "en-GB",
                   {
                     style: "currency",
@@ -55,7 +55,7 @@ const FaqScreen = () => {
               </ListGroup.Item>
               <ListGroup.Item>
                 There is a one-off joining fee of{" "}
-                {Number(financials.joiningFee).toLocaleString("en-GB", {
+                {Number(financials.joiningFee / 100).toLocaleString("en-GB", {
                   style: "currency",
                   currency: "GBP",
                 })}{" "}

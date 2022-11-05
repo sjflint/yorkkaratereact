@@ -11,7 +11,6 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
-import multerS3 from "multer-s3";
 import dotenv from "dotenv";
 import crypto from "crypto";
 import TrainingVideo from "../models/trainingVideosModel.js";
@@ -74,40 +73,22 @@ const checkFileType = (file, cb) => {
 const storage = multer.memoryStorage();
 const videoUpload = multer({
   storage: storage,
-  limits: { fileSize: 1048576 * 1000 },
+  limits: { fileSize: 1000000 * 1000 },
   fileFilter: function (req, file, cb) {
     checkVideoType(file, cb);
   },
 });
-// const imageUpload = multer({
-//   storage: storage,
-//   // limits: { fileSize: 3145728 },
-//   fileFilter: function (req, file, cb) {
-//     checkImageType(file, cb);
-//   },
-// });
 const imageUpload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: bucketName,
-    contentLength: 3000000,
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: (req, file, cb) => cb(null, Math.random() + file.originalname),
-  }),
-  limits: { fileSize: 3145728 },
+  storage: storage,
+  limits: { fileSize: 3000000 },
   fileFilter: function (req, file, cb) {
     checkImageType(file, cb);
   },
 });
 
-// reduce image size using lambda in aws. No need to do this for files or videos.
-// use css to restrain the images with aspect ratio, object-fit:contain and background colours.
-
 const fileUpload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 },
+  limits: { fileSize: 3000000 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
@@ -203,27 +184,27 @@ router.post("/image", imageUpload.single("image"), async (req, res) => {
   let dbEntry;
 
   const uploadImage = async () => {
-    // const buffer = await sharp(req.file.buffer)
-    //   .resize({
-    //     height: imgHeight,
-    //     width: imgWidth,
-    //     fit: "contain",
-    //     background: { r: 242, g: 242, b: 242, alpha: 1 },
-    //   })
-    //   .withMetadata()
-    //   .toBuffer();
+    const buffer = await sharp(req.file.buffer)
+      .resize({
+        height: imgHeight,
+        width: imgWidth,
+        fit: "contain",
+        background: { r: 242, g: 242, b: 242, alpha: 1 },
+      })
+      .withMetadata()
+      .toBuffer();
 
-    const imageName = req.file.key;
+    const imageName = randomName() + req.file.originalname;
 
-    // const params = {
-    //   Bucket: bucketName,
-    //   Body: buffer,
-    //   Key: imageName,
-    //   ContentType: req.file.mimetype,
-    // };
+    const params = {
+      Bucket: bucketName,
+      Body: buffer,
+      Key: imageName,
+      ContentType: req.file.mimetype,
+    };
 
-    // const command = new PutObjectCommand(params);
-    // await s3.send(command);
+    const command = new PutObjectCommand(params);
+    await s3.send(command);
 
     if (req.body.id !== "newUpload") {
       const dbRecord = await db.findById(req.body.id);
