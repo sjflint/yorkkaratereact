@@ -33,22 +33,22 @@ const AdminScreen = ({ history }) => {
   const { orders } = orderList;
 
   useEffect(() => {
-    dispatch(listEnquiries());
-    dispatch(listOrders());
     if (!memberInfo) {
-      history.push("/login");
-    }
-    if (
-      memberInfo &&
-      (memberInfo.isAdmin ||
-        memberInfo.isShopAdmin ||
-        memberInfo.isInstructor ||
-        memberInfo.isAuthor)
+      console.log("no member details");
+      history.push(`/login?redirect=admin`);
+    } else if (
+      memberInfo.isAdmin ||
+      memberInfo.isShopAdmin ||
+      memberInfo.isInstructor ||
+      memberInfo.isAuthor
     ) {
       console.log("authorised as admin");
     } else {
-      history.push("/");
+      history.push("/profile");
     }
+
+    dispatch(listEnquiries());
+    dispatch(listOrders());
   }, [history, memberInfo, member, dispatch]);
 
   let openOrders = [];
@@ -67,188 +67,248 @@ const AdminScreen = ({ history }) => {
         <h3 className="text-center border-bottom border-warning pb-1">
           Administration Panel
         </h3>
-        <p className="my-3">
-          Hello {member && memberInfo.firstName}. What do you need to do today?
-        </p>
 
-        {memberInfo.isAdmin && (
+        {memberInfo && (
           <>
-            <h5 className="text-white mb-2 border-bottom border-warning">
-              Admin
-            </h5>
+            <p className="my-3">
+              Hello {member && memberInfo.firstName}. What do you need to do
+              today?
+            </p>
 
-            <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/admin/listMembers">
-                  <Card>
-                    <Card.Img variant="top" src={membersImg} className="p-3" />
-                    <Card.Footer className="text-center">Members</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+            {memberInfo.isAdmin && (
+              <>
+                <h5 className="text-white mb-2 border-bottom border-warning">
+                  Admin
+                </h5>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/admin/editevents">
-                  <Card>
-                    <Card.Img variant="top" src={eventsImg} className="p-3" />
-                    <Card.Footer className="text-center">Events</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+                <Row className="mb-3 no-gutters max-width-700">
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/admin/listMembers">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={membersImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Members
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/admin/financialsummary">
-                  <Card>
-                    <Card.Img
-                      variant="top"
-                      src={financialImg}
-                      className="p-3"
-                    />
-                    <Card.Footer className="text-center">Financial</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/admin/editevents">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={eventsImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Events
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/admin/emailmembers">
-                  <Card className="notification-container">
-                    {enquiries && enquiries.length > 0 && (
-                      <div className="notification d-flex align-items-center justify-content-center">
-                        {enquiries.length}
-                      </div>
-                    )}
-                    <Card.Img variant="top" src={emailImg} className="p-3" />
-                    <Card.Footer className="text-center">Contact</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/admin/financialsummary">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={financialImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Financial
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/admin/editclasses">
-                  <Card>
-                    <Card.Img
-                      variant="top"
-                      src={timetableImg}
-                      className="p-3"
-                    />
-                    <Card.Footer className="text-center">
-                      Classes / Timetable
-                    </Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
-            </Row>
-          </>
-        )}
-        {memberInfo.isShopAdmin && (
-          <>
-            <h5 className="text-white mb-2 border-bottom border-warning">
-              Shop Admin
-            </h5>
-            <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/shopadmin/editproducts">
-                  <Card>
-                    {/* Notifications for products out of stock */}
-                    <Card.Img variant="top" src={productsImg} className="p-3" />
-                    <Card.Footer className="text-center">Products</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/admin/emailmembers">
+                      <Card className="notification-container">
+                        {enquiries && enquiries.length > 0 && (
+                          <div className="notification d-flex align-items-center justify-content-center">
+                            {enquiries.length}
+                          </div>
+                        )}
+                        <Card.Img
+                          variant="top"
+                          src={emailImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Contact
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/shopadmin/editorders">
-                  <Card>
-                    {/* Notifications for orders to be processed */}
-                    {orders && openOrders.length > 0 && (
-                      <div className="notification d-flex align-items-center justify-content-center">
-                        {openOrders.length}
-                      </div>
-                    )}
-                    <Card.Img variant="top" src={ordersImg} className="p-3" />
-                    <Card.Footer className="text-center">Orders</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/admin/editclasses">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={timetableImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Classes / Timetable
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
+                </Row>
+              </>
+            )}
+            {memberInfo.isShopAdmin && (
+              <>
+                <h5 className="text-white mb-2 border-bottom border-warning">
+                  Shop Admin
+                </h5>
+                <Row className="mb-3 no-gutters max-width-700">
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/shopadmin/editproducts">
+                      <Card>
+                        {/* Notifications for products out of stock */}
+                        <Card.Img
+                          variant="top"
+                          src={productsImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Products
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
-              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
-            </Row>
-          </>
-        )}
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/shopadmin/editorders">
+                      <Card>
+                        {/* Notifications for orders to be processed */}
+                        {orders && openOrders.length > 0 && (
+                          <div className="notification d-flex align-items-center justify-content-center">
+                            {openOrders.length}
+                          </div>
+                        )}
+                        <Card.Img
+                          variant="top"
+                          src={ordersImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Orders
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-        {memberInfo.isAuthor && (
-          <>
-            <h5 className="text-white mb-2 border-bottom border-warning">
-              Author
-            </h5>
-            <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/author/editarticles">
-                  <Card>
-                    {/* Notification for events that have passed??? */}
-                    <Card.Img variant="top" src={articlesImg} className="p-3" />
-                    <Card.Footer className="text-center">Articles</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
-              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
-              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
-              <Col xs={6} sm={3} md={3} className="mb-2"></Col>
-            </Row>
-          </>
-        )}
+                  <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+                </Row>
+              </>
+            )}
 
-        {memberInfo.isInstructor && (
-          <>
-            <h5 className="text-white mb-2 border-bottom border-warning">
-              Instructor
-            </h5>
-            <Row className="mb-3 no-gutters max-width-700">
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/instructor/editsyllabus">
-                  <Card>
-                    <Card.Img variant="top" src={syllabusImg} className="p-3" />
-                    <Card.Footer className="text-center">Syllabus</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+            {memberInfo.isAuthor && (
+              <>
+                <h5 className="text-white mb-2 border-bottom border-warning">
+                  Author
+                </h5>
+                <Row className="mb-3 no-gutters max-width-700">
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/author/editarticles">
+                      <Card>
+                        {/* Notification for events that have passed??? */}
+                        <Card.Img
+                          variant="top"
+                          src={articlesImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Articles
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2"></Col>
+                </Row>
+              </>
+            )}
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/instructor/editlessonplans">
-                  <Card>
-                    <Card.Img
-                      variant="top"
-                      src={lessonplanImg}
-                      className="p-3"
-                    />
-                    <Card.Footer className="text-center">
-                      Lesson Plans
-                    </Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+            {memberInfo.isInstructor && (
+              <>
+                <h5 className="text-white mb-2 border-bottom border-warning">
+                  Instructor
+                </h5>
+                <Row className="mb-3 no-gutters max-width-700">
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/instructor/editsyllabus">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={syllabusImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Syllabus
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/instructor/editgradings">
-                  <Card>
-                    <Card.Img variant="top" src={gradingImg} className="p-3" />
-                    <Card.Footer className="text-center">Gradings</Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/instructor/editlessonplans">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={lessonplanImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Lesson Plans
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
 
-              <Col xs={6} sm={3} md={3} className="mb-2">
-                <Link to="/instructor/attendance">
-                  <Card>
-                    <Card.Img variant="top" src={registerImg} className="p-3" />
-                    <Card.Footer className="text-center">
-                      Attendance
-                    </Card.Footer>
-                  </Card>
-                </Link>
-              </Col>
-            </Row>
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/instructor/editgradings">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={gradingImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Gradings
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
+
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link to="/instructor/attendance">
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={registerImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">
+                          Attendance
+                        </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
+                </Row>
+              </>
+            )}
           </>
         )}
       </Container>

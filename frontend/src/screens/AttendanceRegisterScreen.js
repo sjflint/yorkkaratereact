@@ -49,7 +49,9 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push("/login");
+      history.push(
+        `/login?redirect=instructor/attendance/${match.params.className}/search/~`
+      );
     } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {
@@ -59,7 +61,15 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         dispatch(membersList(pageNumber, keyword));
       }
     }
-  }, [dispatch, classId, keyword, history, memberInfo, pageNumber]);
+  }, [
+    dispatch,
+    classId,
+    keyword,
+    history,
+    memberInfo,
+    pageNumber,
+    match.params.className,
+  ]);
 
   const removeAttendeeHandler = async (id, recordId, className) => {
     await dispatch(attendeeRemove(id, recordId));

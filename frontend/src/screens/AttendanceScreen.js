@@ -44,7 +44,7 @@ const AttendanceScreen = ({ match, history }) => {
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=instructor/attendance");
     } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {

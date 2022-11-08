@@ -76,7 +76,7 @@ const ListClassesScreen = ({ history }) => {
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=admin/editclasses");
     } else if (!memberInfo.isAdmin) {
       history.push("/profile");
     } else {

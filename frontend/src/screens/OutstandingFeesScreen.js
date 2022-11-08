@@ -47,7 +47,7 @@ const OutstandingFeesScreen = ({ history }) => {
       setSdkReady(true);
     }
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=outstandingfees");
     }
 
     dispatch(getMemberDetails(memberInfo._id));

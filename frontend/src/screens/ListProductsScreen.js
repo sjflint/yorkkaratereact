@@ -78,7 +78,7 @@ const ListProductsScreen = ({ history, match }) => {
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=shopadmin/editproducts");
     } else if (!memberInfo.isShopAdmin) {
       history.push("/profile");
     } else {

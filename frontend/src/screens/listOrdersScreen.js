@@ -24,7 +24,7 @@ const ListOrdersScreen = ({ history }) => {
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=shopadmin/editorders");
     } else if (!memberInfo.isShopAdmin) {
       history.push("/profile");
     } else {

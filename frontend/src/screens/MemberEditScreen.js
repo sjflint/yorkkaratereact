@@ -43,13 +43,22 @@ const MemberEditScreen = ({ match, history }) => {
     dispatch({ type: EDIT_MEMBER_RESET });
 
     if (!memberInfo) {
-      history.push("/login");
-    } else if (!memberInfo.isAdmin && !memberInfo.isInstructor) {
+      history.push(`/login?redirect=admin/members/${match.params.id}/edit`);
+    } else if (memberInfo.isAdmin || memberInfo.isInstructor) {
+      console.log("authorised as instructor/admin");
+      dispatch(getMemberDetails(memberId));
+      dispatch(listMemberClasses(memberId));
+    } else {
       history.push("/profile");
     }
-    dispatch(getMemberDetails(memberId));
-    dispatch(listMemberClasses(memberId));
-  }, [dispatch, memberInfo, history, memberId, member.profileImg]);
+  }, [
+    dispatch,
+    memberInfo,
+    history,
+    memberId,
+    member.profileImg,
+    match.params.id,
+  ]);
 
   const adminOptions = [
     {
@@ -206,382 +215,390 @@ const MemberEditScreen = ({ match, history }) => {
 
   return (
     <Container className="mt-3">
-      {!memberInfo.isAdmin && (
-        <Message variant="warning">
-          Viewing as Instructor. Please note: Only admins can edit member's
-          details. Any changes you make will not be saved or updated.
-        </Message>
-      )}
-      {loading ? (
-        <Loader variant="warning" />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : (
+      {memberInfo && (
         <>
-          <Link
-            className="btn btn-outline-secondary py-0 mb-2"
-            to="/admin/listMembers"
-          >
-            <i className="fas fa-arrow-left"></i> Return
-          </Link>
-          <h3 className="text-center border-bottom border-warning pb-1">
-            Membership details for {member.firstName} {member.lastName}
-          </h3>
+          {!memberInfo.isAdmin && (
+            <Message variant="warning">
+              Viewing as Instructor. Please note: Only admins can edit member's
+              details. Any changes you make will not be saved or updated.
+            </Message>
+          )}
+          {loading ? (
+            <Loader variant="warning" />
+          ) : error ? (
+            <Message variant="danger">{error}</Message>
+          ) : (
+            <>
+              <Link
+                className="btn btn-outline-secondary py-0 mb-2"
+                to="/admin/listMembers"
+              >
+                <i className="fas fa-arrow-left"></i> Return
+              </Link>
+              <h3 className="text-center border-bottom border-warning pb-1">
+                Membership details for {member.firstName} {member.lastName}
+              </h3>
 
-          {initialValues ? (
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={saveHandler}
-            >
-              {({ values }) => (
-                <Form className="text-muted">
-                  <h5>Personal Details</h5>
-                  <Row className="pb-4 border-bottom border-warning">
-                    <Col md={6}>
-                      <div className="max-width-300 mx-auto mb-3 bg-light p-2">
-                        <UploadImage
-                          img={member.profileImg}
-                          id={member._id}
-                          type={"Profile"}
-                          singleImageData={singleImageData}
-                        />
-                        <small className="text-center">
-                          Please consider that this image might be displayed
-                          across the public website, as well as being displayed
-                          to grading examinars.
-                        </small>
-                      </div>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          label="First Name"
-                          type="text"
-                          name="firstName"
-                        />
-                      </div>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          label="Last Name"
-                          type="text"
-                          name="lastName"
-                        />
-                      </div>
-                    </Col>
-                    <Col md={6}>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          type="text"
-                          label="Address"
-                          name="addressLine1"
-                          placeholder="Address number/name"
-                          margin="mb-0"
-                        />
-
-                        <FormikControl
-                          control="input"
-                          type="text"
-                          name="addressLine2"
-                          placeholder="Street"
-                          margin="mb-0"
-                        />
-                        <FormikControl
-                          control="input"
-                          type="text"
-                          name="addressLine3"
-                          placeholder="Village/Town/District"
-                          margin="mb-0"
-                        />
-                        <FormikControl
-                          control="input"
-                          type="text"
-                          name="addressLine4"
-                          placeholder="City"
-                          margin="mb-0"
-                        />
-                        <FormikControl
-                          control="input"
-                          type="text"
-                          name="postCode"
-                          placeholder="Postcode"
-                        />
-                      </div>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          label="Email"
-                          type="text"
-                          name="email"
-                          placeholder="Please enter your Email"
-                        />
-                      </div>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          label="Phone Number"
-                          type="text"
-                          name="phone"
-                          placeholder="Please enter your phone number"
-                        />
-                      </div>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          type="date"
-                          label="Date of Birth"
-                          name="dateOfBirth"
-                        />
-                      </div>
-                      <div className="bg-light mb-2 p-2">
-                        <FormikControl
-                          control="input"
-                          as="textarea"
-                          label="Medical Details"
-                          name="medicalDetails"
-                          placeholder="Provide any important medical information here"
-                        />
-                      </div>
-                    </Col>
-                  </Row>
-
-                  <div className="py-4 border-bottom border-warning">
-                    <h5>Emergency Contact Details</h5>
-                    <div className="bg-light mb-2 p-2">
-                      <FormikControl
-                        control="input"
-                        label="Name of emergency contact"
-                        type="text"
-                        name="emergencyContactName"
-                        placeholder="Please enter their name"
-                      />
-                    </div>
-                    <div className="bg-light mb-2 p-2">
-                      <FormikControl
-                        control="input"
-                        label="Email of emergency contact"
-                        type="text"
-                        name="emergencyContactEmail"
-                        placeholder="Please enter their email"
-                      />
-                    </div>
-                    <div className="bg-light mb-2 p-2">
-                      <FormikControl
-                        control="input"
-                        label="Number of emergency contact"
-                        type="text"
-                        name="emergencyContactPhone"
-                        placeholder="Please enter their number"
-                      />
-                    </div>
-                  </div>
-                  <div className="py-4 border-bottom border-warning">
-                    <h5>Membership Status and Permissions</h5>
-                    <Row className="mt-2">
-                      {member && member.kyuGrade === 0 ? (
-                        <Col md={4}>
-                          <div className="border border-warning p-1">
-                            <h5 className="text-center">
-                              Current Dan Grade:{" "}
-                              {`${member.danGrade}${numberMarker} Dan`}
-                            </h5>
-                            {danGrade && gradingDate ? (
-                              <ListGroup>
-                                <ListGroup.Item
-                                  variant="success"
-                                  className="text-center strong"
-                                >
-                                  Dan Grade set to{" "}
-                                  {`${danGrade}${numberMarker2} Dan`}
-                                </ListGroup.Item>
-                              </ListGroup>
-                            ) : (
-                              <Button
-                                variant="outline-secondary"
-                                className="text-center w-100 py-0"
-                                onClick={() => setShowModal(true)}
-                              >
-                                Add Dan grading
-                              </Button>
-                            )}
+              {initialValues ? (
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={saveHandler}
+                >
+                  {({ values }) => (
+                    <Form className="text-muted">
+                      <h5>Personal Details</h5>
+                      <Row className="pb-4 border-bottom border-warning">
+                        <Col md={6}>
+                          <div className="max-width-300 mx-auto mb-3 bg-light p-2">
+                            <UploadImage
+                              img={member.profileImg}
+                              id={member._id}
+                              type={"Profile"}
+                              singleImageData={singleImageData}
+                            />
+                            <small className="text-center">
+                              Please consider that this image might be displayed
+                              across the public website, as well as being
+                              displayed to grading examinars.
+                            </small>
                           </div>
-                        </Col>
-                      ) : (
-                        <Col md={4}>
-                          <div className="border border-warning p-1">
+                          <div className="bg-light mb-2 p-2">
                             <FormikControl
                               control="input"
-                              label="Kyu Grade"
-                              type="number"
-                              name="kyuGrade"
+                              label="First Name"
+                              type="text"
+                              name="firstName"
                             />
                           </div>
-                          <p className="text-center my-2">
-                            If not a kyu grade, enter 0 for the kyu grade value
-                          </p>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              label="Last Name"
+                              type="text"
+                              name="lastName"
+                            />
+                          </div>
                         </Col>
-                      )}
-                      <Col md={4}>
-                        <div className="border border-warning p-1">
-                          <FormikControl
-                            control="radio"
-                            label="Squad member?"
-                            name="squadMember"
-                            options={adminOptions}
-                          />
-                        </div>
-                      </Col>
-                    </Row>
-                    <Row className="mt-2 g-0">
-                      <Col md={3}>
-                        <div className="border border-warning p-1">
-                          <FormikControl
-                            control="radio"
-                            label="Admin user?"
-                            name="isAdmin"
-                            options={adminOptions}
-                          />
-                        </div>
-                      </Col>
-                      <Col md={3}>
-                        <div className="border border-warning p-1">
-                          <FormikControl
-                            control="radio"
-                            label="Shop Admin user?"
-                            name="isShopAdmin"
-                            options={adminOptions}
-                          />
-                        </div>
-                      </Col>
-                      <Col md={3}>
-                        <div className="border border-warning p-1">
-                          <FormikControl
-                            control="radio"
-                            label="Instructor user?"
-                            name="isInstructor"
-                            options={adminOptions}
-                          />
-                        </div>
-                      </Col>
-                      <Col md={3}>
-                        <div className="border border-warning p-1">
-                          <FormikControl
-                            control="radio"
-                            label="Author user?"
-                            name="isAuthor"
-                            options={adminOptions}
-                          />
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div className="py-4 border-bottom border-warning">
-                    <h5>Classes</h5>
-                    {classListLoading ? (
-                      <Loader />
-                    ) : classListError ? (
-                      <Message>{error}</Message>
-                    ) : (
-                      <MemberTrainingSessions />
-                    )}
-                  </div>
+                        <Col md={6}>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              type="text"
+                              label="Address"
+                              name="addressLine1"
+                              placeholder="Address number/name"
+                              margin="mb-0"
+                            />
 
-                  <Row className="mt-2">
-                    {!memberInfo.isAdmin ? (
-                      <Button
-                        variant="default"
-                        type="submit"
-                        className="w-100"
-                        disabled
-                      >
-                        Update disabled
-                      </Button>
-                    ) : (
-                      <Col>
-                        {success ? (
-                          <Button className="btn btn-success w-100" disabled>
-                            Updated
-                          </Button>
+                            <FormikControl
+                              control="input"
+                              type="text"
+                              name="addressLine2"
+                              placeholder="Street"
+                              margin="mb-0"
+                            />
+                            <FormikControl
+                              control="input"
+                              type="text"
+                              name="addressLine3"
+                              placeholder="Village/Town/District"
+                              margin="mb-0"
+                            />
+                            <FormikControl
+                              control="input"
+                              type="text"
+                              name="addressLine4"
+                              placeholder="City"
+                              margin="mb-0"
+                            />
+                            <FormikControl
+                              control="input"
+                              type="text"
+                              name="postCode"
+                              placeholder="Postcode"
+                            />
+                          </div>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              label="Email"
+                              type="text"
+                              name="email"
+                              placeholder="Please enter your Email"
+                            />
+                          </div>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              label="Phone Number"
+                              type="text"
+                              name="phone"
+                              placeholder="Please enter your phone number"
+                            />
+                          </div>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              type="date"
+                              label="Date of Birth"
+                              name="dateOfBirth"
+                            />
+                          </div>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              as="textarea"
+                              label="Medical Details"
+                              name="medicalDetails"
+                              placeholder="Provide any important medical information here"
+                            />
+                          </div>
+                        </Col>
+                      </Row>
+
+                      <div className="py-4 border-bottom border-warning">
+                        <h5>Emergency Contact Details</h5>
+                        <div className="bg-light mb-2 p-2">
+                          <FormikControl
+                            control="input"
+                            label="Name of emergency contact"
+                            type="text"
+                            name="emergencyContactName"
+                            placeholder="Please enter their name"
+                          />
+                        </div>
+                        <div className="bg-light mb-2 p-2">
+                          <FormikControl
+                            control="input"
+                            label="Email of emergency contact"
+                            type="text"
+                            name="emergencyContactEmail"
+                            placeholder="Please enter their email"
+                          />
+                        </div>
+                        <div className="bg-light mb-2 p-2">
+                          <FormikControl
+                            control="input"
+                            label="Number of emergency contact"
+                            type="text"
+                            name="emergencyContactPhone"
+                            placeholder="Please enter their number"
+                          />
+                        </div>
+                      </div>
+                      <div className="py-4 border-bottom border-warning">
+                        <h5>Membership Status and Permissions</h5>
+                        <Row className="mt-2">
+                          {member && member.kyuGrade === 0 ? (
+                            <Col md={4}>
+                              <div className="border border-warning p-1">
+                                <h5 className="text-center">
+                                  Current Dan Grade:{" "}
+                                  {`${member.danGrade}${numberMarker} Dan`}
+                                </h5>
+                                {danGrade && gradingDate ? (
+                                  <ListGroup>
+                                    <ListGroup.Item
+                                      variant="success"
+                                      className="text-center strong"
+                                    >
+                                      Dan Grade set to{" "}
+                                      {`${danGrade}${numberMarker2} Dan`}
+                                    </ListGroup.Item>
+                                  </ListGroup>
+                                ) : (
+                                  <Button
+                                    variant="outline-secondary"
+                                    className="text-center w-100 py-0"
+                                    onClick={() => setShowModal(true)}
+                                  >
+                                    Add Dan grading
+                                  </Button>
+                                )}
+                              </div>
+                            </Col>
+                          ) : (
+                            <Col md={4}>
+                              <div className="border border-warning p-1">
+                                <FormikControl
+                                  control="input"
+                                  label="Kyu Grade"
+                                  type="number"
+                                  name="kyuGrade"
+                                />
+                              </div>
+                              <p className="text-center my-2">
+                                If not a kyu grade, enter 0 for the kyu grade
+                                value
+                              </p>
+                            </Col>
+                          )}
+                          <Col md={4}>
+                            <div className="border border-warning p-1">
+                              <FormikControl
+                                control="radio"
+                                label="Squad member?"
+                                name="squadMember"
+                                options={adminOptions}
+                              />
+                            </div>
+                          </Col>
+                        </Row>
+                        <Row className="mt-2 g-0">
+                          <Col md={3}>
+                            <div className="border border-warning p-1">
+                              <FormikControl
+                                control="radio"
+                                label="Admin user?"
+                                name="isAdmin"
+                                options={adminOptions}
+                              />
+                            </div>
+                          </Col>
+                          <Col md={3}>
+                            <div className="border border-warning p-1">
+                              <FormikControl
+                                control="radio"
+                                label="Shop Admin user?"
+                                name="isShopAdmin"
+                                options={adminOptions}
+                              />
+                            </div>
+                          </Col>
+                          <Col md={3}>
+                            <div className="border border-warning p-1">
+                              <FormikControl
+                                control="radio"
+                                label="Instructor user?"
+                                name="isInstructor"
+                                options={adminOptions}
+                              />
+                            </div>
+                          </Col>
+                          <Col md={3}>
+                            <div className="border border-warning p-1">
+                              <FormikControl
+                                control="radio"
+                                label="Author user?"
+                                name="isAuthor"
+                                options={adminOptions}
+                              />
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                      <div className="py-4 border-bottom border-warning">
+                        <h5>Classes</h5>
+                        {classListLoading ? (
+                          <Loader />
+                        ) : classListError ? (
+                          <Message>{error}</Message>
                         ) : (
+                          <MemberTrainingSessions />
+                        )}
+                      </div>
+
+                      <Row className="mt-2">
+                        {!memberInfo.isAdmin ? (
                           <Button
                             variant="default"
                             type="submit"
                             className="w-100"
+                            disabled
                           >
-                            Update
+                            Update disabled
                           </Button>
+                        ) : (
+                          <Col>
+                            {success ? (
+                              <Button
+                                className="btn btn-success w-100"
+                                disabled
+                              >
+                                Updated
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="default"
+                                type="submit"
+                                className="w-100"
+                              >
+                                Update
+                              </Button>
+                            )}
+                          </Col>
                         )}
-                      </Col>
-                    )}
-                  </Row>
-                </Form>
+                      </Row>
+                    </Form>
+                  )}
+                </Formik>
+              ) : (
+                <>
+                  <h5 className="text-center text-warning">
+                    Error loading details. Please don't use the refresh button.
+                  </h5>
+                  <Link
+                    className="btn btn-block btn-warning my-3"
+                    to="/admin/listMembers"
+                  >
+                    Return to Member List
+                  </Link>
+                </>
               )}
-            </Formik>
-          ) : (
-            <>
-              <h5 className="text-center text-warning">
-                Error loading details. Please don't use the refresh button.
-              </h5>
-              <Link
-                className="btn btn-block btn-warning my-3"
-                to="/admin/listMembers"
-              >
-                Return to Member List
-              </Link>
             </>
           )}
+          <Modal
+            size="sm"
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            aria-labelledby="title-sm"
+          >
+            <Modal.Header closeButton className="bg-primary">
+              <Modal.Title id="title-sm" className="text-white">
+                Date of dan grading
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p className="mb-1">
+                Please enter the date the member passed their grading
+              </p>
+              <form>
+                <div className="form-group">
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={gradingDate}
+                    onChange={(e) => setGradingDate(e.target.value)}
+                  />
+                </div>
+              </form>
+              <Modal.Footer>
+                <Button
+                  variant="primary"
+                  className="w-100"
+                  onClick={() => {
+                    setShowModal(false);
+                    setDanGrade(member.danGrade + 1);
+                  }}
+                >
+                  Add grading date
+                </Button>
+                <Button
+                  className="mr-2 w-100"
+                  variant="danger"
+                  onClick={() => {
+                    setShowModal(false);
+                    setGradingDate();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Modal.Footer>
+            </Modal.Body>
+          </Modal>
         </>
       )}
-      <Modal
-        size="sm"
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        aria-labelledby="title-sm"
-      >
-        <Modal.Header closeButton className="bg-primary">
-          <Modal.Title id="title-sm" className="text-white">
-            Date of dan grading
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="mb-1">
-            Please enter the date the member passed their grading
-          </p>
-          <form>
-            <div className="form-group">
-              <input
-                type="date"
-                className="form-control"
-                value={gradingDate}
-                onChange={(e) => setGradingDate(e.target.value)}
-              />
-            </div>
-          </form>
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              className="w-100"
-              onClick={() => {
-                setShowModal(false);
-                setDanGrade(member.danGrade + 1);
-              }}
-            >
-              Add grading date
-            </Button>
-            <Button
-              className="mr-2 w-100"
-              variant="danger"
-              onClick={() => {
-                setShowModal(false);
-                setGradingDate();
-              }}
-            >
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal.Body>
-      </Modal>
     </Container>
   );
 };

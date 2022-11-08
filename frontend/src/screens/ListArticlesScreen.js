@@ -88,7 +88,7 @@ const ListArticlesScreen = ({ history, match }) => {
   useEffect(() => {
     dispatch({ type: ARTICLE_CREATE_RESET });
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=author/editarticles");
     } else if (!memberInfo.isAuthor) {
       history.push("/profile");
     } else {

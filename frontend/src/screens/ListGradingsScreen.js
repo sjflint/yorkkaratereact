@@ -28,7 +28,7 @@ const ListGradingsScreen = ({ history }) => {
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push(`/login`);
+      history.push(`/login?redirect=instructor/editgradings`);
     } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {

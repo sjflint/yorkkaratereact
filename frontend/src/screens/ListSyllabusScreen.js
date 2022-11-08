@@ -87,7 +87,7 @@ const ListSyllabusScreen = ({ history, match }) => {
   useEffect(() => {
     dispatch({ type: TRAINING_VIDEO_CREATE_RESET });
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=instructor/editsyllabus");
     } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {

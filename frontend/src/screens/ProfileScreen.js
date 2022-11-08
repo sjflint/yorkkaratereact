@@ -48,14 +48,14 @@ const ProfileScreen = ({ history, match }) => {
 
   const myClassList = useSelector((state) => state.myClassList);
   const {
-    loading: classListLoading,
-    error: classListError,
+    // loading: classListLoading,
+    // error: classListError,
     sessions,
   } = myClassList;
 
   useEffect(() => {
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=profile");
     }
 
     if (member.ddsuccess === false) {
@@ -111,162 +111,168 @@ const ProfileScreen = ({ history, match }) => {
   return (
     <div className="mt-3">
       <Container fluid="lg" id="profile-container">
-        <Tab.Container id="left-tabs" defaultActiveKey={key}>
-          <Row>
-            <Col sm={3} xs={4} className="py-1">
-              <Nav variant="tabs" className="flex-column">
-                {member && (
-                  <div className="d-flex flex-column">
-                    <img
-                      src={member.profileImg}
-                      alt=""
-                      className="rounded-0 profile-img"
-                    />
-                    <Button
-                      className="mb-2 btn-default rounded-0 btn-sm p-1"
-                      onClick={() => {
-                        setProfileImgModal(true);
-                        dispatch({ type: UPLOAD_IMG_CLEAR });
-                      }}
-                    >
-                      Change Profile Picture
-                    </Button>
-                  </div>
-                )}
+        {memberInfo && (
+          <>
+            <Tab.Container id="left-tabs" defaultActiveKey={key}>
+              <Row>
+                <Col sm={3} xs={4} className="py-1">
+                  <Nav variant="tabs" className="flex-column">
+                    {member && (
+                      <div className="d-flex flex-column">
+                        <img
+                          src={member.profileImg}
+                          alt=""
+                          className="rounded-0 profile-img"
+                        />
+                        <Button
+                          className="mb-2 btn-default rounded-0 btn-sm p-1"
+                          onClick={() => {
+                            setProfileImgModal(true);
+                            dispatch({ type: UPLOAD_IMG_CLEAR });
+                          }}
+                        >
+                          Change Profile Picture
+                        </Button>
+                      </div>
+                    )}
 
-                <Nav.Item
-                  onMouseOver={() => setPage("first")}
-                  onClick={changeUrl}
-                >
-                  <Nav.Link eventKey="first">
-                    <Row>
-                      <Col sm={4}>
-                        <div className="text-center">
-                          <i className="fas fa-id-card fa-2x"></i>
-                        </div>
-                      </Col>
-                      <Col sm={8} className="align-self-center">
-                        <h6 className="text-center mb-0">Your Details</h6>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item
-                  onMouseOver={() => setPage("second")}
-                  onClick={changeUrl}
-                >
-                  <Nav.Link eventKey="second">
-                    <Row>
-                      <Col sm={4}>
-                        <div className="text-center">
-                          <i className="fas fa-store fa-2x"></i>
-                        </div>
-                      </Col>
-                      <Col sm={8} className="align-self-center">
-                        <h6 className="text-center mb-0">Shop Orders</h6>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item
-                  onMouseOver={() => setPage("third")}
-                  onClick={changeUrl}
-                >
-                  <Nav.Link eventKey="third">
-                    <Row>
-                      <Col sm={4}>
-                        <div className="text-center">
-                          <i className="fas fa-calendar-alt fa-2x"></i>
-                        </div>
-                      </Col>
-                      <Col sm={8} className="align-self-center text-center">
-                        <h6 className="text-center mb-0">
-                          Classes
-                          {sessions && !sessions[0] && (
-                            <i className="fa-solid fa-triangle-exclamation text-danger fa-2x"></i>
-                          )}
-                        </h6>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item
-                  onMouseOver={() => setPage("fourth")}
-                  onClick={changeUrl}
-                >
-                  <Nav.Link eventKey="fourth">
-                    <Row>
-                      <Col sm={4}>
-                        <div className="text-center">
-                          <i className="fas fa-video fa-2x"></i>
-                        </div>
-                      </Col>
-                      <Col sm={8} className="align-self-center">
-                        <h6 className="text-center mb-0">Videos</h6>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item
-                  onMouseOver={() => setPage("fifth")}
-                  onClick={changeUrl}
-                >
-                  <Nav.Link eventKey="fifth">
-                    <Row>
-                      <Col sm={4}>
-                        <div className="text-center">
-                          <i className="fas fa-award fa-2x"></i>
-                        </div>
-                      </Col>
-                      <Col sm={8} className="align-self-center">
-                        <h6 className="text-center mb-0">Events</h6>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item
-                  onMouseOver={() => setPage("sixth")}
-                  onClick={changeUrl}
-                >
-                  <Nav.Link eventKey="sixth">
-                    <Row>
-                      <Col sm={4}>
-                        <div className="text-center">
-                          <i className="far fa-credit-card fa-2x"></i>
-                        </div>
-                      </Col>
-                      <Col sm={8} className="align-self-center">
-                        <h6 className="text-center mb-0">Payment details</h6>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Col>
-            <Col sm={9} xs={8}>
-              <Tab.Content>
-                <Tab.Pane eventKey="first">
-                  <MemberDetails />
-                </Tab.Pane>
-                <Tab.Pane eventKey="second">
-                  <MemberOrders />
-                </Tab.Pane>
-                <Tab.Pane eventKey="third">
-                  <MemberClasses />
-                </Tab.Pane>
-                <Tab.Pane eventKey="fourth">
-                  <MemberVideos />
-                </Tab.Pane>
-                <Tab.Pane eventKey="fifth">
-                  <MemberEvents />
-                </Tab.Pane>
-                <Tab.Pane eventKey="sixth">
-                  <MemberPayment />
-                </Tab.Pane>
-              </Tab.Content>
-            </Col>
-          </Row>
-        </Tab.Container>
+                    <Nav.Item
+                      onMouseOver={() => setPage("first")}
+                      onClick={changeUrl}
+                    >
+                      <Nav.Link eventKey="first">
+                        <Row>
+                          <Col sm={4}>
+                            <div className="text-center">
+                              <i className="fas fa-id-card fa-2x"></i>
+                            </div>
+                          </Col>
+                          <Col sm={8} className="align-self-center">
+                            <h6 className="text-center mb-0">Your Details</h6>
+                          </Col>
+                        </Row>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item
+                      onMouseOver={() => setPage("second")}
+                      onClick={changeUrl}
+                    >
+                      <Nav.Link eventKey="second">
+                        <Row>
+                          <Col sm={4}>
+                            <div className="text-center">
+                              <i className="fas fa-store fa-2x"></i>
+                            </div>
+                          </Col>
+                          <Col sm={8} className="align-self-center">
+                            <h6 className="text-center mb-0">Shop Orders</h6>
+                          </Col>
+                        </Row>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item
+                      onMouseOver={() => setPage("third")}
+                      onClick={changeUrl}
+                    >
+                      <Nav.Link eventKey="third">
+                        <Row>
+                          <Col sm={4}>
+                            <div className="text-center">
+                              <i className="fas fa-calendar-alt fa-2x"></i>
+                            </div>
+                          </Col>
+                          <Col sm={8} className="align-self-center text-center">
+                            <h6 className="text-center mb-0">
+                              Classes
+                              {sessions && !sessions[0] && (
+                                <i className="fa-solid fa-triangle-exclamation text-danger fa-2x"></i>
+                              )}
+                            </h6>
+                          </Col>
+                        </Row>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item
+                      onMouseOver={() => setPage("fourth")}
+                      onClick={changeUrl}
+                    >
+                      <Nav.Link eventKey="fourth">
+                        <Row>
+                          <Col sm={4}>
+                            <div className="text-center">
+                              <i className="fas fa-video fa-2x"></i>
+                            </div>
+                          </Col>
+                          <Col sm={8} className="align-self-center">
+                            <h6 className="text-center mb-0">Videos</h6>
+                          </Col>
+                        </Row>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item
+                      onMouseOver={() => setPage("fifth")}
+                      onClick={changeUrl}
+                    >
+                      <Nav.Link eventKey="fifth">
+                        <Row>
+                          <Col sm={4}>
+                            <div className="text-center">
+                              <i className="fas fa-award fa-2x"></i>
+                            </div>
+                          </Col>
+                          <Col sm={8} className="align-self-center">
+                            <h6 className="text-center mb-0">Events</h6>
+                          </Col>
+                        </Row>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item
+                      onMouseOver={() => setPage("sixth")}
+                      onClick={changeUrl}
+                    >
+                      <Nav.Link eventKey="sixth">
+                        <Row>
+                          <Col sm={4}>
+                            <div className="text-center">
+                              <i className="far fa-credit-card fa-2x"></i>
+                            </div>
+                          </Col>
+                          <Col sm={8} className="align-self-center">
+                            <h6 className="text-center mb-0">
+                              Payment details
+                            </h6>
+                          </Col>
+                        </Row>
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Col>
+                <Col sm={9} xs={8}>
+                  <Tab.Content>
+                    <Tab.Pane eventKey="first">
+                      <MemberDetails />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="second">
+                      <MemberOrders />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="third">
+                      <MemberClasses />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="fourth">
+                      <MemberVideos />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="fifth">
+                      <MemberEvents />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="sixth">
+                      <MemberPayment />
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Col>
+              </Row>
+            </Tab.Container>
+          </>
+        )}
       </Container>
 
       <Modal

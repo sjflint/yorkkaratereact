@@ -81,7 +81,7 @@ const ListLessonPlanScreen = ({ history }) => {
   useEffect(() => {
     dispatch({ type: LESSON_PLAN_CREATE_RESET });
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=instructor/editlessonplans");
     } else if (!memberInfo.isInstructor) {
       history.push("/profile");
     } else {

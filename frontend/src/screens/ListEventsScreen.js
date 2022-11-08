@@ -65,7 +65,7 @@ const ListEventsScreen = ({ history, match }) => {
   useEffect(() => {
     dispatch({ type: EVENT_CREATE_RESET });
     if (!memberInfo) {
-      history.push("/login");
+      history.push("/login?redirect=admin/editevents");
     } else if (!memberInfo.isAdmin) {
       history.push("/profile");
     } else {
