@@ -60,7 +60,7 @@ const shopAdminEmail = asyncHandler(async (shopAdminEmails, ordersWaiting) => {
   </head>
   <body>
     ${header}
-    <div style="max-width: 600px; margin: auto; background: white">
+    <div style="max-width: 600px; background: white">
       <div style="padding: 10px">
         <h3>Current Orders waiting to be fulfilled</h3>
         <table

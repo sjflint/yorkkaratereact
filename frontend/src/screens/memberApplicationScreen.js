@@ -25,7 +25,7 @@ const memberApplicationScreen = () => {
                 to book a taster session. No commitment.
               </Card.Text>
               <Link
-                to={"/trialregistration"}
+                to={"/trialregistrationform"}
                 className="btn btn-default btn-block btn-sm"
               >
                 Book Your Trial session

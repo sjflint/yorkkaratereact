@@ -78,6 +78,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
         _id: member._id,
         changeAmount: financials.costOfAdditionalClass,
       };
+      console.log(paymentDetails);
       await updateSubscription(paymentDetails);
     }
     genericEmail({

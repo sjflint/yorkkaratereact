@@ -30,7 +30,7 @@ import directDebitImg from "../../src/img/directdebit.jpg";
 import { createPayment } from "../actions/directDebitActions";
 import { CREATE_DD_PAYMENT_RESET } from "../constants/directDebitConstants";
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
 
   const [sdkReady, setSdkReady] = useState(false);
@@ -71,6 +71,10 @@ const OrderScreen = ({ match }) => {
   );
 
   useEffect(() => {
+    if (!memberInfo) {
+      history.push(`/login?redirect=order/${match.params.id}`);
+    }
+
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
@@ -125,7 +129,7 @@ const OrderScreen = ({ match }) => {
     successDeliver,
     successFulfil,
     successDDPayment,
-    memberInfo.email,
+    memberInfo,
   ]);
 
   const payDirectDebitHandler = () => {
