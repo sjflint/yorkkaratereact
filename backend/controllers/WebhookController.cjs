@@ -179,13 +179,14 @@ const processPayment = async (event) => {
   const createdEvent = await Webhook.create(event);
   console.log(`Payment id: ${createdEvent.links.payment}`);
 
+  const payment = await client.payments.find(createdEvent.links.payment);
   switch (createdEvent.action) {
     case "failed":
       if (createdEvent.details.will_attempt_retry) {
         // No further action as the payment process will continue
         return "Payment will be retried";
       } else {
-        const payment = await client.payments.find(createdEvent.links.payment);
+        // const payment = await client.payments.find(createdEvent.links.payment);
 
         // find mandate using bank account id
         const mandateList = await client.mandates.list({
