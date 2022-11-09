@@ -174,8 +174,10 @@ const processSubscription = async (event) => {
 
 // Payment webhooks
 const processPayment = async (event) => {
+  console.log("analysing payment webhook...");
   const financials = await Financial.findOne({});
   const createdEvent = await Webhook.create(event);
+  console.log(createdEvent);
   switch (createdEvent.action) {
     case "failed":
       if (createdEvent.details.will_attempt_retry) {
