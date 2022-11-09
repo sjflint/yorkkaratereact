@@ -177,7 +177,8 @@ const processPayment = async (event) => {
   console.log("analysing payment webhook...");
   const financials = await Financial.findOne({});
   const createdEvent = await Webhook.create(event);
-  console.log(createdEvent);
+  console.log(`Payment id: ${createdEvent.links.payment}`);
+
   switch (createdEvent.action) {
     case "failed":
       if (createdEvent.details.will_attempt_retry) {
@@ -185,6 +186,7 @@ const processPayment = async (event) => {
         return "Payment will be retried";
       } else {
         const payment = await client.payments.find(createdEvent.links.payment);
+
         // find mandate using bank account id
         const mandateList = await client.mandates.list({
           customer_bank_account: createdEvent.details.bank_account_id,
@@ -405,6 +407,12 @@ const processPayment = async (event) => {
       return `don't know how to process event with action ${createdEvent.action}`;
   }
 };
+
+const findPaymentTest = async () => {
+  const payment = await client.payments.find("PM006B22Q0YTRK");
+  console.log(payment);
+};
+findPaymentTest();
 
 module.exports = {
   processMandate,
