@@ -407,7 +407,7 @@ const EmailMembersScreen = ({ history }) => {
                     ) : (
                       <Button
                         type="submit"
-                        variant="outline-warning btn-block w-100 py-0 mt-2"
+                        variant="link btn-block w-100 py-0 mt-2"
                       >
                         Send email
                       </Button>

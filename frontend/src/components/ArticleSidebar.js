@@ -16,6 +16,9 @@ const ArticleSidebar = ({ article }) => {
       <Link to={`/article/${article._id}`} className="text-decoration-none">
         <div className="bg-primary text-white p-1">
           <p className="mb-0">{article.title}</p>
+          <small>
+            <FormatDate date={article.dateCreated} />
+          </small>
         </div>
         <div>
           <div className="my-1">
@@ -23,12 +26,7 @@ const ArticleSidebar = ({ article }) => {
           </div>
         </div>
         <Card.Footer className="text-center">
-          <Button variant="outline-secondary btn-sm w-100 mb-2">
-            Read More...
-          </Button>
-          <small>
-            Date: <FormatDate date={article.dateCreated} />
-          </small>
+          <Button variant="link btn-sm w-100 mb-2">Read More...</Button>
         </Card.Footer>
       </Link>
     </Card>

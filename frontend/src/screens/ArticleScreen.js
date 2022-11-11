@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Image, ListGroup, Container } from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Container, Button } from "react-bootstrap";
 import ArticleSidebar from "../components/ArticleSidebar";
 import FormatDate from "../components/FormatDate";
 import { listArticle } from "../actions/articleActions";
@@ -103,12 +103,13 @@ const ArticleScreen = ({ match }) => {
               ))}
             </div>
           )}
-          <Link
-            className="btn w-100 btn-outline-secondary btn-sm my-3"
-            to="/news"
+          <Button
+            // className="btn w-100 btn-outline-secondary btn-sm my-3"
+            variant="link"
+            className="w-100 text-center"
           >
             Read more news articles
-          </Link>
+          </Button>
         </Col>
       </Row>
     </Container>

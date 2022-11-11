@@ -29,7 +29,7 @@ const Article = ({ article }) => {
               <small>
                 <FormatDate date={article.dateCreated} />
               </small>
-              <Button variant="outline-secondary" className="w-100 btn-sm">
+              <Button variant="link" className="w-100 btn-sm">
                 Read Article
               </Button>
             </Card.Footer>

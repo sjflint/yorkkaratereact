@@ -75,6 +75,16 @@ a:hover {
   text-decoration: underline;
 }
 
+.btn-link {
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  background-color: #f2f2f2;
+  color: rgba(245, 114, 49, 0.9);
+  font-weight: bold;
+}
+
 #img-logo {
   max-width: 300px;
   border-radius: 0px;
