@@ -409,12 +409,6 @@ const processPayment = async (event) => {
   }
 };
 
-const findPaymentTest = async () => {
-  const payment = await client.payments.find("PM006B22Q0YTRK");
-  console.log(payment);
-};
-findPaymentTest();
-
 module.exports = {
   processMandate,
   processSubscription,
