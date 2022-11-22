@@ -136,7 +136,8 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
             console.log(member);
             if (
               member.kyuGrade <= trainingSession.minGradeLevel &&
-              member.kyuGrade >= trainingSession.maxGradeLevel
+              member.kyuGrade >= trainingSession.maxGradeLevel &&
+              member.ddsuccess === true
             ) {
               if (participantsArray.includes(member._id)) {
                 console.log("already attending");

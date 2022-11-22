@@ -43,7 +43,7 @@ const processMandate = asyncHandler(async (event) => {
   const financials = await Financial.findOne({});
   const createdEvent = await Webhook.create(event);
 
-  const member = await Member.findOne({
+  let member = await Member.findOne({
     ddMandate: createdEvent.links.mandate,
   });
 
@@ -140,7 +140,7 @@ const processMandate = asyncHandler(async (event) => {
 
     // *****Customer Approval Granted*****
     case "customer_approval_granted":
-      await Member.findOneAndUpdate(
+      member = await Member.findOneAndUpdate(
         { ddMandate: createdEvent.links.mandate },
         {
           ddMandate: createdEvent.links.mandate,
@@ -162,6 +162,9 @@ const processMandate = asyncHandler(async (event) => {
         attachments: [],
       });
       return `Mandate ${createdEvent.links.mandate} has now been approved.\n`;
+    case "submitted":
+      console.log("DD mandate submitted");
+      return "await mandate to be processed";
     default:
       return `Do not know how to process an event with action ${createdEvent.action}`;
   }

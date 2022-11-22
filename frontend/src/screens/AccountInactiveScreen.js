@@ -41,10 +41,11 @@ const AccountInactiveScreen = () => {
             </h3>
             <p>
               Unfortunately, your account is now inactive because your direct
-              debit was cancelled or failed to be created. Perhaps you cancelled
-              this yourself or maybe your bank cancelled the direct debit or
-              perhaps you indidcated that your account requires two signatures
-              to authorise direct debits.
+              debit was cancelled or failed to be created: <br />- Perhaps you
+              cancelled this yourself <br />- Maybe your bank cancelled the
+              direct debit
+              <br />- Perhaps you indidcated that your account requires two
+              signatures to authorise direct debits.
             </p>
             <h5 className="text-warning">Let's get you back going again!</h5>
             <p>
@@ -52,6 +53,11 @@ const AccountInactiveScreen = () => {
               although your account will be reinstated, your class bookings will
               not. After regaining access to your account, please visit the
               'Class Bookings' section to re-book your classes.
+            </p>
+            <p>
+              If you indicated that your bank account requires two signatories,
+              please follow the instructions emailed to you by goCardless to
+              activate your Direct Debit mandate
             </p>
             <Button
               variant="default"

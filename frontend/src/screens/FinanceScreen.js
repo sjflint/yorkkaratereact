@@ -138,10 +138,12 @@ const FinanceScreen = ({ history }) => {
     memberList.forEach((member) => {
       member.trainingFees && totalFees.push(Number(member.trainingFees));
     });
-    const initialValue = 0;
-    totalIncome = totalFees.reduce((prev, curr) => prev + curr, initialValue);
-    totalIncome = totalIncome / 100;
   }
+  const initialValue = 0;
+  console.log(totalFees);
+  totalIncome = totalFees.reduce((prev, curr) => prev + curr, initialValue);
+  console.log(totalIncome);
+  totalIncome = totalIncome / 100;
 
   return (
     <Container fluid="lg" className="mt-3">
@@ -165,7 +167,7 @@ const FinanceScreen = ({ history }) => {
                 >
                   <div>Income:</div>
                   <div>
-                    {Number(totalIncome / 100).toLocaleString("en-GB", {
+                    {Number(totalIncome).toLocaleString("en-GB", {
                       style: "currency",
                       currency: "GBP",
                     })}
@@ -178,7 +180,7 @@ const FinanceScreen = ({ history }) => {
                   {" "}
                   <div>Costs:</div>
                   <div>
-                    {Number(totalCost / 100).toLocaleString("en-GB", {
+                    {Number(totalCost).toLocaleString("en-GB", {
                       style: "currency",
                       currency: "GBP",
                     })}
@@ -191,7 +193,7 @@ const FinanceScreen = ({ history }) => {
                   {" "}
                   <div>Profit/Loss:</div>
                   <div>
-                    {((totalIncome - totalCost) / 100).toLocaleString("en-GB", {
+                    {(totalIncome - totalCost).toLocaleString("en-GB", {
                       style: "currency",
                       currency: "GBP",
                     })}

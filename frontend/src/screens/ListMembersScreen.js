@@ -100,10 +100,16 @@ const ListMembersScreen = ({ history, match }) => {
                       <td>
                         {member.ddMandate === "Cancelled"
                           ? "Cancelled"
+                          : member.ddMandate === "Failed"
+                          ? "Failed"
+                          : member.ddMandate === "Pending"
+                          ? "Pending"
                           : "Active"}
                       </td>
                       <td>
-                        {member.ddMandate === "Cancelled" ? (
+                        {member.ddMandate === "Cancelled" ||
+                        member.ddMandate === "Failed" ||
+                        member.ddMandate === "Pending" ? (
                           <Button
                             variant="danger"
                             className="btn-sm"
