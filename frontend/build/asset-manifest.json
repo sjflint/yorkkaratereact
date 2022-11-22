@@ -1,13 +1,11 @@
 {
   "files": {
     "main.css": "/static/css/main.cc468d4b.css",
-    "main.js": "/static/js/main.692b3250.js",
+    "main.js": "/static/js/main.4f2e43da.js",
     "static/js/787.d8c6ec95.chunk.js": "/static/js/787.d8c6ec95.chunk.js",
-    "static/media/insidelicense.png": "/static/media/insidelicense.7dde9fa2fecd9e24ee27.png",
     "static/media/poster2.png": "/static/media/poster2.7de3d72187ef9ce8e5c8.png",
     "static/media/poster3.png": "/static/media/poster3.227dc347e9070350d975.png",
     "static/media/childProtection.pdf": "/static/media/childProtection.fface7650cd779abb63d.pdf",
-    "static/media/jkslicense.png": "/static/media/jkslicense.61efe7721bd2bdf4ddc7.png",
     "static/media/simonkato.jpg": "/static/media/simonkato.235fd33f8a44915cddd3.jpg",
     "static/media/instructorCodeOfConduct.pdf": "/static/media/instructorCodeOfConduct.f181f7d055d24119d365.pdf",
     "static/media/disciplinaryRules.pdf": "/static/media/disciplinaryRules.b59b87b1a7b51739a737.pdf",
@@ -21,6 +19,7 @@
     "static/media/parentsCodeOfConduct.pdf": "/static/media/parentsCodeOfConduct.62e51b06ea3c9f89a1fd.pdf",
     "static/media/juniorclass.jpg": "/static/media/juniorclass.59a5079cc8fe5ff752b2.jpg",
     "static/media/uploading(1).gif": "/static/media/uploading(1).15cd0dca43f1a59e240c.gif",
+    "static/media/insidelicense.png": "/static/media/insidelicense.da2ff8dafb8111eac904.png",
     "static/media/logo2021(transparent-black).png": "/static/media/logo2021(transparent-black).743b27970468edace76e.png",
     "static/media/logo2021.png": "/static/media/logo2021.22676b1922c790e5e279.png",
     "static/media/archbishopholgateschool.jpg": "/static/media/archbishopholgateschool.9c70227d41fa584f2fed.jpg",
@@ -38,6 +37,7 @@
     "static/media/riskAssessment.pdf": "/static/media/riskAssessment.460c4a4e9594628decee.pdf",
     "static/media/archbishoptrimmed.jpg": "/static/media/archbishoptrimmed.17753d5323d9b6c7dec0.jpg",
     "static/media/email.png": "/static/media/email.ce3e067a5d5518e46721.png",
+    "static/media/jkslicense.png": "/static/media/jkslicense.810cce5f20e25138b191.png",
     "static/media/kihonkumite.jpg": "/static/media/kihonkumite.e2afd70316b82a2881d7.jpg",
     "static/media/st.chadshalltrimmed.jpg": "/static/media/st.chadshalltrimmed.0c6701d91d5ed65f4a0f.jpg",
     "static/media/simon-profile.jpg": "/static/media/simon-profile.c0b8f948d4a372decf59.jpg",
@@ -60,11 +60,11 @@
     "static/media/broken.svg": "/static/media/broken.4c573f79c97c70fa7f41f78406e1a9ab.svg",
     "index.html": "/index.html",
     "main.cc468d4b.css.map": "/static/css/main.cc468d4b.css.map",
-    "main.692b3250.js.map": "/static/js/main.692b3250.js.map",
+    "main.4f2e43da.js.map": "/static/js/main.4f2e43da.js.map",
     "787.d8c6ec95.chunk.js.map": "/static/js/787.d8c6ec95.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cc468d4b.css",
-    "static/js/main.692b3250.js"
+    "static/js/main.4f2e43da.js"
   ]
 }
