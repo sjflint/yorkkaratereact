@@ -303,7 +303,6 @@ const processPayment = async (event) => {
               message: `<h4>${member.firstName}, your payment to the York Karate Shop failed</h4>
                     <p>We have received notification that we could not collect your shop payment. Consequently, your order has been cancelled.</p>
                     <p>To reorder, please visit our shop <a href='${process.env.DOMAIN_LINK}/shop'>here</a></p>
-                    <p>Once the payment has been made, the grading result will be reinstated.</p>
                   `,
               link: `${process.env.DOMAIN_LINK}/shop`,
               linkText: "Visit our shop",
@@ -342,7 +341,7 @@ const processPayment = async (event) => {
             return "Training fees not paid. Membership cancelled";
           case "Extra class payment":
             let outstandingFees = member.outstandingFees;
-            const additionalFee = financials.costOfAdditionalClass * 100;
+            const additionalFee = financials.costOfAdditionalClass;
             outstandingFees = outstandingFees + additionalFee;
 
             await Member.findOneAndUpdate(
