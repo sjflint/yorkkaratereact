@@ -34,7 +34,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
     } else {
       // process payment and update grading course
       try {
-        const costOfGrading = financials.costOfGrading * 100;
+        const costOfGrading = financials.costOfGrading;
         console.log(`Cost of grading: ${costOfGrading}`);
         const payment = await client.payments.create(
           {

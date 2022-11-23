@@ -62,9 +62,6 @@ const ProfileScreen = ({ history, match }) => {
       history.push("/accountinactive");
     }
 
-    if (member.ddMandate === "Cancelled") {
-      history.push("/membershipcancelled");
-    }
     if (window.location.pathname.includes("ddsuccess")) {
       setDDModal(true);
       history.push("/profile");
