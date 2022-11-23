@@ -377,6 +377,7 @@ const getMembers = asyncHandler(async (req, res) => {
     kyuGrade: 1,
     danGrade: 1,
     trainingFees: 1,
+    ddsuccess: 1,
   };
 
   const members = await Member.find({ ...keyword }, options)

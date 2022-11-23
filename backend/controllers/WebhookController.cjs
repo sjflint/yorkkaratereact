@@ -112,7 +112,6 @@ const processMandate = asyncHandler(async (event) => {
         await Member.findOneAndUpdate(
           { ddMandate: createdEvent.links.mandate },
           {
-            ddMandate: "Pending",
             ddsuccess: false,
           },
           { new: true }
@@ -140,10 +139,9 @@ const processMandate = asyncHandler(async (event) => {
 
     // *****Customer Approval Granted*****
     case "customer_approval_granted":
-      member = await Member.findOneAndUpdate(
+      await Member.findOneAndUpdate(
         { ddMandate: createdEvent.links.mandate },
         {
-          ddMandate: createdEvent.links.mandate,
           ddsuccess: true,
         },
         { new: true }
@@ -189,8 +187,6 @@ const processPayment = async (event) => {
         // No further action as the payment process will continue
         return "Payment will be retried";
       } else {
-        // const payment = await client.payments.find(createdEvent.links.payment);
-
         // find mandate using bank account id
         const mandateList = await client.mandates.list({
           customer_bank_account: createdEvent.details.bank_account_id,
@@ -203,7 +199,7 @@ const processPayment = async (event) => {
 
         // payment description
         switch (payment.description) {
-          case "Annual membership fee":
+          case "Joining fee":
             clearBookedSessions(member._id);
             await Member.findOneAndUpdate(
               { ddMandate: mandateId },

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Image, ListGroup, Container, Button } from "react-bootstrap";
 import ArticleSidebar from "../components/ArticleSidebar";
@@ -11,7 +10,7 @@ import Message from "../components/Message";
 import ReactImageGallery from "react-image-gallery";
 import Meta from "../components/Meta";
 
-const ArticleScreen = ({ match }) => {
+const ArticleScreen = ({ match, history }) => {
   const dispatch = useDispatch();
 
   const displayArticle = useSelector((state) => state.displayArticle);
@@ -104,7 +103,7 @@ const ArticleScreen = ({ match }) => {
             </div>
           )}
           <Button
-            // className="btn w-100 btn-outline-secondary btn-sm my-3"
+            onClick={() => history.push("/news")}
             variant="link"
             className="w-100 text-center"
           >

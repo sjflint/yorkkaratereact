@@ -312,7 +312,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
           {
             amount: member.totalPayment,
             currency: "GBP",
-            description: "Annual Training Fees",
+            description: "Joining fee",
             links: {
               mandate: redirectFlow.links.mandate,
             },
