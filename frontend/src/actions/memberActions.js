@@ -13,6 +13,12 @@ import {
   LIST_MEMBERS_REQUEST,
   LIST_MEMBERS_RESET,
   LIST_MEMBERS_SUCCESS,
+  LIST_WELFARE_MEMBER_FAIL,
+  LIST_WELFARE_MEMBER_REQUEST,
+  LIST_WELFARE_MEMBER_SUCCESS,
+  LIST_WELFARE_PUBLIC_FAIL,
+  LIST_WELFARE_PUBLIC_REQUEST,
+  LIST_WELFARE_PUBLIC_SUCCESS,
   MEMBER_DELETE_FAIL,
   MEMBER_DELETE_REQUEST,
   MEMBER_DELETE_SUCCESS,
@@ -184,6 +190,59 @@ export const listBlackBelts = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BLACKBELT_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listPublicWelfareMembers = () => async (dispatch) => {
+  try {
+    dispatch({ type: LIST_WELFARE_PUBLIC_REQUEST });
+
+    const { data } = await axios.get("/api/members/publicwelfarelist");
+
+    dispatch({
+      type: LIST_WELFARE_PUBLIC_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: LIST_WELFARE_PUBLIC_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listMemberWelfareMembers = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: LIST_WELFARE_MEMBER_REQUEST });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/members/memberwelfarelist", config);
+
+    dispatch({
+      type: LIST_WELFARE_MEMBER_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: LIST_WELFARE_MEMBER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -474,9 +474,9 @@ const cancelPayment = asyncHandler(async (req, res) => {
 
   const attendees = record.extraParticipants;
 
-  const newAttendees = attendees.filter((attendee) => {
-    attendee !== req.body.paymentDetails._id;
-  });
+  const newAttendees = attendees.filter(
+    (attendee) => String(attendee) !== String(member._id)
+  );
 
   await Attendance.findOneAndUpdate(
     { _id: req.body.paymentDetails.recordId },

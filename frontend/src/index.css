@@ -238,6 +238,27 @@ td {
   position: relative;
 }
 
+.stock-notification {
+  margin-top: -40px;
+  margin-left: 20px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: red;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  color: white;
+}
+
+/* div[class*="--Results"] {
+  background-color: #f57231 !important;
+  visibility: visible;
+}
+
+div[class*="--Results"]:not([aria-hidden="true"]) {
+  visibility: visible !important;
+} */
+
 @media (max-width: 1000px) {
   #club-name {
     display: none;

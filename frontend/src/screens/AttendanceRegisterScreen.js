@@ -72,6 +72,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   ]);
 
   const removeAttendeeHandler = async (id, recordId, className) => {
+    console.log(`remove attendee: ${id}`);
     await dispatch(attendeeRemove(id, recordId));
     await dispatch(updateAttendance(classId));
   };

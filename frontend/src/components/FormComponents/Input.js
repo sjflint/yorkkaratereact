@@ -13,6 +13,7 @@ const Input = ({ label, name, placeholder, margin, ...rest }) => {
         {...rest}
         placeholder={placeholder}
         className="form-control"
+        autoComplete="address-line2"
       />
 
       <ErrorMessage name={name} component={TextError} />

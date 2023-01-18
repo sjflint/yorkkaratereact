@@ -341,7 +341,7 @@ const processPayment = async (event) => {
             return "Training fees not paid. Membership cancelled";
           case "Extra class payment":
             let outstandingFees = member.outstandingFees;
-            const additionalFee = financials.costOfAdditionalClass;
+            const additionalFee = financials.costOfExtraFee;
             outstandingFees = outstandingFees + additionalFee;
 
             await Member.findOneAndUpdate(

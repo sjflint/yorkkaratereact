@@ -273,7 +273,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   email = email.toLowerCase().trim();
   const dateOfBirth = req.body.values.dateOfBirth;
 
-  const member = await Member.find({
+  let member = await Member.find({
     firstName: firstName,
     lastName: lastName,
     email: email,
@@ -282,7 +282,9 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   if (member.length > 0 && member.length < 2) {
     member[0].password = req.body.values.newPassword;
-    await member[0].save();
+    member = await member[0].save();
+
+    console.log(member.firstName);
 
     // send email to confirm password reset
     genericEmail({
@@ -487,6 +489,73 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Add current numbe rof members to array
+// @route SERVER ONLY
+const addTotalMembersToArray = async () => {
+  const financials = await Financial.findOne({});
+
+  const members = await Member.find({ ddsuccess: true });
+
+  financials.totalMembers.push(members.length);
+
+  financials.save();
+
+  console.log(financials);
+  console.log(members.length);
+};
+
+// @desc get public list of welfare officers
+// @route GET /api/members/publicwelfarelist
+// access Public
+const getPublicWelfareList = asyncHandler(async (req, res) => {
+  let eighteenYearsAgo = new Date();
+  eighteenYearsAgo = eighteenYearsAgo.setFullYear(
+    eighteenYearsAgo.getFullYear() - 18
+  );
+
+  const members = await Member.find(
+    {
+      dateOfBirth: { $lte: new Date(eighteenYearsAgo) },
+      kyuGrade: { $lte: 3 },
+      ddsuccess: true,
+    },
+    { firstName: 1, lastName: 1, profileImg: 1 }
+  );
+
+  if (members) {
+    res.status(200).json(members);
+  } else {
+    res.status(404);
+    throw new Error("Members not found");
+  }
+});
+
+// @desc get member list of welfare officers
+// @route GET /api/members/memberwelfarelist
+// access Private
+const getMemberWelfareList = asyncHandler(async (req, res) => {
+  let eighteenYearsAgo = new Date();
+  eighteenYearsAgo = eighteenYearsAgo.setFullYear(
+    eighteenYearsAgo.getFullYear() - 18
+  );
+
+  const members = await Member.find(
+    {
+      dateOfBirth: { $lte: new Date(eighteenYearsAgo) },
+      kyuGrade: { $lte: 3 },
+      ddsuccess: true,
+    },
+    { firstName: 1, lastName: 1, profileImg: 1, phone: 1, email: 1 }
+  );
+
+  if (members) {
+    res.status(200).json(members);
+  } else {
+    res.status(404);
+    throw new Error("Members not found");
+  }
+});
+
 export {
   authMember,
   getMemberProfile,
@@ -503,4 +572,7 @@ export {
   getPublicMemberById,
   updateMemberProfile,
   getFormerBlackBelts,
+  addTotalMembersToArray,
+  getPublicWelfareList,
+  getMemberWelfareList,
 };

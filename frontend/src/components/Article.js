@@ -5,13 +5,9 @@ import FormatDate from "./FormatDate";
 const Article = ({ article }) => {
   return (
     <Row className="p-2 rounded h-100 bg-grey">
-      <Col md="5" className="p-2 pt-0">
+      <Col md="5" className="p-0 align-self-center">
         <Link to={`/article/${article._id}`}>
-          <img
-            src={`${article.carouselImages[0].original}`}
-            alt="article"
-            className="mb-2"
-          />
+          <img src={`${article.carouselImages[0].original}`} alt="article" />
         </Link>
       </Col>
       <Col md="7">

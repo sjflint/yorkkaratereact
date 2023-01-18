@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMemberDetails, updateProfile } from "../actions/memberActions";
+import { updateProfile } from "../actions/memberActions";
 import { PayPalButton } from "react-paypal-button-v2";
 import axios from "axios";
 import Loader from "../components/Loader";
@@ -28,30 +28,31 @@ const OutstandingFeesScreen = ({ history }) => {
   // show succes message
 
   useEffect(() => {
+    if (!memberInfo) {
+      history.push("/login?redirect=outstandingfees");
+    }
+
     const addPayPalScript = async () => {
       console.log("adding script...");
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=GBP`;
       script.async = true;
       script.onload = () => {
         setSdkReady(true);
       };
       document.body.appendChild(script);
     };
-
-    if (!window.paypal) {
-      addPayPalScript();
-    } else {
-      setSdkReady(true);
+    if (paymentSuccess === false) {
+      if (!window.paypal) {
+        addPayPalScript();
+      } else {
+        setSdkReady(true);
+      }
     }
-    if (!memberInfo) {
-      history.push("/login?redirect=outstandingfees");
-    }
-
-    dispatch(getMemberDetails(memberInfo._id));
-  }, [dispatch, memberInfo, history]);
+    // eslint-disable-next-line
+  }, [dispatch, memberInfo]);
 
   const successPaymentHandler = useCallback(
     async (paymentResult) => {
@@ -66,7 +67,8 @@ const OutstandingFeesScreen = ({ history }) => {
         console.log("payment successful");
       }
     },
-    [dispatch, memberInfo._id]
+
+    [dispatch, memberInfo]
   );
 
   return (
@@ -96,14 +98,18 @@ const OutstandingFeesScreen = ({ history }) => {
                     paymentSuccess === false && (
                       <>
                         <h3 className="text-danger">
-                          {[member.outstandingFees].toLocaleString("en-GB", {
-                            style: "currency",
-                            currency: "GBP",
-                          })}
+                          {[member.outstandingFees / 100].toLocaleString(
+                            "en-GB",
+                            {
+                              style: "currency",
+                              currency: "GBP",
+                            }
+                          )}
                         </h3>
                         <PayPalButton
-                          amount={member.outstandingFees}
+                          amount={member.outstandingFees / 100}
                           onSuccess={successPaymentHandler}
+                          currency={"GBP"}
                         />
                       </>
                     )}

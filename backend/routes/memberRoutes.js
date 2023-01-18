@@ -16,6 +16,8 @@ import {
   updateMemberProfile,
   getPublicMemberById,
   getFormerBlackBelts,
+  getPublicWelfareList,
+  getMemberWelfareList,
 } from "../controllers/memberController.js";
 import {
   protect,
@@ -36,6 +38,8 @@ router.route("/profile").get(protect, getMemberProfile);
 // router.route("/profileimg").post(upload.single("image"), postProfileImg);
 router.route("/blackbelts").get(getBlackBelts);
 router.route("/formerblackbelts").get(getFormerBlackBelts);
+router.route("/publicWelfareList").get(getPublicWelfareList);
+router.route("/memberWelfareList").get(protect, getMemberWelfareList);
 router.route("/public/:id").get(getPublicMemberById);
 router
   .route("/:id")

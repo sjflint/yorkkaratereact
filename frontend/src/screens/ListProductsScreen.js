@@ -9,6 +9,7 @@ import {
   FormLabel,
   Row,
   Col,
+  Card,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -297,18 +298,28 @@ const ListProductsScreen = ({ history, match }) => {
                   </td>
                   <td>
                     {product.countInStock ? (
-                      <Button
-                        variant="info"
-                        className="btn btn-sm"
-                        onClick={async () => {
-                          setUpdateId(product._id);
-                          await dispatch(listProduct(product._id));
-                          await setImage(product.image);
-                          await setStockModal(true);
-                        }}
-                      >
-                        <i className="fas fa-box-open"></i>{" "}
-                      </Button>
+                      <div className="notification-container">
+                        <Button
+                          variant="info"
+                          className="btn btn-sm"
+                          onClick={async () => {
+                            setUpdateId(product._id);
+                            await dispatch(listProduct(product._id));
+                            await setImage(product.image);
+                            await setStockModal(true);
+                          }}
+                        >
+                          <i className="fas fa-box-open"></i>{" "}
+                          {Object.keys(product.countInStock).map(
+                            (stock) =>
+                              product.countInStock[stock] === 0 && (
+                                <div className="stock-notification d-flex align-items-center justify-content-center">
+                                  !
+                                </div>
+                              )
+                          )}
+                        </Button>
+                      </div>
                     ) : (
                       <Button variant="info" className="btn-sm" disabled>
                         <i className="fas fa-x"></i>

@@ -78,9 +78,13 @@ const removeAttendeeRecord = asyncHandler(async (req, res) => {
   if (record) {
     const newParticipantsList = record.participants;
 
+    console.log(`The current list of participants: ${newParticipantsList}`);
+
     const updateParticipantsList = newParticipantsList.filter(
-      (id) => id !== req.body.id
+      (id) => String(id) !== String(req.body.id)
     );
+
+    console.log(`The new list of participants: ${updateParticipantsList}`);
 
     await Attendance.findByIdAndUpdate(
       req.body.classId,
@@ -118,7 +122,7 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
 
   const financials = await Finance.findOne({});
 
-  const extraFee = financials.costOfExtraFee * 100;
+  const extraFee = financials.costOfExtraFee;
 
   // Member actions
   const lastExtraClassAdded = member.extraClassAdded.setDate(

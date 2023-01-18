@@ -42,7 +42,10 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
 
   const financials = await Financial.findOne({});
 
-  const membersList = await Member.find({ ddsuccess: true });
+  const membersList = await Member.find({
+    ddsuccess: true,
+    ddMandate: { $ne: "" },
+  });
 
   if (financials) {
     if (financials.costOfAdditionalClass !== costOfAdditionalClass) {
@@ -94,13 +97,23 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
         recipientEmail: member.email,
         recipientName: member.firstName,
         subject: "Update to club fees",
-        message: `<h4>${member.firstName}, we have updated some of our fees.</h4>
+        message: `<h4>${
+          member.firstName
+        }, we have updated some of our fees.</h4>
     <p>We would like to let you know that with immediate effect, the following fees are in place:</p>
     <ul>
-      <li>Base Level Training Fees (to train once a week): £${baseLevelTrainingFees} p/m</li>
-      <li>The cost of increasing your training by one extra class a week: £${costOfAdditionalClass}</li>
-      <li>The cost of attending a one-off, extra class: £${costOfExtraFee}</li>
-      <li>The cost of attending a grading examination: £${costOfGrading}</li>
+      <li>Base Level Training Fees (to train once a week): £${
+        baseLevelTrainingFees / 100
+      } p/m</li>
+      <li>The cost of increasing your training by one extra class a week: £${
+        costOfAdditionalClass / 100
+      }</li>
+      <li>The cost of attending a one-off, extra class: £${
+        costOfExtraFee / 100
+      }</li>
+      <li>The cost of attending a grading examination: £${
+        costOfGrading / 100
+      }</li>
     </ul>
     <p>There is nothing you need to do. Any price changes will automatically be applied to your direct debit.</p>
     `,

@@ -61,8 +61,6 @@ const checkFileType = (file, cb) => {
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
-  console.log(file);
-
   if (extname && mimetype) {
     return cb(null, true);
   } else {
@@ -73,7 +71,7 @@ const checkFileType = (file, cb) => {
 const storage = multer.memoryStorage();
 const videoUpload = multer({
   storage: storage,
-  limits: { fileSize: 1000000 * 1000 },
+  limits: { fileSize: 1000000000 },
   fileFilter: function (req, file, cb) {
     checkVideoType(file, cb);
   },

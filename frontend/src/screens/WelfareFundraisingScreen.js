@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Col, Container, ListGroup, Row } from "react-bootstrap";
-import bamse from "../img/Bamse.jpg";
 import candleLightersLogoIMG from "../img/candlelighterslogo.png";
 import riskAssessmentPDF from "../documents/riskAssessment.pdf";
 import athletesCodeOfConductPDF from "../documents/athletesCodeOfConduct.pdf";
@@ -11,32 +10,97 @@ import instructorCodeOfConductPDF from "../documents/instructorCodeOfConduct.pdf
 import parentsCodeOfConductPDF from "../documents/parentsCodeOfConduct.pdf";
 import reportingConcernsPDF from "../documents/reportingConcerns.pdf";
 import termsAndConditionsPDF from "../documents/termsAndConditions.pdf";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  listMemberWelfareMembers,
+  listPublicWelfareMembers,
+} from "../actions/memberActions";
+import { LIST_WELFARE_PUBLIC_CLEAR } from "../constants/memberConstants";
 
 const WelfareFundraisingScreen = () => {
+  const dispatch = useDispatch();
+  // What info do we want?
+  // Public - name, image
+  // Members = name, image, email, phone
+  const memberLogin = useSelector((state) => state.memberLogin);
+  const { memberInfo } = memberLogin;
+
+  const welfareMemberPublic = useSelector((state) => state.welfareMemberPublic);
+  const { welfarePublicList } = welfareMemberPublic;
+
+  const welfareMember = useSelector((state) => state.welfareMember);
+  const { welfareMemberList } = welfareMember;
+
+  useEffect(() => {
+    if (memberInfo && !welfareMemberList) {
+      dispatch({ type: LIST_WELFARE_PUBLIC_CLEAR });
+      console.log("logged in");
+      dispatch(listMemberWelfareMembers());
+    } else if (!memberInfo && !welfarePublicList) {
+      console.log("not logged in - show public page");
+      dispatch(listPublicWelfareMembers());
+    }
+  }, [welfarePublicList, welfareMemberList, dispatch, memberInfo]);
+
   return (
     <Container className="mt-3">
       <h3 className="text-center border-bottom border-warning pb-1">
         Welfare and Fundraising
       </h3>
+      <Row className="mb-4 border-bottom border-warning pb-1">
+        {welfarePublicList &&
+          welfarePublicList.map((member, index) => {
+            return (
+              <Col sm={6} md={4}>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={member.profileImg}
+                    alt="profile"
+                  />
+                  <Card.Body>
+                    <Card.Title className="text-center text-warning py-1">
+                      {`${member.firstName} ${member.lastName}`}
+                    </Card.Title>
+                    <Card.Text className="text-center">
+                      {index === 0 ? "Lead Welfare Officer" : "Welfare Officer"}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })}
+        {welfareMemberList &&
+          welfareMemberList.map((member, index) => {
+            return (
+              <Col sm={6} md={4}>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={member.profileImg}
+                    alt="profile"
+                  />
+                  <Card.Body className="text-center">
+                    <Card.Title className="text-warning py-1">
+                      {`${member.firstName} ${member.lastName}`}
+                    </Card.Title>
+                    <Card.Text>
+                      {index === 0 ? "Lead Welfare Officer" : "Welfare Officer"}
+                    </Card.Text>
+                    <Card.Text>
+                      <small>{member.email}</small>
+                    </Card.Text>
+                    <Card.Text>
+                      <small>0{member.phone}</small>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })}
+      </Row>
       <Row>
         <Col md={4}>
-          <Card>
-            <Card.Header className="bg-secondary text-white text-center">
-              <h5>The Welfare Officer</h5>
-            </Card.Header>
-            <Card.Img variant="top" src={bamse} alt="" />
-            <Card.Body>
-              <Card.Title className="text-center text-warning py-1">
-                Bamse Bear
-              </Card.Title>
-              <Card.Text className="text-center">
-                <a className="d-block" href="mailto:bamse@bamsebear.com">
-                  bamse@bamsebear.com
-                </a>
-                <a href="tel:07900 802 635">01234 567 890</a>
-              </Card.Text>
-            </Card.Body>
-          </Card>
           <Card className="my-3 text-center">
             <Card.Header className="bg-primary text-white">
               Club Policies
@@ -111,12 +175,11 @@ const WelfareFundraisingScreen = () => {
           </Card>
         </Col>
         <Col md={8}>
-          <h4 className="pb-1">The Welfare Officer</h4>
+          <h4 className="pb-1">The Welfare Officers</h4>
           <p>
-            The welfare Officer's role within the club is to uphold the club's
-            policies and procedures, including the code of conduct and the child
-            protection policy. The welfare Officer is also assigned with raising
-            funds for the club and the York Karate squad.
+            The welfare Officers are there to uphold the club's policies and
+            procedures, including the code of conduct and the child protection
+            policy.
           </p>
           <p className="lead pt-4 pb-1">External Contacts</p>
           <p>

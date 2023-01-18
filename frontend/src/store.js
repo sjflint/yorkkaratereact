@@ -29,6 +29,8 @@ import {
   resetPasswordReducer,
   memberPublicDetailsReducer,
   formerBlackBeltListReducer,
+  welfareMemberPublicReducer,
+  welfareMemberReducer,
 } from "./reducers/memberReducer";
 import {
   productListReducer,
@@ -134,6 +136,8 @@ const reducer = combineReducers({
   memberDetails: memberDetailsReducer,
   memberPublicDetails: memberPublicDetailsReducer,
   listMembers: listMembersReducer,
+  welfareMemberPublic: welfareMemberPublicReducer,
+  welfareMember: welfareMemberReducer,
   memberDelete: memberDeleteReducer,
   memberEdit: memberEditReducer,
   updateProfileDetails: updateProfileReducer,

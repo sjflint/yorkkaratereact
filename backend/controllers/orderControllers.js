@@ -246,7 +246,7 @@ const deleteOrders = asyncHandler(async () => {
   await Order.deleteMany({ isPaid: "false" });
 });
 
-// @desc email shop admins with orders waiting to be processed
+// @desc email shop admins with orders waiting to be processed and/or out of stock
 // @server only
 const emailShopAdmins = asyncHandler(async () => {
   const shopAdmins = await Member.find({ isShopAdmin: true });
@@ -255,6 +255,7 @@ const emailShopAdmins = asyncHandler(async () => {
     shopAdminEmails = `${shopAdminEmails}${shopAdmin.email};`;
   }
 
+  // // orders waiting
   const ordersWaiting = await Order.find({
     isPaid: "true",
     isDelivered: false,
@@ -262,6 +263,32 @@ const emailShopAdmins = asyncHandler(async () => {
   if (ordersWaiting.length > 0) {
     console.log("sending shop admin email...");
     shopAdminEmail(shopAdminEmails, ordersWaiting);
+  }
+
+  // out of stock
+  const products = await Product.find({});
+  let outOfStock = false;
+  if (products) {
+    products.map((product) => {
+      for (const key in product.countInStock) {
+        if (product.countInStock[key] === 0) {
+          outOfStock = true;
+        }
+      }
+    });
+  }
+  if (outOfStock === true) {
+    genericEmail({
+      recipientEmail: shopAdminEmails,
+      recipientName: "Shop Admin",
+      subject: "Items out of stock",
+      message: `<h4>Please review the product stock levels</h4>
+    <p>Some items are currently out of stock. If possible, please re-order more stock from the suppliers.</p>
+    `,
+      link: `${process.env.DOMAIN_LINK}/shopadmin/editproducts`,
+      linkText: "View product admin page",
+      attachments: [],
+    });
   }
 });
 

@@ -16,24 +16,29 @@ const getProducts = asyncHandler(async (req, res) => {
 
   // const count = await Product.countDocuments();
 
-  if (filterBy === "") {
-    const count = await Product.find({}).countDocuments();
-
-    const products = await Product.find({})
-      .limit(pageSize)
-      .skip(pageSize * (page - 1))
-      .sort({ name: 1 });
-
-    res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  if (req.query.pageNumber === "all") {
+    const products = await Product.find({});
+    res.json({ products });
   } else {
-    const count = await Product.find({ category: filterBy }).countDocuments();
+    if (filterBy === "") {
+      const count = await Product.find({}).countDocuments();
 
-    const products = await Product.find({ category: filterBy }).sort({
-      name: 1,
-    });
-    // .limit(pageSize)
-    // .skip(pageSize * (page - 1));
-    res.json({ products, page, pages: Math.ceil(count / pageSize) });
+      const products = await Product.find({})
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
+        .sort({ name: 1 });
+
+      res.json({ products, page, pages: Math.ceil(count / pageSize) });
+    } else {
+      const count = await Product.find({ category: filterBy }).countDocuments();
+
+      const products = await Product.find({ category: filterBy }).sort({
+        name: 1,
+      });
+      // .limit(pageSize)
+      // .skip(pageSize * (page - 1));
+      res.json({ products, page, pages: Math.ceil(count / pageSize) });
+    }
   }
 });
 

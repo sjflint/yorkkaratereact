@@ -6,14 +6,17 @@ import {
 } from "../controllers/orderControllers.js";
 import { checkTrialComplete } from "../controllers/registerTrialControllers.js";
 import { emailEnquiryAdmin } from "../emailTemplates/enquiryAdmin.js";
+import { addTotalMembersToArray } from "../controllers/memberController.js";
 
 export const cronJobs = () => {
   // Newsletter sent every Monday @ 7am
+  // add current number of members to totalMembers Array
   cron.schedule(
     "1 1 7 * * 1",
     () => {
       newsLetterEmail();
       console.log("request to send newsletter");
+      addTotalMembersToArray();
     },
     { timezone: "Europe/London" }
   );

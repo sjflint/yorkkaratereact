@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -149,6 +148,7 @@ const RegistrationForm = () => {
 
   return (
     <>
+      {/* Can't implement Mapbox with mouse click. Should review in further updates */}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -230,6 +230,7 @@ const RegistrationForm = () => {
                     name="addressLine1"
                     placeholder="Address number/name"
                     margin="mb-0"
+                    autoComplete="address-line2"
                   />
 
                   <FormikControl

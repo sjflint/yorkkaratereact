@@ -13,6 +13,13 @@ import {
   LIST_MEMBERS_REQUEST,
   LIST_MEMBERS_RESET,
   LIST_MEMBERS_SUCCESS,
+  LIST_WELFARE_MEMBER_FAIL,
+  LIST_WELFARE_MEMBER_REQUEST,
+  LIST_WELFARE_MEMBER_SUCCESS,
+  LIST_WELFARE_PUBLIC_CLEAR,
+  LIST_WELFARE_PUBLIC_FAIL,
+  LIST_WELFARE_PUBLIC_REQUEST,
+  LIST_WELFARE_PUBLIC_SUCCESS,
   MEMBER_DELETE_FAIL,
   MEMBER_DELETE_REQUEST,
   MEMBER_DELETE_SUCCESS,
@@ -205,6 +212,34 @@ export const memberEditReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case EDIT_MEMBER_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const welfareMemberPublicReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LIST_WELFARE_PUBLIC_REQUEST:
+      return { loading: true };
+    case LIST_WELFARE_PUBLIC_SUCCESS:
+      return { loading: false, welfarePublicList: action.payload };
+    case LIST_WELFARE_PUBLIC_FAIL:
+      return { loading: false, error: action.payload };
+    case LIST_WELFARE_PUBLIC_CLEAR:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const welfareMemberReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LIST_WELFARE_MEMBER_REQUEST:
+      return { loading: true };
+    case LIST_WELFARE_MEMBER_SUCCESS:
+      return { loading: false, welfareMemberList: action.payload };
+    case LIST_WELFARE_MEMBER_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

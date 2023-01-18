@@ -134,10 +134,16 @@ const FinanceScreen = ({ history }) => {
   // total income
   let totalFees = [];
   let totalIncome;
-  if (memberList) {
+  let totalMembers = 0;
+  let totalMembersDelta = 0;
+  if (memberList && financials) {
     memberList.forEach((member) => {
-      member.trainingFees && totalFees.push(Number(member.trainingFees));
+      if (member.trainingFees && member.ddsuccess) {
+        totalFees.push(Number(member.trainingFees));
+        totalMembers++;
+      }
     });
+    totalMembersDelta = totalMembers - financials.totalMembers.at(-1);
   }
   const initialValue = 0;
   console.log(totalFees);
@@ -197,6 +203,27 @@ const FinanceScreen = ({ history }) => {
                       style: "currency",
                       currency: "GBP",
                     })}
+                  </div>
+                </ListGroup.Item>
+                <ListGroup.Item
+                  variant="info"
+                  className="d-flex justify-content-between"
+                >
+                  <div>Total Members:</div>
+
+                  <div>
+                    {totalMembers}
+                    {totalMembersDelta > 0 ? (
+                      <small className="text-success">
+                        (+{totalMembersDelta})
+                      </small>
+                    ) : totalMembersDelta < 0 ? (
+                      <small className="text-danger">
+                        ({totalMembersDelta})
+                      </small>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </ListGroup.Item>
               </ListGroup>

@@ -107,7 +107,12 @@ const LoginScreen = ({ location, history }) => {
           </Button>
 
           <Link to={"/reset-account"}>
-            <Button variant="outline-danger btn-sm">Forgotten password?</Button>
+            <Button
+              variant="outline-danger btn-sm"
+              onClick={() => window.location.reload()}
+            >
+              Forgotten password?
+            </Button>
           </Link>
         </div>
       </Form>

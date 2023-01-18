@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import membersImg from "../img/members.png";
@@ -17,8 +17,11 @@ import { Link } from "react-router-dom";
 import Meta from "../components/Meta";
 import { listEnquiries } from "../actions/enquiryActions";
 import { listOrders } from "../actions/orderActions";
+import { listProducts } from "../actions/productActions";
 
 const AdminScreen = ({ history }) => {
+  const [zeroStock, setZeroStock] = useState(false);
+
   const dispatch = useDispatch();
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
@@ -31,6 +34,9 @@ const AdminScreen = ({ history }) => {
 
   const orderList = useSelector((state) => state.orderList);
   const { orders } = orderList;
+
+  const productList = useSelector((state) => state.productList);
+  const { products } = productList;
 
   useEffect(() => {
     if (!memberInfo) {
@@ -49,6 +55,7 @@ const AdminScreen = ({ history }) => {
 
     dispatch(listEnquiries());
     dispatch(listOrders());
+    dispatch(listProducts("all"));
   }, [history, memberInfo, member, dispatch]);
 
   let openOrders = [];
@@ -56,6 +63,16 @@ const AdminScreen = ({ history }) => {
     orders.forEach((order) => {
       if (order.isPaid === "true" && !order.isDelivered) {
         openOrders.push(order);
+      }
+    });
+  }
+
+  if (products && zeroStock === false) {
+    products.map((product) => {
+      for (const key in product.countInStock) {
+        if (product.countInStock[key] === 0) {
+          setZeroStock(true);
+        }
       }
     });
   }
@@ -172,8 +189,13 @@ const AdminScreen = ({ history }) => {
                 <Row className="mb-3 no-gutters max-width-700">
                   <Col xs={6} sm={3} md={3} className="mb-2">
                     <Link to="/shopadmin/editproducts">
-                      <Card>
+                      <Card className="notification-container">
                         {/* Notifications for products out of stock */}
+                        {zeroStock === true && (
+                          <div className="notification d-flex align-items-center justify-content-center">
+                            !
+                          </div>
+                        )}
                         <Card.Img
                           variant="top"
                           src={productsImg}
