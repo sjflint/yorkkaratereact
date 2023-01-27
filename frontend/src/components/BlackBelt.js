@@ -47,9 +47,9 @@ const BlackBelt = ({ blackBelt }) => {
 
             {gradingDates.map((grading) => {
               return (
-                <ListGroupItem
-                  key={Math.random()}
-                >{`${grading[0]}: ${grading[1]}`}</ListGroupItem>
+                <ListGroupItem key={Math.random()}>{`${grading[0]}: ${new Date(
+                  grading[1]
+                ).toLocaleDateString()}`}</ListGroupItem>
               );
             })}
           </ListGroup>

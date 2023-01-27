@@ -6,7 +6,7 @@ dotenv.config();
 
 const client = gocardless(
   process.env.GoCardlessAccessToken,
-  constants.Environments.Sandbox
+  constants.Environments.Live
 );
 
 const createDirectDebit = async (member, session_token) => {

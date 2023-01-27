@@ -12,7 +12,7 @@ dotenv.config();
 
 const client = gocardless(
   process.env.GoCardlessAccessToken,
-  constants.Environments.Sandbox
+  constants.Environments.Live
 );
 
 // @desc Post grading application and payment

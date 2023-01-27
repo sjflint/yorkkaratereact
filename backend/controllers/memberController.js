@@ -325,6 +325,7 @@ const getBlackBelts = asyncHandler(async (req, res) => {
 
   const blackBeltMembers = await Member.find(query, options).sort({
     danGrade: -1,
+    danGradings: 1,
   });
 
   res.json(blackBeltMembers);

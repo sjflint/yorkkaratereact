@@ -14,7 +14,7 @@ dotenv.config();
 
 const client = gocardless(
   process.env.GoCardlessAccessToken,
-  constants.Environments.Sandbox
+  constants.Environments.Live
 );
 
 // Clear sessions booked for member.......

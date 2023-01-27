@@ -26,7 +26,7 @@ const RegistrationForm = () => {
 
   useEffect(() => {
     if (memberInfo) {
-      window.location.href = `https://pay-sandbox.gocardless.com/flow/${memberInfo.ddRedirect}`;
+      window.location.href = `https://pay.gocardless.com/flow/${memberInfo.ddRedirect}`;
     }
   }, [history, memberInfo]);
 

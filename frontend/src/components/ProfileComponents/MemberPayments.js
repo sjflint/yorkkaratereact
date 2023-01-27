@@ -43,7 +43,7 @@ const MemberPayments = () => {
   useEffect(() => {
     if (ddSetupInfo && ddSetupInfo !== null) {
       localStorage.removeItem("updateDD");
-      window.location.href = `https://pay-sandbox.gocardless.com/flow/${ddSetupInfo.ddRedirect}`;
+      window.location.href = `https://pay.gocardless.com/flow/${ddSetupInfo.ddRedirect}`;
     }
   }, [history, ddSetupInfo]);
 

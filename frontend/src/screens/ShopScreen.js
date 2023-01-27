@@ -34,27 +34,26 @@ const ShopScreen = ({ match }) => {
             </Button>
           </Link>
         </div>
-        <Container>
-          <Row className="text-center align-items-center bg-primary">
-            <Col xs={6} className="my-3">
-              <img src={logo} alt="logo" className="max-width-200" />
-            </Col>
-            <Col xs={6}>
-              <img
-                src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
-                className="fluid max-width-100"
-                alt="paypal-logo"
-              />
-            </Col>
-            <Col sm={12}>
-              <h5 className="text-center text-warning">
-                Bespoke training items available using the club logo
-              </h5>
-            </Col>
-          </Row>
-        </Container>
 
-        <Container className="bg-dark">
+        <Row className="text-center align-items-center bg-primary mx-0">
+          <Col xs={6} className="my-3">
+            <img src={logo} alt="logo" className="max-width-200" />
+          </Col>
+          <Col xs={6}>
+            <img
+              src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
+              className="fluid max-width-100"
+              alt="paypal-logo"
+            />
+          </Col>
+          <Col sm={12}>
+            <h5 className="text-center text-warning">
+              Bespoke training items available using the club logo
+            </h5>
+          </Col>
+        </Row>
+
+        <div className="bg-dark">
           <Navbar
             expand="sm"
             collapseOnSelect
@@ -64,7 +63,7 @@ const ShopScreen = ({ match }) => {
           >
             <Navbar.Toggle aria-controls="shop-nav" />
             <Navbar.Collapse id="shop-nav">
-              <Nav className="me-auto">
+              <Nav className="mx-auto">
                 <Nav.Link onClick={() => setFilterBy("uniform/gi")} href="#">
                   Suits
                 </Nav.Link>
@@ -83,77 +82,77 @@ const ShopScreen = ({ match }) => {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
-        </Container>
 
-        {loading ? (
-          <Loader variant="warning" />
-        ) : error ? (
-          <Message variant="warning" heading="Error loading products">
-            {error}
-          </Message>
-        ) : (
-          <>
-            {!filterBy && (
-              <Container>
-                <Row className="align-items-center bg-primary text-center p-2">
-                  <Col xs={12} sm={2} md={2}></Col>
-                  <Col xs={12} sm={8} md={8} className="bg-light">
-                    <h3 className="text-center">Featured Products</h3>
-                    <ProductCarousel />
-                  </Col>
-                  <Col xs={12} sm={2} md={2}></Col>
-                </Row>
-              </Container>
-            )}
-            {!filterBy ? (
-              <>
-                <h5 className="mt-4 border-bottom border-warning pb-1">
-                  Browse all of our products
-                </h5>
+          {loading ? (
+            <Loader variant="warning" />
+          ) : error ? (
+            <Message variant="warning" heading="Error loading products">
+              {error}
+            </Message>
+          ) : (
+            <>
+              {!filterBy && (
+                <Container>
+                  <Row className="align-items-center bg-primary text-center p-2">
+                    <Col xs={12} sm={2} md={2}></Col>
+                    <Col xs={12} sm={8} md={8} className="bg-light">
+                      <h3 className="text-center">Featured Products</h3>
+                      <ProductCarousel />
+                    </Col>
+                    <Col xs={12} sm={2} md={2}></Col>
+                  </Row>
+                </Container>
+              )}
+              {!filterBy ? (
+                <>
+                  <h5 className="mt-4 border-bottom border-warning pb-1 text-light mx-1">
+                    Browse all of our products
+                  </h5>
 
-                <Row className="no-gutters">
-                  {products.map((product) => (
-                    <Col
-                      xs={12}
-                      sm={6}
-                      md={4}
-                      key={product._id}
-                      className="d-flex align-items-stretch"
-                    >
-                      <Product product={product} />
-                    </Col>
-                  ))}
-                </Row>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <ProductPaginate
-                    pages={pages}
-                    page={page}
-                    className="d-flex justify-content-center"
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <h5 className="mt-4 border-bottom border-warning pb-1 text-white">
-                  Browse {filterBy}
-                </h5>
-                <Row className="no-gutters">
-                  {products.map((product) => (
-                    <Col
-                      xs={6}
-                      sm={6}
-                      md={4}
-                      key={product._id}
-                      className="d-flex align-items-stretch"
-                    >
-                      <Product product={product} />
-                    </Col>
-                  ))}
-                </Row>
-              </>
-            )}
-          </>
-        )}
+                  <Row className="no-gutters">
+                    {products.map((product) => (
+                      <Col
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        key={product._id}
+                        className="d-flex align-items-stretch"
+                      >
+                        <Product product={product} />
+                      </Col>
+                    ))}
+                  </Row>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <ProductPaginate
+                      pages={pages}
+                      page={page}
+                      className="d-flex justify-content-center"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h5 className="mt-4 border-bottom border-warning pb-1 text-white mx-1">
+                    Browse {filterBy}
+                  </h5>
+                  <Row className="no-gutters">
+                    {products.map((product) => (
+                      <Col
+                        xs={6}
+                        sm={6}
+                        md={4}
+                        key={product._id}
+                        className="d-flex align-items-stretch"
+                      >
+                        <Product product={product} />
+                      </Col>
+                    ))}
+                  </Row>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </Container>
     </div>
   );

@@ -12,7 +12,7 @@ dotenv.config();
 
 const client = gocardless(
   process.env.GoCardlessAccessToken,
-  constants.Environments.Sandbox
+  constants.Environments.Live
 );
 
 // @desc confirm dd setup and update database
