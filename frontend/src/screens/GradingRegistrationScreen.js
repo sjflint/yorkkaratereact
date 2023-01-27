@@ -92,7 +92,7 @@ const GradingRegistrationScreen = ({ match }) => {
         },
       };
       let res = await axios.post(
-        `https://www.zanshintest.com/api/grading/${application.eventId}`,
+        `https://www.yorkkarate.net/api/grading/${application.eventId}`,
         application,
         config
       );

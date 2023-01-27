@@ -67,11 +67,17 @@ const RegistrationForm = () => {
   const validationSchema = Yup.object({
     firstName: Yup.string()
       .required("Required")
-      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field ")
+      .matches(
+        /^[a-zA-Z-']+$/,
+        "Only letters or '-' are allowed for this field "
+      )
       .trim(),
     lastName: Yup.string()
       .required("Required")
-      .matches(/^[a-zA-Z]+$/, "Only letters are allowed for this field ")
+      .matches(
+        /^[a-zA-Z-']+$/,
+        "Only letters or '-' are allowed for this field "
+      )
       .trim(),
     dateOfBirth: Yup.date().required("Required"),
     medicalStatus: Yup.string().required("Required"),

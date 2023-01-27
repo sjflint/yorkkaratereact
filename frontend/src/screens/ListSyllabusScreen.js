@@ -191,7 +191,7 @@ const ListSyllabusScreen = ({ history, match }) => {
   }
 
   const marker = (num) => {
-    return num === 1 ? "st" : num === 2 ? "nd" : "th";
+    return num === 1 ? "st" : num === 2 ? "nd" : num === 3 ? "rd" : "th";
   };
 
   return (

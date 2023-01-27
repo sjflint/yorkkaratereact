@@ -16,7 +16,7 @@ Meta.defaultProps = {
   description: "York Karate Dojo - a traditional shotokan karate organisation",
   keywords: "shotokan, karate, York, Martial arts, combat, Japan",
   image:
-    "https://www.zanshintest.com/static/media/logo2021.22676b1922c790e5e279.png",
+    "https://www.yorkkarate.net/static/media/logo2021.22676b1922c790e5e279.png",
 };
 
 export default Meta;

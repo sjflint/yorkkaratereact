@@ -11,7 +11,10 @@ import {
 } from "../actions/attendanceActions";
 import { cancelPayment } from "../actions/directDebitActions";
 import { membersList } from "../actions/memberActions";
-import { listTrainingSessions } from "../actions/trainingSessionActions";
+import {
+  addMyClass,
+  listTrainingSessions,
+} from "../actions/trainingSessionActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import SearchBox from "../components/SearchBox";
@@ -396,6 +399,17 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                     >
                       + Add to Class
                     </Button>
+                    {/* <Button
+                      variant="outline-success"
+                      className="btn-sm"
+                      onClick={() => {
+                        const id = { memberId: member._id, classId: classId };
+                        dispatch(addMyClass(id));
+                      }}
+                    >
+                      + Add to Class
+                    </Button> */}
+                    {/* can be used to add members via admin register screen if needed */}
                   </td>
                 </tr>
               );

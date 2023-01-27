@@ -73,6 +73,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
       },
       { new: true }
     );
+
     if (req.body.classList.length !== 0) {
       const paymentDetails = {
         _id: member._id,
@@ -87,7 +88,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
       subject: "New class added",
       message: `<h4>${member.firstName}, we have upgraded your membership to include an extra class per week</h4>
               <p>We have added the following class to your training schedule:</p>
-              <p>${session.name}<br/>${session.location}<br/>${session.times}   
+              <p>${session.name}<br/>${session.location}<br/>${session.times}
             `,
       link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "View your training sessions",

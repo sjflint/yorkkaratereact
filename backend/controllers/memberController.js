@@ -14,7 +14,7 @@ dotenv.config();
 
 // Format first name and last name to uppercase first letter and lower case for the rest
 const formatName = (name) => {
-  const removeNoneAlpha = name.replace(/[^a-z0-9]/gi, "");
+  const removeNoneAlpha = name.replace(/[^a-z0-9-']/gi, "");
   const nameLowerCase = removeNoneAlpha.toLowerCase().trim();
   return nameLowerCase.charAt(0).toUpperCase() + nameLowerCase.slice(1);
 };

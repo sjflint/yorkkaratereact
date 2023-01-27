@@ -38,44 +38,31 @@ const HomeScreen = () => {
             </Col>
           </Row>
 
-          <>
-            <p>
-              Welcome to York Karate Dojo. Please take a minute to explore our
-              site and discover what we do. Should You have any questions,
-              please don't hesitate to <Link to="/contact">contact us</Link>.
-              <br />
-              <br /> Our ethos is very simple. We aim to provide an excellent
-              standard of karate training. We are interested in training those
-              who are very determined to achieve their potential within karate,
-              as well as developing other skills that are of wider benefit.
-              Karate has long been hailed as an activity to stimulate personal
-              growth, be it physical strength and fitness or defensive skills,
-              emotional nurturing through inner confidence and belief or
-              learning to appreciate the importance of respect and discipline.{" "}
-              <br />
-            </p>
-            <div className="text-center text-warning">
-              ----------------------------------------------
-            </div>
-            <br />
-            <p>Our club motto is</p>
-            <p className="fw-bold mb-0">'Nana Korobi, ya oki'</p>
-            <p className="fst-italic">fall down 7 times, stand up 8.</p>
-            Simon Flint <br />
-            Instructor
-          </>
-          <Row className="align-items-start">
-            <Col lg={6} sm={12} className="p-2">
+          <Row>
+            <Col lg={6}>
+              <p>
+                Welcome to York Karate Dojo. Please take a minute to explore our
+                site and discover what we do. Should You have any questions,
+                please don't hesitate to <Link to="/contact">contact us</Link>.
+                <br />
+                <br /> Our ethos is very simple. We aim to provide an excellent
+                standard of karate training. We are interested in training those
+                who are very determined to achieve their potential within
+                karate, as well as developing other skills that are of wider
+                benefit. Karate has long been hailed as an activity to stimulate
+                personal growth, be it physical strength and fitness or
+                defensive skills, emotional nurturing through inner confidence
+                and belief or learning to appreciate the importance of respect
+                and discipline. <br />
+              </p>
+            </Col>
+
+            <Col lg={6}>
               <div className="p-2 bg-primary">
                 <Video
                   poster={poster2Img}
                   mp4="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/yorkkarate.mp4"
                 />
-              </div>
-            </Col>
-            <Col lg={6} sm={12} className="p-2">
-              <div className="p-2 bg-primary">
-                <Video mp4="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/VID-20220517-WA0000.mp4" />
               </div>
             </Col>
           </Row>

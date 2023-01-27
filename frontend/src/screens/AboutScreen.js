@@ -69,6 +69,17 @@ const AboutScreen = () => {
           </Row>
         </section>
       </Container>
+      {/* **** Todo - add club motto info here */}
+      <Container className="text-center pb-4">
+        <h3 className="text-center pb-2 border-bottom border-warning">
+          Our club motto
+        </h3>
+        <div className="p-2 bg-primary max-width-700 mx-auto">
+          <Video mp4="https://york-karate-uploads.s3.eu-west-2.amazonaws.com/VID-20220517-WA0000.mp4" />
+        </div>
+        <p className="fw-bold mb-0">'Nana Korobi, ya oki'</p>
+        <p className="fst-italic">fall down 7 times, stand up 8.</p>
+      </Container>
       <Container>
         <h3 className="text-center my-3 border-bottom border-warning pb-2">
           Meet the instructors
@@ -90,7 +101,7 @@ const AboutScreen = () => {
             if (instructor.isInstructor) {
               return (
                 <>
-                  <section className="pb-4">
+                  <section className="pb-4 border-bottom border-warning">
                     <Row className="no-gutters my-3 p-3">
                       <Col md={6}>
                         <img
@@ -119,7 +130,9 @@ const AboutScreen = () => {
                             (grading) => {
                               return (
                                 <ListGroupItem key={Math.random()}>
-                                  {`${grading[0]}: ${grading[1]}`}
+                                  {`${grading[0]}: ${new Date(
+                                    grading[1]
+                                  ).toLocaleDateString()}`}
                                 </ListGroupItem>
                               );
                             }
