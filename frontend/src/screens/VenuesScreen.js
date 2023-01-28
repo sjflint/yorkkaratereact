@@ -34,7 +34,7 @@ const VenuesScreen = () => {
               className="bg-primary p-1"
             />
             <Card.Body>
-              <Card.Title>Tuesday / Wednesday / Friday</Card.Title>
+              <Card.Title>Tuesday / Wednesday</Card.Title>
               <Card.Text>
                 Joseph Rowntree School Haxby Rd, York YO32 4BZ
               </Card.Text>
@@ -64,7 +64,7 @@ const VenuesScreen = () => {
               className="bg-primary p-1"
             />
             <Card.Body>
-              <Card.Title>Saturday</Card.Title>
+              <Card.Title>Friday / Saturday</Card.Title>
               <Card.Text>
                 Strensall Village Hall, Strensall, York YO32 5XW
               </Card.Text>

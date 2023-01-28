@@ -134,9 +134,11 @@ const ListMembersScreen = ({ history, match }) => {
               })}
             </tbody>
           </Table>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <MemberPaginate pages={pages} page={page} editList={true} />
-          </div>
+          <Container>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <MemberPaginate pages={pages} page={page} editList={true} />
+            </div>
+          </Container>
         </>
       )}
 
