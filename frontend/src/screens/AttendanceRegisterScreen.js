@@ -10,7 +10,7 @@ import {
   attendeeExtraAdd,
 } from "../actions/attendanceActions";
 import { cancelPayment } from "../actions/directDebitActions";
-import { membersList } from "../actions/memberActions";
+import { changeAttRecord, membersList } from "../actions/memberActions";
 import {
   addMyClass,
   listTrainingSessions,
@@ -50,6 +50,9 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     memberList,
   } = listMembers;
 
+  const memberAttRecord = useSelector((state) => state.memberAttRecord);
+  const { success } = memberAttRecord;
+
   useEffect(() => {
     if (!memberInfo) {
       history.push(
@@ -66,6 +69,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     }
   }, [
     dispatch,
+    success,
     classId,
     keyword,
     history,
@@ -211,7 +215,28 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                   if (participant.dateOfBirth) {
                     return (
                       <tr key={participant._id}>
-                        <td>
+                        <td className="d-flex align-items-center justify-content-between">
+                          {/* To allow instructor to adjust att record. Should be removed once task completed */}
+                          <div className="d-flex flex-column">
+                            <div>
+                              <i
+                                className="text-link fa-solid fa-caret-up fa-2x"
+                                onClick={() =>
+                                  dispatch(changeAttRecord(participant._id, 1))
+                                }
+                              ></i>
+                            </div>
+                            <div>{participant.attendanceRecord}</div>
+                            <div>
+                              <i
+                                className="text-link fa-solid fa-caret-down fa-2x"
+                                onClick={() =>
+                                  dispatch(changeAttRecord(participant._id, -1))
+                                }
+                              ></i>
+                            </div>
+                          </div>
+
                           <Link to={`/admin/members/${participant._id}/edit`}>
                             {participant.firstName} {participant.lastName}{" "}
                             {participant.medicalStatus === "Yes medical" && (

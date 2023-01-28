@@ -15,7 +15,7 @@ const getTrainingSessions = asyncHandler(async (req, res) => {
   const trainingSessions = await TrainingSession.find({})
     .populate(
       "participants",
-      "id firstName lastName email phone medicalStatus dateOfBirth"
+      "id firstName lastName email phone medicalStatus dateOfBirth attendanceRecord"
     )
     .populate(
       "trialParticipants",

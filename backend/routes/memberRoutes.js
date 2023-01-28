@@ -18,6 +18,7 @@ import {
   getFormerBlackBelts,
   getPublicWelfareList,
   getMemberWelfareList,
+  updateAttRecord,
 } from "../controllers/memberController.js";
 import {
   protect,
@@ -41,6 +42,7 @@ router.route("/formerblackbelts").get(getFormerBlackBelts);
 router.route("/publicWelfareList").get(getPublicWelfareList);
 router.route("/memberWelfareList").get(protect, getMemberWelfareList);
 router.route("/public/:id").get(getPublicMemberById);
+router.route("/attrecord/:id/:value").put(updateAttRecord);
 router
   .route("/:id")
   .delete(protect, admin, deleteMember)

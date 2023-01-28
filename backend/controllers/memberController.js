@@ -561,6 +561,21 @@ const getMemberWelfareList = asyncHandler(async (req, res) => {
   }
 });
 
+const updateAttRecord = asyncHandler(async (req, res) => {
+  const member = await Member.findById({ _id: req.params.id });
+
+  if (member) {
+    let attRecord = Number(member.attendanceRecord);
+    console.log(attRecord);
+    member.attendanceRecord = attRecord + Number(req.params.value);
+    member.save();
+    res.status(200).json(member);
+  } else {
+    res.status(404);
+    throw new Error("Member not found");
+  }
+});
+
 export {
   authMember,
   getMemberProfile,
@@ -580,4 +595,5 @@ export {
   addTotalMembersToArray,
   getPublicWelfareList,
   getMemberWelfareList,
+  updateAttRecord,
 };

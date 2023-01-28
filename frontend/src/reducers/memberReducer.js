@@ -20,6 +20,9 @@ import {
   LIST_WELFARE_PUBLIC_FAIL,
   LIST_WELFARE_PUBLIC_REQUEST,
   LIST_WELFARE_PUBLIC_SUCCESS,
+  MEMBER_ATTRECORD_FAIL,
+  MEMBER_ATTRECORD_REQUEST,
+  MEMBER_ATTRECORD_SUCCESS,
   MEMBER_DELETE_FAIL,
   MEMBER_DELETE_REQUEST,
   MEMBER_DELETE_SUCCESS,
@@ -239,6 +242,19 @@ export const welfareMemberReducer = (state = {}, action) => {
     case LIST_WELFARE_MEMBER_SUCCESS:
       return { loading: false, welfareMemberList: action.payload };
     case LIST_WELFARE_MEMBER_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const memberAttRecordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MEMBER_ATTRECORD_REQUEST:
+      return { loading: true };
+    case MEMBER_ATTRECORD_SUCCESS:
+      return { loading: false, success: true };
+    case MEMBER_ATTRECORD_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

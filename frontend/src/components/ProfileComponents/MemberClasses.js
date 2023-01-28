@@ -87,7 +87,7 @@ const MemberClasses = () => {
   const memberAge = getAge(member.dateOfBirth);
   if (filteredSessions && member) {
     filteredSessions = filteredSessions.filter((trainingSessions) => {
-      if (memberAge < 9) {
+      if (memberAge < 9 && member.kyuGrade > 10) {
         return trainingSessions.juniorSession === true;
       } else if (
         member.kyuGrade <= trainingSessions.minGradeLevel &&

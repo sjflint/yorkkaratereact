@@ -72,10 +72,22 @@ const MemberTrainingSessions = () => {
       });
     });
 
+    // calculate age
+    const getAge = (birthDate) =>
+      Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
+
     if (filteredSessions && member) {
+      // get age
+      const memberAge = getAge(member.dateOfBirth);
       filteredSessions = filteredSessions.filter((trainingSession) => {
-        if (member.age < 9) {
+        if (memberAge < 8) {
           return trainingSession.juniorSession === true;
+        } else if (
+          memberAge < 9 &&
+          member.kyuGrade <= trainingSession.minGradeLevel &&
+          member.kyuGrade >= trainingSession.maxGradeLevel
+        ) {
+          return true;
         } else if (
           member.kyuGrade <= trainingSession.minGradeLevel &&
           member.kyuGrade >= trainingSession.maxGradeLevel &&

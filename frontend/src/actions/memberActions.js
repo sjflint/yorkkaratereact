@@ -19,6 +19,9 @@ import {
   LIST_WELFARE_PUBLIC_FAIL,
   LIST_WELFARE_PUBLIC_REQUEST,
   LIST_WELFARE_PUBLIC_SUCCESS,
+  MEMBER_ATTRECORD_FAIL,
+  MEMBER_ATTRECORD_REQUEST,
+  MEMBER_ATTRECORD_SUCCESS,
   MEMBER_DELETE_FAIL,
   MEMBER_DELETE_REQUEST,
   MEMBER_DELETE_SUCCESS,
@@ -333,6 +336,38 @@ export const deleteMember = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: MEMBER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const changeAttRecord = (id, value) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: MEMBER_ATTRECORD_REQUEST });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    await axios.put(`/api/members/attrecord/${id}/${value}`, config);
+
+    dispatch({
+      type: MEMBER_ATTRECORD_SUCCESS,
+    });
+    dispatch(membersList());
+  } catch (error) {
+    dispatch({
+      type: MEMBER_ATTRECORD_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
