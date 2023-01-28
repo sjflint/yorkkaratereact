@@ -216,17 +216,17 @@ router.post("/image", imageUpload.single("image"), async (req, res) => {
         dbRecord.save();
       } else {
         // delete old image
-        const dbRecord = await db.findById(req.body.id);
+        // const dbRecord = await db.findById(req.body.id);
 
-        const imageToDelete = dbRecord[dbEntry].slice(55);
+        // const imageToDelete = dbRecord[dbEntry].slice(55);
 
-        console.log(imageToDelete);
-        const params = {
-          Bucket: bucketName,
-          Key: imageToDelete,
-        };
-        const command = new DeleteObjectCommand(params);
-        await s3.send(command);
+        // console.log(imageToDelete);
+        // const params = {
+        //   Bucket: bucketName,
+        //   Key: imageToDelete,
+        // };
+        // const command = new DeleteObjectCommand(params);
+        // await s3.send(command);
 
         // add new image to database
         await db.findOneAndUpdate(
