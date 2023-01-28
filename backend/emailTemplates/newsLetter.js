@@ -142,6 +142,7 @@ const newsLetterEmail = asyncHandler(async () => {
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
+    pool: true,
     auth: {
       user: "info@yorkkarate.net",
       pass: process.env.GMAIL_SECRET,
@@ -150,7 +151,8 @@ const newsLetterEmail = asyncHandler(async () => {
 
   const mailOptions = {
     from: "info@yorkkarate.net",
-    to: recipients,
+    to: "info@yorkkarate.net",
+    bcc: recipients,
     subject: "York Karate News",
     text: "All the latest news from York Karate Dojo",
     html: `

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, ListGroup, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { listFinancials } from "../actions/financialActions";
 import {
   addMyClass,
   deleteMyClass,
@@ -34,6 +35,13 @@ const MemberTrainingSessions = () => {
     error: classListError,
     sessions,
   } = memberClassList;
+
+  const financialList = useSelector((state) => state.financialList);
+  const {
+    loading: financialsLoading,
+    financials,
+    error: financialsError,
+  } = financialList;
 
   // Check for delete/switch eligibility
   let changeDate;
@@ -83,6 +91,7 @@ const MemberTrainingSessions = () => {
 
   useEffect(() => {
     dispatch(listTrainingSessions());
+    dispatch(listFinancials());
   }, [dispatch]);
 
   //  Add session
@@ -234,7 +243,17 @@ const MemberTrainingSessions = () => {
           </h5>
           <h5>
             Monthly training fees will increase by:{" "}
-            {sessions && sessions.length === 0 ? "£0.00" : "£3.00"}
+            {sessions && sessions.length === 0
+              ? "£0.00"
+              : financials
+              ? (financials.costOfAdditionalClass / 100).toLocaleString(
+                  "en-GB",
+                  {
+                    style: "currency",
+                    currency: "GBP",
+                  }
+                )
+              : null}
           </h5>
           <Row>
             {filteredSessions &&
@@ -349,7 +368,7 @@ const MemberTrainingSessions = () => {
           </h5>
 
           <Card className="mb-3">
-            <Card.Header className="bg-secondary text-white">
+            <Card.Header className="bg-secondary">
               {sessionToDelete.name}
             </Card.Header>
             <Card.Body className="bg-light text-primary">
@@ -369,7 +388,7 @@ const MemberTrainingSessions = () => {
               filteredSessions.map((session) => (
                 <Col md={6} className="mb-3" key={session._id}>
                   <Card>
-                    <Card.Header className="bg-secondary text-white">
+                    <Card.Header className="bg-secondary">
                       {session.name}
                     </Card.Header>
                     <Card.Body className="bg-light text-primary">

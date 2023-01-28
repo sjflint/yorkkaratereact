@@ -521,7 +521,9 @@ const getPublicWelfareList = asyncHandler(async (req, res) => {
       ddsuccess: true,
     },
     { firstName: 1, lastName: 1, profileImg: 1 }
-  );
+  ).sort({
+    danGrade: -1,
+  });
 
   if (members) {
     res.status(200).json(members);
@@ -547,7 +549,9 @@ const getMemberWelfareList = asyncHandler(async (req, res) => {
       ddsuccess: true,
     },
     { firstName: 1, lastName: 1, profileImg: 1, phone: 1, email: 1 }
-  );
+  ).sort({
+    danGrade: -1,
+  });
 
   if (members) {
     res.status(200).json(members);

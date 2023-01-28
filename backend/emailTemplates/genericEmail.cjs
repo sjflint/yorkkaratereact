@@ -8,6 +8,7 @@ dotenv.config();
 const genericEmail = asyncHandler(async (emailDetails) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
+    pool: true,
     auth: {
       user: "info@yorkkarate.net",
       pass: process.env.GMAIL_SECRET,
@@ -23,7 +24,8 @@ const genericEmail = asyncHandler(async (emailDetails) => {
 
   const mailOptions = {
     from: "info@yorkkarate.net",
-    to: emailDetails.recipientEmail,
+    to: "info@yorkkarate.net",
+    bcc: emailDetails.recipientEmail,
     subject: emailDetails.subject,
     text: emailDetails.subject,
     attachments: emailDetails.attachments,
