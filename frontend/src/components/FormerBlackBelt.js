@@ -5,7 +5,7 @@ const FormerBlackBelt = ({ blackBelt }) => {
 
   return (
     <>
-      <Card className="bg-primary">
+      <Card className="bg-black">
         <div className="profileImg mx-auto">
           <Card.Img variant="top" src={blackBelt.profileImg} alt="" />
         </div>

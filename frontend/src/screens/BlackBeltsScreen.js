@@ -59,8 +59,7 @@ const BlackBeltScreen = () => {
         </h3>
         <p>
           We are proud of every member who progressed to black belt whilst
-          training at our club, and are thankful for what they contributed. They
-          will be forever memorialised here.
+          training at our club, and are thankful for what they contributed.
         </p>
         {formerLoading ? (
           <Loader variant="warning" />
@@ -74,9 +73,9 @@ const BlackBeltScreen = () => {
               <>
                 <Col
                   xs={6}
-                  sm={4}
-                  md={3}
-                  lg={2}
+                  sm={6}
+                  md={4}
+                  lg={3}
                   key={blackBelt._id}
                   className="d-flex align-items-stretch"
                 >
