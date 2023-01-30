@@ -67,31 +67,29 @@ const createEvent = asyncHandler(async (req, res) => {
 
   const createdEvent = await event.save();
 
-  // create paragraphs from description
-  let paragraphs = "";
-  event.description.forEach((paragraph) => {
-    paragraphs = `${paragraphs}<p>${paragraph}</p>`;
-  });
   const dateOfEvent = new Date(event.dateOfEvent).toLocaleDateString();
 
   // send email to all members
   const members = await Member.find({ ddsuccess: true });
   if (members) {
+    let recipients = "";
     members.forEach((member) => {
-      genericEmail({
-        recipientEmail: member.email,
-        recipientName: member.firstName,
-        subject: event.title,
-        message: `<h4>${event.title}</h4>
-      <p>Date: ${dateOfEvent}.</p>
-      <p>Location: ${event.location}.</p>
-      ${paragraphs}
-      `,
-        link: `${process.env.DOMAIN_LINK}/event/${event._id}`,
-        linkText: "View more details / Register",
-        image: event.image,
-        attachments: [],
-      });
+      recipients = `${recipients}${member.email};`;
+    });
+    console.log(recipients);
+    genericEmail({
+      recipientEmail: recipients,
+      recipientName: "Club Member",
+      subject: event.title,
+      message: `<h4>${event.title}</h4>
+    <p>Date: ${dateOfEvent}.</p>
+    <p>Location: ${event.location}.</p>
+    ${event.description}
+    `,
+      link: `${process.env.DOMAIN_LINK}/event/${event._id}`,
+      linkText: "View more details / Register",
+      image: event.image,
+      attachments: [],
     });
   }
 

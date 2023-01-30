@@ -359,8 +359,30 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
             record.extraParticipants.map((participant) => {
               return (
                 <tr key={participant._id}>
-                  <td>
-                    {participant.firstName} {participant.lastName}
+                  <td className="d-flex align-items-center justify-content-between">
+                    {/* To allow instructor to adjust att record. Should be removed once task completed */}
+                    <div className="d-flex flex-column">
+                      <div>
+                        <i
+                          className="text-link fa-solid fa-caret-up fa-2x"
+                          onClick={() =>
+                            dispatch(changeAttRecord(participant._id, 1))
+                          }
+                        ></i>
+                      </div>
+                      <div>{participant.attendanceRecord}</div>
+                      <div>
+                        <i
+                          className="text-link fa-solid fa-caret-down fa-2x"
+                          onClick={() =>
+                            dispatch(changeAttRecord(participant._id, -1))
+                          }
+                        ></i>
+                      </div>
+                    </div>
+                    <div>
+                      {participant.firstName} {participant.lastName}
+                    </div>
                   </td>
                   <td>
                     <i className="fa-solid fa-circle-check text-success fa-3x"></i>

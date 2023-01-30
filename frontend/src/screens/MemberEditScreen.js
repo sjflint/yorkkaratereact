@@ -202,7 +202,7 @@ const MemberEditScreen = ({ match, history }) => {
       values.kyuGrade = 0;
     }
 
-    if (values.medicalDetails !== "") {
+    if (values.medicalDetails !== "" || values.medicalDetails !== "-") {
       values.medicalStatus = "Yes medical";
     } else {
       values.medicalStatus = "false";

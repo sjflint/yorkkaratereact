@@ -49,7 +49,9 @@ const newsLetterEmail = asyncHandler(async () => {
              ${filteredEvents[i].title}
           </h4>
           <small>
-            ${filteredEvents[i].dateOfEvent.toLocaleDateString()}
+            ${new Date(filteredEvents[i].dateOfEvent).toLocaleDateString(
+              "en-GB"
+            )}
           </small>
           <p>
             ${filteredEvents[i].location}
@@ -103,7 +105,7 @@ const newsLetterEmail = asyncHandler(async () => {
           ${articles[i].title}
         </h4>
         <small>
-        ${articles[i].dateCreated.toLocaleDateString()}
+        ${new Date(articles[i].dateCreated).toLocaleDateString("en-GB")}
         </small>
         <p style="text-align: left;">
         ${articles[i].leader}

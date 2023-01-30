@@ -73,10 +73,10 @@ const BlackBeltScreen = () => {
             {formerBlackBelts.map((blackBelt) => (
               <>
                 <Col
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
+                  xs={6}
+                  sm={4}
+                  md={3}
+                  lg={2}
                   key={blackBelt._id}
                   className="d-flex align-items-stretch"
                 >

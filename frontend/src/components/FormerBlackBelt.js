@@ -5,15 +5,17 @@ const FormerBlackBelt = ({ blackBelt }) => {
 
   return (
     <>
-      <Card>
-        <Card.Img variant="top" src={blackBelt.profileImg} alt="" />
-        <Card.Body>
+      <Card className="bg-primary">
+        <div className="profileImg mx-auto">
+          <Card.Img variant="top" src={blackBelt.profileImg} alt="" />
+        </div>
+        <Card.Body className="bg-light">
           <Card.Title className="text-center border-bottom border-warning pb-1">
             {blackBelt.firstName} {blackBelt.lastName}
           </Card.Title>
           <ListGroup className="list-group-flush">
             <ListGroupItem>
-              Current Grade: {blackBelt.danGrade}
+              Grade: {blackBelt.danGrade}
               {blackBelt.danGrade === 1
                 ? "st"
                 : blackBelt.danGrade === 2
