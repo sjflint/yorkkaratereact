@@ -31,6 +31,10 @@ import {
   TRAINING_SESSION_ID_REQUEST,
   TRAINING_SESSION_ID_SUCCESS,
   TRAINING_SESSION_ID_FAIL,
+  TRAINING_SESSION_CANCEL_REQUEST,
+  TRAINING_SESSION_CANCEL_SUCCESS,
+  TRAINING_SESSION_CANCEL_FAIL,
+  TRAINING_SESSION_CANCEL_RESET,
 } from "../constants/trainingSessionConstants";
 
 export const listTrainingSessionsReducer = (
@@ -216,6 +220,21 @@ export const trainingSessionUpdateReducer = (state = {}, action) => {
     case TRAINING_SESSION_UPDATE_FAIL:
       return { loadingTrainingSession: false, error: action.payload };
     case TRAINING_SESSION_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const trainingSessionCancelReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRAINING_SESSION_CANCEL_REQUEST:
+      return { loading: true };
+    case TRAINING_SESSION_CANCEL_SUCCESS:
+      return { loading: false, success: true };
+    case TRAINING_SESSION_CANCEL_FAIL:
+      return { loadingTrainingSession: false, error: action.payload };
+    case TRAINING_SESSION_CANCEL_RESET:
       return {};
     default:
       return state;

@@ -212,6 +212,14 @@ const MemberDetails = () => {
                     currency: "GBP",
                   })}
                 </ListGroup.Item>
+                <ListGroup.Item className="bg-light text-warning">
+                  <strong>Free Class Credits</strong>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  {member.freeClasses > 0
+                    ? `${member.freeClasses} free class credits`
+                    : "No free class credits"}
+                </ListGroup.Item>
               </Col>
 
               {member.firstName && member.gradeLevel !== "Advanced" && (

@@ -78,7 +78,7 @@ const AttendanceScreen = ({ match, history }) => {
         </h3>
         <Row>
           {todaysClasses.map((indClass) => (
-            <Col key={indClass._id}>
+            <Col key={indClass._id} lg={4} md={6} sm={12} className="mb-3">
               <Card className="h-100">
                 <Card.Header>{indClass.name}</Card.Header>
                 <Card.Body>

@@ -16,6 +16,7 @@ import {
   listTrainingSessions,
   updateTrainingSession,
   trainingSessionById,
+  cancelTrainingSession,
 } from "../actions/trainingSessionActions";
 import FormikControl from "../components/FormComponents/FormikControl";
 import Loader from "../components/Loader";
@@ -30,6 +31,9 @@ const ListClassesScreen = ({ history }) => {
   const [editModal, setEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [updateId, setUpdateId] = useState();
+  const [cancelModal, setCancelModal] = useState(false);
+  const [classIdToCancel, setClassIdToCancel] = useState("");
+  const [dateOfCancelledClass, setDateOfCancelledClass] = useState("");
 
   const dispatch = useDispatch();
 
@@ -74,6 +78,15 @@ const ListClassesScreen = ({ history }) => {
     success: successCreate,
   } = trainingSessionCreate;
 
+  const trainingSessionCancel = useSelector(
+    (state) => state.trainingSessionCancel
+  );
+  const {
+    loading: loadingCancel,
+    error: errorCancel,
+    success: successCancel,
+  } = trainingSessionCancel;
+
   useEffect(() => {
     if (!memberInfo) {
       history.push("/login?redirect=admin/editclasses");
@@ -81,6 +94,9 @@ const ListClassesScreen = ({ history }) => {
       history.push("/profile");
     } else {
       dispatch(listTrainingSessions());
+    }
+    if (successCancel) {
+      setCancelModal(false);
     }
   }, [
     dispatch,
@@ -90,6 +106,7 @@ const ListClassesScreen = ({ history }) => {
     successDelete,
     successCreate,
     successUpdate,
+    successCancel,
   ]);
 
   const deleteHandler = async () => {
@@ -123,6 +140,15 @@ const ListClassesScreen = ({ history }) => {
     values.times = `${values.startTime} - ${values.endTime}`;
     dispatch(updateTrainingSession(values));
     setEditModal(false);
+  };
+
+  const cancelClassHandler = async () => {
+    const classId = classIdToCancel;
+    const date = dateOfCancelledClass;
+
+    dispatch(cancelTrainingSession(classId, date));
+    // include free classes on membership page
+    // list cancelled classes coming up
   };
 
   const initialValues = {
@@ -260,6 +286,9 @@ const ListClassesScreen = ({ history }) => {
   return (
     <div className="mt-3">
       <Container fluid="lg">
+        {successCancel && (
+          <Message variant="success">Class successfuly cancelled</Message>
+        )}
         <div className="d-flex justify-content-between">
           <Button
             variant="outline-secondary"
@@ -312,6 +341,18 @@ const ListClassesScreen = ({ history }) => {
               <tr key={trainingSession._id}>
                 <td>
                   <small>{trainingSession.name}</small>
+                  <br />
+                  <Button
+                    variant="outline-danger"
+                    className="py-0"
+                    onClick={() => {
+                      setCancelModal(true);
+                      setClassIdToCancel("");
+                      setClassIdToCancel(trainingSession._id);
+                    }}
+                  >
+                    <i className="fas fa-minus"></i> Cancel Class
+                  </Button>
                 </td>
                 <td>
                   <small className="max-width-200">
@@ -693,6 +734,49 @@ const ListClassesScreen = ({ history }) => {
           <Button variant="secondary" onClick={() => setEditModal(false)}>
             Cancel
           </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* cancel class modal */}
+      <Modal show={cancelModal} onHide={() => setCancelModal(false)}>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">
+            Cancel this class (
+            {trainingSessions &&
+              classIdToCancel !== "" &&
+              trainingSessions.map((trainingSession) => {
+                if (trainingSession._id === classIdToCancel) {
+                  return trainingSession.location;
+                }
+              })}
+            ) on the specified date below
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {errorCancel && <Message variant="danger">{errorCancel}</Message>}
+          <p>Please specify the date of the cancelled class</p>
+          <form className="p-2">
+            <input
+              type="date"
+              onChange={(e) => setDateOfCancelledClass(e.target.value)}
+            />
+          </form>
+          This action will cancel the class on the selected date. This action
+          cannot be undone <br /> Are you sure?
+        </Modal.Body>
+        <Modal.Footer className="bg-dark">
+          <Button variant="secondary" onClick={() => setDeleteModal(false)}>
+            Close
+          </Button>
+          {loadingCancel ? (
+            <Button variant="danger" onClick={cancelClassHandler}>
+              <Loader />
+            </Button>
+          ) : (
+            <Button variant="danger" onClick={cancelClassHandler}>
+              Cancel Class
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </div>

@@ -279,9 +279,10 @@ const EmailMembersScreen = ({ history }) => {
                         ) : (
                           enquiries.length > 0 ||
                           (sendNewEmail === false && (
-                            <div className="d-flex text-success align-items-center my-3">
-                              <i className="fa-solid fa-circle-check fa-2x"></i>
-                              <p className="mb-0">
+                            <div className="d-flex text-success align-items-center my-5 bg-dark">
+                              <i className="fa-solid fa-circle-check fa-2x my-3"></i>
+                              <br />
+                              <p className="m-2">
                                 You're done - No Enquiries to respond to.
                               </p>
                             </div>

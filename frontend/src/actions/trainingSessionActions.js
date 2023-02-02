@@ -30,6 +30,9 @@ import {
   TRAINING_SESSION_ID_REQUEST,
   TRAINING_SESSION_ID_SUCCESS,
   TRAINING_SESSION_ID_FAIL,
+  TRAINING_SESSION_CANCEL_REQUEST,
+  TRAINING_SESSION_CANCEL_SUCCESS,
+  TRAINING_SESSION_CANCEL_FAIL,
 } from "../constants/trainingSessionConstants";
 
 export const listTrainingSessions = () => async (dispatch) => {
@@ -358,3 +361,42 @@ export const updateTrainingSession = (values) => async (dispatch, getState) => {
     });
   }
 };
+
+export const cancelTrainingSession =
+  (classId, date) => async (dispatch, getState) => {
+    const values = { classId, date };
+    try {
+      dispatch({
+        type: TRAINING_SESSION_CANCEL_REQUEST,
+      });
+
+      const {
+        memberLogin: { memberInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${memberInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        `/api/trainingsessions/:id`,
+        values,
+        config
+      );
+
+      dispatch({
+        type: TRAINING_SESSION_CANCEL_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: TRAINING_SESSION_CANCEL_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
