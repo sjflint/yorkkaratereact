@@ -388,7 +388,7 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
         subject: "Class has been amended",
         message: `<h4>${member.firstName}, we have amended a training session on the timetable</h4>
               <p>The class details are:</p>
-              <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}   
+              <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}
               <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
             `,
         link: `${process.env.DOMAIN_LINK}/profile?key=third`,
@@ -398,6 +398,49 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     }
 
     res.status(201).json(updatedTrainingSession);
+  } else {
+    res.status(404);
+    throw new Error("Training Session not found");
+  }
+});
+
+// @desc Cancel a training session
+// @route POST /api/trainingsessions/:id
+// @access Private/Admin
+const trainingSessionCancelled = asyncHandler(async (req, res) => {
+  const classId = req.body.classId;
+
+  const trainingSession = await TrainingSession.findById(classId);
+  if (trainingSession) {
+    const participants = trainingSession.participants;
+    const recipients = [];
+
+    for (const participant of participants) {
+      const member = await Member.findById(participant);
+
+      if (member) {
+        member.freeClasses++;
+        member.save();
+        recipients.push(member.email);
+        console.log(`free class added for ${member.firstName}`);
+      }
+    }
+    genericEmail({
+      recipientEmail: recipients,
+      subject: "A Class has been cancelled",
+      message: `<h4>Unfortunately, we have had to cancel one of your training sessions. We are sorry for the inconvenience.</h4>
+          <p>The class that has been cancelled is:</p>
+          <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${
+        trainingSession.times
+      }<br/>On the ${new Date(req.body.date).toLocaleDateString()}
+          <p>A free session has been added to your account to be used at any other suitable training session on the timetable. There is no need to book, simply turn up for the training session you would like to attend and the instructor will add you to the register.</p>
+          <p>Please accept my apology for the inconvenience</p>
+        `,
+      link: `${process.env.DOMAIN_LINK}/timetable`,
+      linkText: "View our timetable",
+      attachments: [],
+    });
+    res.status(201).json("class cancelled");
   } else {
     res.status(404);
     throw new Error("Training Session not found");
@@ -415,4 +458,5 @@ export {
   updateTimetableSession,
   createTimetableSession,
   getTrainingSessionById,
+  trainingSessionCancelled,
 };

@@ -116,6 +116,7 @@ const removeAttendeeRecord = asyncHandler(async (req, res) => {
 // @access Private/Instructor
 const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
   const todaysDate = new Date();
+  const memberId = req.body.memberId;
   const record = await Attendance.findById(req.body.recordId);
 
   const member = await Member.findById(req.body.memberId);
@@ -128,7 +129,14 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
   const lastExtraClassAdded = member.extraClassAdded.setDate(
     member.extraClassAdded.getDate() + 28
   );
-  if (lastExtraClassAdded < todaysDate) {
+
+  if (member.freeClasses > 0) {
+    await Member.findByIdAndUpdate({
+      memberId,
+      $inc: { freeClasses: -1 },
+    });
+    console.log("free class used");
+  } else if (lastExtraClassAdded < todaysDate) {
     console.log("no action");
   } else {
     // Charge DD for extra session

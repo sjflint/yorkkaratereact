@@ -11,6 +11,7 @@ import {
   deleteTimetableSession,
   updateTimetableSession,
   getTrainingSessionById,
+  trainingSessionCancelled,
 } from "../controllers/trainingSessionController.js";
 import { admin, protect } from "../middleware/authMiddleware.js";
 
@@ -29,6 +30,7 @@ router
   .route("/:id")
   .get(getTrainingSessionById)
   .delete(protect, admin, deleteTimetableSession)
-  .put(protect, admin, updateTimetableSession);
+  .put(protect, admin, updateTimetableSession)
+  .post(protect, admin, trainingSessionCancelled);
 
 export default router;

@@ -53,6 +53,7 @@ const memberSchema = mongoose.Schema(
     squadMember: { type: Boolean, default: false },
     bio: { type: String, default: "" },
     numberOfSessionsRequired: { type: Number },
+    freeClasses: { type: Number, default: 0 },
     trainingFees: { type: Number },
   },
   {
