@@ -158,26 +158,8 @@ const GradingRegistrationScreen = ({ match }) => {
             <ListGroup.Item>
               Name: {member.firstName} {member.lastName}
             </ListGroup.Item>
-            {/* {member.danGrade > 0 || member.kyuGrade === 1 ? (
-              <ListGroup.Item>
-                Grade: {grade}
-                <p className="text-danger">
-                  This grading course is only for kyu grades. Unfortunatley, you
-                  are not eligible.
-                </p>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Button
-                  variant="default"
-                  className="w-100 text-white"
-                  onClick={() => setShowModal(true)}
-                >
-                  You are eligible for the training course. Register Now
-                </Button>
-              </ListGroup.Item>
-            ) : ( */}
+
             <ListGroup.Item>Grade: {grade}</ListGroup.Item>
-            {/* )} */}
 
             {member.firstName && member.gradeLevel !== "Advanced" && (
               <ListGroup.Item className="text-center">

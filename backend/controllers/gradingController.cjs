@@ -35,14 +35,65 @@ const postGradingApplication = asyncHandler(async (req, res) => {
       // process payment and update grading course
       try {
         if (member.kyuGrade <= 1) {
-          console.log("registering for the training course");
-          // create financials value for course training fees
-          // create payment for the training fee
-          // create webhook for the training fee
-          // store attendees in new array on event model
-          // create option to view attendees on the grading screen
+          console.log("registering for the training course...");
+          const costOfTraining = financials.costOfTrainingCourse;
+          const payment = await client.payments.create(
+            {
+              amount: costOfTraining,
+              currency: "GBP",
+              description: "Course Training Fees",
+              links: {
+                mandate: mandate,
+              },
+              metadata: {
+                gradingId: req.params.id,
+              },
+            },
+            `${Math.random()} - payment ID`
+          );
+          if (payment) {
+            const gradingCourse = await Event.findById(req.params.id);
+            if (!gradingCourse) {
+              res.status(500);
+              throw new Error(
+                "Internal server error. Payment may have been taken but your application may not have been processed. Please contact us for assistance"
+              );
+            } else {
+              gradingCourse.trainingParticipants.push({
+                _id: member._id,
+                firstName: member.firstName,
+                lastName: member.lastName,
+                email: member.email,
+                phone: member.phone,
+                paymentStatus: "pending",
+                paymentId: payment.id,
+              });
+
+              await gradingCourse.save();
+
+              // Send confirmation email
+              const dateOfEvent = new Date(
+                gradingCourse.dateOfEvent
+              ).toLocaleDateString();
+              genericEmail({
+                recipientEmail: member.email,
+                recipientName: member.firstName,
+                subject: gradingCourse.title,
+                message: `<h4>${gradingCourse.title}</h4>
+                          <p>Date: ${dateOfEvent}.</p>
+                          <p>Location: ${gradingCourse.location}.</p>
+                          <p>Thank you for registering for the training session.</p>
+                        `,
+                link: `${process.env.DOMAIN_LINK}/event/${gradingCourse._id}`,
+                linkText: "View more details",
+                image: gradingCourse.image,
+                attachments: [],
+              });
+            }
+          }
+
           // Limit number of attendees
-          res.send("training application successful!");
+          res.send("training course application successful!");
         } else {
           const costOfGrading = financials.costOfGrading;
           console.log(`Cost of grading: ${costOfGrading}`);

@@ -36,7 +36,6 @@ const GradingScreen = ({ match, history }) => {
   }, [dispatch, memberInfo, history, match.params.id]);
 
   if (grading && grading.title) {
-    console.log(grading.participants);
     grading.participants.sort((a, b) =>
       a.grade > b.grade ? -1 : b.grade < a.grade ? 1 : 0
     );
@@ -65,6 +64,7 @@ const GradingScreen = ({ match, history }) => {
                 <ListGroup.Item>Location: {grading.location}</ListGroup.Item>
                 <ListGroup.Item>
                   Number of participants:{" "}
+                  {grading.participants && grading.participants.length}
                   {/* How to calculate number of participants */}
                 </ListGroup.Item>
               </ListGroup>
@@ -124,6 +124,45 @@ const GradingScreen = ({ match, history }) => {
                     </tr>
                   );
                 })}
+            </tbody>
+          </Table>
+
+          <h5 className="my-3 border-bottom border-warning text-center">
+            Training Course Participants
+          </h5>
+          <Table striped bordered hover>
+            <thead>
+              <tr className="text-center">
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              {grading.title && grading.trainingParticipants.length === 0 ? (
+                <tr>
+                  <td className="text-center text-danger">
+                    No Training Course Participants
+                  </td>
+                </tr>
+              ) : (
+                grading.title &&
+                grading.trainingParticipants.map((member) => {
+                  return (
+                    <tr key={member._id} className="text-center">
+                      <td>{`${member.firstName} ${member.lastName}`}</td>
+                      <td>
+                        <a href={`mailto:${member.email}`}>{member.email}</a>
+                      </td>
+                      <td>
+                        <a
+                          href={`tel:0${member.phone}`}
+                        >{`0${member.phone}`}</a>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </Table>
         </>

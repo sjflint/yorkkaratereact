@@ -11,6 +11,7 @@ const eventSchema = mongoose.Schema(
     location: { type: String, required: true },
     register: { type: String },
     participants: { type: Array, required: true, default: [] },
+    trainingParticipants: { type: Array, required: true, default: [] },
   },
   {
     timestamp: true,

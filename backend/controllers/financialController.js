@@ -32,6 +32,7 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     costOfAdditionalClass,
     costOfExtraFee,
     costOfGrading,
+    costOfTrainingCourse,
   } = req.body;
 
   baseLevelTrainingFees = Number(baseLevelTrainingFees * 100);
@@ -39,6 +40,7 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
   costOfAdditionalClass = Number(costOfAdditionalClass * 100);
   costOfExtraFee = Number(costOfExtraFee * 100);
   costOfGrading = Number(costOfGrading * 100);
+  costOfTrainingCourse = Number(costOfGrading * 100);
 
   const financials = await Financial.findOne({});
 
@@ -88,9 +90,11 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     financials.costOfGrading = costOfGrading;
     financials.joiningFee = joiningFee;
     financials.costOfExtraFee = costOfExtraFee;
+    financials.costOfTrainingCourse = costOfTrainingCourse;
 
     await financials.save();
 
+    // combine emails
     // send email to notify members of the change
     membersList.forEach((member) => {
       genericEmail({

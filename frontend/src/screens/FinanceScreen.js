@@ -26,6 +26,7 @@ const FinanceScreen = ({ history }) => {
   const [additionalFees, setAdditionalFees] = useState(0);
   const [extraFee, setExtraFee] = useState(0);
   const [gradingFees, setGradingFees] = useState(0);
+  const [trainingCourseFees, setTrainingCourseFees] = useState(0);
   const [showMonthlyCosts, setShowMonthlyCosts] = useState(false);
   const [name, setName] = useState("");
   const [cost, setCost] = useState(0);
@@ -86,6 +87,7 @@ const FinanceScreen = ({ history }) => {
       costOfAdditionalClass: additionalFees,
       costOfExtraFee: extraFee,
       costOfGrading: gradingFees,
+      costOfTrainingCourse: trainingCourseFees,
     };
     await dispatch(updateFinancials(newFees));
     await dispatch(listFinancials());
@@ -429,6 +431,34 @@ const FinanceScreen = ({ history }) => {
                         <FormControl
                           disabled
                           value={(financials.costOfGrading / 100).toFixed(2)}
+                          className="mb-0 bg-light"
+                          type="number"
+                        />
+                      </InputGroup>
+                    )}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <div>Cost of training course</div>
+                    {editFees ? (
+                      <InputGroup>
+                        <InputGroup.Text>£</InputGroup.Text>
+                        <FormControl
+                          onChange={(e) =>
+                            setTrainingCourseFees(e.target.value)
+                          }
+                          value={trainingCourseFees}
+                          className="mb-0 bg-light"
+                          type="number"
+                        />
+                      </InputGroup>
+                    ) : (
+                      <InputGroup>
+                        <InputGroup.Text>£</InputGroup.Text>
+                        <FormControl
+                          disabled
+                          value={(
+                            financials.costOfTrainingCourse / 100
+                          ).toFixed(2)}
                           className="mb-0 bg-light"
                           type="number"
                         />

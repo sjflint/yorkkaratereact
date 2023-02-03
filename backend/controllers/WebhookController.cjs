@@ -280,11 +280,73 @@ const processPayment = async (event) => {
                       <p>Once the payment has been made, the grading result will be reinstated.</p>
                     `,
                 link: `${process.env.DOMAIN_LINK}/outstandingfees`,
-                linkText: "Apply again for the grading course",
+                linkText: "Pay outstanding fees",
                 attachments: [],
               });
             }
             return "Grading Payment failed";
+
+          case "Course Training Fees":
+            const trainingCourse = await Event.findById(
+              payment.metadata.gradingId
+            );
+            const courseToday = new Date();
+
+            if (courseToday < trainingCourse.dateOfEvent) {
+              // remove from participants list and send email to say not registered
+              let participantArr = [];
+              trainingCourse.trainingParticipants.map((participant) => {
+                if (participant._id.toString() !== member._id.toString()) {
+                  participantArr.push(participant);
+                }
+              });
+              await Event.findOneAndUpdate(
+                { _id: payment.metadata.gradingId },
+                {
+                  trainingParticipants: participantArr,
+                }
+              );
+              genericEmail({
+                recipientEmail: member.email,
+                recipientName: member.firstName,
+                subject: "Training Course Payment Failed",
+                message: `<h4>${member.firstName}, your training course payment failed</h4>
+                        <p>We have received notification that we could not collect your taining payment. Consequently, we have removed you from the list of participants for the training session.</p>
+                        <p>If the deadline has not passed, you could try again <a href='${process.env.DOMAIN_LINK}/event/${gradingCourse._id}'>here</a></p>
+                        <p>If the deadline has passed, but you would still like to train, please contact us urgently.</p>
+                      `,
+                link: `${process.env.DOMAIN_LINK}/event/${gradingCourse._id}`,
+                linkText: "Apply again for the training session",
+                attachments: [],
+              });
+            } else {
+              let outstandingFees = member.outstandingFees;
+              const trainingFee = financials.costOfTrainingCourse * 100;
+              outstandingFees = outstandingFees + trainingFee;
+
+              await Member.findOneAndUpdate(
+                { _id: member._id },
+                {
+                  outstandingFees: outstandingFees,
+                }
+              );
+
+              genericEmail({
+                recipientEmail: member.email,
+                recipientName: member.firstName,
+                subject: "Training Course Payment Failed",
+                message: `<h4>${member.firstName}, your training course payment failed</h4>
+                      <p>We have received notification that we could not collect your training course payment. Consequently, there is an 'outstanding balance' on your account.</p>
+                      <p>Please pay the outstanding balance by <a href='${process.env.DOMAIN_LINK}/outstandingfees'>clicking here</a></p>
+                      <p>Not paying this balance could jeopordise your memership with York Karate. Please contact us if you need to discuss this further.</p>
+                    `,
+                link: `${process.env.DOMAIN_LINK}/outstandingfees`,
+                linkText: "Pay outstanding fees",
+                attachments: [],
+              });
+            }
+
+            return "Training Fee failed";
 
           case "Payment to York Karate Shop":
             const order = await Order.findOneAndUpdate(

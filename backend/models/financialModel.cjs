@@ -6,6 +6,7 @@ const financialSchema = mongoose.Schema({
   costOfAdditionalClass: { type: Number, required: true },
   costOfExtraFee: { type: Number, required: true },
   costOfGrading: { type: Number, required: true },
+  costOfTrainingCourse: { type: Number, required: true },
   totalMembers: { type: Array },
 });
 
