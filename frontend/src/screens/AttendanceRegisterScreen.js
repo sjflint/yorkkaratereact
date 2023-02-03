@@ -79,7 +79,6 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   ]);
 
   const removeAttendeeHandler = async (id, recordId, className) => {
-    console.log(`remove attendee: ${id}`);
     await dispatch(attendeeRemove(id, recordId));
     await dispatch(updateAttendance(classId));
   };
@@ -190,222 +189,227 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
       {(loading || attendanceLoading || memberListLoading) && (
         <Loader variant="warning" />
       )}
-
-      <Table
-        striped
-        bordered
-        hover
-        responsive
-        className="table-sm text-center mt-3"
-      >
-        <thead>
-          <tr className="text-center">
-            <th>Name</th>
-            <th>Present</th>
-            <th>Not Present</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trainingSessions &&
-            record &&
-            record.length !== 0 &&
-            trainingSessions.map((trainingSession) => {
-              if (trainingSession._id === classId) {
-                return trainingSession.participants.map((participant) => {
-                  if (participant.dateOfBirth) {
-                    return (
-                      <tr key={participant._id}>
-                        <td className="d-flex align-items-center justify-content-between">
-                          {/* To allow instructor to adjust att record. Should be removed once task completed */}
-                          <div className="d-flex flex-column">
-                            <div>
-                              <i
-                                className="text-link fa-solid fa-caret-up fa-2x"
-                                onClick={() =>
-                                  dispatch(changeAttRecord(participant._id, 1))
-                                }
-                              ></i>
+      <div>
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className="table-sm text-center mt-3"
+        >
+          <thead>
+            <tr className="text-center">
+              <th>Name</th>
+              <th>Present</th>
+              <th>Not Present</th>
+            </tr>
+          </thead>
+          <tbody>
+            {trainingSessions &&
+              record &&
+              record.length !== 0 &&
+              trainingSessions.map((trainingSession) => {
+                if (trainingSession._id === classId) {
+                  return trainingSession.participants.map((participant) => {
+                    if (participant.dateOfBirth) {
+                      return (
+                        <tr key={participant._id}>
+                          <td className="d-flex align-items-center justify-content-between">
+                            {/* To allow instructor to adjust att record. Should be removed once task completed */}
+                            <div className="d-flex flex-column">
+                              <div>
+                                <i
+                                  className="text-link fa-solid fa-caret-up fa-2x"
+                                  onClick={() =>
+                                    dispatch(
+                                      changeAttRecord(participant._id, 1)
+                                    )
+                                  }
+                                ></i>
+                              </div>
+                              <div>{participant.attendanceRecord}</div>
+                              <div>
+                                <i
+                                  className="text-link fa-solid fa-caret-down fa-2x"
+                                  onClick={() =>
+                                    dispatch(
+                                      changeAttRecord(participant._id, -1)
+                                    )
+                                  }
+                                ></i>
+                              </div>
                             </div>
-                            <div>{participant.attendanceRecord}</div>
-                            <div>
-                              <i
-                                className="text-link fa-solid fa-caret-down fa-2x"
-                                onClick={() =>
-                                  dispatch(changeAttRecord(participant._id, -1))
-                                }
-                              ></i>
-                            </div>
-                          </div>
 
-                          <Link to={`/admin/members/${participant._id}/edit`}>
+                            <Link to={`/admin/members/${participant._id}/edit`}>
+                              {participant.firstName} {participant.lastName}{" "}
+                              {participant.medicalStatus === "Yes medical" && (
+                                <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
+                              )}
+                            </Link>
+                          </td>
+                          {record.participants &&
+                          record.participants.includes(
+                            participant._id.toString()
+                          ) ? (
+                            <>
+                              <td>
+                                <i className="fa-solid fa-circle-check text-success fa-3x"></i>
+                              </td>
+                              <td>
+                                <Button
+                                  variant="outline-danger"
+                                  className="btn-sm"
+                                  onClick={() =>
+                                    removeAttendeeHandler(
+                                      participant._id,
+                                      record._id
+                                    )
+                                  }
+                                >
+                                  Mark as Not Present
+                                </Button>
+                              </td>
+                            </>
+                          ) : (
+                            <>
+                              <td>
+                                <Button
+                                  variant="outline-success"
+                                  className="btn-sm"
+                                  onClick={() =>
+                                    addAttendeeHandler(
+                                      participant._id,
+                                      record._id
+                                    )
+                                  }
+                                >
+                                  Mark as Present
+                                </Button>
+                              </td>
+                              <td>
+                                <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      );
+                    } else {
+                      return (
+                        <tr key={participant._id}>
+                          <td>
                             {participant.firstName} {participant.lastName}{" "}
                             {participant.medicalStatus === "Yes medical" && (
                               <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
                             )}
-                          </Link>
-                        </td>
-                        {record.participants &&
-                        record.participants.includes(
-                          participant._id.toString()
-                        ) ? (
-                          <>
-                            <td>
-                              <i className="fa-solid fa-circle-check text-success fa-3x"></i>
-                            </td>
-                            <td>
-                              <Button
-                                variant="outline-danger"
-                                className="btn-sm"
-                                onClick={() =>
-                                  removeAttendeeHandler(
-                                    participant._id,
-                                    record._id
-                                  )
-                                }
-                              >
-                                Mark as Not Present
-                              </Button>
-                            </td>
-                          </>
-                        ) : (
-                          <>
-                            <td>
-                              <Button
-                                variant="outline-success"
-                                className="btn-sm"
-                                onClick={() =>
-                                  addAttendeeHandler(
-                                    participant._id,
-                                    record._id
-                                  )
-                                }
-                              >
-                                Mark as Present
-                              </Button>
-                            </td>
-                            <td>
-                              <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
-                            </td>
-                          </>
-                        )}
-                      </tr>
-                    );
-                  } else {
-                    return (
-                      <tr key={participant._id}>
-                        <td>
-                          {participant.firstName} {participant.lastName}{" "}
-                          {participant.medicalStatus === "Yes medical" && (
-                            <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
+                            <br />
+                            (Trial)
+                          </td>
+                          {record.participants &&
+                          record.participants.includes(
+                            participant._id.toString()
+                          ) ? (
+                            <>
+                              <td>
+                                <i className="fa-solid fa-circle-check text-success fa-3x"></i>
+                              </td>
+                              <td>
+                                <Button
+                                  variant="outline-danger"
+                                  className="btn-sm"
+                                  onClick={() =>
+                                    removeTrialAttendeeHandler(
+                                      participant._id,
+                                      record._id
+                                    )
+                                  }
+                                >
+                                  Mark as Not Present
+                                </Button>
+                              </td>
+                            </>
+                          ) : (
+                            <>
+                              <td>
+                                <Button
+                                  variant="outline-success"
+                                  className="btn-sm"
+                                  onClick={() =>
+                                    addTrialAttendeeHandler(
+                                      participant._id,
+                                      record._id
+                                    )
+                                  }
+                                >
+                                  Mark as Present
+                                </Button>
+                              </td>
+                              <td>
+                                <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
+                              </td>
+                            </>
                           )}
-                          <br />
-                          (Trial)
-                        </td>
-                        {record.participants &&
-                        record.participants.includes(
-                          participant._id.toString()
-                        ) ? (
-                          <>
-                            <td>
-                              <i className="fa-solid fa-circle-check text-success fa-3x"></i>
-                            </td>
-                            <td>
-                              <Button
-                                variant="outline-danger"
-                                className="btn-sm"
-                                onClick={() =>
-                                  removeTrialAttendeeHandler(
-                                    participant._id,
-                                    record._id
-                                  )
-                                }
-                              >
-                                Mark as Not Present
-                              </Button>
-                            </td>
-                          </>
-                        ) : (
-                          <>
-                            <td>
-                              <Button
-                                variant="outline-success"
-                                className="btn-sm"
-                                onClick={() =>
-                                  addTrialAttendeeHandler(
-                                    participant._id,
-                                    record._id
-                                  )
-                                }
-                              >
-                                Mark as Present
-                              </Button>
-                            </td>
-                            <td>
-                              <i className="fa-solid fa-circle-xmark text-danger fa-3x"></i>
-                            </td>
-                          </>
-                        )}
-                      </tr>
-                    );
-                  }
-                });
-              } else {
-                return null;
-              }
-            })}
+                        </tr>
+                      );
+                    }
+                  });
+                } else {
+                  return null;
+                }
+              })}
 
-          {record &&
-            record.length !== 0 &&
-            record.extraParticipants.map((participant) => {
-              return (
-                <tr key={participant._id}>
-                  <td className="d-flex align-items-center justify-content-between">
-                    {/* To allow instructor to adjust att record. Should be removed once task completed */}
-                    <div className="d-flex flex-column">
-                      <div>
-                        <i
-                          className="text-link fa-solid fa-caret-up fa-2x"
-                          onClick={() =>
-                            dispatch(changeAttRecord(participant._id, 1))
-                          }
-                        ></i>
+            {record &&
+              record.length !== 0 &&
+              record.extraParticipants.map((participant) => {
+                return (
+                  <tr key={participant._id}>
+                    <td className="d-flex align-items-center justify-content-between">
+                      {/* To allow instructor to adjust att record. Should be removed once task completed */}
+                      <div className="d-flex flex-column">
+                        <div>
+                          <i
+                            className="text-link fa-solid fa-caret-up fa-2x"
+                            onClick={() =>
+                              dispatch(changeAttRecord(participant._id, 1))
+                            }
+                          ></i>
+                        </div>
+                        <div>{participant.attendanceRecord}</div>
+                        <div>
+                          <i
+                            className="text-link fa-solid fa-caret-down fa-2x"
+                            onClick={() =>
+                              dispatch(changeAttRecord(participant._id, -1))
+                            }
+                          ></i>
+                        </div>
                       </div>
-                      <div>{participant.attendanceRecord}</div>
                       <div>
-                        <i
-                          className="text-link fa-solid fa-caret-down fa-2x"
-                          onClick={() =>
-                            dispatch(changeAttRecord(participant._id, -1))
-                          }
-                        ></i>
+                        {participant.firstName} {participant.lastName}
                       </div>
-                    </div>
-                    <div>
-                      {participant.firstName} {participant.lastName}
-                    </div>
-                  </td>
-                  <td>
-                    <i className="fa-solid fa-circle-check text-success fa-3x"></i>
-                  </td>
-                  <td>
-                    <Button
-                      variant="outline-danger"
-                      className="btn-sm"
-                      onClick={async () => {
-                        await dispatch(
-                          cancelPayment(participant._id, record._id)
-                        );
-                        await dispatch(updateAttendance(classId));
-                      }}
-                    >
-                      Mark as Not Present
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </Table>
+                    </td>
+                    <td>
+                      <i className="fa-solid fa-circle-check text-success fa-3x"></i>
+                    </td>
+                    <td>
+                      <Button
+                        variant="outline-danger"
+                        className="btn-sm"
+                        onClick={async () => {
+                          await dispatch(
+                            cancelPayment(participant._id, record._id)
+                          );
+                          await dispatch(updateAttendance(classId));
+                        }}
+                      >
+                        Mark as Not Present
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </Table>
+      </div>
 
       <p className="mt-4 mb-1">+ additional members</p>
       <Route

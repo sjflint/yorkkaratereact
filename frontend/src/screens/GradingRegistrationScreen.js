@@ -91,6 +91,7 @@ const GradingRegistrationScreen = ({ match }) => {
           Authorization: `Bearer ${memberInfo.token}`,
         },
       };
+
       let res = await axios.post(
         `https://www.yorkkarate.net/api/grading/${application.eventId}`,
         application,
@@ -131,7 +132,11 @@ const GradingRegistrationScreen = ({ match }) => {
         <Message>{eventError}</Message>
       ) : (
         <>
-          <Image src={event.image} alt={event.title} />
+          <Image
+            src={event.image}
+            alt={event.title}
+            className="max-width-600"
+          />
           <ListGroup variant="flush">
             <h3 className="p-2">{event.title}</h3>
             <ListGroup.Item>
@@ -153,7 +158,7 @@ const GradingRegistrationScreen = ({ match }) => {
             <ListGroup.Item>
               Name: {member.firstName} {member.lastName}
             </ListGroup.Item>
-            {member.danGrade > 0 || member.kyuGrade === 1 ? (
+            {/* {member.danGrade > 0 || member.kyuGrade === 1 ? (
               <ListGroup.Item>
                 Grade: {grade}
                 <p className="text-danger">
@@ -161,9 +166,18 @@ const GradingRegistrationScreen = ({ match }) => {
                   are not eligible.
                 </p>
               </ListGroup.Item>
-            ) : (
-              <ListGroup.Item>Grade: {grade}</ListGroup.Item>
-            )}
+              <ListGroup.Item>
+                <Button
+                  variant="default"
+                  className="w-100 text-white"
+                  onClick={() => setShowModal(true)}
+                >
+                  You are eligible for the training course. Register Now
+                </Button>
+              </ListGroup.Item>
+            ) : ( */}
+            <ListGroup.Item>Grade: {grade}</ListGroup.Item>
+            {/* )} */}
 
             {member.firstName && member.gradeLevel !== "Advanced" && (
               <ListGroup.Item className="text-center">
@@ -191,11 +205,19 @@ const GradingRegistrationScreen = ({ match }) => {
               </Message>
             ) : (
               <>
-                {console.log(`date today  (+7): ${new Date(dateToday)}`)}
-                {console.log(`event date: ${new Date(event.dateOfEvent)}`)}
                 {applicationSuccess === true ? (
                   <ListGroup.Item variant="success" className="text-center">
                     You have applied for this grading course!
+                  </ListGroup.Item>
+                ) : member.kyuGrade <= 1 ? (
+                  <ListGroup.Item>
+                    <Button
+                      variant="default"
+                      className="w-100 text-white"
+                      onClick={() => setShowModal(true)}
+                    >
+                      You are eligible for the training course. Register Now
+                    </Button>
                   </ListGroup.Item>
                 ) : !member.licenseNumber ? (
                   <ListGroup.Item variant="danger" className="text-center">
@@ -250,7 +272,7 @@ const GradingRegistrationScreen = ({ match }) => {
                   <ListGroup.Item>
                     <Button
                       variant="default"
-                      className="w-100 text-white"
+                      className="text-white w-100"
                       onClick={() => setShowModal(true)}
                     >
                       You are eligible to Grade. Register Now

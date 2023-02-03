@@ -32,6 +32,7 @@ const ProfileScreen = ({ history, match }) => {
   const [profileImgModal, setProfileImgModal] = useState(false);
   const [jksModal, setJksModal] = useState(false);
   const [value, setValue] = useState("");
+  const [inValid, setInvalid] = useState("");
   const ddSuccess = new URLSearchParams(search).get("dd");
 
   const dispatch = useDispatch();
@@ -338,19 +339,29 @@ const ProfileScreen = ({ history, match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item variant="secondary">
                   <input
-                    type="number"
+                    pattern="[0-9]*"
+                    type="text"
                     value={value}
-                    onChange={(e) => setValue(e.target.value)}
+                    onChange={(e) => {
+                      setInvalid(false);
+                      setValue(e.target.validity.valid ? e.target.value : 0);
+                    }}
                     placeholder="License number"
                     className="w-75 text-center"
                   />
                 </ListGroup.Item>
+                {value === 0 && (
+                  <small className="text-danger">
+                    Only enter numbers. Please ignore the letter 'E' if your
+                    number starts with this.
+                  </small>
+                )}
               </ListGroup>
             </Col>
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          {value !== "" && value.length > 2 && value.length < 6 ? (
+          {value !== " " && value.length > 2 && value.length < 7 ? (
             <button
               className="btn btn-default"
               onClick={(e) => {
@@ -361,9 +372,14 @@ const ProfileScreen = ({ history, match }) => {
               Save number
             </button>
           ) : (
-            <button className="btn btn-primary" disabled>
-              Save number
-            </button>
+            <>
+              {/* <button className="btn btn-primary" disabled>
+                Save number
+              </button> */}
+              <small className="text-danger">
+                Please enter a valid license number
+              </small>
+            </>
           )}
 
           <Button

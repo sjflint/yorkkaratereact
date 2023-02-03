@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.3433b872.css",
-    "main.js": "/static/js/main.4f64016c.js",
+    "main.js": "/static/js/main.875d0024.js",
     "static/js/787.d8c6ec95.chunk.js": "/static/js/787.d8c6ec95.chunk.js",
     "static/media/poster2.png": "/static/media/poster2.7de3d72187ef9ce8e5c8.png",
     "static/media/poster3.png": "/static/media/poster3.227dc347e9070350d975.png",
@@ -19,7 +19,7 @@
     "static/media/parentsCodeOfConduct.pdf": "/static/media/parentsCodeOfConduct.62e51b06ea3c9f89a1fd.pdf",
     "static/media/juniorclass.jpg": "/static/media/juniorclass.59a5079cc8fe5ff752b2.jpg",
     "static/media/uploading(1).gif": "/static/media/uploading(1).15cd0dca43f1a59e240c.gif",
-    "static/media/insidelicense.png": "/static/media/insidelicense.da2ff8dafb8111eac904.png",
+    "static/media/insidelicense.png": "/static/media/insidelicense.fd47d7371c8feafdb990.png",
     "static/media/logo2021(transparent-black).png": "/static/media/logo2021(transparent-black).743b27970468edace76e.png",
     "static/media/logo2021.png": "/static/media/logo2021.22676b1922c790e5e279.png",
     "static/media/archbishopholgateschool.jpg": "/static/media/archbishopholgateschool.9c70227d41fa584f2fed.jpg",
@@ -59,11 +59,11 @@
     "static/media/broken.svg": "/static/media/broken.4c573f79c97c70fa7f41f78406e1a9ab.svg",
     "index.html": "/index.html",
     "main.3433b872.css.map": "/static/css/main.3433b872.css.map",
-    "main.4f64016c.js.map": "/static/js/main.4f64016c.js.map",
+    "main.875d0024.js.map": "/static/js/main.875d0024.js.map",
     "787.d8c6ec95.chunk.js.map": "/static/js/787.d8c6ec95.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3433b872.css",
-    "static/js/main.4f64016c.js"
+    "static/js/main.875d0024.js"
   ]
 }
