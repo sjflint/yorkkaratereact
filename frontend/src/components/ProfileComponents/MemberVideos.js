@@ -24,13 +24,22 @@ const MemberVideos = () => {
   const { member } = memberDetails;
 
   useEffect(() => {
-    if (member && member.kyuGrade > 0) {
+    if (member && member.kyuGrade > 1) {
       const grade = member.kyuGrade - 1;
+      console.log(grade);
+      dispatch(listTrainingVideosByGrade(grade));
+    }
+
+    if (member && member.kyuGrade === 1) {
+      const grade = -1;
+
+      console.log(grade);
       dispatch(listTrainingVideosByGrade(grade));
     }
 
     if (member && member.kyuGrade === 0) {
       const grade = (member.danGrade + 1) * -1;
+      console.log(grade);
 
       dispatch(listTrainingVideosByGrade(grade));
     }
@@ -55,6 +64,7 @@ const MemberVideos = () => {
     const currGrade = member.kyuGrade;
     grade = `${currGrade + marker(currGrade)} kyu`;
     if (currGrade - 1 === 0) {
+      nextGradePrefix = `${member.kyuGrade + marker(member.kyuGrade)} dan`;
     } else {
       nextGradePrefix = `${
         member.kyuGrade - 1 + marker(member.kyuGrade - 1)

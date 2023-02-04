@@ -137,11 +137,15 @@ const MemberDetails = () => {
         numberMarker = "th";
     }
   }
+
+  const numMarker = (num) => {
+    return num === 1 ? "st" : num === 2 ? "nd" : "th";
+  };
   let grade;
   if (member && member.kyuGrade === 0) {
-    grade = `${member.danGrade}${numberMarker} dan`;
+    grade = `${member.danGrade}${numMarker(member.danGrade)} dan`;
   } else {
-    grade = `${member.kyuGrade}${numberMarker} kyu`;
+    grade = `${member.kyuGrade}${numMarker(member.kyuGrade)} kyu`;
   }
 
   const saveHandler = async (values) => {

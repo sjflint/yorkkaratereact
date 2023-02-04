@@ -131,10 +131,8 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
   );
 
   if (member.freeClasses > 0) {
-    await Member.findByIdAndUpdate({
-      memberId,
-      $inc: { freeClasses: -1 },
-    });
+    member.freeClasses--;
+    member.save();
     console.log("free class used");
   } else if (lastExtraClassAdded < todaysDate) {
     console.log("no action");
