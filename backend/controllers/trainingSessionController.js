@@ -381,6 +381,7 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     trainingSession.day = day;
 
     const updatedTrainingSession = await trainingSession.save();
+    // review this. Combine email addresses into a single email and send only to those eligible by age/grade
     for (const member of members) {
       genericEmail({
         recipientEmail: member.email,
@@ -414,6 +415,8 @@ const trainingSessionCancelled = asyncHandler(async (req, res) => {
   if (trainingSession) {
     const participants = trainingSession.participants;
     const recipients = [];
+
+    // create record of cancelled class
 
     for (const participant of participants) {
       const member = await Member.findById(participant);

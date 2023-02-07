@@ -90,6 +90,8 @@ const createProduct = asyncHandler(async (req, res) => {
 
   const members = await Member.find({ ddsuccess: true });
 
+  // combine emails to send
+
   for (const member of members) {
     genericEmail({
       recipientEmail: member.email,

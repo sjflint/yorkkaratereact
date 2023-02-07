@@ -27,6 +27,8 @@ const FaqScreen = () => {
           Frequently Asked Questions
         </h3>
 
+        {/* add what age can you start training */}
+
         {financialsLoading ? (
           <Loader variant="warning" />
         ) : (
