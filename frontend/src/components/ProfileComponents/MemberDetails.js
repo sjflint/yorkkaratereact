@@ -107,37 +107,6 @@ const MemberDetails = () => {
     ),
   });
 
-  let numberMarker;
-  if (member && member.danGrade === 0) {
-    switch (member.kyuGrade) {
-      case 1:
-        numberMarker = "st";
-        break;
-      case 2:
-        numberMarker = "nd";
-        break;
-      case 3:
-        numberMarker = "rd";
-        break;
-      default:
-        numberMarker = "th";
-    }
-  } else {
-    switch (member.danGrade) {
-      case 1:
-        numberMarker = "st";
-        break;
-      case 2:
-        numberMarker = "nd";
-        break;
-      case 3:
-        numberMarker = "rd";
-        break;
-      default:
-        numberMarker = "th";
-    }
-  }
-
   const numMarker = (num) => {
     return num === 1 ? "st" : num === 2 ? "nd" : "th";
   };
