@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.3433b872.css",
-    "main.js": "/static/js/main.75dd9076.js",
+    "main.js": "/static/js/main.23945ffa.js",
     "static/js/787.d8c6ec95.chunk.js": "/static/js/787.d8c6ec95.chunk.js",
     "static/media/poster2.png": "/static/media/poster2.7de3d72187ef9ce8e5c8.png",
     "static/media/poster3.png": "/static/media/poster3.227dc347e9070350d975.png",
@@ -31,6 +31,7 @@
     "static/media/orders.png": "/static/media/orders.d3d68652d43913b5030b.png",
     "static/media/kagawa2.jpg": "/static/media/kagawa2.123f16283062acf7c57f.jpg",
     "static/media/reportingConcerns.pdf": "/static/media/reportingConcerns.3a255ff7d17b42cbb4e7.pdf",
+    "static/media/medal-logo.jpg": "/static/media/medal-logo.a6e5188ba9b59732849d.jpg",
     "static/media/st.chadshall.jpg": "/static/media/st.chadshall.4d8690ee3986d70fa2cf.jpg",
     "static/media/josephrowntreetrimmed.jpg": "/static/media/josephrowntreetrimmed.40ad73bef41c98d86a0f.jpg",
     "static/media/strensalltrimmed.jpg": "/static/media/strensalltrimmed.264e7f42ab1f7d0c10aa.jpg",
@@ -59,11 +60,11 @@
     "static/media/broken.svg": "/static/media/broken.4c573f79c97c70fa7f41f78406e1a9ab.svg",
     "index.html": "/index.html",
     "main.3433b872.css.map": "/static/css/main.3433b872.css.map",
-    "main.75dd9076.js.map": "/static/js/main.75dd9076.js.map",
+    "main.23945ffa.js.map": "/static/js/main.23945ffa.js.map",
     "787.d8c6ec95.chunk.js.map": "/static/js/787.d8c6ec95.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3433b872.css",
-    "static/js/main.75dd9076.js"
+    "static/js/main.23945ffa.js"
   ]
 }
