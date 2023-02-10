@@ -46,6 +46,7 @@
     "react-image-gallery": "^1.2.7",
     "react-paypal-button-v2": "^2.6.3",
     "sharp": "^0.31.1",
+    "webpack": "^4.46.0",
     "yup": "^0.32.9",
     "yup-phone": "^1.2.19"
   },

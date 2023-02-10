@@ -13,11 +13,13 @@ import syllabusImg from "../img/syllabus.png";
 import lessonplanImg from "../img/lessonplan.png";
 import gradingImg from "../img/grading.png";
 import registerImg from "../img/register.png";
+import squadImg from "../img/medal-logo.jpg";
 import { Link } from "react-router-dom";
 import Meta from "../components/Meta";
 import { listEnquiries } from "../actions/enquiryActions";
 import { listOrders } from "../actions/orderActions";
 import { listProducts } from "../actions/productActions";
+import { LIST_MEMBERS_RESET } from "../constants/memberConstants";
 
 const AdminScreen = ({ history }) => {
   const [zeroStock, setZeroStock] = useState(false);
@@ -173,8 +175,24 @@ const AdminScreen = ({ history }) => {
                           className="p-3"
                         />
                         <Card.Footer className="text-center">
-                          Classes / Timetable
+                          Timetable
                         </Card.Footer>
+                      </Card>
+                    </Link>
+                  </Col>
+
+                  <Col xs={6} sm={3} md={3} className="mb-2">
+                    <Link
+                      to="/admin/squad"
+                      onClick={() => dispatch({ type: LIST_MEMBERS_RESET })}
+                    >
+                      <Card>
+                        <Card.Img
+                          variant="top"
+                          src={squadImg}
+                          className="p-3"
+                        />
+                        <Card.Footer className="text-center">Squad</Card.Footer>
                       </Card>
                     </Link>
                   </Col>

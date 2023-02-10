@@ -6,6 +6,7 @@ const asyncHandler = require("express-async-handler");
 dotenv.config();
 
 const genericEmail = asyncHandler(async (emailDetails) => {
+  console.log(emailDetails.attachments);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     pool: true,

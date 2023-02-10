@@ -7,6 +7,8 @@ import {
   Container,
   Form,
   Image,
+  ListGroup,
+  ListGroupItem,
   Modal,
   Row,
 } from "react-bootstrap";
@@ -70,6 +72,8 @@ const TimetableScreen = () => {
     }
   };
 
+  const dateToday = new Date();
+
   return (
     <div className="mt-3">
       <Container fluid="lg">
@@ -85,71 +89,105 @@ const TimetableScreen = () => {
           </Message>
         ) : (
           <Row>
-            <Col md={6}>
-              <Image
-                src={ImgStChads}
-                alt="monday dojo"
-                className="border-top border-warning mt-2 p-2 bg-primary"
-              />
-              <TrainingSession
-                trainingSessions={trainingSessions}
-                trainingDay={"Monday"}
-              />
+            <Col sm={12} md={9}>
+              <Row>
+                <Col md={6}>
+                  <Image
+                    src={ImgStChads}
+                    alt="monday dojo"
+                    className="border-top border-warning mt-2 p-2 bg-primary"
+                  />
+                  <TrainingSession
+                    trainingSessions={trainingSessions}
+                    trainingDay={"Monday"}
+                  />
+                </Col>
+                <Col md={6}>
+                  <Image
+                    src={ImgJoRo}
+                    alt="monday dojo"
+                    className="border-top border-warning mt-2 p-2 bg-primary"
+                  />
+                  <TrainingSession
+                    trainingSessions={trainingSessions}
+                    trainingDay={"Tuesday"}
+                  />
+                </Col>
+                <Col md={6}>
+                  <Image
+                    src={ImgJoRo}
+                    alt="monday dojo"
+                    className="border-top border-warning mt-2 p-2 bg-primary"
+                  />
+                  <TrainingSession
+                    trainingSessions={trainingSessions}
+                    trainingDay={"Wednesday"}
+                  />
+                </Col>
+                <Col md={6}>
+                  <Image
+                    src={ImgArchHol}
+                    alt="monday dojo"
+                    className="border-top border-warning mt-2 p-2 bg-primary"
+                  />
+                  <TrainingSession
+                    trainingSessions={trainingSessions}
+                    trainingDay={"Thursday"}
+                  />
+                </Col>
+                <Col md={6}>
+                  <Image
+                    src={ImgStrensall}
+                    alt="monday dojo"
+                    className="border-top border-warning mt-2 p-2 bg-primary"
+                  />
+                  <TrainingSession
+                    trainingSessions={trainingSessions}
+                    trainingDay={"Friday"}
+                  />
+                </Col>
+                <Col md={6}>
+                  <Image
+                    src={ImgStrensall}
+                    alt="monday dojo"
+                    className="border-top border-warning mt-2 p-2 bg-primary"
+                  />
+                  <TrainingSession
+                    trainingSessions={trainingSessions}
+                    trainingDay={"Saturday"}
+                  />
+                </Col>
+              </Row>
             </Col>
-            <Col md={6}>
-              <Image
-                src={ImgJoRo}
-                alt="monday dojo"
-                className="border-top border-warning mt-2 p-2 bg-primary"
-              />
-              <TrainingSession
-                trainingSessions={trainingSessions}
-                trainingDay={"Tuesday"}
-              />
-            </Col>
-            <Col md={6}>
-              <Image
-                src={ImgJoRo}
-                alt="monday dojo"
-                className="border-top border-warning mt-2 p-2 bg-primary"
-              />
-              <TrainingSession
-                trainingSessions={trainingSessions}
-                trainingDay={"Wednesday"}
-              />
-            </Col>
-            <Col md={6}>
-              <Image
-                src={ImgArchHol}
-                alt="monday dojo"
-                className="border-top border-warning mt-2 p-2 bg-primary"
-              />
-              <TrainingSession
-                trainingSessions={trainingSessions}
-                trainingDay={"Thursday"}
-              />
-            </Col>
-            <Col md={6}>
-              <Image
-                src={ImgStrensall}
-                alt="monday dojo"
-                className="border-top border-warning mt-2 p-2 bg-primary"
-              />
-              <TrainingSession
-                trainingSessions={trainingSessions}
-                trainingDay={"Friday"}
-              />
-            </Col>
-            <Col md={6}>
-              <Image
-                src={ImgStrensall}
-                alt="monday dojo"
-                className="border-top border-warning mt-2 p-2 bg-primary"
-              />
-              <TrainingSession
-                trainingSessions={trainingSessions}
-                trainingDay={"Saturday"}
-              />
+            <Col sm={12} md={3}>
+              <>
+                <h6 className="text-center border-bottom border-warning p-1 mt-1">
+                  Cancellations
+                </h6>
+                <ListGroup className="mb-3">
+                  {trainingSessions &&
+                    trainingSessions.map((trainingSession) => {
+                      let cancelledClasses = [];
+                      trainingSession.cancelledClasses.map((classes) => {
+                        if (new Date(classes) > dateToday) {
+                          return cancelledClasses.push(
+                            new Date(classes).toLocaleDateString()
+                          );
+                        }
+                      });
+                      return (
+                        cancelledClasses.length > 0 && (
+                          <ListGroupItem className="mb-1 bg-grey">
+                            <small>
+                              {trainingSession.name} {trainingSession.location}{" "}
+                              is cancelled on {cancelledClasses}
+                            </small>
+                          </ListGroupItem>
+                        )
+                      );
+                    })}
+                </ListGroup>
+              </>
             </Col>
           </Row>
         )}

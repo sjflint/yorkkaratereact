@@ -108,6 +108,7 @@ const MemberEditScreen = ({ match, history }) => {
       isAuthor: member.isAuthor.toString(),
       isInstructor: member.isInstructor.toString(),
       squadMember: member.squadMember.toString(),
+      weight: member.weight,
       firstName: member.firstName,
       lastName: member.lastName,
       dateOfBirth: member.dateOfBirth.substring(0, 10),
@@ -129,6 +130,7 @@ const MemberEditScreen = ({ match, history }) => {
   const validationSchema = Yup.object({
     kyuGrade: Yup.number().required("Required").moreThan(-1).lessThan(17),
     danGrade: Yup.number().required("Required").lessThan(11).moreThan(-1),
+    weight: Yup.number().typeError("a number value must be entered in kg"),
     isAdmin: Yup.boolean().required("Required"),
     isShopAdmin: Yup.boolean().required("Required"),
     isAuthor: Yup.boolean().required("Required"),
@@ -202,15 +204,24 @@ const MemberEditScreen = ({ match, history }) => {
       values.kyuGrade = 0;
     }
 
-    if (values.medicalDetails !== "" || values.medicalDetails !== "-") {
-      values.medicalStatus = "Yes medical";
-    } else {
+    console.log(values.medicalDetails);
+
+    if (!values.medicalDetails || values.medicalDetails === "-") {
       values.medicalStatus = "false";
+    } else {
+      values.medicalStatus = "Yes medical";
+    }
+
+    if (values.squadMember && !values.squadDiscipline) {
+      values.squadDiscipline = {
+        kata: true,
+        kumite: true,
+      };
     }
 
     await dispatch(editMember(values));
 
-    setTimeout(() => history.push("/admin/listmembers"), 1000);
+    setTimeout(() => history.goBack(), 1000);
   };
 
   return (
@@ -352,6 +363,15 @@ const MemberEditScreen = ({ match, history }) => {
                               label="Medical Details"
                               name="medicalDetails"
                               placeholder="Provide any important medical information here"
+                            />
+                          </div>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              label="Weigth (kg)"
+                              type="text"
+                              name="weight"
+                              placeholder="Please enter your current weight in kg"
                             />
                           </div>
                         </Col>

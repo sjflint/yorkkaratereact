@@ -73,7 +73,7 @@ const FinanceScreen = ({ history }) => {
     } else if (!memberInfo.isAdmin) {
       history.push("/profile");
     } else {
-      dispatch(membersList());
+      dispatch(membersList(0, "all"));
       dispatch(listTrainingSessions());
       dispatch(listFinancials());
       dispatch(listMonthlyCosts());

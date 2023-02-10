@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import {
   Button,
   Container,
+  ListGroup,
+  ListGroupItem,
   Modal,
   OverlayTrigger,
   Table,
@@ -283,6 +285,8 @@ const ListClassesScreen = ({ history }) => {
     return sorter[day1] - sorter[day2];
   });
 
+  const dateToday = new Date();
+
   return (
     <div className="mt-3">
       <Container fluid="lg">
@@ -308,6 +312,34 @@ const ListClassesScreen = ({ history }) => {
             <i className="fas fa-plus"></i> Create Class
           </Button>
         </div>
+        <>
+          <h3 className="text-center border-bottom border-warning pb-1">
+            Cancellations
+          </h3>
+          <ListGroup className="mb-3">
+            {trainingSessions &&
+              trainingSessions.map((trainingSession) => {
+                let cancelledClasses = [];
+                trainingSession.cancelledClasses.map((classes) => {
+                  if (new Date(classes) > dateToday) {
+                    return cancelledClasses.push(
+                      new Date(classes).toLocaleDateString()
+                    );
+                  }
+                });
+                return (
+                  cancelledClasses.length > 0 && (
+                    <ListGroupItem variant="danger" className="mb-1">
+                      <h6>
+                        {trainingSession.name} {trainingSession.location} is
+                        cancelled on these dates {cancelledClasses}
+                      </h6>
+                    </ListGroupItem>
+                  )
+                );
+              })}
+          </ListGroup>
+        </>
         <h3 className="text-center border-bottom border-warning pb-1">
           Classes
         </h3>

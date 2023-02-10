@@ -91,15 +91,16 @@ const createProduct = asyncHandler(async (req, res) => {
   const members = await Member.find({ ddsuccess: true });
 
   // combine emails to send
-
+  let recipients = [];
   for (const member of members) {
-    genericEmail({
-      recipientEmail: member.email,
-      recipientName: member.firstName,
-      subject: "We have a great new product for sale!",
-      message: `<h4>${
-        member.firstName
-      }, we have a new product in our shop that you might be interested in.</h4>
+    recipients.push(member.email);
+  }
+  genericEmail({
+    recipientEmail: recipients,
+    subject: "We have a great new product for sale!",
+    message: `<h4>${
+      member.firstName
+    }, we have a new product in our shop that you might be interested in.</h4>
       <table role="presentation" cellspacing="0" width="100%">
       <tr>
       <td>
@@ -150,11 +151,10 @@ const createProduct = asyncHandler(async (req, res) => {
     </tr>
     </table>
           `,
-      link: `${process.env.DOMAIN_LINK}/shop`,
-      linkText: "Visit shop",
-      attachments: [],
-    });
-  }
+    link: `${process.env.DOMAIN_LINK}/shop`,
+    linkText: "Visit shop",
+    attachments: [],
+  });
 
   res.status(201).json(createdProduct);
 });

@@ -130,14 +130,18 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
     member.extraClassAdded.getDate() + 28
   );
 
+  console.log(todaysDate);
+  console.log(lastExtraClassAdded);
+
   if (member.freeClasses > 0) {
     member.freeClasses--;
     member.save();
     console.log("free class used");
   } else if (lastExtraClassAdded < todaysDate) {
-    console.log("no action");
+    console.log("no action as extra class option used");
   } else {
     // Charge DD for extra session
+    console.log("charging for extra class");
     const paymentDetails = {
       _id: member._id,
       amount: extraFee,

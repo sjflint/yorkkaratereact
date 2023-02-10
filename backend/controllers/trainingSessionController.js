@@ -382,21 +382,22 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
 
     const updatedTrainingSession = await trainingSession.save();
     // review this. Combine email addresses into a single email and send only to those eligible by age/grade
+    const recipients = [];
     for (const member of members) {
-      genericEmail({
-        recipientEmail: member.email,
-        recipientName: member.firstName,
-        subject: "Class has been amended",
-        message: `<h4>${member.firstName}, we have amended a training session on the timetable</h4>
+      recipients.push(member.email);
+    }
+    genericEmail({
+      recipientEmail: recipients,
+      subject: "Class has been amended",
+      message: `<h4>${member.firstName}, we have amended a training session on the timetable</h4>
               <p>The class details are:</p>
               <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}
               <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
             `,
-        link: `${process.env.DOMAIN_LINK}/profile?key=third`,
-        linkText: "View your training sessions",
-        attachments: [],
-      });
-    }
+      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
+      linkText: "View your training sessions",
+      attachments: [],
+    });
 
     res.status(201).json(updatedTrainingSession);
   } else {
@@ -417,6 +418,11 @@ const trainingSessionCancelled = asyncHandler(async (req, res) => {
     const recipients = [];
 
     // create record of cancelled class
+    const date = new Date(req.body.date);
+    await TrainingSession.updateOne(
+      { _id: classId },
+      { $push: { cancelledClasses: date } }
+    );
 
     for (const participant of participants) {
       const member = await Member.findById(participant);

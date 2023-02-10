@@ -28,6 +28,23 @@ const FaqScreen = () => {
         </h3>
 
         {/* add what age can you start training */}
+        <div
+          sm={4}
+          className="bg-warning p-5 text-white d-flex align-items-center justify-content-center"
+        >
+          <h5 className="text-white">What age can children start?</h5>
+        </div>
+
+        <ListGroup>
+          <ListGroup.Item>
+            Our 'Junior' class is for children under 9 years of age.
+          </ListGroup.Item>
+          <ListGroup.Item>
+            We don't have a set minimum age at which children can start
+            training. A lot depends on the individual child. However, around 4/5
+            is a good age to start.
+          </ListGroup.Item>
+        </ListGroup>
 
         {financialsLoading ? (
           <Loader variant="warning" />

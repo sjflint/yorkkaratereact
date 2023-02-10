@@ -8,6 +8,7 @@ import Member from "../models/memberModel.cjs";
 import FormerBlackBelts from "../models/formerBlackBeltsModel.cjs";
 import { genericEmail } from "../emailTemplates/genericEmail.cjs";
 import Financial from "../models/financialModel.cjs";
+import Attendance from "../models/attendanceModel.cjs";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -211,6 +212,8 @@ const getMemberPaymentDetails = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
+  console.log(values);
+
   const member = await Member.findById(values.memberId);
 
   if (member && values.licenseNumber) {
@@ -223,8 +226,12 @@ const updateProfile = asyncHandler(async (req, res) => {
     );
     res.json("JKS Number updated");
   } else if (member) {
-    await Member.findOneAndUpdate({ _id: member._id }, values, { new: true });
-    res.json("profile updated");
+    const memberUpdated = await Member.findOneAndUpdate(
+      { _id: member._id },
+      values,
+      { new: true }
+    );
+    res.json(memberUpdated);
   } else {
     res.status(404);
     throw new Error("User not found");
@@ -346,48 +353,79 @@ const getFormerBlackBelts = asyncHandler(async (req, res) => {
 // @route GET /api/members
 // @access Private/Admin
 const getMembers = asyncHandler(async (req, res) => {
-  const keyword = req.query.keyword
-    ? {
-        $or: [
-          {
-            firstName: {
-              $regex: req.query.keyword,
-              $options: "i",
+  // special keywords: all for every members unpaginated & squad for all squad members unpaginated
+  if (req.query.keyword === "all") {
+    console.log('"all" keyword called');
+    const members = await Member.find({ ddsuccess: true });
+    res.json({ members: members });
+  } else if (req.query.keyword === "squad") {
+    console.log('"squad" keyword called');
+    const members = await Member.find({ squadMember: true });
+
+    // Check attendance and return for each member
+    // Obtain array of last 12 squad training sessions
+    const classes = await Attendance.find({
+      name: "Friday - Squad: 17:30 - 19:00",
+    });
+    classes.slice(-12);
+
+    // Loop through each member and check their attendance against the array of the last 12 squad sessions
+    members.forEach((member) => {
+      let attScore = 0;
+      classes.forEach((squadClass) => {
+        if (squadClass.participants.includes(member._id)) {
+          attScore++;
+        }
+      });
+      member.squadAttScore = attScore;
+    });
+    // ***** DONT YET HAVE 12 SESSIONS ON RECORD. WILL NEED TO WAIT UNTIL THE 28/04/23
+
+    res.json({ members: members });
+  } else {
+    const keyword = req.query.keyword
+      ? {
+          $or: [
+            {
+              firstName: {
+                $regex: req.query.keyword,
+                $options: "i",
+              },
             },
-          },
-          {
-            lastName: {
-              $regex: req.query.keyword,
-              $options: "i",
+            {
+              lastName: {
+                $regex: req.query.keyword,
+                $options: "i",
+              },
             },
-          },
-        ],
-      }
-    : {};
+          ],
+        }
+      : {};
 
-  const pageSize = 10;
-  const page = Number(req.query.pageNumber) || 1;
+    const pageSize = 10;
+    const page = Number(req.query.pageNumber) || 1;
 
-  const count = await Member.countDocuments();
+    const count = await Member.countDocuments();
 
-  const options = {
-    _id: 1,
-    firstName: 1,
-    lastName: 1,
-    email: 1,
-    phone: 1,
-    ddMandate: 1,
-    kyuGrade: 1,
-    danGrade: 1,
-    trainingFees: 1,
-    ddsuccess: 1,
-  };
+    const options = {
+      _id: 1,
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      phone: 1,
+      ddMandate: 1,
+      kyuGrade: 1,
+      danGrade: 1,
+      trainingFees: 1,
+      ddsuccess: 1,
+    };
 
-  const members = await Member.find({ ...keyword }, options)
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    const members = await Member.find({ ...keyword }, options)
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
 
-  res.json({ members, page, pages: Math.ceil(count / pageSize) });
+    res.json({ members, page, pages: Math.ceil(count / pageSize) });
+  }
 });
 
 // @desc Delete member
@@ -458,7 +496,7 @@ const getPublicMemberById = asyncHandler(async (req, res) => {
 });
 
 // @desc Update member profile
-// @route POST /api/members/:id
+// @route PUT /api/members/:id
 // @access Private/Admin
 const updateMemberProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
@@ -466,9 +504,13 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.params.id);
 
   if (member) {
-    await Member.findOneAndUpdate({ _id: values.memberId }, values, {
-      new: true,
-    });
+    const memberUpdate = await Member.findOneAndUpdate(
+      { _id: values.memberId },
+      values,
+      {
+        new: true,
+      }
+    );
 
     // send email to confirm profile updated
     genericEmail({
@@ -483,7 +525,7 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
       attachments: [],
     });
 
-    res.json("profile updated");
+    res.json(memberUpdate);
   } else {
     res.status(404);
     throw new Error("Member not found");

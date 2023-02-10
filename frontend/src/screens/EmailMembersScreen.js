@@ -126,7 +126,7 @@ const EmailMembersScreen = ({ history }) => {
       values.minGrade = 0;
       values.maxGrade = 0;
     }
-    if (values.attachments) {
+    if (file) {
       values.attachments = [
         {
           fileName: file,
@@ -202,7 +202,11 @@ const EmailMembersScreen = ({ history }) => {
             onSubmit={onSubmit}
           >
             {({ values }) => (
-              <Form>
+              <Form
+                style={{
+                  display: sendNewEmail || enquiries.length > 0 ? "" : "none",
+                }}
+              >
                 <div className="py-4 border-bottom border-warning">
                   <Row>
                     {sendNewEmail && (
@@ -419,6 +423,14 @@ const EmailMembersScreen = ({ history }) => {
               </Form>
             )}
           </Formik>
+          {enquiries.length > 0 ||
+            (sendNewEmail === false && (
+              <div className="d-flex text-success align-items-center my-5 bg-dark">
+                <i className="fa-solid fa-circle-check fa-2x my-3 p-2"></i>
+                <br />
+                <p className="m-2">You're done - No Enquiries to respond to.</p>
+              </div>
+            ))}
         </>
       )}
     </Container>

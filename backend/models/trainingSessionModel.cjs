@@ -12,6 +12,7 @@ const trainingSessionSchema = mongoose.Schema(
     capacity: { type: Number, required: true },
     hallHire: { type: Number, required: true },
     numberBooked: { type: Number, required: true, default: 0 },
+    cancelledClasses: { type: Array },
     participants: [
       {
         type: mongoose.Schema.Types.ObjectId,

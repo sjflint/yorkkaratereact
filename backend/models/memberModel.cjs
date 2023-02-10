@@ -51,10 +51,13 @@ const memberSchema = mongoose.Schema(
     feedback: { type: String },
     outstandingFees: { type: Number, default: 0 },
     squadMember: { type: Boolean, default: false },
+    squadDiscipline: { type: Object },
+    weight: { type: Number },
     bio: { type: String, default: "" },
     numberOfSessionsRequired: { type: Number },
     freeClasses: { type: Number, default: 0 },
     trainingFees: { type: Number },
+    squadAttScore: { type: Number },
   },
   {
     timestamps: true,

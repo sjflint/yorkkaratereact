@@ -31,9 +31,14 @@ const MemberDetails = () => {
     success: successPasswordUpdate,
   } = updatePasswordStatus;
 
+  const updateProfileDetails = useSelector(
+    (state) => state.updateProfileDetails
+  );
+  const { success: updateProfileSuccess } = updateProfileDetails;
+
   useEffect(() => {
     dispatch(getMemberDetails("profile"));
-  }, [dispatch]);
+  }, [dispatch, updateProfileSuccess]);
 
   // Update details form
   // Formik init, val and submit
@@ -50,6 +55,7 @@ const MemberDetails = () => {
     emergencyContactName: member.emergencyContactName,
     emergencyContactEmail: member.emergencyContactEmail,
     emergencyContactPhone: `0${member.emergencyContactPhone}`,
+    weight: member.weight,
   };
 
   const validationSchema = Yup.object({
@@ -60,6 +66,7 @@ const MemberDetails = () => {
     addressLine4: Yup.string(),
     postCode: Yup.string().required("Required"),
     email: Yup.string().required().email(),
+    weight: Yup.number().typeError("value must be a number in kg"),
     confirmEmail: Yup.string()
       .required()
       .oneOf([Yup.ref("email"), null], "email does not match"),
@@ -364,6 +371,19 @@ const MemberDetails = () => {
                     />
                   </div>
                 </div>
+                {member.squadMemeber && (
+                  <div className="py-4 border-bottom border-warning">
+                    <div className="bg-light mb-2 p-2">
+                      <FormikControl
+                        control="input"
+                        label="Weight in kg"
+                        type="text"
+                        name="weight"
+                        placeholder="Please enter your weight in kg. This is only required for kumite athletes"
+                      />
+                    </div>
+                  </div>
+                )}
                 <Row className="mt-2">
                   <Col>
                     <Button
