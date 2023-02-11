@@ -212,7 +212,7 @@ const MemberEditScreen = ({ match, history }) => {
       values.medicalStatus = "Yes medical";
     }
 
-    if (values.squadMember && !values.squadDiscipline) {
+    if (!values.squadMember || typeof values.squadDiscipline == "object") {
       values.squadDiscipline = {
         kata: true,
         kumite: true,

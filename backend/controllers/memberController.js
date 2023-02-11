@@ -512,18 +512,18 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
       }
     );
 
-    // send email to confirm profile updated
-    genericEmail({
-      recipientEmail: member.email,
-      recipientName: member.firstName,
-      subject: "Profile Updated",
-      message: `<h4>${member.firstName}, your profile has been updated</h4>
-    <p>We have updated your profile details for your York Karate account.</p>
-    `,
-      link: `${process.env.DOMAIN_LINK}/profile`,
-      linkText: "View Account",
-      attachments: [],
-    });
+    // // send email to confirm profile updated
+    // genericEmail({
+    //   recipientEmail: member.email,
+    //   recipientName: member.firstName,
+    //   subject: "Profile Updated",
+    //   message: `<h4>${member.firstName}, your profile has been updated</h4>
+    // <p>We have updated your profile details for your York Karate account.</p>
+    // `,
+    //   link: `${process.env.DOMAIN_LINK}/profile`,
+    //   linkText: "View Account",
+    //   attachments: [],
+    // });
 
     res.json(memberUpdate);
   } else {
