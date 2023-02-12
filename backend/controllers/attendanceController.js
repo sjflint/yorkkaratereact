@@ -41,31 +41,72 @@ const getAttendanceRecord = asyncHandler(async (req, res) => {
 const addAttendeeRecord = asyncHandler(async (req, res) => {
   const record = await Attendance.findById(req.body.classId);
 
-  if (record) {
-    const newParticipantsList = record.participants;
-    newParticipantsList.push(req.body.id);
-    await Attendance.findByIdAndUpdate(
-      req.body.classId,
-      { participants: newParticipantsList },
-      { new: true }
-    );
+  console.log(req.body);
 
-    const trialMember = await TrialClass.findById(req.body.id);
-
-    if (trialMember) {
-      trialMember.completed = true;
-      trialMember.save();
-      res.status(201).json("participants updated");
-    } else {
-      await Member.findByIdAndUpdate(
-        req.body.id,
-        { $inc: { attendanceRecord: 1 } },
+  if (req.body.addRemove === "add") {
+    if (record) {
+      const newParticipantsList = record.participants;
+      newParticipantsList.push(req.body.id);
+      const newRecord = await Attendance.findByIdAndUpdate(
+        req.body.classId,
+        { participants: newParticipantsList },
         { new: true }
       );
-      res.status(201).json("participants updated");
+
+      const trialMember = await TrialClass.findById(req.body.id);
+
+      if (trialMember) {
+        trialMember.completed = true;
+        trialMember.save();
+        res.status(201).json(trialMember);
+      } else {
+        await Member.findByIdAndUpdate(
+          req.body.id,
+          { $inc: { attendanceRecord: 1 } },
+          { new: true }
+        );
+        res.status(201).json(newRecord);
+      }
+    } else {
+      res.status(404).json("requested record is not found");
     }
-  } else {
-    res.status(404).json("requested record is not found");
+  }
+
+  if (req.body.addRemove === "remove") {
+    if (record) {
+      const newParticipantsList = record.participants;
+
+      console.log(`The current list of participants: ${newParticipantsList}`);
+
+      const updateParticipantsList = newParticipantsList.filter(
+        (id) => String(id) !== String(req.body.id)
+      );
+
+      console.log(`The new list of participants: ${updateParticipantsList}`);
+
+      const newRecord = await Attendance.findByIdAndUpdate(
+        req.body.classId,
+        { participants: updateParticipantsList },
+        { new: true }
+      );
+
+      const trialMember = await TrialClass.findById(req.body.id);
+
+      if (trialMember) {
+        trialMember.completed = false;
+        trialMember.save();
+        res.status(201).json("participants updated");
+      } else {
+        await Member.findByIdAndUpdate(
+          req.body.id,
+          { $inc: { attendanceRecord: -1 } },
+          { new: true }
+        );
+        res.status(201).json(newRecord);
+      }
+    } else {
+      res.status(404).json("requested record is not found");
+    }
   }
 });
 
@@ -75,40 +116,40 @@ const addAttendeeRecord = asyncHandler(async (req, res) => {
 const removeAttendeeRecord = asyncHandler(async (req, res) => {
   const record = await Attendance.findById(req.body.classId);
 
-  if (record) {
-    const newParticipantsList = record.participants;
+  // if (record) {
+  //   const newParticipantsList = record.participants;
 
-    console.log(`The current list of participants: ${newParticipantsList}`);
+  //   console.log(`The current list of participants: ${newParticipantsList}`);
 
-    const updateParticipantsList = newParticipantsList.filter(
-      (id) => String(id) !== String(req.body.id)
-    );
+  //   const updateParticipantsList = newParticipantsList.filter(
+  //     (id) => String(id) !== String(req.body.id)
+  //   );
 
-    console.log(`The new list of participants: ${updateParticipantsList}`);
+  //   console.log(`The new list of participants: ${updateParticipantsList}`);
 
-    await Attendance.findByIdAndUpdate(
-      req.body.classId,
-      { participants: updateParticipantsList },
-      { new: true }
-    );
+  //   await Attendance.findByIdAndUpdate(
+  //     req.body.classId,
+  //     { participants: updateParticipantsList },
+  //     { new: true }
+  //   );
 
-    const trialMember = await TrialClass.findById(req.body.id);
+  //   const trialMember = await TrialClass.findById(req.body.id);
 
-    if (trialMember) {
-      trialMember.completed = false;
-      trialMember.save();
-      res.status(201).json("participants updated");
-    } else {
-      await Member.findByIdAndUpdate(
-        req.body.id,
-        { $inc: { attendanceRecord: -1 } },
-        { new: true }
-      );
-      res.status(201).json("participants updated");
-    }
-  } else {
-    res.status(404).json("requested record is not found");
-  }
+  //   if (trialMember) {
+  //     trialMember.completed = false;
+  //     trialMember.save();
+  //     res.status(201).json("participants updated");
+  //   } else {
+  //     await Member.findByIdAndUpdate(
+  //       req.body.id,
+  //       { $inc: { attendanceRecord: -1 } },
+  //       { new: true }
+  //     );
+  //     res.status(201).json("participants updated");
+  //   }
+  // } else {
+  //   res.status(404).json("requested record is not found");
+  // }
 });
 
 // @desc add Extra Attendee

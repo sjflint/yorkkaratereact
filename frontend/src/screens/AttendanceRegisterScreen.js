@@ -18,6 +18,7 @@ import {
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import SearchBox from "../components/SearchBox";
+import { ATTENDANCE_ADD_RESET } from "../constants/attendanceConstants";
 
 export const AttendanceRegisterScreen = ({ history, match }) => {
   const keyword = match.params.keyword;
@@ -37,7 +38,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   const { loading, error, trainingSessions } = trainingSessionsList;
 
   const attendanceList = useSelector((state) => state.attendanceList);
-  const {
+  let {
     loading: attendanceLoading,
     error: attendanceError,
     record,
@@ -52,6 +53,13 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
   const memberAttRecord = useSelector((state) => state.memberAttRecord);
   const { success } = memberAttRecord;
+
+  const addAttendee = useSelector((state) => state.addAttendee);
+  const {
+    loading: addLoading,
+    error: errorLoading,
+    record: updatedRecord,
+  } = addAttendee;
 
   useEffect(() => {
     if (!memberInfo) {
@@ -69,7 +77,8 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     }
   }, [
     dispatch,
-    success,
+
+    // success,
     classId,
     keyword,
     history,
@@ -78,14 +87,15 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     match.params.className,
   ]);
 
+  // *** to remove reload, change dispatch to only a single call of attendeeAddRemove. Return new record and show this. On page reload, record will come from updateAttendance. ***
   const removeAttendeeHandler = async (id, recordId, className) => {
-    await dispatch(attendeeRemove(id, recordId));
-    await dispatch(updateAttendance(classId));
+    await dispatch(attendeeAdd(id, recordId, "remove"));
+    // await dispatch(updateAttendance(classId));
   };
 
   const addAttendeeHandler = async (id, recordId) => {
-    await dispatch(attendeeAdd(id, recordId));
-    await dispatch(updateAttendance(classId));
+    await dispatch(attendeeAdd(id, recordId, "add"));
+    // await dispatch(updateAttendance(classId));
   };
 
   const removeTrialAttendeeHandler = async (id, recordId, className) => {
@@ -167,6 +177,10 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   };
   filterSearches();
 
+  if (updatedRecord) {
+    record = updatedRecord;
+  }
+  console.log(record);
   return (
     <Container className="mt-3">
       {error && <Message variant="danger">{error}</Message>}

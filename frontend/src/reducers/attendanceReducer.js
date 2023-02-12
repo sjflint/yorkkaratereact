@@ -11,6 +11,7 @@ import {
   ATTENDANCE_ADD_EXTRA_REQUEST,
   ATTENDANCE_ADD_EXTRA_SUCCESS,
   ATTENDANCE_ADD_EXTRA_FAIL,
+  ATTENDANCE_ADD_RESET,
 } from "../constants/attendanceConstants";
 
 export const attendanceListReducer = (state = {}, action) => {
@@ -52,10 +53,12 @@ export const addAttendeeReducer = (state = {}, action) => {
     case ATTENDANCE_ADD_SUCCESS:
       return {
         loading: false,
-        success: true,
+        record: action.payload,
       };
     case ATTENDANCE_ADD_FAIL:
       return { loading: false, error: action.payload };
+    case ATTENDANCE_ADD_RESET:
+      return {};
     default:
       return state;
   }

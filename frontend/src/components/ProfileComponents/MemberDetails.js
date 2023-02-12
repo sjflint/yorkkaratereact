@@ -371,7 +371,7 @@ const MemberDetails = () => {
                     />
                   </div>
                 </div>
-                {member.squadMemeber && (
+                {member.squadMember && (
                   <div className="py-4 border-bottom border-warning">
                     <div className="bg-light mb-2 p-2">
                       <FormikControl
@@ -379,7 +379,7 @@ const MemberDetails = () => {
                         label="Weight in kg"
                         type="text"
                         name="weight"
-                        placeholder="Please enter your weight in kg. This is only required for kumite athletes"
+                        placeholder="Please enter your weight in kg."
                       />
                     </div>
                   </div>

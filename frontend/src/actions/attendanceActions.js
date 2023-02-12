@@ -89,42 +89,45 @@ export const attendeeRemove = (id, classId) => async (dispatch, getState) => {
   }
 };
 
-export const attendeeAdd = (id, classId) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: ATTENDANCE_ADD_REQUEST,
-    });
+export const attendeeAdd =
+  (id, classId, addRemove) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ATTENDANCE_ADD_REQUEST,
+      });
 
-    const {
-      memberLogin: { memberInfo },
-    } = getState();
+      const {
+        memberLogin: { memberInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${memberInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${memberInfo.token}`,
+        },
+      };
 
-    const values = {
-      id: id,
-      classId: classId,
-    };
+      const values = {
+        id: id,
+        classId: classId,
+        addRemove: addRemove,
+      };
 
-    await axios.post(`/api/attendance/add`, values, config);
+      const { data } = await axios.post(`/api/attendance/add`, values, config);
 
-    dispatch({
-      type: ATTENDANCE_ADD_SUCCESS,
-    });
-  } catch (error) {
-    dispatch({
-      type: ATTENDANCE_ADD_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: ATTENDANCE_ADD_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ATTENDANCE_ADD_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const attendeeExtraAdd =
   (memberId, recordId) => async (dispatch, getState) => {
