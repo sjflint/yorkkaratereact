@@ -93,6 +93,7 @@ const SquadScreen = () => {
 
   const gradeOptions = [
     { label: "Please select" },
+    { value: 0, label: "1st dan or above" },
     { value: 1, label: "1st kyu" },
     { value: 2, label: "2nd kyu" },
     { value: 3, label: "3rd kyu" },
@@ -268,6 +269,7 @@ const SquadScreen = () => {
                             <i
                               className="fa-solid fa-circle-xmark text-danger fa-3x"
                               onClick={() => {
+                                member.squadDiscipline &&
                                 member.squadDiscipline.kata
                                   ? (member.squadDiscipline.kata = false)
                                   : (member.squadDiscipline.kata = true);

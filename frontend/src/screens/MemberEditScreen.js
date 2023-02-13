@@ -124,6 +124,7 @@ const MemberEditScreen = ({ match, history }) => {
       emergencyContactEmail: member.emergencyContactEmail,
       emergencyContactPhone: `0${member.emergencyContactPhone}`,
       danGradings: member.danGradings,
+      squadDiscipline: member.squadDiscipline,
     };
   }
 
@@ -212,7 +213,11 @@ const MemberEditScreen = ({ match, history }) => {
       values.medicalStatus = "Yes medical";
     }
 
-    if (!values.squadMember || typeof values.squadDiscipline == "object") {
+    if (
+      values.squadMember === "true" &&
+      typeof values.squadDiscipline !== "object"
+    ) {
+      console.log("create squad discipline object");
       values.squadDiscipline = {
         kata: true,
         kumite: true,

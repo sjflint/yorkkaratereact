@@ -99,13 +99,13 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   };
 
   const removeTrialAttendeeHandler = async (id, recordId, className) => {
-    await dispatch(attendeeRemove(id, recordId));
+    await dispatch(attendeeAdd(id, recordId, "remove"));
     await dispatch(updateAttendance(classId));
     // set trial attendee complete === false
   };
 
   const addTrialAttendeeHandler = async (id, recordId, className) => {
-    await dispatch(attendeeAdd(id, recordId));
+    await dispatch(attendeeAdd(id, recordId, "add"));
     await dispatch(updateAttendance(classId));
     // set trial attendee complete === true
   };
