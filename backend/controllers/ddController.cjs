@@ -51,7 +51,7 @@ const ddSetup = asyncHandler(async (req, res) => {
       },
       metadata: {},
     },
-    req.body._id
+    `${Math.random()} req.body._id`
   );
   // add payment amount to database
   await Member.findOneAndUpdate(
@@ -368,7 +368,9 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
 // @route POST /ddroutes/createpayment
 // @access Public (private)
 const createPayment = asyncHandler(async (req, res) => {
+  console.log(req.body.paymentDetails._id);
   const member = await Member.findById(req.body.paymentDetails._id);
+  console.log(`Member Found ${member.firstName}`);
 
   const payment = await client.payments.create(
     {
@@ -383,12 +385,61 @@ const createPayment = asyncHandler(async (req, res) => {
     Math.random() + req.body.paymentDetails._id + "paymentstring"
   );
 
+  if (req.body.paymentDetails.category === "competitionPayment") {
+    console.log("attempting to store info");
+    const payment = `${req.body.paymentDetails.description} - £${(
+      req.body.paymentDetails.amount / 100
+    ).toFixed(2)}`;
+
+    let competitionPayment = [];
+
+    if (member.competitionPayment) {
+      competitionPayment = member.competitionPayment;
+      competitionPayment.push(payment);
+    } else {
+      competitionPayment.push(payment);
+    }
+
+    Member.findOneAndUpdate(
+      { _id: req.body.paymentDetails._id },
+      {
+        competitionPayment: competitionPayment,
+      },
+      { new: true },
+      function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(docs);
+        }
+      }
+    );
+    genericEmail({
+      recipientEmail: member.email,
+      recipientName: member.firstName,
+      subject: "Competition Payment Created",
+      message: `<h4>${
+        member.firstName
+      }, we have created a payment for an upcoming competition.</h4>
+  <p>We have created a payment from your direct debit with the following details:</p>
+  <ul>
+      <li>Payment Description: ${req.body.paymentDetails.description}</li>
+      <li>Amount: £${(req.body.paymentDetails.amount / 100).toFixed(2)}</li>
+  </ul>
+  `,
+      link: `${process.env.DOMAIN_LINK}/login`,
+      linkText: "View Account",
+      attachments: [],
+    });
+  }
+
   res.status(201).json({
     PaymentStatus: "submitted",
     PaymentAmount: payment.amount,
     paymentId: payment.id,
   });
 });
+// *** if ever creating a new payment type, add to webhooks to catch payment success/failure ***
 
 // @desc create payment
 // @route Access from server only

@@ -155,8 +155,10 @@ export const createPayment = (paymentDetails) => async (dispatch, getState) => {
       },
     };
 
-    const _id = memberInfo._id;
-    paymentDetails._id = _id;
+    if (!paymentDetails._id) {
+      const _id = memberInfo._id;
+      paymentDetails._id = _id;
+    }
 
     const { data } = await axios.post(
       `/ddroutes/createpayment`,

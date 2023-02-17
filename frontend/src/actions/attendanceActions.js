@@ -12,45 +12,87 @@ import {
   ATTENDANCE_ADD_EXTRA_REQUEST,
   ATTENDANCE_ADD_EXTRA_SUCCESS,
   ATTENDANCE_ADD_EXTRA_FAIL,
+  ATTENDANCE_MEMBER_LIST_REQUEST,
+  ATTENDANCE_MEMBER_LIST_SUCCESS,
+  ATTENDANCE_MEMBER_LIST_FAIL,
 } from "../constants/attendanceConstants";
 
-export const updateAttendance = (classId) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: ATTENDANCE_LIST_REQUEST,
-    });
+export const updateAttendance =
+  (classId, date) => async (dispatch, getState) => {
+    console.log(date);
+    try {
+      dispatch({
+        type: ATTENDANCE_LIST_REQUEST,
+      });
 
-    const values = {
-      date: new Date().toDateString(),
-      name: classId,
-    };
+      const values = {
+        // don't set date here but on the attendance screen. Validation that the date is not set for the future. Start here!!!
+        // date: new Date().toDateString(),
+        date: new Date(date).toDateString(),
+        name: classId,
+      };
 
-    const {
-      memberLogin: { memberInfo },
-    } = getState();
+      const {
+        memberLogin: { memberInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${memberInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${memberInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(`/api/attendance`, values, config);
+      const { data } = await axios.post(`/api/attendance`, values, config);
+      dispatch({
+        type: ATTENDANCE_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ATTENDANCE_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+export const listMemberAttendance =
+  (id, numRecord) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ATTENDANCE_MEMBER_LIST_REQUEST,
+      });
 
-    dispatch({
-      type: ATTENDANCE_LIST_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ATTENDANCE_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      const {
+        memberLogin: { memberInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${memberInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.get(
+        `/api/attendance/${id}/${numRecord}`,
+        config
+      );
+
+      dispatch({
+        type: ATTENDANCE_MEMBER_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ATTENDANCE_MEMBER_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const attendeeRemove = (id, classId) => async (dispatch, getState) => {
   try {

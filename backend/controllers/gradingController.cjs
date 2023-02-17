@@ -49,7 +49,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
                 gradingId: req.params.id,
               },
             },
-            `${Math.random()} - payment ID`
+            `${member._id} - course training fees`
           );
           if (payment) {
             const gradingCourse = await Event.findById(req.params.id);
@@ -110,7 +110,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               },
             },
 
-            `${Math.random()} - payment ID`
+            `${member._id} - grading fee`
           );
 
           if (payment) {

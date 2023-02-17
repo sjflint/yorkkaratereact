@@ -111,6 +111,12 @@ const GradingRegistrationScreen = ({ match }) => {
   if (event.title && event.participants.some((e) => e._id === member._id)) {
     applicationSuccess = true;
   }
+  if (
+    event.title &&
+    event.trainingParticipants.some((e) => e._id === member._id)
+  ) {
+    applicationSuccess = true;
+  }
 
   const updateLicenseNumber = async () => {
     const values = {

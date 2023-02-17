@@ -12,6 +12,10 @@ import {
   ATTENDANCE_ADD_EXTRA_SUCCESS,
   ATTENDANCE_ADD_EXTRA_FAIL,
   ATTENDANCE_ADD_RESET,
+  ATTENDANCE_MEMBER_LIST_REQUEST,
+  ATTENDANCE_MEMBER_LIST_SUCCESS,
+  ATTENDANCE_MEMBER_LIST_FAIL,
+  ATTENDANCE_MEMBER_LIST_RESET,
 } from "../constants/attendanceConstants";
 
 export const attendanceListReducer = (state = {}, action) => {
@@ -25,6 +29,24 @@ export const attendanceListReducer = (state = {}, action) => {
       };
     case ATTENDANCE_LIST_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const memberAttendanceListReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ATTENDANCE_MEMBER_LIST_REQUEST:
+      return { loading: true, record: [] };
+    case ATTENDANCE_MEMBER_LIST_SUCCESS:
+      return {
+        loading: false,
+        record: action.payload,
+      };
+    case ATTENDANCE_MEMBER_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case ATTENDANCE_MEMBER_LIST_RESET:
+      return {};
     default:
       return state;
   }

@@ -24,6 +24,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   const keyword = match.params.keyword;
 
   const classId = match.params.className;
+  const date = match.params.date;
 
   const pageNumber = match.params.pageNumber || 1;
 
@@ -70,7 +71,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
       history.push("/profile");
     } else {
       dispatch(listTrainingSessions());
-      dispatch(updateAttendance(classId));
+      dispatch(updateAttendance(classId, date));
       if (keyword) {
         dispatch(membersList(pageNumber, keyword));
       }
@@ -100,19 +101,19 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
   const removeTrialAttendeeHandler = async (id, recordId, className) => {
     await dispatch(attendeeAdd(id, recordId, "remove"));
-    await dispatch(updateAttendance(classId));
+    await dispatch(updateAttendance(classId, date));
     // set trial attendee complete === false
   };
 
   const addTrialAttendeeHandler = async (id, recordId, className) => {
     await dispatch(attendeeAdd(id, recordId, "add"));
-    await dispatch(updateAttendance(classId));
+    await dispatch(updateAttendance(classId, date));
     // set trial attendee complete === true
   };
 
   const addExtraAttendeeHandler = async (memberId) => {
     await dispatch(attendeeExtraAdd(memberId, record._id));
-    await dispatch(updateAttendance(classId));
+    await dispatch(updateAttendance(classId, date));
     history.push(`instructor/attendance/${classId}`);
   };
 
@@ -180,7 +181,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
   if (updatedRecord) {
     record = updatedRecord;
   }
-  console.log(record);
+
   return (
     <Container className="mt-3">
       {error && <Message variant="danger">{error}</Message>}
@@ -290,12 +291,12 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                                 <Button
                                   variant="outline-success"
                                   className="btn-sm"
-                                  onClick={() =>
+                                  onClick={() => {
                                     addAttendeeHandler(
                                       participant._id,
                                       record._id
-                                    )
-                                  }
+                                    );
+                                  }}
                                 >
                                   Mark as Present
                                 </Button>
@@ -412,7 +413,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                           await dispatch(
                             cancelPayment(participant._id, record._id)
                           );
-                          await dispatch(updateAttendance(classId));
+                          await dispatch(updateAttendance(classId, date));
                         }}
                       >
                         Mark as Not Present

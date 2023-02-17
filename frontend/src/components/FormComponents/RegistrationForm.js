@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import FormikControl from "./FormikControl";
 import "yup-phone";
 import { register } from "../../actions/memberActions";
+import Message from "../Message";
 
 const RegistrationForm = () => {
   // Redux
@@ -134,6 +135,7 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = (values) => {
+    setErrors(false);
     values.firstName = values.firstName.toLowerCase();
     values.lastName = values.lastName.toLowerCase();
     values.email = values.email.toLowerCase();
@@ -151,9 +153,15 @@ const RegistrationForm = () => {
     }
     dispatch(register(values));
   };
+  const [errors, setErrors] = useState(false);
 
   return (
     <>
+      {errors && (
+        <Message variant="danger">
+          Please review the form and correct errors
+        </Message>
+      )}
       {/* Can't implement Mapbox with mouse click. Should review in further updates */}
       <Formik
         initialValues={initialValues}
@@ -405,7 +413,14 @@ const RegistrationForm = () => {
               </div>
             </div>
 
-            <Button type="submit" variant="default btn-block w-100 py-0">
+            <Button
+              type="submit"
+              variant="default btn-block w-100 py-0"
+              onClick={() => {
+                window.scrollTo(0, 0);
+                setErrors(true);
+              }}
+            >
               Register
             </Button>
           </Form>

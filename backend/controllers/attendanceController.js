@@ -7,7 +7,60 @@ import TrainingSession from "../models/trainingSessionModel.cjs";
 import TrialClass from "../models/trialRegistrationModel.js";
 import { serverCreatedPayment } from "./ddController.cjs";
 
-// @desc get Attendance Record
+// @desc get all attendance records for one member
+// @route GET /api/attendance/:id
+// @access Public
+const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
+  const numberOfResults = req.params.numresults;
+  const member = req.params.id;
+
+  const attendanceRecord = await Attendance.find({});
+  let result = [];
+  for (let i = attendanceRecord.length - 1; i >= 0; i--) {
+    attendanceRecord[i].participants.forEach(
+      (participant) => {
+        if (participant === member) {
+          const record = {
+            date: new Date(attendanceRecord[i].date).toLocaleDateString(
+              "en-GB"
+            ),
+            class: attendanceRecord[i].name,
+          };
+          result.push(record);
+        }
+      }
+      // result.push(
+      //   `Date: ${new Date(attendanceRecord[i].date).toLocaleDateString(
+      //     "en-GB"
+      //   )} Class: ${attendanceRecord[i].name}`
+      // )
+    );
+    attendanceRecord[i].extraParticipants.forEach((participant) => {
+      const id = String(participant);
+
+      if (id === member) {
+        const record = {
+          date: new Date(attendanceRecord[i].date).toLocaleDateString("en-GB"),
+          class: `${attendanceRecord[i].name} - EXTRA CLASS`,
+        };
+        result.push(record);
+      }
+
+      // result.push(
+      //   `Extra class attended - Date: ${new Date(
+      //     attendanceRecord[i].date
+      //   ).toLocaleDateString("en-GB")} Class: ${attendanceRecord[i].name}`
+      // );
+    });
+  }
+  if (result.length > 0) {
+    res.status(201).json(result.slice(numberOfResults));
+  } else {
+    res.json("No results found");
+  }
+});
+
+// @desc get one Attendance Record
 // @route POST /api/attendance
 // @access Private/Instructor
 const getAttendanceRecord = asyncHandler(async (req, res) => {
@@ -110,48 +163,6 @@ const addAttendeeRecord = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc remove Attendee
-// @route POST /api/attendance/remove
-// @access Private/Instructor
-const removeAttendeeRecord = asyncHandler(async (req, res) => {
-  const record = await Attendance.findById(req.body.classId);
-
-  // if (record) {
-  //   const newParticipantsList = record.participants;
-
-  //   console.log(`The current list of participants: ${newParticipantsList}`);
-
-  //   const updateParticipantsList = newParticipantsList.filter(
-  //     (id) => String(id) !== String(req.body.id)
-  //   );
-
-  //   console.log(`The new list of participants: ${updateParticipantsList}`);
-
-  //   await Attendance.findByIdAndUpdate(
-  //     req.body.classId,
-  //     { participants: updateParticipantsList },
-  //     { new: true }
-  //   );
-
-  //   const trialMember = await TrialClass.findById(req.body.id);
-
-  //   if (trialMember) {
-  //     trialMember.completed = false;
-  //     trialMember.save();
-  //     res.status(201).json("participants updated");
-  //   } else {
-  //     await Member.findByIdAndUpdate(
-  //       req.body.id,
-  //       { $inc: { attendanceRecord: -1 } },
-  //       { new: true }
-  //     );
-  //     res.status(201).json("participants updated");
-  //   }
-  // } else {
-  //   res.status(404).json("requested record is not found");
-  // }
-});
-
 // @desc add Extra Attendee
 // @route POST /api/attendance/addextra
 // @access Private/Instructor
@@ -225,6 +236,11 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
       message: `<h4>Extra class attended</h4>
       <p>Thank you for attending the class ${record.name} on ${date}.</p>
       <p>If this class is an additional class this month, you will receive notification from goCardless about any additional fees. Perhaps consider reviewing your training schedule and seeing if it might be worth adding an extra class to your weekly program.</p>
+      <h5>What is our club policy on attending additional classes</h5>
+      <p>In general, it is expected that you will attend the classes that you are booked in for. However, we understand that life can get in the way of our plans and so you may attend one free class every 28 days. This should be used when you miss one of your regular classes.</p>
+      <p>You may attend more than one extra class in any given 28 day time period, but this will incur a charge.</p>
+      <p>One exception is when we cancel a training session. You will get a notification by email if your class has been cancelled and receive a free class credit to be used at any other training session. Please view your profile on the website to see if you currently have any free class credits available.</p>
+      <p>You do not need to pre-book extra classes. Simply attend the class and the instructor will add you to the register.</p>
       `,
       link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "Review your class bookings",
@@ -240,6 +256,6 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
 export {
   getAttendanceRecord,
   addAttendeeRecord,
-  removeAttendeeRecord,
   addExtraAttendeeRecord,
+  getmemberAttendanceRecords,
 };

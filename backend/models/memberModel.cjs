@@ -58,6 +58,7 @@ const memberSchema = mongoose.Schema(
     freeClasses: { type: Number, default: 0 },
     trainingFees: { type: Number },
     squadAttScore: { type: Number },
+    competitionPayment: { type: Array },
   },
   {
     timestamps: true,

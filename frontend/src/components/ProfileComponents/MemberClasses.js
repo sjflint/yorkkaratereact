@@ -13,6 +13,8 @@ import dojoImg from "../../img/dojo.jpeg";
 import Loader from "../Loader";
 import Message from "../Message";
 import { listFinancials } from "../../actions/financialActions";
+import { ATTENDANCE_MEMBER_LIST_RESET } from "../../constants/attendanceConstants";
+import AttRecord from "../AttRecord";
 
 const MemberClasses = () => {
   const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const MemberClasses = () => {
   const [deleteClass, setDeleteClass] = useState(false);
   const [switchClass, setSwitchClass] = useState(false);
   const [buttonLoader, setButtonLoader] = useState(false);
+  const [attRecordModal, setAttRecordModal] = useState(false);
 
   const [sessionToDelete, setSessionToDelete] = useState({});
 
@@ -222,6 +225,17 @@ const MemberClasses = () => {
           )}`}
         </p>
       )}
+      <div className="py-4 border-bottom border-warning">
+        <h5>Attendance Record</h5>
+        <Button
+          onClick={() => {
+            dispatch({ type: ATTENDANCE_MEMBER_LIST_RESET });
+            setAttRecordModal(true);
+          }}
+        >
+          View Attendance Record
+        </Button>
+      </div>
 
       {/* Add Class Modal */}
       <Modal
@@ -428,6 +442,35 @@ const MemberClasses = () => {
             Cancel
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* record modal */}
+      <Modal
+        show={attRecordModal}
+        onHide={() => setAttRecordModal(false)}
+        aria-labelledby="title-sm"
+      >
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title id="title-sm" className="text-white">
+            Attendance Record
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-1">Attendance Record</p>
+          {/* att Record */}
+          <AttRecord id={member._id} numRecords={-5} />
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              className="w-100"
+              onClick={() => {
+                setAttRecordModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal.Body>
       </Modal>
     </>
   );

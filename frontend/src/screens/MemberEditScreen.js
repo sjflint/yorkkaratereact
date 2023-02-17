@@ -13,11 +13,14 @@ import { listMemberClasses } from "../actions/trainingSessionActions";
 import { Link } from "react-router-dom";
 
 import UploadImage from "../components/uploadImage";
+import AttRecord from "../components/AttRecord";
+import { ATTENDANCE_MEMBER_LIST_RESET } from "../constants/attendanceConstants";
 
 const MemberEditScreen = ({ match, history }) => {
   const [showModal, setShowModal] = useState(false);
   const [gradingDate, setGradingDate] = useState();
   const [danGrade, setDanGrade] = useState();
+  const [attRecordModal, setAttRecordModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -523,6 +526,17 @@ const MemberEditScreen = ({ match, history }) => {
                           <MemberTrainingSessions />
                         )}
                       </div>
+                      <div className="py-4 border-bottom border-warning">
+                        <h5>Attendance Record</h5>
+                        <Button
+                          onClick={() => {
+                            dispatch({ type: ATTENDANCE_MEMBER_LIST_RESET });
+                            setAttRecordModal(true);
+                          }}
+                        >
+                          View Attendance Record
+                        </Button>
+                      </div>
 
                       <Row className="mt-2">
                         {!memberInfo.isAdmin ? (
@@ -618,6 +632,33 @@ const MemberEditScreen = ({ match, history }) => {
                   }}
                 >
                   Cancel
+                </Button>
+              </Modal.Footer>
+            </Modal.Body>
+          </Modal>
+          <Modal
+            show={attRecordModal}
+            onHide={() => setAttRecordModal(false)}
+            aria-labelledby="title-sm"
+          >
+            <Modal.Header closeButton className="bg-primary">
+              <Modal.Title id="title-sm" className="text-white">
+                Attendance Record
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p className="mb-1">Attendance Record</p>
+              {/* att Record */}
+              <AttRecord id={member._id} numRecords={-5} />
+              <Modal.Footer>
+                <Button
+                  variant="primary"
+                  className="w-100"
+                  onClick={() => {
+                    setAttRecordModal(false);
+                  }}
+                >
+                  Close
                 </Button>
               </Modal.Footer>
             </Modal.Body>

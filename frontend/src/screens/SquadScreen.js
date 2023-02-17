@@ -1,13 +1,28 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Form, Modal, Table } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  InputGroup,
+  ListGroup,
+  Modal,
+  Table,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { createPayment } from "../actions/directDebitActions";
 import { editMember, membersList } from "../actions/memberActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const SquadScreen = () => {
   const dispatch = useDispatch();
+
+  const [compPayment, setCompPayment] = useState(false);
+  const [paymentModal, setPaymentModal] = useState(false);
+  const [memberId, setMemberId] = useState();
+  const [paymentDescription, setPaymentDescription] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState(0);
 
   const today = new Date();
 
@@ -127,6 +142,13 @@ const SquadScreen = () => {
         <h3 className="text-center border-bottom border-warning pb-1 mt-4">
           Squad Administration
         </h3>
+        <Button
+          onClick={() => setCompPayment(true)}
+          variant="secondary"
+          className="btn-link"
+        >
+          Create payments for a competition
+        </Button>
         {loading && <Loader variant="warning" />}
         {error && <Message variant="danger">{error}</Message>}
         {memberList && (
@@ -328,8 +350,10 @@ const SquadScreen = () => {
           <Form.Group className="text-center mb-3">
             <Form.Label>Minimum Grade</Form.Label>
             <Form.Select onChange={(e) => setGradeFilterMin(e.target.value)}>
-              {gradeOptions.map((option) => (
-                <option value={option.value}>{option.label}</option>
+              {gradeOptions.map((option, index) => (
+                <option value={option.value} key={index}>
+                  {option.label}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
@@ -337,8 +361,10 @@ const SquadScreen = () => {
             <Form.Label>max grade</Form.Label>
 
             <Form.Select onChange={(e) => setGradeFilterMax(e.target.value)}>
-              {gradeOptions.map((option) => (
-                <option value={option.value}>{option.label}</option>
+              {gradeOptions.map((option, index) => (
+                <option value={option.value} key={index}>
+                  {option.label}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
@@ -381,16 +407,20 @@ const SquadScreen = () => {
           <Form.Group className="text-center mb-3">
             <Form.Label>Minimum Age</Form.Label>
             <Form.Select onChange={(e) => setAgeFilterMin(e.target.value)}>
-              {ageOptions.map((option) => (
-                <option value={option.value}>{option.label}</option>
+              {ageOptions.map((option, index) => (
+                <option value={option.value} key={index}>
+                  {option.label}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
           <Form.Group className="text-center">
             <Form.Label>Maximum Age</Form.Label>
             <Form.Select onChange={(e) => setAgeFilterMax(e.target.value)}>
-              {ageOptions.map((option) => (
-                <option value={option.value}>{option.label}</option>
+              {ageOptions.map((option, index) => (
+                <option value={option.value} key={index}>
+                  {option.label}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
@@ -408,6 +438,121 @@ const SquadScreen = () => {
           </Button>
           <Button variant="primary" onClick={() => setAgeFilterModal(false)}>
             Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* comp payment modal */}
+      <Modal show={compPayment} onHide={() => setCompPayment(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Competition Payments</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-black">
+          {memberListFilter &&
+            memberListFilter.map((member) => {
+              return (
+                <ListGroup key={member._id} className="mb-2">
+                  <ListGroup.Item className="d-flex justify-content-between">
+                    {member.firstName} {member.lastName}{" "}
+                    <Button
+                      className="btn btn-link"
+                      variant="secondary"
+                      onClick={() => {
+                        setMemberId(member._id);
+
+                        setPaymentAmount(0);
+                        setPaymentModal(true);
+                      }}
+                    >
+                      Add Payment
+                    </Button>
+                  </ListGroup.Item>
+                  {member.competitionPayment
+                    ? member.competitionPayment
+                        .slice(-3)
+                        .reverse()
+                        .map(
+                          (payment, index) =>
+                            index < 3 && (
+                              <ListGroup.Item className="bg-grey" key={index}>
+                                {payment}
+                              </ListGroup.Item>
+                            )
+                        )
+                    : "No payments to show"}
+                </ListGroup>
+              );
+            })}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setCompPayment(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => setCompPayment(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Payment modal */}
+      <Modal
+        size="sm"
+        show={paymentModal}
+        onHide={() => setPaymentModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Payment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-2">
+            <Form.Label>Payment Description</Form.Label>
+            <Form.Control
+              value={paymentDescription}
+              type="text"
+              onChange={(e) => setPaymentDescription(e.target.value)}
+            />
+          </Form.Group>
+          <InputGroup>
+            <InputGroup.Text>£</InputGroup.Text>
+            <Form.Control
+              value={paymentAmount}
+              type="text"
+              onChange={(e) => setPaymentAmount(e.target.value)}
+            />
+          </InputGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="danger"
+            className="btn-sm"
+            onClick={() => {
+              setPaymentModal(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            className="btn-sm"
+            onClick={async () => {
+              const paymentDetails = {
+                _id: memberId,
+                amount: Number(paymentAmount * 100),
+                description: paymentDescription,
+                category: "competitionPayment",
+              };
+              console.log(paymentDetails);
+              console.log(memberId);
+              await dispatch(createPayment(paymentDetails));
+              await dispatch(membersList(0, "squad"));
+              setPaymentModal(false);
+            }}
+          >
+            Create Payment
           </Button>
         </Modal.Footer>
       </Modal>

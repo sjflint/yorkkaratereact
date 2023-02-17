@@ -94,6 +94,7 @@ import {
   addAttendeeReducer,
   addExtraAttendeeReducer,
   attendanceListReducer,
+  memberAttendanceListReducer,
   removeAttendeeReducer,
 } from "./reducers/attendanceReducer";
 import {
@@ -113,6 +114,7 @@ import { enquiryListReducer } from "./reducers/enquiryReducer";
 
 const reducer = combineReducers({
   attendanceList: attendanceListReducer,
+  memberAttendanceList: memberAttendanceListReducer,
   removeAttendee: removeAttendeeReducer,
   addAttendee: addAttendeeReducer,
   addExtraAttendee: addExtraAttendeeReducer,

@@ -1,15 +1,24 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { listTrainingSessions } from "../actions/trainingSessionActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const AttendanceScreen = ({ match, history }) => {
+  const [customDay, setCustomDay] = useState();
+  const [customDate, setCustomDate] = useState(new Date());
+
   const dayToday = () => {
-    const d = new Date();
-    const day = d.getDay();
+    let day;
+    if (customDay && customDate < new Date()) {
+      day = Number(customDay);
+    } else {
+      const d = new Date();
+      day = d.getDay();
+    }
+
     switch (day) {
       case 0:
         return "Sunday";
@@ -53,16 +62,42 @@ const AttendanceScreen = ({ match, history }) => {
   }, [dispatch, history, memberInfo]);
 
   let todaysClasses;
-  const day = dayToday().substring(0, 3);
-  if (trainingSessions) {
-    todaysClasses = trainingSessions.filter(
-      (trainingSession) => trainingSession.name.substring(0, 3) === day
-    );
-  }
+  let day = dayToday().substring(0, 3);
+
+  const options = [
+    { label: "Monday", value: 1 },
+    { label: "Tuesday", value: 2 },
+    { label: "Wednesday", value: 3 },
+    { label: "Thursday", value: 4 },
+    { label: "Friday", value: 5 },
+    { label: "Saturday", value: 6 },
+    { label: "Sunday", value: 0 },
+  ];
 
   return (
     <div className="mt-3">
       <Container fluid="lg">
+        <div className="max-width-500 p-2 my-3 bg-grey mx-auto">
+          <Form.Group>
+            <Form.Label>
+              Set a date to go back and edit previous classes
+            </Form.Label>
+            <Form.Control
+              type="date"
+              onChange={(e) => {
+                setCustomDate(new Date(e.target.value));
+                setCustomDay(new Date(e.target.value).getDay());
+              }}
+              max={new Date().toISOString().slice(0, 10)}
+            />
+            {customDate > new Date() && (
+              <Message variant="danger">
+                Date cannot be set for the future
+              </Message>
+            )}
+          </Form.Group>
+        </div>
+
         {loading && <Loader variant="warning" />}
         {error && <Message variant="danger">{error}</Message>}
         <div className="d-flex justify-content-between align-items-center">
@@ -74,33 +109,48 @@ const AttendanceScreen = ({ match, history }) => {
           </div>
         </div>
         <h3 className="text-center border-bottom border-warning pb-1">
-          Attendance
+          Attendance{" "}
+          {customDate > new Date()
+            ? `${new Date().toLocaleDateString("en-GB")}`
+            : `${customDate.toLocaleDateString("en-GB")}`}
         </h3>
         <Row>
-          {todaysClasses.map((indClass) => (
-            <Col key={indClass._id} lg={4} md={6} sm={12} className="mb-3">
-              <Card className="h-100">
-                <Card.Header>{indClass.name}</Card.Header>
-                <Card.Body>
-                  <Card.Title>{indClass.times}</Card.Title>
-                  <Card.Text>{indClass.location}</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Button
-                    variant="outline-secondary"
-                    className="w-100"
-                    onClick={() => {
-                      history.push(
-                        `/instructor/attendance/${indClass._id}/search/~`
-                      );
-                    }}
+          {trainingSessions &&
+            trainingSessions.map(
+              (indClass) =>
+                indClass.name.substring(0, 3) === day && (
+                  <Col
+                    key={indClass._id}
+                    lg={4}
+                    md={6}
+                    sm={12}
+                    className="mb-3"
                   >
-                    View Register
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-          ))}
+                    <Card className="h-100">
+                      <Card.Header>{indClass.name}</Card.Header>
+                      <Card.Body>
+                        <Card.Title>{indClass.times}</Card.Title>
+                        <Card.Text>{indClass.location}</Card.Text>
+                      </Card.Body>
+                      <Card.Footer>
+                        <Button
+                          variant="outline-secondary"
+                          className="w-100"
+                          onClick={() => {
+                            history.push(
+                              `/instructor/attendance/${
+                                indClass._id
+                              }/${customDate.toISOString()}/search/~`
+                            );
+                          }}
+                        >
+                          View Register
+                        </Button>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                )
+            )}
         </Row>
       </Container>
     </div>
