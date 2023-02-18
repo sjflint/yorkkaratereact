@@ -74,6 +74,7 @@ const ddSetup = asyncHandler(async (req, res) => {
       amount: financials.baseLevelTrainingFees,
       currency: "GBP",
       name: "Monthly training fees",
+      // *** not 1st of month but how to set up at earliest possibility ***
       interval: 1,
       interval_unit: "monthly",
       links: {
@@ -212,6 +213,7 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
     amount: newAmount,
     currency: "GBP",
     name: "Monthly training fees",
+    // *** should not be 1st of month but current collection day
     interval: 1,
     interval_unit: "monthly",
     // day_of_month: chargeDay,
@@ -282,6 +284,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
           name: "Monthly training fees",
           interval: 1,
           interval_unit: "monthly",
+          // ***should not be 1st of the month but charge day***
           day_of_month: 1,
           links: {
             mandate: redirectFlow.links.mandate,

@@ -60,6 +60,7 @@ const memberSchema = mongoose.Schema(
     squadAttScore: { type: Number },
     competitionPayment: { type: Array },
   },
+  { versionKey: false },
   {
     timestamps: true,
   }
