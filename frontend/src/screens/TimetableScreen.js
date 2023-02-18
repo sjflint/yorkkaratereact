@@ -72,7 +72,8 @@ const TimetableScreen = () => {
     }
   };
 
-  const dateToday = new Date();
+  const dateYesterday = new Date();
+  dateYesterday.setDate(dateYesterday.getDate() - 1);
 
   return (
     <div className="mt-3">
@@ -168,26 +169,36 @@ const TimetableScreen = () => {
                   {trainingSessions &&
                     trainingSessions.map((trainingSession) => {
                       let cancelledClasses = [];
+
                       trainingSession.cancelledClasses.map((classes) => {
-                        if (new Date(classes) > dateToday) {
+                        if (new Date(classes) >= dateYesterday) {
                           return cancelledClasses.push(
                             new Date(classes).toLocaleDateString()
                           );
                         }
                       });
+                      {
+                      }
                       return (
                         cancelledClasses.length > 0 && (
-                          <ListGroupItem className="mb-1 bg-grey">
-                            <small>
-                              {trainingSession.name} {trainingSession.location}{" "}
-                              is cancelled on {cancelledClasses}
-                            </small>
-                          </ListGroupItem>
+                          <>
+                            <ListGroupItem className="mb-1 bg-grey">
+                              <small>
+                                {trainingSession.name}{" "}
+                                {trainingSession.location} is cancelled on{" "}
+                                {cancelledClasses}
+                              </small>
+                            </ListGroupItem>
+                          </>
                         )
                       );
                     })}
                 </ListGroup>
               </>
+
+              {/* {numberOfCancelledClasses === 0 && (
+                <small className="text-warning">No classes cancelled</small>
+              )} */}
             </Col>
           </Row>
         )}

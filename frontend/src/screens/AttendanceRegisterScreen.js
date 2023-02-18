@@ -431,7 +431,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         render={({ history }) => (
           <SearchBox
             history={history}
-            path={`/instructor/attendance/${classId}/`}
+            path={`/instructor/attendance/${classId}/${date}/`}
           />
         )}
       />

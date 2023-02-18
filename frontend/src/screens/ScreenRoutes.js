@@ -149,7 +149,7 @@ const ScreenRoutes = () => {
       <Route path="/instructor/editgradings" component={ListGradingsScreen} />
       <Route path="/instructor/attendance" component={AttendanceScreen} exact />
       <Route
-        path="/instructor/attendance/:className/:date/search/:keyword?"
+        path="/instructor/attendance/:className/:date?/search/:keyword?"
         component={AttendanceRegisterScreen}
       />
 
