@@ -7,6 +7,7 @@ import {
 import { checkTrialComplete } from "../controllers/registerTrialControllers.js";
 import { emailEnquiryAdmin } from "../emailTemplates/enquiryAdmin.js";
 import { addTotalMembersToArray } from "../controllers/memberController.js";
+import { waitingListCheck } from "../controllers/trainingSessionController.js";
 
 export const cronJobs = () => {
   // Newsletter sent every Monday @ 7am
@@ -31,23 +32,21 @@ export const cronJobs = () => {
     { timezone: "Europe/London" }
   );
 
-  // send email to admin with all paid orders, marked not ready to collect.
+  // Action at 8am every morning
   cron.schedule("0 8 * * *", () => {
+    // email with all paid orders, marked not ready to collect.
     emailShopAdmins();
-    console.log("request to send email to shop admins");
+    // email with open enquiries
+    emailEnquiryAdmin();
+    // check waiting lists and email if places available
+    waitingListCheck();
   });
 
-  // send email to trial attendees who have attended their session. Remove from database.
+  // send email at midnight every day to trial attendees who have attended their session. Remove from database.
   cron.schedule("0 0 * * *", () => {
     checkTrialComplete();
-  });
-
-  // send email for open enquiries
-  cron.schedule("0 8 * * *", () => {
-    emailEnquiryAdmin();
   });
 };
 
 // remove cancelled member records from db
 // check black belt deletions if account reinstated
-// dates on newsletter email

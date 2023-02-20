@@ -456,6 +456,72 @@ const trainingSessionCancelled = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc add details to waiting list
+// @route POST /api/trainingsessions/waitinglist
+// @access Public
+const postWaitingList = asyncHandler(async (req, res) => {
+  const waitingList = {
+    email: req.body.email,
+    phone: req.body.phone,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+  };
+  const trainingSession = await TrainingSession.findByIdAndUpdate(
+    req.body.classId,
+    {
+      $push: { waitingList: waitingList },
+    },
+    function (err, success) {
+      if (err) {
+        res.status(404).json("unable to add to waiting list");
+      } else {
+        res.status(201).json(trainingSession);
+      }
+    }
+  );
+});
+
+// @desc run test on training sessions and send emails on waiitng lists if required
+// @route server only
+// @access server only
+const waitingListCheck = async () => {
+  const formatName = (name) => {
+    const removeNoneAlpha = name.replace(/[^a-z0-9-']/gi, "");
+    const nameLowerCase = removeNoneAlpha.toLowerCase().trim();
+    return nameLowerCase.charAt(0).toUpperCase() + nameLowerCase.slice(1);
+  };
+  const trainingSessions = await TrainingSession.find({});
+
+  trainingSessions.forEach((trainingSession) => {
+    if (trainingSession.capacity - trainingSession.numberBooked > 0) {
+      if (
+        trainingSession.waitingList &&
+        trainingSession.waitingList.length > 0
+      ) {
+        trainingSession.waitingList.forEach((member) => {
+          genericEmail({
+            recipientEmail: member.email,
+            subject: `A Place has become available in the ${trainingSession.name} session`,
+            message: `<h4>Hi ${formatName(member.firstName)}, GOOD NEWS!</h4>
+                <p>A place has become available in the ${
+                  trainingSession.name
+                } session. You indicated that you might be interested in this class.</p>
+                <h5>What now?</h5>
+                <p>If you are a member of York Karate already, please login to your account and add the class to your list of classes.</p> 
+                <p>If you are not a member of York Karate but are considering joining, you can book a trial session through our website. To do this, please click the link below.</p>               
+              `,
+            link: `${process.env.DOMAIN_LINK}/trialregistrationform`,
+            linkText: "Book A Trial.",
+            attachments: [],
+          });
+        });
+        trainingSession.waitingList = [];
+        trainingSession.save();
+      }
+    }
+  });
+};
+
 export {
   getTrainingSessions,
   getMyTrainingSessions,
@@ -468,4 +534,6 @@ export {
   createTimetableSession,
   getTrainingSessionById,
   trainingSessionCancelled,
+  postWaitingList,
+  waitingListCheck,
 };

@@ -25,6 +25,11 @@ const trainingSessionSchema = mongoose.Schema(
         ref: "TrialClass",
       },
     ],
+    waitingList: [
+      {
+        type: Object,
+      },
+    ],
   },
   {
     timestamp: true,

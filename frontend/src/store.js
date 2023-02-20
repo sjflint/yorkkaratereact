@@ -52,6 +52,7 @@ import {
   trainingSessionCreateReducer,
   trainingSessionDeleteReducer,
   trainingSessionUpdateReducer,
+  waitingListReducer,
 } from "./reducers/trainingSessionReducer";
 import { basketReducer } from "./reducers/basketReducers";
 import {
@@ -197,6 +198,7 @@ const reducer = combineReducers({
   trialGet: trialGetReducer,
   trialPay: trialPayReducer,
   enquiryList: enquiryListReducer,
+  waitingList: waitingListReducer,
 });
 
 const memberInfoFromStorage = localStorage.getItem("memberInfo")

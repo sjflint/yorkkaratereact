@@ -33,6 +33,9 @@ import {
   TRAINING_SESSION_CANCEL_REQUEST,
   TRAINING_SESSION_CANCEL_SUCCESS,
   TRAINING_SESSION_CANCEL_FAIL,
+  WAITING_LIST_REQUEST,
+  WAITING_LIST_SUCCESS,
+  WAITING_LIST_FAIL,
 } from "../constants/trainingSessionConstants";
 
 export const listTrainingSessions = () => async (dispatch) => {
@@ -400,3 +403,29 @@ export const cancelTrainingSession =
       });
     }
   };
+
+export const addToWaitingList = (details) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: WAITING_LIST_REQUEST,
+    });
+
+    const { data } = await axios.post(
+      `/api/trainingsessions/waitinglist`,
+      details
+    );
+
+    dispatch({
+      type: WAITING_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: WAITING_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

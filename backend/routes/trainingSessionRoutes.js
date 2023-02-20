@@ -12,6 +12,7 @@ import {
   updateTimetableSession,
   getTrainingSessionById,
   trainingSessionCancelled,
+  postWaitingList,
 } from "../controllers/trainingSessionController.js";
 import { admin, protect } from "../middleware/authMiddleware.js";
 
@@ -23,6 +24,7 @@ router.route("/myTrainingSessions").get(protect, getMyTrainingSessions);
 router.route("/addsession").put(protect, addTrainingSession);
 router.route("/deletesession").post(protect, deleteTrainingSession);
 router.route("/switchsession").post(protect, switchTrainingSession);
+router.route("/waitinglist").post(postWaitingList);
 router
   .route("/membertrainingsessions/:id")
   .get(protect, admin, getMemberTrainingSessions);

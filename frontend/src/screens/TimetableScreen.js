@@ -90,7 +90,7 @@ const TimetableScreen = () => {
           </Message>
         ) : (
           <Row>
-            <Col sm={12} md={9}>
+            <Col md={12} lg={9}>
               <Row>
                 <Col md={6}>
                   <Image
@@ -160,12 +160,20 @@ const TimetableScreen = () => {
                 </Col>
               </Row>
             </Col>
-            <Col sm={12} md={3}>
+            <Col md={12} lg={3}>
               <>
-                <h6 className="text-center border-bottom border-warning p-1 mt-1">
+                <h6 className="text-center border-bottom border-warning p-1 mt-3">
                   Cancellations
                 </h6>
+                <p>
+                  If there are any scheduled class cancellations, they will be
+                  listed below. Members will also be contacted via email
+                </p>
                 <ListGroup className="mb-3">
+                  <ListGroupItem className="bg-warning text-white">
+                    Upcoming Cancellations:
+                  </ListGroupItem>
+                  <ListGroupItem></ListGroupItem>
                   {trainingSessions &&
                     trainingSessions.map((trainingSession) => {
                       let cancelledClasses = [];
@@ -189,16 +197,13 @@ const TimetableScreen = () => {
                                 {cancelledClasses}
                               </small>
                             </ListGroupItem>
+                            <ListGroupItem></ListGroupItem>
                           </>
                         )
                       );
                     })}
                 </ListGroup>
               </>
-
-              {/* {numberOfCancelledClasses === 0 && (
-                <small className="text-warning">No classes cancelled</small>
-              )} */}
             </Col>
           </Row>
         )}

@@ -35,6 +35,10 @@ import {
   TRAINING_SESSION_CANCEL_SUCCESS,
   TRAINING_SESSION_CANCEL_FAIL,
   TRAINING_SESSION_CANCEL_RESET,
+  WAITING_LIST_REQUEST,
+  WAITING_LIST_SUCCESS,
+  WAITING_LIST_FAIL,
+  WAITING_LIST_RESET,
 } from "../constants/trainingSessionConstants";
 
 export const listTrainingSessionsReducer = (
@@ -235,6 +239,21 @@ export const trainingSessionCancelReducer = (state = {}, action) => {
     case TRAINING_SESSION_CANCEL_FAIL:
       return { loadingTrainingSession: false, error: action.payload };
     case TRAINING_SESSION_CANCEL_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const waitingListReducer = (state = {}, action) => {
+  switch (action.type) {
+    case WAITING_LIST_REQUEST:
+      return { loading: true };
+    case WAITING_LIST_SUCCESS:
+      return { loading: false, success: true, details: action.payload };
+    case WAITING_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case WAITING_LIST_RESET:
       return {};
     default:
       return state;

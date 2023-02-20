@@ -42,6 +42,7 @@ const authMember = asyncHandler(async (req, res) => {
       lastName: member.lastName,
       firstName: member.firstName,
       email: member.email,
+      phone: member.phone,
       isAdmin: member.isAdmin,
       isAuthor: member.isAuthor,
       isShopAdmin: member.isShopAdmin,
