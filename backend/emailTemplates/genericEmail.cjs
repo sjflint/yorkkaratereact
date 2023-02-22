@@ -25,7 +25,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
 
   const mailOptions = {
     from: "info@yorkkarate.net",
-    to: "info@yorkkarate.net",
+    to: "no-reply@yorkkarate.net",
     bcc: emailDetails.recipientEmail,
     subject: emailDetails.subject,
     text: emailDetails.subject,

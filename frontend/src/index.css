@@ -167,6 +167,9 @@ input[type="file"] {
   text-decoration: underline;
 }
 
+.max-width-30 {
+  max-width: 30px;
+}
 .max-width-100 {
   max-width: 100px;
 }

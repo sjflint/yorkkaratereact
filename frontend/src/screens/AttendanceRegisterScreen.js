@@ -1,34 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Route } from "react-router-dom";
 import {
   attendeeAdd,
-  attendeeRemove,
   updateAttendance,
   attendeeExtraAdd,
 } from "../actions/attendanceActions";
 import { cancelPayment } from "../actions/directDebitActions";
 import { changeAttRecord, membersList } from "../actions/memberActions";
-import {
-  addMyClass,
-  listTrainingSessions,
-} from "../actions/trainingSessionActions";
+import { listTrainingSessions } from "../actions/trainingSessionActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import SearchBox from "../components/SearchBox";
-import { ATTENDANCE_ADD_RESET } from "../constants/attendanceConstants";
 
 export const AttendanceRegisterScreen = ({ history, match }) => {
   const keyword = match.params.keyword;
-
   const classId = match.params.className;
   const date = match.params.date;
-
   const pageNumber = match.params.pageNumber || 1;
 
   const dispatch = useDispatch();
+
+  const [stamps, setStamps] = useState([]);
 
   const memberLogin = useSelector((state) => state.memberLogin);
   const { memberInfo } = memberLogin;
@@ -52,15 +47,8 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     memberList,
   } = listMembers;
 
-  const memberAttRecord = useSelector((state) => state.memberAttRecord);
-  const { success } = memberAttRecord;
-
   const addAttendee = useSelector((state) => state.addAttendee);
-  const {
-    loading: addLoading,
-    error: errorLoading,
-    record: updatedRecord,
-  } = addAttendee;
+  const { record: updatedRecord } = addAttendee;
 
   useEffect(() => {
     if (!memberInfo) {
@@ -78,25 +66,23 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     }
   }, [
     dispatch,
-
-    // success,
     classId,
     keyword,
     history,
     memberInfo,
     pageNumber,
     match.params.className,
+    date,
   ]);
 
-  // *** to remove reload, change dispatch to only a single call of attendeeAddRemove. Return new record and show this. On page reload, record will come from updateAttendance. ***
   const removeAttendeeHandler = async (id, recordId, className) => {
+    setStamps(stamps.filter((stamp) => stamp !== id));
     await dispatch(attendeeAdd(id, recordId, "remove"));
-    // await dispatch(updateAttendance(classId));
   };
 
   const addAttendeeHandler = async (id, recordId) => {
+    setStamps([...stamps, id]);
     await dispatch(attendeeAdd(id, recordId, "add"));
-    // await dispatch(updateAttendance(classId));
   };
 
   const removeTrialAttendeeHandler = async (id, recordId, className) => {
@@ -214,6 +200,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         >
           <thead>
             <tr className="text-center">
+              <th>Stamps</th>
               <th>Name</th>
               <th>Present</th>
               <th>Not Present</th>
@@ -229,32 +216,18 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                     if (participant.dateOfBirth) {
                       return (
                         <tr key={participant._id}>
-                          <td className="d-flex align-items-center justify-content-between">
-                            {/* To allow instructor to adjust att record. Should be removed once task completed */}
-                            <div className="d-flex flex-column">
-                              <div>
-                                <i
-                                  className="text-link fa-solid fa-caret-up fa-2x"
-                                  onClick={() =>
-                                    dispatch(
-                                      changeAttRecord(participant._id, 1)
-                                    )
-                                  }
-                                ></i>
-                              </div>
-                              <div>{participant.attendanceRecord}</div>
-                              <div>
-                                <i
-                                  className="text-link fa-solid fa-caret-down fa-2x"
-                                  onClick={() =>
-                                    dispatch(
-                                      changeAttRecord(participant._id, -1)
-                                    )
-                                  }
-                                ></i>
-                              </div>
-                            </div>
-
+                          <td>
+                            {stamps.includes(participant._id) ? (
+                              <p className="border border-danger rounded-circle max-width-30 mx-auto bg-danger text-white">
+                                {participant.attendanceRecord + 1}
+                              </p>
+                            ) : (
+                              <p className="border border-danger rounded-circle max-width-30 mx-auto bg-danger text-white">
+                                {participant.attendanceRecord}
+                              </p>
+                            )}
+                          </td>
+                          <td>
                             <Link to={`/admin/members/${participant._id}/edit`}>
                               {participant.firstName} {participant.lastName}{" "}
                               {participant.medicalStatus === "Yes medical" && (

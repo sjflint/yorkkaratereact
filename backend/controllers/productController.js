@@ -98,9 +98,7 @@ const createProduct = asyncHandler(async (req, res) => {
   genericEmail({
     recipientEmail: recipients,
     subject: "We have a great new product for sale!",
-    message: `<h4>${
-      member.firstName
-    }, we have a new product in our shop that you might be interested in.</h4>
+    message: `<h4>We have a new product in our shop that you might be interested in.</h4>
       <table role="presentation" cellspacing="0" width="100%">
       <tr>
       <td>

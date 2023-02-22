@@ -228,7 +228,7 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
     );
 
     // send email to confirm new class
-    const date = new Date(record.date).toLocaleDateString();
+    const date = new Date(record.date).toLocaleDateString("en-GB");
     genericEmail({
       recipientEmail: member.email,
       recipientName: member.firstName,

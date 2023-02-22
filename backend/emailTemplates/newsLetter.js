@@ -153,7 +153,7 @@ const newsLetterEmail = asyncHandler(async () => {
 
   const mailOptions = {
     from: "info@yorkkarate.net",
-    to: "info@yorkkarate.net",
+    to: "no-reply@yorkkarate.net",
     bcc: recipients,
     subject: "York Karate News",
     text: "All the latest news from York Karate Dojo",

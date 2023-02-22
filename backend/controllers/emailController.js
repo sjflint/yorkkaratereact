@@ -11,7 +11,7 @@ import TrainingSessions from "../models/trainingSessionModel.cjs";
 // -Specific class
 
 const sendEmail = asyncHandler(async (req, res) => {
-  const members = await Members.find({});
+  const members = await Members.find({ ddsuccess: true });
 
   let recipients = [];
   const emailDetails = {

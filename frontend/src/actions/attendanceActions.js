@@ -26,8 +26,6 @@ export const updateAttendance =
       });
 
       const values = {
-        // don't set date here but on the attendance screen. Validation that the date is not set for the future. Start here!!!
-        // date: new Date().toDateString(),
         date: new Date(date).toDateString(),
         name: classId,
       };
