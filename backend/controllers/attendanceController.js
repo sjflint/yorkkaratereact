@@ -17,24 +17,15 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
   const attendanceRecord = await Attendance.find({});
   let result = [];
   for (let i = attendanceRecord.length - 1; i >= 0; i--) {
-    attendanceRecord[i].participants.forEach(
-      (participant) => {
-        if (participant === member) {
-          const record = {
-            date: new Date(attendanceRecord[i].date).toLocaleDateString(
-              "en-GB"
-            ),
-            class: attendanceRecord[i].name,
-          };
-          result.push(record);
-        }
+    attendanceRecord[i].participants.forEach((participant) => {
+      if (participant === member) {
+        const record = {
+          date: new Date(attendanceRecord[i].date).toLocaleDateString("en-GB"),
+          class: attendanceRecord[i].name,
+        };
+        result.push(record);
       }
-      // result.push(
-      //   `Date: ${new Date(attendanceRecord[i].date).toLocaleDateString(
-      //     "en-GB"
-      //   )} Class: ${attendanceRecord[i].name}`
-      // )
-    );
+    });
     attendanceRecord[i].extraParticipants.forEach((participant) => {
       const id = String(participant);
 
@@ -45,12 +36,6 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
         };
         result.push(record);
       }
-
-      // result.push(
-      //   `Extra class attended - Date: ${new Date(
-      //     attendanceRecord[i].date
-      //   ).toLocaleDateString("en-GB")} Class: ${attendanceRecord[i].name}`
-      // );
     });
   }
   if (result.length > 0) {
@@ -93,8 +78,6 @@ const getAttendanceRecord = asyncHandler(async (req, res) => {
 // @access Private/Instructor
 const addAttendeeRecord = asyncHandler(async (req, res) => {
   const record = await Attendance.findById(req.body.classId);
-
-  console.log(req.body);
 
   if (req.body.addRemove === "add") {
     if (record) {
@@ -182,9 +165,6 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
     member.extraClassAdded.getDate() + 28
   );
 
-  console.log(todaysDate);
-  console.log(lastExtraClassAdded);
-
   if (member.freeClasses > 0) {
     member.freeClasses--;
     member.save();
@@ -230,7 +210,7 @@ const addExtraAttendeeRecord = asyncHandler(async (req, res) => {
     // send email to confirm new class
     const date = new Date(record.date).toLocaleDateString("en-GB");
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Extra class attended",
       message: `<h4>Extra class attended</h4>

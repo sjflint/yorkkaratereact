@@ -83,7 +83,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
       await updateSubscription(paymentDetails);
     }
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "New class added",
       message: `<h4>${member.firstName}, we have upgraded your membership to include an extra class per week</h4>
@@ -147,7 +147,7 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
       { new: true }
     );
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Class removed",
       message: `<h4>${member.firstName}, at your request we have reduced your membership and removed one class per week</h4>
@@ -205,7 +205,7 @@ const switchTrainingSession = asyncHandler(async (req, res) => {
         { new: true }
       );
       genericEmail({
-        recipientEmail: member.email,
+        recipientEmail: `${member.email}, ${member.secondaryEmail}`,
         recipientName: member.firstName,
         subject: "Class switched",
         message: `<h4>${member.firstName}, at your request we have switched your training sessions</h4>
@@ -313,27 +313,27 @@ const createTimetableSession = asyncHandler(async (req, res) => {
     junior = true;
   }
 
+  let recipients = [];
   for (const member of members) {
-    genericEmail({
-      recipientEmail: member.email,
-      recipientName: member.firstName,
-      subject: "New class starting",
-      message: `<h4>${
-        member.firstName
-      }, we have a new training session on the timetable</h4>
+    recipients.push(member.email, member.secondaryEmail);
+  }
+
+  genericEmail({
+    recipientEmail: recipients,
+    subject: "New class starting",
+    message: `<h4>Dear members, we have a new training session on the timetable</h4>
               <p>This new class is for ${
                 junior === true ? "Juniors" : "ages 9+"
               }. The class details are:</p>
               <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${
-        trainingSession.times
-      }   
+      trainingSession.times
+    }   
               <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
             `,
-      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
-      linkText: "View your training sessions",
-      attachments: [],
-    });
-  }
+    link: `${process.env.DOMAIN_LINK}/profile?key=third`,
+    linkText: "View your training sessions",
+    attachments: [],
+  });
 
   res.status(201).json(trainingSession);
 });
@@ -384,12 +384,12 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     // review this. Combine email addresses into a single email and send only to those eligible by age/grade
     const recipients = [];
     for (const member of members) {
-      recipients.push(member.email);
+      recipients.push(member.email, member.secondaryEmail);
     }
     genericEmail({
       recipientEmail: recipients,
       subject: "Class has been amended",
-      message: `<h4>${member.firstName}, we have amended a training session on the timetable</h4>
+      message: `<h4>Dear members, we have amended a training session on the timetable</h4>
               <p>The class details are:</p>
               <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}
               <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
@@ -430,7 +430,7 @@ const trainingSessionCancelled = asyncHandler(async (req, res) => {
       if (member) {
         member.freeClasses++;
         member.save();
-        recipients.push(member.email);
+        recipients.push(member.email, member.secondaryEmail);
         console.log(`free class added for ${member.firstName}`);
       }
     }

@@ -18,7 +18,7 @@ const newsLetterEmail = asyncHandler(async () => {
 
   if (members) {
     members.forEach((member) => {
-      recipients = `${recipients};${member.email}`;
+      recipients = `${recipients};${member.email};${member.secondaryEmail}`;
     });
   }
   // Get upcoming events

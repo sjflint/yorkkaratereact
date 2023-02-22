@@ -74,7 +74,7 @@ const createEvent = asyncHandler(async (req, res) => {
   if (members) {
     let recipients = "";
     members.forEach((member) => {
-      recipients = `${recipients}${member.email};`;
+      recipients = `${recipients}${member.email};${member.secondaryEmail};`;
     });
     console.log(recipients);
     genericEmail({

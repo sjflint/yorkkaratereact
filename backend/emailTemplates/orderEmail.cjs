@@ -64,7 +64,7 @@ const orderEmail = asyncHandler(async (emailDetails, orderId) => {
 
       const mailOptions = {
         from: "info@yorkkarate.net",
-        to: emailDetails.recipientEmail,
+        to: `${member.email}; ${member.secondaryEmail};`,
         subject: emailDetails.subject,
         text: emailDetails.subject,
         attachments: emailDetails.attachments,

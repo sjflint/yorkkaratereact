@@ -61,7 +61,7 @@ const processMandate = asyncHandler(async (event) => {
         { new: true }
       );
       genericEmail({
-        recipientEmail: member.email,
+        recipientEmail: `${member.email}, ${member.secondaryEmail}`,
         recipientName: member.firstName,
         subject: "Direct Debit Cancelled",
         message: `<h4>${member.firstName}, your direct debit has been cancelled</h4>
@@ -79,7 +79,7 @@ const processMandate = asyncHandler(async (event) => {
     case "failed":
       clearBookedSessions(member._id);
       genericEmail({
-        recipientEmail: member.email,
+        recipientEmail: `${member.email}, ${member.secondaryEmail}`,
         recipientName: member.firstName,
         subject: "Direct Debit Failed",
         message: `<h4>${member.firstName}, your direct debit failed when being setup.</h4>
@@ -117,7 +117,7 @@ const processMandate = asyncHandler(async (event) => {
           { new: true }
         );
         genericEmail({
-          recipientEmail: member.email,
+          recipientEmail: `${member.email}, ${member.secondaryEmail}`,
           recipientName: member.firstName,
           subject: "Direct Debit Requires Approval",
           message: `<h4>${member.firstName}, your direct debit requires approval.</h4>
@@ -148,7 +148,7 @@ const processMandate = asyncHandler(async (event) => {
       );
       // send email to say account active after dd approval given ****************************
       genericEmail({
-        recipientEmail: member.email,
+        recipientEmail: `${member.email}, ${member.secondaryEmail}`,
         recipientName: member.firstName,
         subject: "Direct Debit Requires Approval",
         message: `<h4>${member.firstName}, your direct debit has been approved.</h4>
@@ -211,7 +211,7 @@ const processPayment = async (event) => {
               { new: true }
             );
             genericEmail({
-              recipientEmail: member.email,
+              recipientEmail: `${member.email}, ${member.secondaryEmail}`,
               recipientName: member.firstName,
               subject: "Membership Fee failed",
               message: `<h4>${member.firstName}, your membership has been suspended</h4>
@@ -247,7 +247,7 @@ const processPayment = async (event) => {
                 }
               );
               genericEmail({
-                recipientEmail: member.email,
+                recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: "Grading payment failed",
                 message: `<h4>${member.firstName}, your grading payment failed</h4>
@@ -271,7 +271,7 @@ const processPayment = async (event) => {
                 }
               );
               genericEmail({
-                recipientEmail: member.email,
+                recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: "Grading payment failed",
                 message: `<h4>${member.firstName}, your grading payment failed</h4>
@@ -307,7 +307,7 @@ const processPayment = async (event) => {
                 }
               );
               genericEmail({
-                recipientEmail: member.email,
+                recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: "Training Course Payment Failed",
                 message: `<h4>${member.firstName}, your training course payment failed</h4>
@@ -332,7 +332,7 @@ const processPayment = async (event) => {
               );
 
               genericEmail({
-                recipientEmail: member.email,
+                recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: "Training Course Payment Failed",
                 message: `<h4>${member.firstName}, your training course payment failed</h4>
@@ -359,7 +359,7 @@ const processPayment = async (event) => {
               { new: true }
             );
             genericEmail({
-              recipientEmail: member.email,
+              recipientEmail: `${member.email}, ${member.secondaryEmail}`,
               recipientName: member.firstName,
               subject: "Shop payment failed",
               message: `<h4>${member.firstName}, your payment to the York Karate Shop failed</h4>
@@ -388,7 +388,7 @@ const processPayment = async (event) => {
             );
             console.log("training fees not paid");
             genericEmail({
-              recipientEmail: member.email,
+              recipientEmail: `${member.email}, ${member.secondaryEmail}`,
               recipientName: member.firstName,
               subject: "Training Fees not paid",
               message: `<h4>${member.firstName}, your membership has been suspended</h4>
@@ -413,7 +413,7 @@ const processPayment = async (event) => {
               }
             );
             genericEmail({
-              recipientEmail: member.email,
+              recipientEmail: `${member.email}, ${member.secondaryEmail}`,
               recipientName: member.firstName,
               subject: "Payment failed",
               message: `<h4>${member.firstName}, your payment for your extra class failed</h4>

@@ -76,7 +76,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
                 gradingCourse.dateOfEvent
               ).toLocaleDateString();
               genericEmail({
-                recipientEmail: member.email,
+                recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: gradingCourse.title,
                 message: `<h4>${gradingCourse.title}</h4>
@@ -140,7 +140,7 @@ const postGradingApplication = asyncHandler(async (req, res) => {
                 gradingCourse.dateOfEvent
               ).toLocaleDateString();
               genericEmail({
-                recipientEmail: member.email,
+                recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: gradingCourse.title,
                 message: `<h4>${gradingCourse.title}</h4>

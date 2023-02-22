@@ -82,7 +82,7 @@ const AccountResetScreen = () => {
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="email" className="mb-3 bg-light p-2">
-            <Form.Label>Email</Form.Label>
+            <Form.Label>Email (primary)</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email address"

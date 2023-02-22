@@ -14,6 +14,7 @@ const memberSchema = mongoose.Schema(
     addressLine4: { type: String },
     postCode: { type: String, required: true },
     email: { type: String, required: true },
+    secondaryEmail: { type: String, default: "" },
     phone: { type: Number, required: true },
     emergencyContactName: { type: String, required: true },
     emergencyContactEmail: { type: String, required: true },

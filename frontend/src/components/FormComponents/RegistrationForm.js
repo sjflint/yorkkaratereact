@@ -54,6 +54,7 @@ const RegistrationForm = () => {
     addressLine4: "",
     postCode: "",
     email: "",
+    secondaryEmail: "",
     confirmEmail: "",
     phone: "",
     emergencyContactName: "",
@@ -89,6 +90,7 @@ const RegistrationForm = () => {
     addressLine4: Yup.string().required("Required"),
     postCode: Yup.string().required("Required"),
     email: Yup.string().required().email().trim(),
+    secondaryEmail: Yup.string().email().trim(),
     confirmEmail: Yup.string()
       .required()
       .oneOf([Yup.ref("email"), null], "email does not match")
@@ -294,6 +296,15 @@ const RegistrationForm = () => {
                     type="text"
                     name="confirmEmail"
                     placeholder="Confirm Email"
+                  />
+                </div>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Secondary Email (optional)"
+                    type="text"
+                    name="secondaryEmail"
+                    placeholder="Add a secondary email address (optional)"
                   />
                 </div>
                 <div className="bg-light mb-2 p-2">

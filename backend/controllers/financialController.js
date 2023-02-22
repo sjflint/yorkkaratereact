@@ -96,14 +96,15 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
 
     // combine emails
     // send email to notify members of the change
-    membersList.forEach((member) => {
-      genericEmail({
-        recipientEmail: member.email,
-        recipientName: member.firstName,
-        subject: "Update to club fees",
-        message: `<h4>${
-          member.firstName
-        }, we have updated some of our fees.</h4>
+    let recipients = [];
+    membersList.forEach((member) =>
+      recipients.push(member.email, member.secondaryEmail)
+    );
+
+    genericEmail({
+      recipientEmail: recipients,
+      subject: "Update to club fees",
+      message: `<h4>To all club members, we have updated some of our fees.</h4>
     <p>We would like to let you know that with immediate effect, the following fees are in place:</p>
     <ul>
       <li>Base Level Training Fees (to train once a week): £${
@@ -121,10 +122,9 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     </ul>
     <p>There is nothing you need to do. Any price changes will automatically be applied to your direct debit.</p>
     `,
-        link: `${process.env.DOMAIN_LINK}/profile`,
-        linkText: "View Your account and fees",
-        attachments: [],
-      });
+      link: `${process.env.DOMAIN_LINK}/profile`,
+      linkText: "View Your account and fees",
+      attachments: [],
     });
 
     res.status(201).json("financials updated");

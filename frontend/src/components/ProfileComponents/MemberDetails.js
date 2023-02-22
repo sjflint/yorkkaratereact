@@ -51,6 +51,7 @@ const MemberDetails = () => {
     postCode: member.postCode,
     email: member.email,
     confirmEmail: "",
+    secondaryEmail: member.secondaryEmail,
     phone: `0${member.phone}`,
     emergencyContactName: member.emergencyContactName,
     emergencyContactEmail: member.emergencyContactEmail,
@@ -66,6 +67,7 @@ const MemberDetails = () => {
     addressLine4: Yup.string(),
     postCode: Yup.string().required("Required"),
     email: Yup.string().required().email(),
+    secondaryEmail: Yup.string().email(),
     weight: Yup.number().typeError("value must be a number in kg"),
     confirmEmail: Yup.string()
       .required()
@@ -329,6 +331,15 @@ const MemberDetails = () => {
                       type="text"
                       name="confirmEmail"
                       placeholder="Confirm Email"
+                    />
+                  </div>
+                  <div className="bg-light mb-2 p-2">
+                    <FormikControl
+                      control="input"
+                      label="Secondary Email (optional)"
+                      type="text"
+                      name="secondaryEmail"
+                      placeholder="Provide a secondary email address (optional)"
                     />
                   </div>
                   <div className="bg-light mb-2 p-2">

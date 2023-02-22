@@ -95,7 +95,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     // send email confirming order
     orderEmail(
       {
-        recipientEmail: member.email,
+        recipientEmail: `${member.email}, ${member.secondaryEmail}`,
         recipientName: member.firstName,
         subject: "Order Received",
         link: `${process.env.DOMAIN_LINK}/profile`,
@@ -119,7 +119,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     // send email confirming order
     orderEmail(
       {
-        recipientEmail: member.email,
+        recipientEmail: `${member.email}, ${member.secondaryEmail}`,
         recipientName: member.firstName,
         subject: "Order Received",
         link: `${process.env.DOMAIN_LINK}/profile`,
@@ -150,7 +150,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
     // send email to say order ready to collect
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Order ready to collect",
       message: `<h4>Your Order (${order._id}) is ready</h4>
@@ -183,7 +183,7 @@ const updateOrderToFulfilled = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
     // send email to conifrm order collected
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Order fulfilled",
       message: `<h4>Your Order (${order._id}) is complete</h4>

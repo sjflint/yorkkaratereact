@@ -64,7 +64,7 @@ const LoginScreen = ({ location, history }) => {
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId="email" className="mb-3 bg-light p-2">
-          <Form.Label>email</Form.Label>
+          <Form.Label>email (primary)</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter your email"

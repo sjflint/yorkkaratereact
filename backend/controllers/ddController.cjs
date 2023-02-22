@@ -97,7 +97,7 @@ const ddSetup = asyncHandler(async (req, res) => {
 
   // **************send a welcome email*************
   genericEmail({
-    recipientEmail: member.email,
+    recipientEmail: `${member.email}, ${member.secondaryEmail}`,
     recipientName: member.firstName,
     subject: "Welcome to York Karate Dojo",
     message: `<h4>Welcome to York Karate Dojo, ${member.firstName}</h4>
@@ -169,7 +169,7 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
 
   if (member) {
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Direct Debit Cancelled",
       message: `<h4>${member.firstName}, your direct debit has been cancelled</h4>
@@ -418,7 +418,7 @@ const createPayment = asyncHandler(async (req, res) => {
       }
     );
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Competition Payment Created",
       message: `<h4>${

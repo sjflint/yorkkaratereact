@@ -14,8 +14,6 @@ const getProducts = asyncHandler(async (req, res) => {
   const page = Number(req.query.pageNumber) || 1;
   const filterBy = req.query.filterBy;
 
-  // const count = await Product.countDocuments();
-
   if (req.query.pageNumber === "all") {
     const products = await Product.find({});
     res.json({ products });
@@ -35,8 +33,7 @@ const getProducts = asyncHandler(async (req, res) => {
       const products = await Product.find({ category: filterBy }).sort({
         name: 1,
       });
-      // .limit(pageSize)
-      // .skip(pageSize * (page - 1));
+
       res.json({ products, page, pages: Math.ceil(count / pageSize) });
     }
   }
@@ -93,7 +90,7 @@ const createProduct = asyncHandler(async (req, res) => {
   // combine emails to send
   let recipients = [];
   for (const member of members) {
-    recipients.push(member.email);
+    recipients.push(member.email, member.secondaryEmail);
   }
   genericEmail({
     recipientEmail: recipients,

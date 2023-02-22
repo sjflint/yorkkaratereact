@@ -122,6 +122,7 @@ const MemberEditScreen = ({ match, history }) => {
       addressLine4: member.addressLine4,
       postCode: member.postCode,
       email: member.email,
+      secondaryEmail: member.secondaryEmail,
       phone: `0${member.phone}`,
       emergencyContactName: member.emergencyContactName,
       emergencyContactEmail: member.emergencyContactEmail,
@@ -146,6 +147,7 @@ const MemberEditScreen = ({ match, history }) => {
     addressLine1: Yup.string().required("Required"),
     postCode: Yup.string().required("Required"),
     email: Yup.string().required().email(),
+    secondaryEmail: Yup.string().email(),
     phone: Yup.string().required("Required").phone("GB", true),
     emergencyContactName: Yup.string()
       .required("Required")
@@ -344,7 +346,16 @@ const MemberEditScreen = ({ match, history }) => {
                               label="Email"
                               type="text"
                               name="email"
-                              placeholder="Please enter your Email"
+                              placeholder="Please enter an Email"
+                            />
+                          </div>
+                          <div className="bg-light mb-2 p-2">
+                            <FormikControl
+                              control="input"
+                              label="Secondary Email (optional)"
+                              type="text"
+                              name="secondaryEmail"
+                              placeholder="Please enter a secondary email (optional)"
                             />
                           </div>
                           <div className="bg-light mb-2 p-2">

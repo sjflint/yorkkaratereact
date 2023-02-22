@@ -213,8 +213,6 @@ const getMemberPaymentDetails = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
-  console.log(values);
-
   const member = await Member.findById(values.memberId);
 
   if (member && values.licenseNumber) {
@@ -253,7 +251,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 
     // send email to confirm password change
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Password changed",
       message: `<h4>${member.firstName}, your password has been changed</h4>
@@ -296,7 +294,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
     // send email to confirm password reset
     genericEmail({
-      recipientEmail: member.email,
+      recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "Password reset",
       message: `<h4>${member.firstName}, your password has been reset</h4>

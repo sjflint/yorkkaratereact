@@ -26,7 +26,9 @@ const sendEmail = asyncHandler(async (req, res) => {
   };
   switch (req.body.recipientGroup) {
     case "all":
-      members.forEach((member) => recipients.push(member.email));
+      members.forEach((member) =>
+        recipients.push(member.email, member.secondaryEmail)
+      );
       genericEmail(emailDetails);
       return res.status(201).json("email sent");
 
@@ -35,14 +37,16 @@ const sendEmail = asyncHandler(async (req, res) => {
         (member) =>
           member.kyuGrade <= req.body.minGrade &&
           member.kyuGrade >= req.body.maxGrade &&
-          recipients.push(member.email)
+          recipients.push(member.email, member.secondaryEmail)
       );
       genericEmail(emailDetails);
       return res.status(201).json("email sent");
 
     case "squad":
       members.forEach(
-        (member) => member.squadMember && recipients.push(member.email)
+        (member) =>
+          member.squadMember &&
+          recipients.push(member.email, member.secondaryEmail)
       );
       genericEmail(emailDetails);
       return res.status(201).json("email sent");
@@ -52,7 +56,7 @@ const sendEmail = asyncHandler(async (req, res) => {
         req.body.classId
       ).populate("participants", "email");
       trainingSessions.participants.forEach((participant) =>
-        recipients.push(participant.email)
+        recipients.push(participant.email, participant.secondaryEmail)
       );
       genericEmail(emailDetails);
       return res.status(201).json("email sent");
