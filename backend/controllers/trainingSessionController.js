@@ -470,15 +470,11 @@ const postWaitingList = asyncHandler(async (req, res) => {
     req.body.classId,
     {
       $push: { waitingList: waitingList },
-    },
-    function (err, success) {
-      if (err) {
-        res.status(404).json("unable to add to waiting list");
-      } else {
-        res.status(201).json(trainingSession);
-      }
     }
   );
+  if (trainingSession) {
+    res.status(201).json(trainingSession);
+  }
 });
 
 // @desc run test on training sessions and send emails on waiitng lists if required

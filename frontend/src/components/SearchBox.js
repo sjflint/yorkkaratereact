@@ -24,9 +24,9 @@ const SearchBox = ({ history, path, placeholder }) => {
         name="q"
         onChange={(e) => setKeyword(e.target.value)}
         placeholder={`Search ${placeholder}...`}
-        className="mr-sm-2 ml-sm-2"
+        className="mr-sm-2 ml-sm-2 max-width-500"
       ></Form.Control>
-      <Button type="submit" variant="outline-secondary" className="p-2">
+      <Button type="submit" variant="outline-secondary" className="p-2 mx-2">
         Search
       </Button>
     </Form>

@@ -190,6 +190,67 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
       {(loading || attendanceLoading || memberListLoading) && (
         <Loader variant="warning" />
       )}
+
+      <div className="bg-black p-3 mt-2">
+        <p className="mt-1 mb-1 text-white">+ additional members</p>
+        <Route
+          render={({ history }) => (
+            <SearchBox
+              history={history}
+              path={`/instructor/attendance/${classId}/${date}/`}
+            />
+          )}
+        />
+
+        {filteredMembersList.length > 0 && (
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            className="table-sm text-center mt-3 text-white"
+          >
+            <thead>
+              <tr className="text-center">
+                <th>Name</th>
+                <th>Add To Class</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredMembersList.map((member) => {
+                return (
+                  <tr key={member._id}>
+                    <td className="text-white">
+                      {member.firstName} {member.lastName}
+                    </td>
+                    <td>
+                      <Button
+                        variant="outline-success"
+                        className="btn-sm"
+                        onClick={() => addExtraAttendeeHandler(member._id)}
+                      >
+                        + Add to Class
+                      </Button>
+                      {/* <Button
+                      variant="outline-success"
+                      className="btn-sm"
+                      onClick={() => {
+                        const id = { memberId: member._id, classId: classId };
+                        dispatch(addMyClass(id));
+                      }}
+                    >
+                      + Add to Class
+                    </Button> */}
+                      {/* can be used to add members via admin register screen if needed */}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        )}
+      </div>
+
       <div>
         <Table
           striped
@@ -284,6 +345,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
                     } else {
                       return (
                         <tr key={participant._id}>
+                          <td></td>
                           <td>
                             {participant.firstName} {participant.lastName}{" "}
                             {participant.medicalStatus === "Yes medical" && (
@@ -350,30 +412,24 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
               record.extraParticipants.map((participant) => {
                 return (
                   <tr key={participant._id}>
-                    <td className="d-flex align-items-center justify-content-between">
-                      {/* To allow instructor to adjust att record. Should be removed once task completed */}
-                      <div className="d-flex flex-column">
-                        <div>
-                          <i
-                            className="text-link fa-solid fa-caret-up fa-2x"
-                            onClick={() =>
-                              dispatch(changeAttRecord(participant._id, 1))
-                            }
-                          ></i>
-                        </div>
-                        <div>{participant.attendanceRecord}</div>
-                        <div>
-                          <i
-                            className="text-link fa-solid fa-caret-down fa-2x"
-                            onClick={() =>
-                              dispatch(changeAttRecord(participant._id, -1))
-                            }
-                          ></i>
-                        </div>
-                      </div>
-                      <div>
-                        {participant.firstName} {participant.lastName}
-                      </div>
+                    <td>
+                      {stamps.includes(participant._id) ? (
+                        <p className="border border-danger rounded-circle max-width-30 mx-auto bg-danger text-white">
+                          {participant.attendanceRecord + 1}
+                        </p>
+                      ) : (
+                        <p className="border border-danger rounded-circle max-width-30 mx-auto bg-danger text-white">
+                          {participant.attendanceRecord}
+                        </p>
+                      )}
+                    </td>
+                    <td>
+                      <Link to={`/admin/members/${participant._id}/edit`}>
+                        {participant.firstName} {participant.lastName}{" "}
+                        {participant.medicalStatus === "Yes medical" && (
+                          <i className="fa-solid fa-briefcase-medical text-danger fa-2x"></i>
+                        )}
+                      </Link>
                     </td>
                     <td>
                       <i className="fa-solid fa-circle-check text-success fa-3x"></i>
@@ -398,64 +454,6 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
           </tbody>
         </Table>
       </div>
-
-      <p className="mt-4 mb-1">+ additional members</p>
-      <Route
-        render={({ history }) => (
-          <SearchBox
-            history={history}
-            path={`/instructor/attendance/${classId}/${date}/`}
-          />
-        )}
-      />
-
-      {filteredMembersList.length > 0 && (
-        <Table
-          striped
-          bordered
-          hover
-          responsive
-          className="table-sm text-center mt-3"
-        >
-          <thead>
-            <tr className="text-center">
-              <th>Name</th>
-              <th>Add To Class</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredMembersList.map((member) => {
-              return (
-                <tr key={member._id}>
-                  <td>
-                    {member.firstName} {member.lastName}
-                  </td>
-                  <td>
-                    <Button
-                      variant="outline-success"
-                      className="btn-sm"
-                      onClick={() => addExtraAttendeeHandler(member._id)}
-                    >
-                      + Add to Class
-                    </Button>
-                    {/* <Button
-                      variant="outline-success"
-                      className="btn-sm"
-                      onClick={() => {
-                        const id = { memberId: member._id, classId: classId };
-                        dispatch(addMyClass(id));
-                      }}
-                    >
-                      + Add to Class
-                    </Button> */}
-                    {/* can be used to add members via admin register screen if needed */}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      )}
     </Container>
   );
 };

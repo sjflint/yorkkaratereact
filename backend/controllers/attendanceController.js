@@ -57,7 +57,10 @@ const getAttendanceRecord = asyncHandler(async (req, res) => {
     const attendanceRecord = await Attendance.findOne({
       date: req.body.date,
       name: className,
-    }).populate("extraParticipants", "id firstName lastName email phone");
+    }).populate(
+      "extraParticipants",
+      "id firstName lastName email phone attendanceRecord"
+    );
 
     if (attendanceRecord) {
       res.json(attendanceRecord);
