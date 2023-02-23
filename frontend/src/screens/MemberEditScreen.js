@@ -239,7 +239,7 @@ const MemberEditScreen = ({ match, history }) => {
       {memberInfo && (
         <>
           {!memberInfo.isAdmin && (
-            <Message variant="warning">
+            <Message variant="danger">
               Viewing as Instructor. Please note: Only admins can edit member's
               details. Any changes you make will not be saved or updated.
             </Message>
@@ -252,7 +252,7 @@ const MemberEditScreen = ({ match, history }) => {
             <>
               <Link
                 className="btn btn-outline-secondary py-0 mb-2"
-                to="/admin/listMembers"
+                onClick={() => history.goBack()}
               >
                 <i className="fas fa-arrow-left"></i> Return
               </Link>

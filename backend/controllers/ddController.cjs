@@ -251,7 +251,15 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
 const updateDirectDebit = asyncHandler(async (req, res) => {
   console.log(req.body.session_token);
   console.log(req.body.ddRedirect);
-  // collection date will be avaialble here at req.body.subChargeDate
+  console.log(req.body.subChargeDate);
+
+  // get collection day
+  let collectionDay;
+
+  if (req.body.subCHargeDate) {
+    collectionDay = new Date(req.body.subChargeDate).getDay();
+    console.log(`charge day: ${collectionDay}`);
+  }
 
   // Create new DD
   const redirectFlow = await client.redirectFlows.complete(
@@ -287,7 +295,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
           interval_unit: "monthly",
           // ***should not be 1st of the month but charge day********
           // The subscription and mandate have already been cancelled. How can data be sent accross for this from the initial request @ members => updatedirectdebit. Could add to the body of the dd request and send through to the dd controller???
-          day_of_month: 1,
+          day_of_month: collectionDay ? collectionDay : null,
           links: {
             mandate: redirectFlow.links.mandate,
           },
@@ -548,6 +556,32 @@ const cancelPayment = asyncHandler(async (req, res) => {
   });
 });
 
+const updateCollectionDate = async (id) => {
+  const member = await Member.findById(id);
+
+  if (member && member.ddMandate && member.ddMandate !== "") {
+    const subscription = await client.subscriptions.find(member.subscriptionId);
+    let collectionDate = subscription.upcoming_payments[0].charge_date;
+
+    collectionDate = new Date(collectionDate);
+    const nextDate = collectionDate.setDate(collectionDate.getDate() - 28);
+    if (new Date() < nextDate) {
+      // set date as soon as possible
+      member.subChargeDate = "";
+      member.save();
+      console.log(true);
+    } else {
+      // set date for the next collection date
+      member.subChargeDate = collectionDate;
+      member.save();
+    }
+
+    return collectionDate;
+  } else {
+    return false;
+  }
+};
+
 module.exports = {
   ddSetup,
   cancelDirectDebit,
@@ -556,4 +590,5 @@ module.exports = {
   createPayment,
   serverCreatedPayment,
   cancelPayment,
+  updateCollectionDate,
 };

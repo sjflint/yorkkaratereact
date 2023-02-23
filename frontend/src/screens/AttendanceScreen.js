@@ -100,7 +100,7 @@ const AttendanceScreen = ({ match, history }) => {
 
         {loading && <Loader variant="warning" />}
         {error && <Message variant="danger">{error}</Message>}
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center mb-3">
           <Link className="btn btn-outline-secondary py-0" to="/admin">
             <i className="fas fa-arrow-left"></i> Return
           </Link>

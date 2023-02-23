@@ -14,7 +14,11 @@ import {
   trainingSessionCancelled,
   postWaitingList,
 } from "../controllers/trainingSessionController.js";
-import { admin, protect } from "../middleware/authMiddleware.js";
+import {
+  admin,
+  adminOrInstructor,
+  protect,
+} from "../middleware/authMiddleware.js";
 
 router
   .route("/")
@@ -27,7 +31,7 @@ router.route("/switchsession").post(protect, switchTrainingSession);
 router.route("/waitinglist").post(postWaitingList);
 router
   .route("/membertrainingsessions/:id")
-  .get(protect, admin, getMemberTrainingSessions);
+  .get(protect, adminOrInstructor, getMemberTrainingSessions);
 router
   .route("/:id")
   .get(getTrainingSessionById)

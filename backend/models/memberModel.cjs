@@ -36,6 +36,7 @@ const memberSchema = mongoose.Schema(
     isInstructor: { type: Boolean, required: true, default: false },
     ddMandate: { type: String },
     subscriptionId: { type: String },
+    subChargeDate: { type: Date },
     trainingFees: { type: Number },
     licenseNumber: { type: Number },
     token: { type: String },
