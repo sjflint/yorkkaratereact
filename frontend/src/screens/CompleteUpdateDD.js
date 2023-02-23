@@ -18,6 +18,7 @@ const CompleteUpdateDD = () => {
         _id: member._id,
         session_token: token,
         ddRedirect: flowId,
+        // add collection date here from DB
       };
 
       const ddUpdate = async () => {

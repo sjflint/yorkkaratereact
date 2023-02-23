@@ -251,6 +251,8 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
 const updateDirectDebit = asyncHandler(async (req, res) => {
   console.log(req.body.session_token);
   console.log(req.body.ddRedirect);
+  // collection date will be avaialble here at req.body.subChargeDate
+
   // Create new DD
   const redirectFlow = await client.redirectFlows.complete(
     req.body.ddRedirect,

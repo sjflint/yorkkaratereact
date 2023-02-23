@@ -114,8 +114,26 @@ const registerMember = asyncHandler(async (req, res) => {
 const updateDirectDebit = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.body._id);
 
+  // set date here in db for next collection date.
+  // we need to test how far away this date is. More than 28 days away means the next payment could already be in the collection phase. Consequently, the payment will be cancelled when dd cancelled and so the next collection date should be asap.
+  // run function to add next collection date to database in ddController.
+  // const addChargeDates = async () => {
+  //   const members = await Member.find({ ddsuccess: true });
+
+  //   for (const member of members) {
+  //     if (member.ddMandate && member.ddMandate !== "") {
+  //       const subscription = await client.subscriptions.find(
+  //         member.subscriptionId
+  //       );
+  //       const subChargeDate = subscription.upcoming_payments[0].charge_date;
+  //       console.log(subChargeDate);
+  //     }
+  //   }
+  // };
+  // addChargeDates();
   if (member) {
     const session_token = Math.random() + member.firstName + member.email;
+
     const ddRedirect = await changeDirectDebit(session_token);
 
     if (ddRedirect) {
