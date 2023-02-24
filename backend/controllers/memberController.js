@@ -11,6 +11,7 @@ import Financial from "../models/financialModel.cjs";
 import Attendance from "../models/attendanceModel.cjs";
 import dotenv from "dotenv";
 import { updateCollectionDate } from "./ddController.cjs";
+import MonthlyCosts from "../models/monthlyCosts.js";
 
 dotenv.config();
 
@@ -548,12 +549,39 @@ const addTotalMembersToArray = async () => {
 
   const members = await Member.find({ ddsuccess: true });
 
-  financials.totalMembers.push(members.length);
+  // Calculate total income
+  let totalFees = [];
+  members.forEach((member) => {
+    if (member.ddsuccess) {
+      totalFees.push(Number(member.trainingFees));
+    }
+  });
+  const initialValue = 0;
+  let totalIncome = totalFees.reduce((prev, curr) => prev + curr, initialValue);
+  totalIncome = totalIncome / 100;
+
+  // calculate total costs
+  let totalCosts = [];
+  const monthlyCosts = await MonthlyCosts.find({});
+  monthlyCosts.forEach((cost) => {
+    totalCosts.push(cost.cost);
+  });
+  const initialCostValue = 0;
+  let totalCost = totalCosts.reduce(
+    (prevValue, currValue) => prevValue + currValue,
+    initialCostValue
+  );
+
+  // update database
+  financials.totalMembers.push({
+    date: new Date().toISOString().slice(0, 10),
+    totalMembers: members.length,
+    totalIncome: totalIncome,
+    totalCosts: totalCost,
+    profit: totalIncome - totalCost,
+  });
 
   financials.save();
-
-  console.log(financials);
-  console.log(members.length);
 };
 
 // @desc get public list of welfare officers

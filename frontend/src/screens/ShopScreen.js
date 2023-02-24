@@ -91,7 +91,7 @@ const ShopScreen = ({ match }) => {
             </Message>
           ) : (
             <>
-              {!filterBy && (
+              {/* {!filterBy && (
                 <Container>
                   <Row className="align-items-center bg-primary text-center p-2">
                     <Col xs={12} sm={2} md={2}></Col>
@@ -102,12 +102,12 @@ const ShopScreen = ({ match }) => {
                     <Col xs={12} sm={2} md={2}></Col>
                   </Row>
                 </Container>
-              )}
+              )} */}
               {!filterBy ? (
                 <>
-                  <h5 className="mt-4 border-bottom border-warning pb-1 text-light mx-1">
+                  {/* <h5 className="mt-4 border-bottom border-warning pb-1 text-light mx-1">
                     Browse all of our products
-                  </h5>
+                  </h5> */}
 
                   <Row className="no-gutters">
                     {products.map((product) => (

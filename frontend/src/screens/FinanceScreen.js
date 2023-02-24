@@ -17,6 +17,7 @@ import {
   updateMonthlyCosts,
   deleteMonthlyCost,
 } from "../actions/financialActions";
+import LineChart from "../components/ChartComponents/LineChart";
 
 const FinanceScreen = ({ history }) => {
   const [showFees, setShowFees] = useState(false);
@@ -31,6 +32,8 @@ const FinanceScreen = ({ history }) => {
   const [name, setName] = useState("");
   const [cost, setCost] = useState(0);
   const [costId, setCostId] = useState("");
+  const [memberChartData, setMemberChartData] = useState();
+  const [financialChartData, setFinancialChartData] = useState();
 
   const dispatch = useDispatch();
 
@@ -138,24 +141,99 @@ const FinanceScreen = ({ history }) => {
   let totalIncome;
   let totalMembers = 0;
   let totalMembersDelta = 0;
+
+  // total income
   if (memberList && financials) {
     memberList.forEach((member) => {
-      if (member.trainingFees && member.ddsuccess) {
+      if (member.ddsuccess) {
         totalFees.push(Number(member.trainingFees));
         totalMembers++;
       }
     });
-    totalMembersDelta = totalMembers - financials.totalMembers.at(-1);
+    totalMembersDelta =
+      totalMembers - financials.totalMembers.at(-1).totalMembers;
   }
   const initialValue = 0;
-  console.log(totalFees);
   totalIncome = totalFees.reduce((prev, curr) => prev + curr, initialValue);
-  console.log(totalIncome);
   totalIncome = totalIncome / 100;
+
+  // construct data for chart
+  if (!memberChartData && financials) {
+    setMemberChartData({
+      labels: financials.totalMembers.map((date) =>
+        new Date(date.date).toLocaleDateString("en-GB")
+      ),
+      datasets: [
+        {
+          label: "Total Members",
+          data: financials.totalMembers.map(
+            (totalMembers) => totalMembers.totalMembers
+          ),
+          backgroundColor: ["#1f9bcf"],
+          borderColor: ["#1f9bcf"],
+        },
+        {
+          label: "Target Members",
+          data: financials.totalMembers.map(() => 200),
+          backgroundColor: ["white"],
+          borderColor: ["white"],
+        },
+        {
+          label: "",
+          data: financials.totalMembers.map(() => 150),
+          backgroundColor: ["black"],
+          borderColor: ["black"],
+        },
+        {
+          label: "",
+          data: financials.totalMembers.map(() => 220),
+          backgroundColor: ["black"],
+          borderColor: ["black"],
+        },
+      ],
+    });
+    setFinancialChartData({
+      labels: financials.totalMembers.map((date) =>
+        new Date(date.date).toLocaleDateString("en-GB")
+      ),
+      datasets: [
+        {
+          label: "Training Fees",
+          data: financials.totalMembers.map(
+            (totalMembers) => totalMembers.totalIncome
+          ),
+          backgroundColor: ["green"],
+          borderColor: ["green"],
+        },
+        {
+          label: "Costs",
+          data: financials.totalMembers.map(
+            (totalMembers) => totalMembers.totalCosts
+          ),
+          backgroundColor: ["red"],
+          borderColor: ["red"],
+        },
+        {
+          label: "Profit/Loss",
+          data: financials.totalMembers.map((totalMembers) =>
+            totalMembers.profit.toFixed(2)
+          ),
+          backgroundColor: ["orange"],
+          borderColor: ["orange"],
+        },
+        {
+          label: "",
+          data: financials.totalMembers.map(() => 5000),
+          backgroundColor: ["black"],
+          borderColor: ["black"],
+        },
+      ],
+    });
+  }
 
   return (
     <Container fluid="lg" className="mt-3">
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between mb-2">
         <Link className="btn btn-outline-secondary py-0" to="/admin">
           <i className="fas fa-arrow-left"></i> Return
         </Link>
@@ -169,66 +247,92 @@ const FinanceScreen = ({ history }) => {
             <Card.Header>Summary</Card.Header>
             <Card.Body>
               <ListGroup variant="flush">
-                <ListGroup.Item
-                  variant="success"
-                  className="d-flex justify-content-between"
-                >
-                  <div>Income:</div>
-                  <div>
-                    {Number(totalIncome).toLocaleString("en-GB", {
-                      style: "currency",
-                      currency: "GBP",
-                    })}
-                  </div>
-                </ListGroup.Item>
-                <ListGroup.Item
-                  variant="danger"
-                  className="d-flex justify-content-between"
-                >
-                  {" "}
-                  <div>Costs:</div>
-                  <div>
-                    {Number(totalCost).toLocaleString("en-GB", {
-                      style: "currency",
-                      currency: "GBP",
-                    })}
-                  </div>
-                </ListGroup.Item>
-                <ListGroup.Item
-                  variant="primary"
-                  className="d-flex justify-content-between"
-                >
-                  {" "}
-                  <div>Profit/Loss:</div>
-                  <div>
-                    {(totalIncome - totalCost).toLocaleString("en-GB", {
-                      style: "currency",
-                      currency: "GBP",
-                    })}
-                  </div>
-                </ListGroup.Item>
-                <ListGroup.Item
-                  variant="info"
-                  className="d-flex justify-content-between"
-                >
-                  <div>Total Members:</div>
+                <Row className="mb-2">
+                  <Col>
+                    <ListGroup.Item className="d-flex justify-content-between bg-success text-white">
+                      <small>Income:</small>
+                      <small>
+                        {Number(totalIncome).toLocaleString("en-GB", {
+                          style: "currency",
+                          currency: "GBP",
+                        })}
+                      </small>
+                    </ListGroup.Item>
+                  </Col>
+                  <Col>
+                    <ListGroup.Item className="d-flex justify-content-between bg-danger text-white">
+                      {" "}
+                      <small>Costs:</small>
+                      <small>
+                        {Number(totalCost).toLocaleString("en-GB", {
+                          style: "currency",
+                          currency: "GBP",
+                        })}
+                      </small>
+                    </ListGroup.Item>
+                  </Col>
+                </Row>
+                <Row className="mb-2">
+                  <Col>
+                    <ListGroup.Item className="d-flex justify-content-between bg-warning text-white">
+                      {" "}
+                      <small>Profit/Loss:</small>
+                      <small>
+                        {(totalIncome - totalCost).toLocaleString("en-GB", {
+                          style: "currency",
+                          currency: "GBP",
+                        })}
+                      </small>
+                    </ListGroup.Item>
+                  </Col>
+                  <Col>
+                    <ListGroup.Item className="d-flex justify-content-between bg-info text-white">
+                      <small>Total Members:</small>
 
-                  <div>
-                    {totalMembers}
-                    {totalMembersDelta > 0 ? (
-                      <small className="text-success">
-                        (+{totalMembersDelta})
+                      <small>
+                        {totalMembers}
+                        {totalMembersDelta > 0 ? (
+                          <small className="text-success">
+                            (+{totalMembersDelta})
+                          </small>
+                        ) : totalMembersDelta < 0 ? (
+                          <small className="text-danger">
+                            ({totalMembersDelta})
+                          </small>
+                        ) : (
+                          ""
+                        )}
                       </small>
-                    ) : totalMembersDelta < 0 ? (
-                      <small className="text-danger">
-                        ({totalMembersDelta})
-                      </small>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </ListGroup.Item>
+                    </ListGroup.Item>
+                  </Col>
+                </Row>
               </ListGroup>
+              {memberChartData && financialChartData && (
+                <>
+                  <LineChart
+                    chartData={memberChartData}
+                    options={{
+                      scales: {
+                        yAxis: {
+                          min: 100,
+                          max: 200,
+                        },
+                      },
+                    }}
+                  />
+                  <LineChart
+                    chartData={financialChartData}
+                    options={{
+                      scales: {
+                        yAxis: {
+                          min: 100,
+                          max: 200,
+                        },
+                      },
+                    }}
+                  />
+                </>
+              )}
             </Card.Body>
           </Card>
           <Card className="mb-5">
@@ -485,7 +589,7 @@ const FinanceScreen = ({ history }) => {
                       </>
                     ) : (
                       <Button
-                        variant="outline-secondary btn-sm py-0 mb-1"
+                        variant="outline-secondary btn-sm py-0 mb-2"
                         onClick={() => setShowFees(true)}
                       >
                         Edit

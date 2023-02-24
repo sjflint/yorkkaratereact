@@ -256,7 +256,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
   // get collection day
   let collectionDay;
 
-  if (req.body.subCHargeDate) {
+  if (req.body.subChargeDate) {
     collectionDay = new Date(req.body.subChargeDate).getDay();
     console.log(`charge day: ${collectionDay}`);
   }
