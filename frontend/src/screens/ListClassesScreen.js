@@ -332,7 +332,14 @@ const ListClassesScreen = ({ history }) => {
                     <ListGroupItem variant="danger" className="mb-1">
                       <h6>
                         {trainingSession.name} {trainingSession.location} is
-                        cancelled on these dates {cancelledClasses}
+                        cancelled on these dates:
+                        <br />
+                        {cancelledClasses.map((date) => (
+                          <>
+                            {date}
+                            <br />
+                          </>
+                        ))}
                       </h6>
                     </ListGroupItem>
                   )

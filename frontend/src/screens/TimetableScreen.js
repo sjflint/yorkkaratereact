@@ -194,7 +194,11 @@ const TimetableScreen = () => {
                               <small>
                                 {trainingSession.name}{" "}
                                 {trainingSession.location} is cancelled on{" "}
-                                {cancelledClasses}
+                                {cancelledClasses.map((date) => (
+                                  <p className="bg-white mb-1 text-center">
+                                    {date}
+                                  </p>
+                                ))}
                               </small>
                             </ListGroupItem>
                             <ListGroupItem></ListGroupItem>
