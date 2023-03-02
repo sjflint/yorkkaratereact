@@ -87,14 +87,14 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
   const removeTrialAttendeeHandler = async (id, recordId, className) => {
     await dispatch(attendeeAdd(id, recordId, "remove"));
-    await dispatch(updateAttendance(classId, date));
-    // set trial attendee complete === false
+    // await dispatch(updateAttendance(classId, date));
+    window.location.reload();
   };
 
   const addTrialAttendeeHandler = async (id, recordId, className) => {
     await dispatch(attendeeAdd(id, recordId, "add"));
-    await dispatch(updateAttendance(classId, date));
-    // set trial attendee complete === true
+    // await dispatch(updateAttendance(classId, date));
+    window.location.reload();
   };
 
   const addExtraAttendeeHandler = async (memberId) => {
@@ -409,6 +409,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
 
             {record &&
               record.length !== 0 &&
+              record.extraParticipants &&
               record.extraParticipants.map((participant) => {
                 return (
                   <tr key={participant._id}>

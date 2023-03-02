@@ -3,6 +3,9 @@ import {
   TRIAL_GET_FAIL,
   TRIAL_GET_REQUEST,
   TRIAL_GET_SUCCESS,
+  TRIAL_LIST_FAIL,
+  TRIAL_LIST_REQUEST,
+  TRIAL_LIST_SUCCESS,
   TRIAL_PAY_FAIL,
   TRIAL_PAY_REQUEST,
   TRIAL_PAY_SUCCESS,
@@ -55,6 +58,37 @@ export const getTrial = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: TRIAL_GET_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getTrialList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: TRIAL_LIST_REQUEST });
+
+    const {
+      memberLogin: { memberInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/trialregistration", config);
+
+    dispatch({
+      type: TRIAL_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TRIAL_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

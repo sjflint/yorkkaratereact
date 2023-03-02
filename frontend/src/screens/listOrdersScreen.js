@@ -118,10 +118,12 @@ const ListOrdersScreen = ({ history }) => {
               {filteredOrders.map((order) => (
                 <tr key={order._id}>
                   <td>
-                    {order.member && (
-                      <Link to={`/shopadmin/members/${order.member._id}`}>
+                    {order.member && memberInfo.isAdmin ? (
+                      <Link to={`/admin/members/${order.member._id}/edit`}>
                         {order.member.firstName} {order.member.lastName}
                       </Link>
+                    ) : (
+                      `${order.member.firstName} ${order.member.lastName}`
                     )}
                   </td>
 

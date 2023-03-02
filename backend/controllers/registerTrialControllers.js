@@ -6,6 +6,22 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// @
+// desc: get all trial members awaiting to attend sessions
+// Private/admin
+const getAllTrials = asyncHandler(async (req, res) => {
+  const trialMembers = await TrialClass.find({}).populate(
+    "classSelection",
+    "name location times"
+  );
+
+  if (trialMembers) {
+    res.status(201).json(trialMembers);
+  } else {
+    res.status(404).json("Could not locate trial participants");
+  }
+});
+
 const registerTrial = asyncHandler(async (req, res) => {
   // Format first name and last name to uppercase first letter and lower case for the rest
   const formatName = (name) => {
@@ -148,4 +164,4 @@ const checkTrialComplete = async () => {
   }
 };
 
-export { registerTrial, getTrial, payTrial, checkTrialComplete };
+export { registerTrial, getTrial, payTrial, checkTrialComplete, getAllTrials };

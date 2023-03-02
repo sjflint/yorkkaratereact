@@ -138,7 +138,7 @@ const ShopScreen = ({ match }) => {
                   <Row className="no-gutters">
                     {products.map((product) => (
                       <Col
-                        xs={6}
+                        xs={12}
                         sm={6}
                         md={4}
                         key={product._id}

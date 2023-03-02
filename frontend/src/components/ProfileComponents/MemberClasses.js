@@ -208,12 +208,9 @@ const MemberClasses = () => {
           ))}
         </ListGroup>
       )}
-      <Button
-        className="btn-block btn btn-default w-100"
-        onClick={() => setAddClass(true)}
-      >
+      <div className="btn btn-link" onClick={() => setAddClass(true)}>
         <i className="fas fa-plus"></i> Add New Class
-      </Button>
+      </div>
       {canSwitch === false && (
         <p className="text-warning text-center mt-4">
           Unable to switch or delete classes again until:
@@ -226,15 +223,16 @@ const MemberClasses = () => {
         </p>
       )}
       <div className="py-4 border-bottom border-warning">
-        <h5>Attendance Record</h5>
-        <Button
+        <div
           onClick={() => {
             dispatch({ type: ATTENDANCE_MEMBER_LIST_RESET });
             setAttRecordModal(true);
           }}
+          className="btn btn-link"
         >
-          View Attendance Record
-        </Button>
+          <i className="fa-solid fa-eye"></i>{" "}
+          <small>View Attendance Record</small>
+        </div>
       </div>
 
       {/* Add Class Modal */}

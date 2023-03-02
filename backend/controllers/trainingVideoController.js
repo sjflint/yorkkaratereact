@@ -28,16 +28,22 @@ const getTrainingVideos = asyncHandler(async (req, res) => {
           },
         ],
       }
-    : {};
+    : null;
 
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
-  const trainingVideos = await TrainingVideo.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-  const count = await TrainingVideo.countDocuments();
-  res.json({ trainingVideos, page, pages: Math.ceil(count / pageSize) });
+  console.log(keyword);
+  if (!keyword) {
+    const trainingVideos = await TrainingVideo.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+    const count = await TrainingVideo.countDocuments();
+    res.json({ trainingVideos, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    const trainingVideos = await TrainingVideo.find({ ...keyword });
+    res.json({ trainingVideos });
+  }
 });
 
 // Fetch videos for member grade ???????

@@ -52,10 +52,10 @@ const AttendanceScreen = ({ match, history }) => {
   const { loading, error, trainingSessions } = trainingSessionsList;
 
   useEffect(() => {
-    if (!memberInfo) {
-      history.push("/login?redirect=instructor/attendance");
-    } else if (!memberInfo.isInstructor) {
+    if (memberInfo && !memberInfo.isInstructor) {
       history.push("/profile");
+    } else if (!memberInfo) {
+      history.push("/login?redirect=instructor/attendance");
     } else {
       dispatch(listTrainingSessions());
     }
@@ -83,6 +83,7 @@ const AttendanceScreen = ({ match, history }) => {
               Set a date to go back and edit previous classes
             </Form.Label>
             <Form.Control
+              value={customDate.toISOString().slice(0, 10)}
               type="date"
               onChange={(e) => {
                 setCustomDate(new Date(e.target.value));
@@ -133,19 +134,15 @@ const AttendanceScreen = ({ match, history }) => {
                         <Card.Text>{indClass.location}</Card.Text>
                       </Card.Body>
                       <Card.Footer>
-                        <Button
-                          variant="outline-secondary"
-                          className="w-100"
-                          onClick={() => {
-                            history.push(
-                              `/instructor/attendance/${
-                                indClass._id
-                              }/${customDate.toISOString()}/search/~`
-                            );
-                          }}
+                        <a
+                          variant="btn btn-outline-secondary btn-link"
+                          className="w-100 btn btn-secondary btn-link"
+                          href={`/instructor/attendance/${
+                            indClass._id
+                          }/${customDate.toISOString()}/search/~`}
                         >
                           View Register
-                        </Button>
+                        </a>
                       </Card.Footer>
                     </Card>
                   </Col>

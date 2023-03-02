@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Modal } from "react-bootstrap";
+import { Container, Table, Button, Modal, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Route } from "react-router-dom";
 import {
@@ -196,9 +196,9 @@ const ListSyllabusScreen = ({ history, match }) => {
 
   return (
     <Container fluid="lg" className="mt-3">
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between mb-3">
         <Link className="btn btn-outline-secondary py-0" to="/admin">
-          <i className="fas fa-arrow-left"></i> Return
+          <i className="fas fa-arrow-left"></i>
         </Link>
 
         <button
@@ -210,12 +210,10 @@ const ListSyllabusScreen = ({ history, match }) => {
             dispatch({ type: UPLOAD_FILE_CLEAR });
           }}
         >
-          <i className="fas fa-plus"></i> Create Training Video
+          <i className="fas fa-plus"></i> Create Video
         </button>
       </div>
-      <h3 className="text-center border-bottom border-warning pb-1 mb-2">
-        Syllabus
-      </h3>
+
       {loadingDelete && <Loader variant="warning" />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loadingCreate && <Loader variant="warning" />}
@@ -231,28 +229,26 @@ const ListSyllabusScreen = ({ history, match }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h3 className="text-center border-bottom border-warning mb-0">
-              Library of Techniques and Kata
-            </h3>
+          <h3 className="text-center border-bottom border-warning mb-3">
+            Library of Techniques and Kata
+          </h3>
 
-            <Route
-              render={({ history }) => (
-                <SearchBox
-                  history={history}
-                  path={"/instructor/editsyllabus/"}
-                  placeholder="videos"
-                />
-              )}
-            />
-          </div>
+          <Route
+            render={({ history }) => (
+              <SearchBox
+                history={history}
+                path={"/instructor/editsyllabus/"}
+                placeholder="videos"
+              />
+            )}
+          />
 
           <Table
             striped
             bordered
             hover
             responsive
-            className="table-sm text-center"
+            className="table-sm text-center mt-3"
           >
             <thead className="align-middle">
               <tr className="text-center">

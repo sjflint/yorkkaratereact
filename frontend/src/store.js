@@ -108,6 +108,7 @@ import {
 import { sendEmailReducer } from "./reducers/emailReducer";
 import {
   trialGetReducer,
+  trialListReducer,
   trialPayReducer,
   trialRegisterReducer,
 } from "./reducers/trialRegisterReducers";
@@ -197,6 +198,7 @@ const reducer = combineReducers({
   trialRegister: trialRegisterReducer,
   trialGet: trialGetReducer,
   trialPay: trialPayReducer,
+  trialList: trialListReducer,
   enquiryList: enquiryListReducer,
   waitingList: waitingListReducer,
 });

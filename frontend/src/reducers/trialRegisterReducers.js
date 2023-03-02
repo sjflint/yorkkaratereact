@@ -8,6 +8,9 @@ import {
   TRIAL_PAY_REQUEST,
   TRIAL_PAY_SUCCESS,
   TRIAL_PAY_FAIL,
+  TRIAL_LIST_REQUEST,
+  TRIAL_LIST_FAIL,
+  TRIAL_LIST_SUCCESS,
 } from "../constants/trialRegistrationConstants";
 
 export const trialRegisterReducer = (state = {}, action) => {
@@ -43,6 +46,19 @@ export const trialPayReducer = (state = {}, action) => {
     case TRIAL_PAY_SUCCESS:
       return { loading: false, success: action.payload };
     case TRIAL_PAY_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const trialListReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TRIAL_LIST_REQUEST:
+      return { loading: true };
+    case TRIAL_LIST_SUCCESS:
+      return { loading: false, trialMembers: action.payload };
+    case TRIAL_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
