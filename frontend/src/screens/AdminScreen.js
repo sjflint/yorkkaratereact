@@ -20,6 +20,7 @@ import { listEnquiries } from "../actions/enquiryActions";
 import { listOrders } from "../actions/orderActions";
 import { listProducts } from "../actions/productActions";
 import { LIST_MEMBERS_RESET } from "../constants/memberConstants";
+import { logout } from "../actions/memberActions";
 
 const AdminScreen = ({ history }) => {
   const [zeroStock, setZeroStock] = useState(false);
@@ -41,6 +42,16 @@ const AdminScreen = ({ history }) => {
   const { products } = productList;
 
   useEffect(() => {
+    if (memberInfo && memberInfo.lastLogin) {
+      const today = new Date();
+      const sevenDays = today.setDate(today.getDate() - 7);
+      const lastLogin = new Date(memberInfo.lastLogin).getTime();
+
+      if (lastLogin <= sevenDays) {
+        console.log("logging out");
+        dispatch(logout());
+      }
+    }
     if (!memberInfo) {
       console.log("no member details");
       history.push(`/login?redirect=admin`);

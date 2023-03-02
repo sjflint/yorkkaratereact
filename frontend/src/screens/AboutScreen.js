@@ -97,52 +97,53 @@ const AboutScreen = () => {
           </>
         )}
         {blackBelts &&
-          blackBelts.map((instructor) => {
+          blackBelts.map((instructor, index) => {
             if (instructor.isInstructor) {
               return (
-                <>
-                  <section className="pb-4 border-bottom border-warning">
-                    <Row className="no-gutters my-3 p-3">
-                      <Col md={6}>
-                        <img
-                          src={instructor.profileImg}
-                          alt="profile"
-                          className="rounded-0"
-                        />
-                      </Col>
-                      <Col md={6}>
-                        <ListGroup className="list-group-flush">
-                          <ListGroupItem>
-                            {instructor.firstName} {instructor.lastName}{" "}
-                          </ListGroupItem>
-                          <ListGroupItem>
-                            Current Grade: {instructor.danGrade}
-                            {instructor.danGrade === 1
-                              ? "st"
-                              : instructor.danGrade === 2
-                              ? "nd"
-                              : instructor.danGrade === 3
-                              ? "rd"
-                              : "th"}{" "}
-                            dan
-                          </ListGroupItem>
-                          {Object.entries(instructor.danGradings).map(
-                            (grading) => {
-                              return (
-                                <ListGroupItem key={Math.random()}>
-                                  {`${grading[0]}: ${new Date(
-                                    grading[1]
-                                  ).toLocaleDateString()}`}
-                                </ListGroupItem>
-                              );
-                            }
-                          )}
-                        </ListGroup>
-                      </Col>
-                    </Row>
-                    <p style={{ whiteSpace: "pre-line" }}>{instructor.bio}</p>
-                  </section>
-                </>
+                <section
+                  className="pb-4 border-bottom border-warning"
+                  key={index}
+                >
+                  <Row className="no-gutters my-3 p-3">
+                    <Col md={6}>
+                      <img
+                        src={instructor.profileImg}
+                        alt="profile"
+                        className="rounded-0"
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <ListGroup className="list-group-flush">
+                        <ListGroupItem>
+                          {instructor.firstName} {instructor.lastName}{" "}
+                        </ListGroupItem>
+                        <ListGroupItem>
+                          Current Grade: {instructor.danGrade}
+                          {instructor.danGrade === 1
+                            ? "st"
+                            : instructor.danGrade === 2
+                            ? "nd"
+                            : instructor.danGrade === 3
+                            ? "rd"
+                            : "th"}{" "}
+                          dan
+                        </ListGroupItem>
+                        {Object.entries(instructor.danGradings).map(
+                          (grading) => {
+                            return (
+                              <ListGroupItem key={Math.random()}>
+                                {`${grading[0]}: ${new Date(
+                                  grading[1]
+                                ).toLocaleDateString()}`}
+                              </ListGroupItem>
+                            );
+                          }
+                        )}
+                      </ListGroup>
+                    </Col>
+                  </Row>
+                  <p style={{ whiteSpace: "pre-line" }}>{instructor.bio}</p>
+                </section>
               );
             } else {
               return null;

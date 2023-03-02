@@ -50,6 +50,7 @@ const authMember = asyncHandler(async (req, res) => {
       isShopAdmin: member.isShopAdmin,
       isInstructor: member.isInstructor,
       token: generateToken(member._id),
+      lastLogin: new Date(),
     });
   } else {
     res.status(401);

@@ -53,9 +53,13 @@ const ListMembersScreen = ({ history, match }) => {
   return (
     <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <Link className="btn btn-outline-secondary py-0" to="/admin">
-          <i className="fas fa-arrow-left"></i> Return
-        </Link>
+        <button
+          className="btn btn-outline-secondary py-0"
+          onClick={() => history.goBack()}
+        >
+          <h4 className="d-inline text-muted">[</h4>
+          <i className="fas fa-arrow-left"></i>
+        </button>
         <Route
           render={({ history }) => (
             <SearchBox history={history} path={"/admin/listmembers/"} />

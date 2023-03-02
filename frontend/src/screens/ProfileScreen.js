@@ -22,7 +22,7 @@ import ImgDDSuccess from "../img/ddsuccess.png";
 import UploadImage from "../components/uploadImage";
 import jksLicense from "../img/jkslicense.png";
 import insideJksLicense from "../img/insidelicense.png";
-import { updateProfile } from "../actions/memberActions";
+import { logout, updateProfile } from "../actions/memberActions";
 import { UPLOAD_IMG_CLEAR } from "../constants/uploadFileConstants";
 
 const ProfileScreen = ({ history, match }) => {
@@ -55,6 +55,15 @@ const ProfileScreen = ({ history, match }) => {
   } = myClassList;
 
   useEffect(() => {
+    if (memberInfo && memberInfo.lastLogin) {
+      const today = new Date();
+      const sevenDays = today.setDate(today.getDate() - 7);
+      const lastLogin = new Date(memberInfo.lastLogin).getTime();
+      if (lastLogin <= sevenDays) {
+        console.log("logging out");
+        dispatch(logout());
+      }
+    }
     if (!memberInfo) {
       history.push("/login?redirect=profile");
     }

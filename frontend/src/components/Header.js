@@ -19,6 +19,15 @@ const Header = () => {
   };
 
   useEffect(() => {
+    if (memberInfo && memberInfo.lastLogin) {
+      const today = new Date();
+      const sevenDays = today.setDate(today.getDate() - 7);
+      const lastLogin = new Date(memberInfo.lastLogin).getTime();
+      if (lastLogin <= sevenDays) {
+        console.log("logging out");
+        dispatch(logout());
+      }
+    }
     if (memberInfo) {
       dispatch(getMemberDetails("profile"));
     }
