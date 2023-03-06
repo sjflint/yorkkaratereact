@@ -27,6 +27,7 @@ const GradingRegistrationScreen = ({ match }) => {
   const [showModal, setShowModal] = useState(false);
   const [jksModal, setJksModal] = useState(false);
   const [value, setValue] = useState("");
+  const [invalid, setInvalid] = useState("");
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -371,7 +372,7 @@ const GradingRegistrationScreen = ({ match }) => {
                   Find your license number near the front of the license book
                   and enter it below.
                 </ListGroup.Item>
-                <ListGroup.Item variant="secondary">
+                {/* <ListGroup.Item variant="secondary">
                   <input
                     type="number"
                     value={value}
@@ -399,6 +400,60 @@ const GradingRegistrationScreen = ({ match }) => {
             <button className="btn btn-primary" disabled>
               Save number
             </button>
+          )}
+
+          <Button
+            variant="secondary"
+            onClick={(e) => {
+              setJksModal(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </Modal.Footer> */}
+                <ListGroup.Item variant="secondary">
+                  <input
+                    pattern="[0-9]*"
+                    type="text"
+                    value={value}
+                    onChange={(e) => {
+                      setInvalid(false);
+                      setValue(e.target.validity.valid ? e.target.value : 0);
+                    }}
+                    placeholder="License number"
+                    className="w-75 text-center"
+                  />
+                </ListGroup.Item>
+                {value === 0 && (
+                  <small className="text-danger">
+                    Only enter numbers. Please ignore the letter 'E' if your
+                    number starts with this.
+                  </small>
+                )}
+              </ListGroup>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          {value !== " " && value.length > 2 && value.length < 7 ? (
+            <button
+              className="btn btn-default"
+              onClick={(e) => {
+                updateLicenseNumber();
+                setJksModal(false);
+              }}
+            >
+              Save number
+            </button>
+          ) : (
+            <>
+              {/* <button className="btn btn-primary" disabled>
+                Save number
+              </button> */}
+              <small className="text-danger">
+                Please enter a valid license number
+              </small>
+            </>
           )}
 
           <Button

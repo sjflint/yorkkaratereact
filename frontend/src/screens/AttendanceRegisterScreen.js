@@ -101,6 +101,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
     await dispatch(attendeeExtraAdd(memberId, record._id));
     await dispatch(updateAttendance(classId, date));
     history.push(`instructor/attendance/${classId}`);
+    window.location.reload();
   };
 
   let filteredMembersList = [];

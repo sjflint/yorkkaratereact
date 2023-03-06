@@ -32,7 +32,7 @@ const ProfileScreen = ({ history, match }) => {
   const [profileImgModal, setProfileImgModal] = useState(false);
   const [jksModal, setJksModal] = useState(false);
   const [value, setValue] = useState("");
-  const [inValid, setInvalid] = useState("");
+  const [invalid, setInvalid] = useState("");
   const ddSuccess = new URLSearchParams(search).get("dd");
 
   const dispatch = useDispatch();

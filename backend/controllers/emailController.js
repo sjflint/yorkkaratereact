@@ -29,6 +29,9 @@ const sendEmail = asyncHandler(async (req, res) => {
       members.forEach((member) =>
         recipients.push(member.email, member.secondaryEmail)
       );
+      console.log(recipients.length);
+      console.log(recipients);
+
       genericEmail(emailDetails);
       return res.status(201).json("email sent");
 
@@ -71,5 +74,53 @@ const sendEmail = asyncHandler(async (req, res) => {
       return res.status(201).json("email sent");
   }
 });
+
+// const checkEmails = async () => {
+//   const members = await Members.find({ ddsuccess: true });
+//   const emailArray = [];
+//   for (const member of members) {
+//     emailArray.push(member.email);
+//     emailArray.push(member.secondaryEmail);
+//   }
+//   const recipients = emailArray.filter((recipient) => recipient !== "");
+
+//   if (recipients.length > 100 && recipients.length < 200) {
+//     //if over 100 and less than 200
+//     // divide into two
+//     const firstArray = recipients.slice(0, recipients.length / 2);
+//     const secondArray = recipients.slice(recipients.length / 2);
+//     console.log(firstArray);
+//     console.log(secondArray);
+//   } else if (recipients.length > 200 && recipients.length < 300) {
+//     //if over 200 and less than 300
+//     // divide into 3
+//     const firstArray = recipients.slice(0, recipients.length / 3);
+//     const secondArray = recipients.slice(
+//       recipients.length / 3,
+//       recipients.length - recipients.length / 3
+//     );
+//     const thirdArray = recipients.slice(
+//       recipients.length - recipients.length / 3
+//     );
+//   } else if (recipients.length > 300 && recipients.length < 400) {
+//     //if over 300 and less than 400
+//     // divide into 4
+//     const firstArray = recipients.slice(0, recipients.length / 4);
+//     const secondArray = recipients.slice(
+//       recipients.length / 4,
+//       recipients.length - recipients.length / 2
+//     );
+//     const thirdArray = recipients.slice(
+//       recipients.length - recipients.length / 2,
+//       recipients.length - recipients.length / 4
+//     );
+//     const fourthArray = recipients.slice(
+//       recipients.length - recipients.length / 4
+//     );
+//   } else {
+//     // default and so less than 3. just send full array
+//   }
+// };
+// checkEmails();
 
 export { sendEmail };
