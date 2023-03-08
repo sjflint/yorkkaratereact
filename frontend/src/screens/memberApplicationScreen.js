@@ -1,9 +1,22 @@
-import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { listFinancials } from "../actions/financialActions";
 import kihonKumiteIMG from "../img/kihonkumite.jpg";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
-const memberApplicationScreen = () => {
+const MemberApplicationScreen = () => {
+  const dispatch = useDispatch();
+
+  const financialList = useSelector((state) => state.financialList);
+  const { loading, error, financials } = financialList;
+
+  useEffect(() => {
+    dispatch(listFinancials());
+  }, []);
+
   return (
     <Container className="mt-3">
       <h3 className="text-center border-bottom border-warning pb-1 mb-3">
@@ -18,11 +31,11 @@ const memberApplicationScreen = () => {
             <Card.Header>Our Trial offer!</Card.Header>
             <Card.Body>
               <Card.Title className="border-bottom border-warning">
-                Contact us for your free trial session
+                Book a trial session
               </Card.Title>
               <Card.Text>
-                Don't pay for anything until you try the class first. Contact us
-                to book a taster session. No commitment.
+                Why not try a class first? Book a taster session today. No
+                commitment.
               </Card.Text>
               <Link
                 to={"/trialregistrationform"}
@@ -34,11 +47,45 @@ const memberApplicationScreen = () => {
                 Fees
               </Card.Title>
               <Card.Text>
-                <ul className="list-unstyled">
-                  <li>£15.00 annual membership</li>
-                  <li>£21.50 p/m to train once a week</li>
-                  <li>+ £3.00 p/m for each additional class per week</li>
-                </ul>
+                {loading ? (
+                  <Loader variant="warning" />
+                ) : error ? (
+                  <Message variant="danger">{error}</Message>
+                ) : financials ? (
+                  <ul className="list-unstyled">
+                    <li>
+                      Annual membership:{" "}
+                      {(financials.joiningFee / 100).toLocaleString("en-GB", {
+                        style: "currency",
+                        currency: "GBP",
+                      })}
+                    </li>
+                    <li>
+                      Training fees for once a week:{" "}
+                      {(financials.baseLevelTrainingFees / 100).toLocaleString(
+                        "en-GB",
+                        {
+                          style: "currency",
+                          currency: "GBP",
+                        }
+                      )}{" "}
+                      p/m
+                    </li>
+                    <li>
+                      +{" "}
+                      {(financials.costOfAdditionalClass / 100).toLocaleString(
+                        "en-GB",
+                        {
+                          style: "currency",
+                          currency: "GBP",
+                        }
+                      )}{" "}
+                      p/m for each additional class per week
+                    </li>
+                  </ul>
+                ) : (
+                  "error loading details. Please try again"
+                )}
               </Card.Text>
               <Link
                 to={"/register"}
@@ -54,4 +101,4 @@ const memberApplicationScreen = () => {
   );
 };
 
-export default memberApplicationScreen;
+export default MemberApplicationScreen;
