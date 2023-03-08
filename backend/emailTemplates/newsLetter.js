@@ -13,12 +13,13 @@ const date = new Date();
 
 const newsLetterEmail = asyncHandler(async () => {
   // Get recipients
-  let recipients = "";
+  let recipientEmail = [];
   const members = await Member.find({ ddsuccess: true });
 
   if (members) {
     members.forEach((member) => {
-      recipients = `${recipients};${member.email};${member.secondaryEmail}`;
+      recipientEmail.push(member.email);
+      recipientEmail.push(member.secondaryEmail);
     });
   }
   // Get upcoming events
@@ -151,13 +152,15 @@ const newsLetterEmail = asyncHandler(async () => {
     },
   });
 
-  const mailOptions = {
-    from: "info@yorkkarate.net",
-    to: "no-reply@yorkkarate.net",
-    bcc: recipients,
-    subject: "York Karate News",
-    text: "All the latest news from York Karate Dojo",
-    html: `
+  // create function here and seperate recipients
+  const sendEmail = (recipients) => {
+    const mailOptions = {
+      from: "info@yorkkarate.net",
+      to: "no-reply@yorkkarate.net",
+      bcc: recipients,
+      subject: "York Karate News",
+      text: "All the latest news from York Karate Dojo",
+      html: `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -223,15 +226,65 @@ const newsLetterEmail = asyncHandler(async () => {
       </body>
     </html>    
     `,
+    };
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(`Email sent ${info.response}`);
+      }
+    });
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`Email sent ${info.response}`);
-    }
-  });
+  // gmail email limits (100 per request). Check number of recipients and divide if needed
+  const emailArray = recipientEmail;
+  // remove blank email addresses
+  const recipients = emailArray.filter((recipient) => recipient !== "");
+
+  if (recipients.length > 100 && recipients.length < 200) {
+    //if over 100 and less than 200
+    // divide into two
+    const firstArray = recipients.slice(0, recipients.length / 2);
+    const secondArray = recipients.slice(recipients.length / 2);
+    sendEmail(firstArray);
+    sendEmail(secondArray);
+  } else if (recipients.length > 200 && recipients.length < 300) {
+    //if over 200 and less than 300
+    // divide into 3
+    const firstArray = recipients.slice(0, recipients.length / 3);
+    const secondArray = recipients.slice(
+      recipients.length / 3,
+      recipients.length - recipients.length / 3
+    );
+    const thirdArray = recipients.slice(
+      recipients.length - recipients.length / 3
+    );
+    sendEmail(firstArray);
+    sendEmail(secondArray);
+    sendEmail(thirdArray);
+  } else if (recipients.length > 300 && recipients.length < 400) {
+    //if over 300 and less than 400
+    // divide into 4
+    const firstArray = recipients.slice(0, recipients.length / 4);
+    const secondArray = recipients.slice(
+      recipients.length / 4,
+      recipients.length - recipients.length / 2
+    );
+    const thirdArray = recipients.slice(
+      recipients.length - recipients.length / 2,
+      recipients.length - recipients.length / 4
+    );
+    const fourthArray = recipients.slice(
+      recipients.length - recipients.length / 4
+    );
+    sendEmail(firstArray);
+    sendEmail(secondArray);
+    sendEmail(thirdArray);
+    sendEmail(fourthArray);
+  } else {
+    // default and so less than 3. just send full array
+    sendEmail(recipients);
+  }
 });
 
 // newsLetterEmail();
