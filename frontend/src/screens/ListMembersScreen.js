@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Modal, Col, Row } from "react-bootstrap";
+import { Container, Table, Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, Route } from "react-router-dom";
@@ -57,7 +57,6 @@ const ListMembersScreen = ({ history, match }) => {
           className="btn btn-outline-secondary py-0"
           onClick={() => history.goBack()}
         >
-          <h4 className="d-inline text-muted">[</h4>
           <i className="fas fa-arrow-left"></i>
         </button>
         <Route

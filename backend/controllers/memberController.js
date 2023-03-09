@@ -117,10 +117,10 @@ const registerMember = asyncHandler(async (req, res) => {
 const updateDirectDebit = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.body._id);
 
-  // set date here in db for next collection date.
-  let collectionDate = await updateCollectionDate(member._id);
+  // set date here in db for next collection date, if available
+  await updateCollectionDate(member._id);
 
-  if (member && collectionDate) {
+  if (member) {
     const session_token = Math.random() + member.firstName + member.email;
 
     const ddRedirect = await changeDirectDebit(session_token);
