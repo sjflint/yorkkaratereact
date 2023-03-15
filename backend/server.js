@@ -27,6 +27,9 @@ import mongoose from "mongoose";
 import { getFileStream } from "./utils/s3.js";
 import { cronJobs } from "./utils/cronJobs.js";
 
+// ip
+// 134.122.111.58
+
 // log finder
 // ["log", "warn"].forEach(function (method) {
 //   var old = console[method];

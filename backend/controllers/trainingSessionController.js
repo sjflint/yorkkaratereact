@@ -482,7 +482,7 @@ const postWaitingList = asyncHandler(async (req, res) => {
 // @access server only
 const waitingListCheck = async () => {
   const formatName = (name) => {
-    const removeNoneAlpha = name.replace(/[^a-z0-9-']/gi, "");
+    const removeNoneAlpha = name.replace(/[^a-z0-9-\s']/gi, "");
     const nameLowerCase = removeNoneAlpha.toLowerCase().trim();
     return nameLowerCase.charAt(0).toUpperCase() + nameLowerCase.slice(1);
   };

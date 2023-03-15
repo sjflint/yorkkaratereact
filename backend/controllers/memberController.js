@@ -17,7 +17,7 @@ dotenv.config();
 
 // Format first name and last name to uppercase first letter and lower case for the rest
 const formatName = (name) => {
-  const removeNoneAlpha = name.replace(/[^a-z0-9-']/gi, "");
+  const removeNoneAlpha = name.replace(/[^a-z0-9-\s']/gi, "");
   const nameLowerCase = removeNoneAlpha.toLowerCase().trim();
   return nameLowerCase.charAt(0).toUpperCase() + nameLowerCase.slice(1);
 };
@@ -51,6 +51,7 @@ const authMember = asyncHandler(async (req, res) => {
       isInstructor: member.isInstructor,
       token: generateToken(member._id),
       lastLogin: new Date(),
+      ddsuccess: member.ddsuccess,
     });
   } else {
     res.status(401);
@@ -187,6 +188,8 @@ const getMemberProfile = asyncHandler(async (req, res) => {
       member.gradeLevel = "Advanced";
     }
 
+    // if conditional pass flag, double number of sessions required
+
     res.json(member);
   } else {
     res.status(404);
@@ -281,10 +284,13 @@ const updatePassword = asyncHandler(async (req, res) => {
 // @access Public
 const resetPassword = asyncHandler(async (req, res) => {
   let { firstName, lastName, email } = req.body.values;
+  console.log(lastName);
   firstName = formatName(firstName);
   lastName = formatName(lastName);
   email = email.toLowerCase().trim();
   const dateOfBirth = req.body.values.dateOfBirth;
+
+  console.log(lastName);
 
   let member = await Member.find({
     firstName: firstName,

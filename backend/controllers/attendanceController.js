@@ -38,8 +38,9 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
       }
     });
   }
+
   if (result.length > 0) {
-    res.status(201).json(result.slice(numberOfResults));
+    res.status(201).json(result.slice(0, numberOfResults * -1));
   } else {
     res.json("No results found");
   }

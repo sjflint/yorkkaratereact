@@ -484,14 +484,6 @@ const SquadScreen = () => {
             })}
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="danger"
-            onClick={() => {
-              setCompPayment(false);
-            }}
-          >
-            Cancel
-          </Button>
           <Button variant="primary" onClick={() => setCompPayment(false)}>
             Close
           </Button>

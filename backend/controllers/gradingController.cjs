@@ -183,7 +183,24 @@ const getGradingDetails = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc POST grading results
+// @route POST /api/grading/results
+// @access Private/Instructor or admin
+const postGradingResult = asyncHandler(async (req, res) => {
+  // member ID
+  // Grading event ID
+});
+
+// @desc GET grading results (for an individual member)
+// @route GET /api/grading/results
+// @access Private
+const getGradingResults = asyncHandler(async (req, res) => {
+  // member ID
+});
+
 module.exports = {
   postGradingApplication,
   getGradingDetails,
+  postGradingResult,
+  getGradingResults,
 };

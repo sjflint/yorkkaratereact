@@ -249,10 +249,6 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
 // @route POST /ddroutes/updatedirectdebit
 // @access Public (private)
 const updateDirectDebit = asyncHandler(async (req, res) => {
-  console.log(req.body.session_token);
-  console.log(req.body.ddRedirect);
-  console.log(req.body.subChargeDate);
-
   // get collection day
   let collectionDay;
 
@@ -323,7 +319,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
       if (!mandateId || mandateId === "Failed") {
         const payment = await client.payments.create(
           {
-            amount: member.totalPayment,
+            amount: member.totalPayment * 100,
             currency: "GBP",
             description: "Joining fee",
             links: {
