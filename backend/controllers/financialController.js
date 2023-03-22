@@ -14,11 +14,34 @@ dotenv.config();
 const getFinancialDetails = asyncHandler(async (req, res) => {
   const financials = await Financial.findOne({});
 
+  const beltsToOrder = await beltCalculator();
+
+  financials.beltsToOrder = beltsToOrder;
+
   if (financials) {
     res.json(financials);
   } else {
     res.status(404);
     throw new Error("Financials not found");
+  }
+});
+
+// @desc update belt stock levels
+// @route PUT /api/financial
+// @access Private/Admin
+const updateBelts = asyncHandler(async (req, res) => {
+  console.log(req.body);
+  const financials = await Financial.findOneAndUpdate(
+    {},
+    { belts: req.body },
+    { new: true }
+  );
+
+  if (financials) {
+    res.status(200).json(financials);
+  } else {
+    res.status(404);
+    throw new Error("could not find or update belts");
   }
 });
 
@@ -33,6 +56,7 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     costOfExtraFee,
     costOfGrading,
     costOfTrainingCourse,
+    belts,
   } = req.body;
 
   baseLevelTrainingFees = Number(baseLevelTrainingFees * 100);
@@ -91,6 +115,7 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     financials.joiningFee = joiningFee;
     financials.costOfExtraFee = costOfExtraFee;
     financials.costOfTrainingCourse = costOfTrainingCourse;
+    financials.belts = belts;
 
     await financials.save();
 
@@ -193,10 +218,96 @@ const deleteMonthlyCost = asyncHandler(async (req, res) => {
   }
 });
 
+const beltCalculator = async () => {
+  // calculate belts required from member data to belts in stock from financial data
+  const members = await Member.find({ ddsuccess: true });
+
+  const financials = await Financial.find({});
+
+  const beltStock = financials[0].belts;
+
+  let arrayOfGrades = [];
+  let beltRequired = {};
+
+  members.forEach((member) => {
+    arrayOfGrades.push(member.kyuGrade);
+  });
+
+  for (const grade of arrayOfGrades) {
+    if (!beltRequired[grade - 1]) {
+      beltRequired[grade - 1] = 1;
+    } else {
+      beltRequired[grade - 1] = beltRequired[grade - 1] + 1;
+    }
+  }
+
+  const beltsToOrder = {
+    "White Red":
+      beltRequired[15] - beltStock[15] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[15] - beltStock[15] + 2,
+    "White Black":
+      beltRequired[14] - beltStock[14] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[14] - beltStock[14] + 2,
+    Orange:
+      beltRequired[13] - beltStock[13] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[13] - beltStock[13] + 2,
+    "Orange White":
+      beltRequired[12] - beltStock[12] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[12] - beltStock[12] + 2,
+    "Orange Yellow":
+      beltRequired[11] - beltStock[11] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[11] - beltStock[11] + 2,
+    Red:
+      beltRequired[9] - beltStock[9] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[9] - beltStock[9] + 2,
+    "Red Black":
+      beltRequired[8] - beltStock[8] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[8] - beltStock[8] + 2,
+    Yellow:
+      beltRequired[7] - beltStock[7] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[7] - beltStock[7] + 2,
+    Green:
+      beltRequired[6] - beltStock[6] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[6] - beltStock[6] + 2,
+    Purple:
+      beltRequired[5] - beltStock[5] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[5] - beltStock[5] + 2,
+    "Purple White":
+      beltRequired[4] - beltStock[4] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[4] - beltStock[4] + 2,
+    Brown:
+      beltRequired[3] - beltStock[3] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[3] - beltStock[3] + 2,
+    "Brown White":
+      beltRequired[2] - beltStock[2] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[2] - beltStock[2] + 2,
+    "Brown Double White":
+      beltRequired[1] - beltStock[1] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[1] - beltStock[1] + 2,
+  };
+
+  return beltsToOrder;
+};
+
 export {
   getFinancialDetails,
   updateFinancialDetails,
   getMonthlyCosts,
   updateMonthlyCost,
   deleteMonthlyCost,
+  updateBelts,
 };

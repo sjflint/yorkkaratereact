@@ -92,6 +92,7 @@ const FinanceScreen = ({ history }) => {
       costOfGrading: gradingFees,
       costOfTrainingCourse: trainingCourseFees,
     };
+
     await dispatch(updateFinancials(newFees));
     await dispatch(listFinancials());
     setEditFees(false);

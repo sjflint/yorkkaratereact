@@ -21,6 +21,7 @@ import { listOrders } from "../actions/orderActions";
 import { listProducts } from "../actions/productActions";
 import { LIST_MEMBERS_RESET } from "../constants/memberConstants";
 import { logout } from "../actions/memberActions";
+import { listFinancials } from "../actions/financialActions";
 
 const AdminScreen = ({ history }) => {
   const [zeroStock, setZeroStock] = useState(false);
@@ -40,6 +41,13 @@ const AdminScreen = ({ history }) => {
 
   const productList = useSelector((state) => state.productList);
   const { products } = productList;
+
+  const financialList = useSelector((state) => state.financialList);
+  const {
+    loading: financialsLoading,
+    financials,
+    error: financialsError,
+  } = financialList;
 
   useEffect(() => {
     if (memberInfo && memberInfo.lastLogin) {
@@ -69,6 +77,7 @@ const AdminScreen = ({ history }) => {
     dispatch(listEnquiries());
     dispatch(listOrders());
     dispatch(listProducts("all"));
+    dispatch(listFinancials());
   }, [history, memberInfo, member, dispatch]);
 
   let openOrders = [];
@@ -86,6 +95,15 @@ const AdminScreen = ({ history }) => {
         if (product.countInStock[key] === 0) {
           setZeroStock(true);
         }
+      }
+    });
+  }
+
+  let beltsToOrder = 0;
+  if (financials && financials.beltsToOrder) {
+    Object.values(financials.beltsToOrder).forEach((val) => {
+      if (val !== "Fully Stocked") {
+        beltsToOrder = beltsToOrder + val;
       }
     });
   }
@@ -331,6 +349,11 @@ const AdminScreen = ({ history }) => {
                   <Col xs={6} sm={3} md={3} className="mb-2">
                     <Link to="/instructor/editgradings">
                       <Card>
+                        {beltsToOrder > 0 && (
+                          <div className="notification d-flex align-items-center justify-content-center">
+                            !
+                          </div>
+                        )}
                         <Card.Img
                           variant="top"
                           src={gradingImg}

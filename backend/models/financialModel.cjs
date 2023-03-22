@@ -8,6 +8,8 @@ const financialSchema = mongoose.Schema({
   costOfGrading: { type: Number, required: true },
   costOfTrainingCourse: { type: Number, required: true },
   totalMembers: { type: Array },
+  belts: { type: Object },
+  beltsToOrder: { type: Object },
 });
 
 const Financial = (module.exports = mongoose.model(

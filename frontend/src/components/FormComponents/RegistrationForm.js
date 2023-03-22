@@ -137,7 +137,7 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = (values) => {
-    setErrors(false);
+    // setErrors(false);
     values.firstName = values.firstName.toLowerCase();
     values.lastName = values.lastName.toLowerCase();
     values.email = values.email.toLowerCase();
@@ -230,13 +230,13 @@ const RegistrationForm = () => {
                   ) : null}
                 </div>
               </Col>
-            </Row>
+              {/* </Row> */}
 
-            <small>
-              If you are completing this form for a child, please use your
-              contact details here.{" "}
-            </small>
-            <Row className="py-4 border-bottom border-warning">
+              <small>
+                If you are completing this form for a child, please use your
+                contact details here.{" "}
+              </small>
+              {/* <Row className="py-4 border-bottom border-warning"> */}
               <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl
@@ -317,39 +317,39 @@ const RegistrationForm = () => {
                   />
                 </div>
               </Col>
-            </Row>
+              {/* </Row> */}
 
-            <div className="py-4 border-bottom border-warning">
-              <div className="bg-light mb-2 p-2">
-                <FormikControl
-                  control="input"
-                  label="Name of emergency contact"
-                  type="text"
-                  name="emergencyContactName"
-                  placeholder="Please enter their name"
-                />
+              <div className="py-4 border-bottom border-warning">
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Name of emergency contact"
+                    type="text"
+                    name="emergencyContactName"
+                    placeholder="Please enter their name"
+                  />
+                </div>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Email of emergency contact"
+                    type="text"
+                    name="emergencyContactEmail"
+                    placeholder="Please enter their email"
+                  />
+                </div>
+                <div className="bg-light mb-2 p-2">
+                  <FormikControl
+                    control="input"
+                    label="Number of emergency contact"
+                    type="text"
+                    name="emergencyContactPhone"
+                    placeholder="Please enter their number"
+                  />
+                </div>
               </div>
-              <div className="bg-light mb-2 p-2">
-                <FormikControl
-                  control="input"
-                  label="Email of emergency contact"
-                  type="text"
-                  name="emergencyContactEmail"
-                  placeholder="Please enter their email"
-                />
-              </div>
-              <div className="bg-light mb-2 p-2">
-                <FormikControl
-                  control="input"
-                  label="Number of emergency contact"
-                  type="text"
-                  name="emergencyContactPhone"
-                  placeholder="Please enter their number"
-                />
-              </div>
-            </div>
 
-            <Row className="py-4 border-bottom border-warning">
+              {/* <Row className="py-4 border-bottom border-warning"> */}
               <Col md={6}>
                 <div className="bg-light mb-2 p-2">
                   <FormikControl

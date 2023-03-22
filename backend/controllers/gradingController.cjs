@@ -72,15 +72,15 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               await gradingCourse.save();
 
               // Send confirmation email
-              const dateOfEvent = new Date(
-                gradingCourse.dateOfEvent
-              ).toLocaleDateString();
+              const dateOfEvent = new Date(gradingCourse.dateOfEvent);
               genericEmail({
                 recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: gradingCourse.title,
                 message: `<h4>${gradingCourse.title}</h4>
-                          <p>Date: ${dateOfEvent}.</p>
+                          <p>Date: ${dateOfEvent.toLocaleDateString(
+                            "en-GB"
+                          )}.</p>
                           <p>Location: ${gradingCourse.location}.</p>
                           <p>Thank you for registering for the training session.</p>
                         `,
@@ -136,15 +136,13 @@ const postGradingApplication = asyncHandler(async (req, res) => {
               await gradingCourse.save();
 
               // Send confirmation email
-              const dateOfEvent = new Date(
-                gradingCourse.dateOfEvent
-              ).toLocaleDateString();
+              const dateOfEvent = new Date(gradingCourse.dateOfEvent);
               genericEmail({
                 recipientEmail: `${member.email}, ${member.secondaryEmail}`,
                 recipientName: member.firstName,
                 subject: gradingCourse.title,
                 message: `<h4>${gradingCourse.title}</h4>
-            <p>Date: ${dateOfEvent}.</p>
+            <p>Date: ${dateOfEvent.toLocaleDateString("en-GB")}.</p>
             <p>Location: ${gradingCourse.location}.</p>
             <p>Thank you for registering for the grading course.</p>
             <h4>Good luck on the day!</h4>
@@ -175,6 +173,10 @@ const postGradingApplication = asyncHandler(async (req, res) => {
 const getGradingDetails = asyncHandler(async (req, res) => {
   const grading = await Event.findById(req.params.id);
 
+  const beltsToOrder = await beltCalculator();
+
+  grading.beltsToOrder = beltsToOrder;
+
   if (grading) {
     res.json(grading);
   } else {
@@ -197,6 +199,93 @@ const postGradingResult = asyncHandler(async (req, res) => {
 const getGradingResults = asyncHandler(async (req, res) => {
   // member ID
 });
+
+const beltCalculator = async () => {
+  // calculate belts required from member data to belts in stock from financial data
+  const members = await Member.find({ ddsuccess: true });
+
+  const financials = await Financial.find({});
+
+  const beltStock = financials[0].belts;
+
+  let arrayOfGrades = [];
+  let beltRequired = {};
+
+  members.forEach((member) => {
+    arrayOfGrades.push(member.kyuGrade);
+  });
+
+  for (const grade of arrayOfGrades) {
+    if (!beltRequired[grade - 1]) {
+      beltRequired[grade - 1] = 1;
+    } else {
+      beltRequired[grade - 1] = beltRequired[grade - 1] + 1;
+    }
+  }
+
+  const beltsToOrder = {
+    "White Red":
+      beltRequired[15] - beltStock[15] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[15] - beltStock[15] + 2,
+    "White Black":
+      beltRequired[14] - beltStock[14] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[14] - beltStock[14] + 2,
+    Orange:
+      beltRequired[13] - beltStock[13] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[13] - beltStock[13] + 2,
+    "Orange White":
+      beltRequired[12] - beltStock[12] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[12] - beltStock[12] + 2,
+    "Orange Yellow":
+      beltRequired[11] - beltStock[11] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[11] - beltStock[11] + 2,
+    Red:
+      beltRequired[9] - beltStock[9] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[9] - beltStock[9] + 2,
+    "Red Black":
+      beltRequired[8] - beltStock[8] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[8] - beltStock[8] + 2,
+    Yellow:
+      beltRequired[7] - beltStock[7] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[7] - beltStock[7] + 2,
+    Green:
+      beltRequired[6] - beltStock[6] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[6] - beltStock[6] + 2,
+    Purple:
+      beltRequired[5] - beltStock[5] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[5] - beltStock[5] + 2,
+    "Purple White":
+      beltRequired[4] - beltStock[4] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[4] - beltStock[4] + 2,
+    Brown:
+      beltRequired[3] - beltStock[3] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[3] - beltStock[3] + 2,
+    "Brown White":
+      beltRequired[2] - beltStock[2] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[2] - beltStock[2] + 2,
+    "Brown Double White":
+      beltRequired[1] - beltStock[1] + 2 < 0
+        ? "Fully Stocked"
+        : beltRequired[1] - beltStock[1] + 2,
+  };
+
+  return beltsToOrder;
+};
+
+beltCalculator();
 
 module.exports = {
   postGradingApplication,

@@ -13,9 +13,11 @@ import {
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import logo from "../img/logo2021a.png";
+import { Link } from "react-router-dom";
 
 const GradingScreen = ({ match, history }) => {
   const [showModal, setShowModal] = useState(false);
+  const [beltModal, setBeltModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -39,6 +41,18 @@ const GradingScreen = ({ match, history }) => {
     grading.participants.sort((a, b) =>
       a.grade > b.grade ? -1 : b.grade < a.grade ? 1 : 0
     );
+  }
+
+  let beltsToOrder = 0;
+  let keys;
+  if (grading && grading.title) {
+    Object.values(grading.beltsToOrder).forEach((val) => {
+      if (val !== "Fully Stocked") {
+        beltsToOrder = beltsToOrder + val;
+      }
+    });
+
+    keys = Object.keys(grading.beltsToOrder);
   }
 
   return (
@@ -67,6 +81,13 @@ const GradingScreen = ({ match, history }) => {
                   {grading.participants && grading.participants.length}
                   {/* How to calculate number of participants */}
                 </ListGroup.Item>
+                {beltsToOrder > 0 && (
+                  <ListGroup.Item variant="danger">
+                    <Button variant="danger" onClick={() => setBeltModal(true)}>
+                      Belts need to be ordered
+                    </Button>
+                  </ListGroup.Item>
+                )}
               </ListGroup>
               <Button
                 className="btn-default mt-4"
@@ -101,7 +122,13 @@ const GradingScreen = ({ match, history }) => {
 
                   return (
                     <tr key={member._id} className="text-center">
-                      <td>{`${member.firstName} ${member.lastName}`}</td>
+                      <td>
+                        {" "}
+                        <Link
+                          to={`/admin/members/${member._id}/edit`}
+                        >{`${member.firstName} ${member.lastName}`}</Link>
+                      </td>
+
                       {member.grade === 1 ? (
                         <td>{member.grade}st kyu</td>
                       ) : member.grade === 2 ? (
@@ -188,6 +215,28 @@ const GradingScreen = ({ match, history }) => {
             variant="secondary"
             className="btn-block"
             onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={beltModal} onHide={() => setBeltModal(false)}>
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title className="text-white">Belts To Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-light text-dark text-center">
+          {keys &&
+            keys.map((key, index) => (
+              <ListGroup.Item
+                key={index}
+              >{`${key} : ${grading.beltsToOrder[key]}`}</ListGroup.Item>
+            ))}
+        </Modal.Body>
+        <Modal.Footer className="bg-primary">
+          <Button
+            variant="secondary"
+            className="btn-block"
+            onClick={() => setBeltModal(false)}
           >
             Cancel
           </Button>
