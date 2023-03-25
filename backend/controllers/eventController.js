@@ -12,7 +12,11 @@ dotenv.config();
 const getEvents = asyncHandler(async (req, res) => {
   const events = await Event.find({}).sort({ dateOfEvent: 1 });
 
-  const today = Date.parse(new Date());
+  let today = new Date();
+
+  today.setDate(today.getDate() - 1);
+
+  today = Date.parse(new Date(today));
 
   const filteredEvents = events.filter((event) => {
     const eventDate = Date.parse(event.dateOfEvent);
