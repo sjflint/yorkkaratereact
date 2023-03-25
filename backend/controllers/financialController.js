@@ -243,59 +243,59 @@ const beltCalculator = async () => {
 
   const beltsToOrder = {
     "White Red":
-      beltRequired[15] - beltStock[15] + 2 < 0
+      beltRequired[15] - beltStock[15] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[15] - beltStock[15] + 2,
     "White Black":
-      beltRequired[14] - beltStock[14] + 2 < 0
+      beltRequired[14] - beltStock[14] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[14] - beltStock[14] + 2,
     Orange:
-      beltRequired[13] - beltStock[13] + 2 < 0
+      beltRequired[13] - beltStock[13] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[13] - beltStock[13] + 2,
     "Orange White":
-      beltRequired[12] - beltStock[12] + 2 < 0
+      beltRequired[12] - beltStock[12] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[12] - beltStock[12] + 2,
     "Orange Yellow":
-      beltRequired[11] - beltStock[11] + 2 < 0
+      beltRequired[11] - beltStock[11] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[11] - beltStock[11] + 2,
     Red:
-      beltRequired[9] - beltStock[9] + 2 < 0
+      beltRequired[9] - beltStock[9] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[9] - beltStock[9] + 2,
     "Red Black":
-      beltRequired[8] - beltStock[8] + 2 < 0
+      beltRequired[8] - beltStock[8] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[8] - beltStock[8] + 2,
     Yellow:
-      beltRequired[7] - beltStock[7] + 2 < 0
+      beltRequired[7] - beltStock[7] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[7] - beltStock[7] + 2,
     Green:
-      beltRequired[6] - beltStock[6] + 2 < 0
+      beltRequired[6] - beltStock[6] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[6] - beltStock[6] + 2,
     Purple:
-      beltRequired[5] - beltStock[5] + 2 < 0
+      beltRequired[5] - beltStock[5] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[5] - beltStock[5] + 2,
     "Purple White":
-      beltRequired[4] - beltStock[4] + 2 < 0
+      beltRequired[4] - beltStock[4] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[4] - beltStock[4] + 2,
     Brown:
-      beltRequired[3] - beltStock[3] + 2 < 0
+      beltRequired[3] - beltStock[3] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[3] - beltStock[3] + 2,
     "Brown White":
-      beltRequired[2] - beltStock[2] + 2 < 0
+      beltRequired[2] - beltStock[2] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[2] - beltStock[2] + 2,
     "Brown Double White":
-      beltRequired[1] - beltStock[1] + 2 < 0
+      beltRequired[1] - beltStock[1] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[1] - beltStock[1] + 2,
   };

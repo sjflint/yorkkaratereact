@@ -140,6 +140,7 @@ const ListClassesScreen = ({ history }) => {
     }
     values.name = `${values.dayOfWeek} - ${values.description}`;
     values.times = `${values.startTime} - ${values.endTime}`;
+    console.log(values);
     dispatch(updateTrainingSession(values));
     setEditModal(false);
   };
@@ -164,6 +165,7 @@ const ListClassesScreen = ({ history }) => {
     dayOfWeek: "",
     description: "",
     hallHire: "",
+    progressionPath: "",
   };
 
   let editInitialValues;
@@ -189,6 +191,7 @@ const ListClassesScreen = ({ history }) => {
       endTime: times[2],
       capacity: Number(trainingSession.capacity),
       hallHire: Number(trainingSession.hallHire).toFixed(2),
+      progressionPath: trainingSession.progressionPath,
       // dayOfWeek
       // description
     };
@@ -205,6 +208,7 @@ const ListClassesScreen = ({ history }) => {
     hallHire: Yup.number().required("Required"),
     dayOfWeek: Yup.string().required("Required"),
     description: Yup.string().required("Required"),
+    progressionPath: Yup.string(),
   });
 
   // Junior options
@@ -269,6 +273,16 @@ const ListClassesScreen = ({ history }) => {
     { key: "1st kyu", value: 1 },
     { key: "Black Belts", value: 0 },
   ];
+
+  let progressOptions = [{ key: "Please select a class", value: "" }];
+  if (trainingSessions) {
+    trainingSessions.forEach((trainingSession) => {
+      progressOptions.push({
+        key: `${trainingSession.name}: ${trainingSession.times}`,
+        value: trainingSession._id.toString(),
+      });
+    });
+  }
 
   const sorter = {
     Monday: 1,
@@ -580,6 +594,14 @@ const ListClassesScreen = ({ history }) => {
                 </div>
                 <div className="bg-light p-2 mb-2">
                   <FormikControl
+                    control="select"
+                    label="Progression Path (optional)"
+                    name="progressionPath"
+                    options={progressOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
                     control="input"
                     label="Location"
                     type="text"
@@ -690,6 +712,14 @@ const ListClassesScreen = ({ history }) => {
                     label="Class Description"
                     name="description"
                     options={descriptionOptions}
+                  />
+                </div>
+                <div className="bg-light p-2 mb-2">
+                  <FormikControl
+                    control="select"
+                    label="Progression Path (optional)"
+                    name="progressionPath"
+                    options={progressOptions}
                   />
                 </div>
                 <div className="bg-light p-2 mb-2">

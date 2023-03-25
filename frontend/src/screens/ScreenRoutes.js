@@ -52,6 +52,7 @@ import TrialRegistrationPayScreen from "./TrialRegistrationPayScreen";
 import trialRegistrationForm from "./trialRegistrationForm";
 import FaqScreen from "./FrequentlyAskedQuestions";
 import SquadScreen from "./SquadScreen";
+import GradingExaminationScreen from "./GradingExaminationScreen";
 
 const ScreenRoutes = () => {
   return (
@@ -152,7 +153,10 @@ const ScreenRoutes = () => {
         path="/instructor/attendance/:className/:date?/search/:keyword?"
         component={AttendanceRegisterScreen}
       />
-
+      <Route
+        path="/instructor/grading/:id"
+        component={GradingExaminationScreen}
+      />
       <Route path="/accountinactive" component={AccountInactiveScreen} />
 
       <Route path="/faq" component={FaqScreen} exact />

@@ -13,6 +13,11 @@ const eventSchema = mongoose.Schema(
     participants: { type: Array, required: true, default: [] },
     trainingParticipants: { type: Array, required: true, default: [] },
     beltsToOrder: { type: Object },
+    gradingResults: [
+      {
+        type: Object,
+      },
+    ],
   },
   {
     timestamp: true,

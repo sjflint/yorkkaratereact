@@ -5,6 +5,7 @@ import {
   getGradingDetails,
   postGradingResult,
   getGradingResults,
+  updateScore,
 } from "../controllers/gradingController.cjs";
 import {
   protect,
@@ -12,14 +13,16 @@ import {
   adminOrInstructor,
 } from "../middleware/authMiddleware.js";
 
-router
-  .route("/:id")
-  .post(protect, postGradingApplication)
-  .get(protect, instructor, getGradingDetails);
+router.route("/score").post(protect, adminOrInstructor, updateScore);
 
 router
   .route("/results")
   .post(protect, adminOrInstructor, postGradingResult)
   .get(protect, getGradingResults);
+
+router
+  .route("/:id")
+  .post(protect, postGradingApplication)
+  .get(protect, instructor, getGradingDetails);
 
 export default router;

@@ -207,7 +207,10 @@ const GradingScreen = ({ match, history }) => {
         <Modal.Footer className="bg-primary">
           <button
             className="btn btn-default btn-block"
-            onClick={() => setShowModal(false)}
+            onClick={() => {
+              history.push(`/instructor/grading/${grading._id}`);
+              setShowModal(false);
+            }}
           >
             Start
           </button>

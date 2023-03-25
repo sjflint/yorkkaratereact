@@ -57,6 +57,9 @@ Button {
 .bg-grey {
   background-color: #f2f2f2;
 }
+.bg-distinction {
+  background-color: purple;
+}
 
 .border-warning {
   border-color: #fe5c07 !important;

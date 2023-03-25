@@ -5,6 +5,7 @@ const Event = require("../models/eventModel.cjs");
 const Member = require("../models/memberModel.cjs");
 const Financial = require("../models/financialModel.cjs");
 const { genericEmail } = require("../emailTemplates/genericEmail.cjs");
+const TrainingSession = require("../models/trainingSessionModel.cjs");
 
 const dotenv = require("dotenv");
 
@@ -189,16 +190,103 @@ const getGradingDetails = asyncHandler(async (req, res) => {
 // @route POST /api/grading/results
 // @access Private/Instructor or admin
 const postGradingResult = asyncHandler(async (req, res) => {
+  console.log("posting grading result");
   // member ID
   // Grading event ID
+  // <8 === fail, <10 === condiitonal pass, >=10 === pass, >=17 === pass with distinction
+  let { memberId, eventId, result } = req.body;
+
+  const member = await Member.findById(memberId);
+  const dob = new Date(member.dateOfBirth);
+  const diff_ms = Date.now() - dob.getTime();
+  const age_dt = new Date(diff_ms);
+  const age = Math.abs(age_dt.getUTCFullYear() - 1970);
+
+  const financials = await Financial.findById("627d1d7b4a3c41c6226bbaf6");
+  await Event.findByIdAndUpdate(eventId, {
+    $push: { gradingResults: { _id: memberId, result: result } },
+  });
+
+  if (result < 8) {
+    // failed
+    console.log("grading failed");
+    member.attendanceRecord = 0;
+    await member.save();
+    res.json("grading result: Failed. Result logged sucessfully");
+  } else if (result < 10) {
+    // conditional pass
+    console.log("conditional pass");
+    member.kyuGrade--;
+    if (member.kyuGrade === 10) {
+      member.kyuGrade--;
+      switchClasses(member._id);
+    }
+    if (member.kyuGrade === 6) {
+      switchClasses(member._id);
+    }
+    if (member.kyuGrade > 10 && age > 8) {
+      member.kyuGrade === 10;
+      switchClasses(member._id);
+    }
+
+    await member.save();
+    member.kyuGrade > 10
+      ? (member.attendanceRecord = -10)
+      : member.kyuGrade > 6
+      ? (member.attendanceRecord = -16)
+      : (member.attendanceRecord = -24);
+    await member.save();
+    financials.belts[member.kyuGrade]--;
+    const belts = financials.belts;
+    await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
+    res.json("grading result: Conditional Pass. Result logged sucessfully");
+  } else {
+    // pass
+    console.log("pass");
+    member.kyuGrade--;
+    if (member.kyuGrade === 10) {
+      member.kyuGrade--;
+      switchClasses(member._id);
+    }
+    if (member.kyuGrade === 6) {
+      switchClasses(member._id);
+    }
+    if (member.kyuGrade > 10 && age > 8) {
+      member.kyuGrade === 10;
+      switchClasses(member._id);
+    }
+    member.attendanceRecord = 0;
+    await member.save();
+    financials.belts[member.kyuGrade]--;
+    const belts = financials.belts;
+    await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
+    res.json("grading result: Pass. Result logged sucessfully");
+  }
+  // send email confirming result
+});
+
+const updateScore = asyncHandler(async (req, res) => {
+  const grading = await Event.findById(req.body.eventId);
+
+  if (grading) {
+    grading.participants.forEach(async (participant) => {
+      if (participant._id.toString() === req.body.id.toString()) {
+        console.log("code running...");
+        let style = req.body.style;
+        participant[style] = Number(req.body.score);
+        console.log(participant);
+        grading.markModified("participants");
+        await grading.save();
+      }
+    });
+  }
+  res.json("score updated");
 });
 
 // @desc GET grading results (for an individual member)
 // @route GET /api/grading/results
 // @access Private
-const getGradingResults = asyncHandler(async (req, res) => {
-  // member ID
-});
+const getGradingResults = asyncHandler(async (req, res) => {});
 
 const beltCalculator = async () => {
   // calculate belts required from member data to belts in stock from financial data
@@ -225,71 +313,104 @@ const beltCalculator = async () => {
 
   const beltsToOrder = {
     "White Red":
-      beltRequired[15] - beltStock[15] + 2 < 0
+      beltRequired[15] - beltStock[15] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[15] - beltStock[15] + 2,
     "White Black":
-      beltRequired[14] - beltStock[14] + 2 < 0
+      beltRequired[14] - beltStock[14] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[14] - beltStock[14] + 2,
     Orange:
-      beltRequired[13] - beltStock[13] + 2 < 0
+      beltRequired[13] - beltStock[13] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[13] - beltStock[13] + 2,
     "Orange White":
-      beltRequired[12] - beltStock[12] + 2 < 0
+      beltRequired[12] - beltStock[12] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[12] - beltStock[12] + 2,
     "Orange Yellow":
-      beltRequired[11] - beltStock[11] + 2 < 0
+      beltRequired[11] - beltStock[11] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[11] - beltStock[11] + 2,
     Red:
-      beltRequired[9] - beltStock[9] + 2 < 0
+      beltRequired[9] - beltStock[9] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[9] - beltStock[9] + 2,
     "Red Black":
-      beltRequired[8] - beltStock[8] + 2 < 0
+      beltRequired[8] - beltStock[8] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[8] - beltStock[8] + 2,
     Yellow:
-      beltRequired[7] - beltStock[7] + 2 < 0
+      beltRequired[7] - beltStock[7] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[7] - beltStock[7] + 2,
     Green:
-      beltRequired[6] - beltStock[6] + 2 < 0
+      beltRequired[6] - beltStock[6] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[6] - beltStock[6] + 2,
     Purple:
-      beltRequired[5] - beltStock[5] + 2 < 0
+      beltRequired[5] - beltStock[5] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[5] - beltStock[5] + 2,
     "Purple White":
-      beltRequired[4] - beltStock[4] + 2 < 0
+      beltRequired[4] - beltStock[4] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[4] - beltStock[4] + 2,
     Brown:
-      beltRequired[3] - beltStock[3] + 2 < 0
+      beltRequired[3] - beltStock[3] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[3] - beltStock[3] + 2,
     "Brown White":
-      beltRequired[2] - beltStock[2] + 2 < 0
+      beltRequired[2] - beltStock[2] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[2] - beltStock[2] + 2,
     "Brown Double White":
-      beltRequired[1] - beltStock[1] + 2 < 0
+      beltRequired[1] - beltStock[1] + 2 < 1
         ? "Fully Stocked"
         : beltRequired[1] - beltStock[1] + 2,
   };
 
   return beltsToOrder;
 };
-
 beltCalculator();
+
+// switchclass function
+const switchClasses = async (member) => {
+  console.log(member);
+  const trainingSessions = await TrainingSession.find({});
+  trainingSessions.forEach(async (trainingSession) => {
+    if (
+      trainingSession.participants.includes(member.toString()) &&
+      trainingSession.progressionPath
+    ) {
+      console.log("class switch required");
+      // remove from participants array of current training session
+      const newArray = trainingSession.participants.filter(
+        (participant) => participant.toString() !== member.toString()
+      );
+      await TrainingSession.findByIdAndUpdate(
+        trainingSession._id,
+        { participants: newArray },
+        { new: true }
+      );
+      // add to participants array for progressionpath training session
+      await TrainingSession.findByIdAndUpdate(
+        trainingSession.progressionPath,
+        {
+          $push: { participants: member },
+        },
+        { new: true }
+      );
+    }
+  });
+  // send email about class switch
+  console.log("class switch complete");
+};
 
 module.exports = {
   postGradingApplication,
   getGradingDetails,
   postGradingResult,
   getGradingResults,
+  updateScore,
 };

@@ -303,6 +303,7 @@ const createTimetableSession = asyncHandler(async (req, res) => {
     numberBooked: 0,
     participants: [],
     day: day,
+    progressionPath: req.body.progressionPath ? req.body.progressionPath : null,
   };
 
   await TrainingSession.create(trainingSession);
@@ -379,6 +380,7 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     trainingSession.capacity = Number(req.body.capacity);
     trainingSession.hallHire = Number(req.body.hallHire);
     trainingSession.day = day;
+    trainingSession.progressionPath = req.body.progressionPath;
 
     const updatedTrainingSession = await trainingSession.save();
     // review this. Combine email addresses into a single email and send only to those eligible by age/grade
@@ -386,18 +388,18 @@ const updateTimetableSession = asyncHandler(async (req, res) => {
     for (const member of members) {
       recipients.push(member.email, member.secondaryEmail);
     }
-    genericEmail({
-      recipientEmail: recipients,
-      subject: "Class has been amended",
-      message: `<h4>Dear members, we have amended a training session on the timetable</h4>
-              <p>The class details are:</p>
-              <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}
-              <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
-            `,
-      link: `${process.env.DOMAIN_LINK}/profile?key=third`,
-      linkText: "View your training sessions",
-      attachments: [],
-    });
+    // genericEmail({
+    //   recipientEmail: recipients,
+    //   subject: "Class has been amended",
+    //   message: `<h4>Dear members, we have amended a training session on the timetable</h4>
+    //           <p>The class details are:</p>
+    //           <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${trainingSession.times}
+    //           <p>If you are interested in this session, and you meet the age/grade requirement, you can book a place now via your profile page. Please click the link below.</p>
+    //         `,
+    //   link: `${process.env.DOMAIN_LINK}/profile?key=third`,
+    //   linkText: "View your training sessions",
+    //   attachments: [],
+    // });
 
     res.status(201).json(updatedTrainingSession);
   } else {

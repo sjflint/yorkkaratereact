@@ -6,6 +6,11 @@ const trainingSessionSchema = mongoose.Schema(
     location: { type: String, required: true },
     minGradeLevel: { type: Number, required: true },
     maxGradeLevel: { type: Number, required: true },
+    progressionPath: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TrainingSession",
+      default: null,
+    },
     juniorSession: { type: Boolean, required: true },
     times: { type: String, required: true },
     day: { type: Number, required: true },
