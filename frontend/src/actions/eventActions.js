@@ -17,11 +17,11 @@ import {
   EVENT_UPDATE_FAIL,
 } from "../constants/eventConstants";
 
-export const listEvents = () => async (dispatch) => {
+export const listEvents = (toPast) => async (dispatch) => {
   try {
     dispatch({ type: EVENT_LIST_REQUEST });
 
-    const { data } = await axios.get("/api/events");
+    const { data } = await axios.get(`/api/events/${toPast}`);
 
     dispatch({
       type: EVENT_LIST_SUCCESS,

@@ -191,78 +191,87 @@ const getGradingDetails = asyncHandler(async (req, res) => {
 // @access Private/Instructor or admin
 const postGradingResult = asyncHandler(async (req, res) => {
   console.log("posting grading result");
+  const confirmedResults = req.body.confirmedResults;
+  const eventId = req.body.eventId;
+
+  console.log(confirmedResults);
+
   // member ID
   // Grading event ID
   // <8 === fail, <10 === condiitonal pass, >=10 === pass, >=17 === pass with distinction
-  let { memberId, eventId, result } = req.body;
+  confirmedResults.forEach(async (record) => {
+    const { memberId, result } = record;
+    const member = await Member.findById(memberId);
+    const dob = new Date(member.dateOfBirth);
+    const diff_ms = Date.now() - dob.getTime();
+    const age_dt = new Date(diff_ms);
+    const age = Math.abs(age_dt.getUTCFullYear() - 1970);
 
-  const member = await Member.findById(memberId);
-  const dob = new Date(member.dateOfBirth);
-  const diff_ms = Date.now() - dob.getTime();
-  const age_dt = new Date(diff_ms);
-  const age = Math.abs(age_dt.getUTCFullYear() - 1970);
+    const financials = await Financial.findById("627d1d7b4a3c41c6226bbaf6");
+    await Event.findByIdAndUpdate(eventId, {
+      $push: { gradingResults: { _id: memberId, result: result } },
+    });
 
-  const financials = await Financial.findById("627d1d7b4a3c41c6226bbaf6");
-  await Event.findByIdAndUpdate(eventId, {
-    $push: { gradingResults: { _id: memberId, result: result } },
+    if (result < 8) {
+      // failed
+      console.log("grading failed");
+      member.attendanceRecord = 0;
+      await member.save();
+    } else if (result < 10) {
+      // conditional pass
+      console.log("conditional pass");
+      member.kyuGrade--;
+      if (member.kyuGrade === 10) {
+        member.kyuGrade--;
+        switchClasses(member._id);
+      }
+      if (member.kyuGrade === 6) {
+        switchClasses(member._id);
+      }
+      financials.belts[member.kyuGrade]--;
+      const belts = financials.belts;
+      await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
+
+      if (member.kyuGrade > 10 && age > 8) {
+        member.kyuGrade = 10;
+        switchClasses(member._id);
+        member.markModified("kyuGrade");
+        member.save();
+      }
+
+      await member.save();
+      member.kyuGrade > 10
+        ? (member.attendanceRecord = -10)
+        : member.kyuGrade > 6
+        ? (member.attendanceRecord = -16)
+        : (member.attendanceRecord = -24);
+      await member.save();
+    } else {
+      // pass
+      console.log("pass");
+      member.kyuGrade--;
+      if (member.kyuGrade === 10) {
+        member.kyuGrade--;
+        switchClasses(member._id);
+      }
+      if (member.kyuGrade === 6) {
+        switchClasses(member._id);
+      }
+      member.attendanceRecord = 0;
+      await member.save();
+      financials.belts[member.kyuGrade]--;
+      const belts = financials.belts;
+      await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
+      if (member.kyuGrade > 10 && age > 8) {
+        member.kyuGrade = 10;
+        switchClasses(member._id);
+        member.markModified("kyuGrade");
+        member.save();
+      }
+    }
   });
-
-  if (result < 8) {
-    // failed
-    console.log("grading failed");
-    member.attendanceRecord = 0;
-    await member.save();
-    res.json("grading result: Failed. Result logged sucessfully");
-  } else if (result < 10) {
-    // conditional pass
-    console.log("conditional pass");
-    member.kyuGrade--;
-    if (member.kyuGrade === 10) {
-      member.kyuGrade--;
-      switchClasses(member._id);
-    }
-    if (member.kyuGrade === 6) {
-      switchClasses(member._id);
-    }
-    if (member.kyuGrade > 10 && age > 8) {
-      member.kyuGrade === 10;
-      switchClasses(member._id);
-    }
-
-    await member.save();
-    member.kyuGrade > 10
-      ? (member.attendanceRecord = -10)
-      : member.kyuGrade > 6
-      ? (member.attendanceRecord = -16)
-      : (member.attendanceRecord = -24);
-    await member.save();
-    financials.belts[member.kyuGrade]--;
-    const belts = financials.belts;
-    await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
-    res.json("grading result: Conditional Pass. Result logged sucessfully");
-  } else {
-    // pass
-    console.log("pass");
-    member.kyuGrade--;
-    if (member.kyuGrade === 10) {
-      member.kyuGrade--;
-      switchClasses(member._id);
-    }
-    if (member.kyuGrade === 6) {
-      switchClasses(member._id);
-    }
-    if (member.kyuGrade > 10 && age > 8) {
-      member.kyuGrade === 10;
-      switchClasses(member._id);
-    }
-    member.attendanceRecord = 0;
-    await member.save();
-    financials.belts[member.kyuGrade]--;
-    const belts = financials.belts;
-    await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
-    res.json("grading result: Pass. Result logged sucessfully");
-  }
-  // send email confirming result
+  await Event.findOneAndUpdate(eventId, { resultsPosted: true });
+  res.status(201).json("results logged");
 });
 
 const updateScore = asyncHandler(async (req, res) => {
@@ -376,7 +385,6 @@ beltCalculator();
 
 // switchclass function
 const switchClasses = async (member) => {
-  console.log(member);
   const trainingSessions = await TrainingSession.find({});
   trainingSessions.forEach(async (trainingSession) => {
     if (

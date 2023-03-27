@@ -209,7 +209,23 @@ const MemberDetails = () => {
                   <h5 className="mb-0 border-bottom border-warning">
                     Attendance Card
                   </h5>
-                  {member.attendanceRecord > member.numberOfSessionsRequired ? (
+                  {member.attendanceRecord === 0 ? (
+                    <Message variant="info">
+                      You currently have no attendance stamps. Your attendnace
+                      card will appear here after your next class.
+                    </Message>
+                  ) : member.attendanceRecord < 0 ? (
+                    <Message variant="danger">
+                      You gained a conditional pass at your last grading, or
+                      unfortunately failed your last grading, and so
+                      consequently you will need to attend additional classes
+                      before you can start collecting attendance stamps again.{" "}
+                      <br />
+                      Number of sessions to attend before collecting stamps
+                      again: {member.attendanceRecord * -1}
+                    </Message>
+                  ) : member.attendanceRecord >
+                    member.numberOfSessionsRequired ? (
                     <img
                       src={`/img/Stampcards/${member.gradeLevel}Card${member.numberOfSessionsRequired}.png`}
                       alt=""

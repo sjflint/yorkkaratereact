@@ -1,6 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Modal, ListGroup } from "react-bootstrap";
+import {
+  Container,
+  Table,
+  Button,
+  Modal,
+  ListGroup,
+  Form,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { listEvents } from "../actions/eventActions";
@@ -111,6 +120,21 @@ const ListGradingsScreen = ({ history }) => {
           <h3 className="text-center border-bottom border-warning pb-1">
             Grading Courses
           </h3>
+          <Row className="my-3">
+            <Col md={4}>
+              <Form.Select
+                onChange={(e) => dispatch(listEvents(e.target.value))}
+                className="d-inline"
+              >
+                <option value={0}>View Past Events</option>
+                <option value={30}>Last 30 days</option>
+                <option value={90}>Last 90 days</option>
+                <option value={365}>Last 12 months</option>
+                <option value={1095}>Last 36 months</option>
+              </Form.Select>
+            </Col>
+          </Row>
+
           <Table striped bordered hover responsive className="table-sm">
             <thead>
               <tr className="text-center">
@@ -122,32 +146,33 @@ const ListGradingsScreen = ({ history }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredEvents.map((event) => (
-                <tr key={event._id}>
-                  <td className="text-center align-middle max-width-200">
-                    <img
-                      src={event.image}
-                      alt="grading course"
-                      max-width="80"
-                      fluid
-                    />
-                  </td>
-                  <td className="text-center align-middle">{event.title}</td>
-                  <td className="text-center align-middle">
-                    {new Date(event.dateOfEvent).toLocaleDateString()}
-                  </td>
-                  <td className="text-center align-middle">
-                    {event.participants.length}
-                  </td>
-                  <td className="text-center align-middle">
-                    <a href={`/gradingdetails/${event._id}`}>
-                      <Button variant="warning" className="btn-sm">
-                        <i className="fa-solid fa-eye"></i>
-                      </Button>
-                    </a>
-                  </td>
-                </tr>
-              ))}
+              {filteredEvents
+                .map((event) => (
+                  <tr key={event._id}>
+                    <td className="text-center align-middle max-width-200">
+                      <img
+                        src={event.image}
+                        alt="grading course"
+                        max-width="80"
+                      />
+                    </td>
+                    <td className="text-center align-middle">{event.title}</td>
+                    <td className="text-center align-middle">
+                      {new Date(event.dateOfEvent).toLocaleDateString()}
+                    </td>
+                    <td className="text-center align-middle">
+                      {event.participants.length}
+                    </td>
+                    <td className="text-center align-middle">
+                      <a href={`/gradingdetails/${event._id}`}>
+                        <Button variant="warning" className="btn-sm">
+                          <i className="fa-solid fa-eye"></i>
+                        </Button>
+                      </a>
+                    </td>
+                  </tr>
+                ))
+                .reverse()}
             </tbody>
           </Table>
           <small>

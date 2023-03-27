@@ -18,6 +18,7 @@ const eventSchema = mongoose.Schema(
         type: Object,
       },
     ],
+    resultsPosted: { type: Boolean, default: false },
   },
   {
     timestamp: true,

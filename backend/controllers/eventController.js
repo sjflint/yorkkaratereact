@@ -12,9 +12,12 @@ dotenv.config();
 const getEvents = asyncHandler(async (req, res) => {
   const events = await Event.find({}).sort({ dateOfEvent: 1 });
 
+  const toPast = Number(req.params.toPast) || 0;
+
   let today = new Date();
 
-  today.setDate(today.getDate() - 1);
+  // allow members to see their grading scores
+  today.setDate(today.getDate() - toPast);
 
   today = Date.parse(new Date(today));
 

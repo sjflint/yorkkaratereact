@@ -1,12 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { listGrading } from "../actions/gradingActions";
+import Loader from "../components/Loader";
 
 const GradingExaminationScreen = ({ history, match }) => {
-  const [gradeSelected, setGradeSelected] = useState("");
+  const [gradeSelected, setGradeSelected] = useState(16);
+  const [loading, setLoading] = useState(false);
+  const [resultsUpdated, setResultsUpdated] = useState(false);
   const dispatch = useDispatch();
 
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -99,6 +102,39 @@ const GradingExaminationScreen = ({ history, match }) => {
     }
   };
 
+  const submitResults = async () => {
+    setLoading(true);
+    let finalResult = [];
+    grading.participants.forEach((member) => {
+      const memberResult = {
+        result:
+          member.kihon + member.kata + member.shobuKumite + member.kihonKumite,
+        memberId: member._id,
+      };
+      if (memberResult.result !== 0) {
+        finalResult.push(memberResult);
+      }
+    });
+    const config = {
+      headers: {
+        Authorization: `Bearer ${memberInfo.token}`,
+      },
+    };
+
+    const values = {
+      eventId: grading._id,
+      confirmedResults: finalResult,
+    };
+    console.log(values);
+    const { data } = await axios.post(`/api/grading/results`, values, config);
+    console.log(`Data=${data}`);
+
+    if (data === "results logged") {
+      setLoading(false);
+      setResultsUpdated(true);
+    }
+  };
+
   return (
     <div>
       <Container>
@@ -114,13 +150,15 @@ const GradingExaminationScreen = ({ history, match }) => {
               dispatch(listGrading(match.params.id));
             }}
           >
-            {grades.map((grade) => (
-              <option value={grade.value}>{grade.label}</option>
+            {grades.map((grade, index) => (
+              <option value={grade.value} key={index}>
+                {grade.label}
+              </option>
             ))}
           </select>
         </div>
 
-        <Table striped bordered hover responsive small size="sm">
+        <Table striped bordered hover responsive size="sm">
           <thead>
             <tr className="text-center">
               <th>Name</th>
@@ -134,162 +172,166 @@ const GradingExaminationScreen = ({ history, match }) => {
           </thead>
           <tbody>
             {grading.title &&
-              grading.participants.map((member) => {
-                console.log(gradeSelected);
-
+              grading.participants.map((member, index) => {
                 return (
                   Number(member.grade) === Number(gradeSelected) && (
-                    <>
-                      <tr key={member._id} className="text-center">
-                        <td>
-                          {" "}
-                          <Link
-                            to={`/admin/members/${member._id}/edit`}
-                          >{`${member.firstName} ${member.lastName}`}</Link>
-                        </td>
+                    <tr key={index} className="text-center">
+                      <td>
+                        {" "}
+                        <Link
+                          to={`/admin/members/${member._id}/edit`}
+                        >{`${member.firstName} ${member.lastName}`}</Link>
+                      </td>
 
-                        {member.grade === 1 ? (
-                          <td>{member.grade}st kyu</td>
-                        ) : member.grade === 2 ? (
-                          <td>{member.grade}nd kyu</td>
-                        ) : member.grade === 3 ? (
-                          <td>{member.grade}rd kyu</td>
-                        ) : (
-                          <td>{member.grade}th kyu</td>
-                        )}
+                      {member.grade === 1 ? (
+                        <td>{member.grade}st kyu</td>
+                      ) : member.grade === 2 ? (
+                        <td>{member.grade}nd kyu</td>
+                      ) : member.grade === 3 ? (
+                        <td>{member.grade}rd kyu</td>
+                      ) : (
+                        <td>{member.grade}th kyu</td>
+                      )}
 
-                        {/* data will need to be held in the participants object and http request sent each time the data is updated */}
-                        <td>
-                          <select
-                            value={member.kihon}
-                            onChange={(e) =>
-                              selectHandler(
-                                member._id,
-                                "kihon",
-                                e.target.value,
-                                grading._id
-                              )
-                            }
-                          >
-                            {options.map((option) => (
-                              <option value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          <select
-                            value={member.kata}
-                            onChange={(e) =>
-                              selectHandler(
-                                member._id,
-                                "kata",
-                                e.target.value,
-                                grading._id
-                              )
-                            }
-                          >
-                            {options.map((option) => (
-                              <option value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          <select
-                            value={member.kihonKumite}
-                            onChange={(e) =>
-                              selectHandler(
-                                member._id,
-                                "kihonKumite",
-                                e.target.value,
-                                grading._id
-                              )
-                            }
-                          >
-                            {options.map((option) => (
-                              <option value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          <select
-                            value={member.shobuKumite}
-                            onChange={(e) =>
-                              selectHandler(
-                                member._id,
-                                "shobuKumite",
-                                e.target.value,
-                                grading._id
-                              )
-                            }
-                          >
-                            {options.map((option) => (
-                              <option value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td>
-                          {member.kihon &&
-                          member.kata &&
-                          member.shobuKumite &&
-                          member.kihonKumite ? (
-                            <>
-                              {member.kihon +
+                      {/* data will need to be held in the participants object and http request sent each time the data is updated */}
+                      <td>
+                        <select
+                          value={member.kihon}
+                          onChange={(e) =>
+                            selectHandler(
+                              member._id,
+                              "kihon",
+                              e.target.value,
+                              grading._id
+                            )
+                          }
+                        >
+                          {options.map((option, index) => (
+                            <option value={option.value} key={index}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          value={member.kata}
+                          onChange={(e) =>
+                            selectHandler(
+                              member._id,
+                              "kata",
+                              e.target.value,
+                              grading._id
+                            )
+                          }
+                        >
+                          {options.map((option, index) => (
+                            <option value={option.value} key={index}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          value={member.kihonKumite}
+                          onChange={(e) =>
+                            selectHandler(
+                              member._id,
+                              "kihonKumite",
+                              e.target.value,
+                              grading._id
+                            )
+                          }
+                        >
+                          {options.map((option, index) => (
+                            <option value={option.value} key={index}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          value={member.shobuKumite}
+                          onChange={(e) =>
+                            selectHandler(
+                              member._id,
+                              "shobuKumite",
+                              e.target.value,
+                              grading._id
+                            )
+                          }
+                        >
+                          {options.map((option, index) => (
+                            <option value={option.value} key={index}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        {member.kihon &&
+                        member.kata &&
+                        member.shobuKumite &&
+                        member.kihonKumite ? (
+                          <>
+                            {member.kihon +
+                              member.kata +
+                              member.kihonKumite +
+                              member.shobuKumite <
+                            8 ? (
+                              <h6 className="text-center bg-danger p-2 text-white">
+                                <i className="fa-solid fa-xmark"></i>
+                                <br />
+                                Fail
+                              </h6>
+                            ) : member.kihon +
                                 member.kata +
                                 member.kihonKumite +
                                 member.shobuKumite <
-                              8 ? (
-                                <h6 className="text-center bg-danger p-2 text-white">
-                                  <i className="fa-solid fa-xmark"></i>
-                                  <br />
-                                  Fail
-                                </h6>
-                              ) : member.kihon +
-                                  member.kata +
-                                  member.kihonKumite +
-                                  member.shobuKumite <
-                                10 ? (
-                                <h6 className="text-center bg-warning p-2 text-white">
-                                  <i className="fa-solid fa-question"></i>
-                                  <br />
-                                  Conditional
-                                </h6>
-                              ) : member.kihon +
-                                  member.kata +
-                                  member.kihonKumite +
-                                  member.shobuKumite <
-                                17 ? (
-                                <h6 className="text-center bg-success p-2 text-white">
-                                  <i className="fa-solid fa-check"></i>
-                                  <br />
-                                  Pass
-                                </h6>
-                              ) : (
-                                <h6 className="text-center bg-distinction p-2 text-white">
-                                  <i className="fa-solid fa-exclamation"></i>
-                                  <br />
-                                  Distinction
-                                </h6>
-                              )}
-                            </>
-                          ) : (
-                            "..."
-                          )}
-                        </td>
-                      </tr>
-                    </>
+                              10 ? (
+                              <h6 className="text-center bg-warning p-2 text-white">
+                                <i className="fa-solid fa-question"></i>
+                                <br />
+                                Conditional
+                              </h6>
+                            ) : member.kihon +
+                                member.kata +
+                                member.kihonKumite +
+                                member.shobuKumite <
+                              17 ? (
+                              <h6 className="text-center bg-success p-2 text-white">
+                                <i className="fa-solid fa-check"></i>
+                                <br />
+                                Pass
+                              </h6>
+                            ) : (
+                              <h6 className="text-center bg-distinction p-2 text-white">
+                                <i className="fa-solid fa-exclamation"></i>
+                                <br />
+                                Distinction
+                              </h6>
+                            )}
+                          </>
+                        ) : (
+                          "..."
+                        )}
+                      </td>
+                    </tr>
                   )
                 );
               })}
           </tbody>
         </Table>
+
+        {grading && loading ? (
+          <Loader />
+        ) : !resultsUpdated && !grading.resultsPosted ? (
+          <Button onClick={() => submitResults()}>Submit Results</Button>
+        ) : (
+          "Results have already been submited"
+        )}
       </Container>
     </div>
   );
