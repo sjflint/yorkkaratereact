@@ -9,7 +9,7 @@ import {
 } from "../controllers/eventController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
-router.route("/:toPast").get(getEvents).post(protect, admin, createEvent);
+router.route("/find/:toPast?").get(getEvents).post(protect, admin, createEvent);
 router
   .route("/:id")
   .get(getEventById)

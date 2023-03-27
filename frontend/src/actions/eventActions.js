@@ -21,7 +21,7 @@ export const listEvents = (toPast) => async (dispatch) => {
   try {
     dispatch({ type: EVENT_LIST_REQUEST });
 
-    const { data } = await axios.get(`/api/events/${toPast}`);
+    const { data } = await axios.get(`/api/events/find/${toPast}`);
 
     dispatch({
       type: EVENT_LIST_SUCCESS,
@@ -107,7 +107,7 @@ export const createEvent = (values) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`/api/events`, values, config);
+    const { data } = await axios.post(`/api/events/find`, values, config);
 
     dispatch({
       type: EVENT_CREATE_SUCCESS,
