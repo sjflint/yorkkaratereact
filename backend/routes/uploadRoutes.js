@@ -78,7 +78,7 @@ const videoUpload = multer({
 });
 const imageUpload = multer({
   storage: storage,
-  limits: { fileSize: 3000000 },
+  limits: { fileSize: 5000000 },
   fileFilter: function (req, file, cb) {
     checkImageType(file, cb);
   },

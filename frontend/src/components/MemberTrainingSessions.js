@@ -24,6 +24,9 @@ const MemberTrainingSessions = () => {
 
   const [sessionToDelete, setSessionToDelete] = useState({});
 
+  const memberLogin = useSelector((state) => state.memberLogin);
+  const { memberInfo } = memberLogin;
+
   const trainingSessionsList = useSelector(
     (state) => state.trainingSessionsList
   );
@@ -52,7 +55,7 @@ const MemberTrainingSessions = () => {
   }
   const today = new Date();
   let canSwitch;
-  if (changeDate < today) {
+  if (changeDate < today || memberInfo.isAdmin) {
     canSwitch = true;
   } else {
     canSwitch = false;
@@ -145,6 +148,7 @@ const MemberTrainingSessions = () => {
       memberId: member,
       deleteId: sessionToDelete,
       addId: sessionToAdd,
+      adminId: memberInfo._id,
     };
     await dispatch(switchMyClass(id));
     await dispatch(listMemberClasses(id.memberId._id));
