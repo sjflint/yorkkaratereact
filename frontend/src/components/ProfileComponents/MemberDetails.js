@@ -47,7 +47,6 @@ const MemberDetails = () => {
 
   useEffect(() => {
     dispatch(getMemberDetails("profile"));
-    dispatch(gradingResultsList(member._id));
   }, [dispatch, updateProfileSuccess]);
 
   // Update details form
@@ -200,6 +199,7 @@ const MemberDetails = () => {
                     variant="light"
                     className="btn-link px-4 text-warning"
                     onClick={() => {
+                      dispatch(gradingResultsList(member._id));
                       setGradingModal(true);
                     }}
                   >

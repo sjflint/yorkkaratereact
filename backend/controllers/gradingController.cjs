@@ -296,6 +296,7 @@ const updateScore = asyncHandler(async (req, res) => {
 // @route GET /api/grading/results
 // @access Private
 const getGradingResults = asyncHandler(async (req, res) => {
+  console.log(req.params.id);
   let results = [];
   const events = await Event.find({});
   if (events) {
