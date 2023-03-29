@@ -295,7 +295,38 @@ const updateScore = asyncHandler(async (req, res) => {
 // @desc GET grading results (for an individual member)
 // @route GET /api/grading/results
 // @access Private
-const getGradingResults = asyncHandler(async (req, res) => {});
+const getGradingResults = asyncHandler(async (req, res) => {
+  let results = [];
+  const events = await Event.find({});
+  if (events) {
+    events.forEach((grading) => {
+      grading.participants.forEach((participant) => {
+        // CHANGE TO REQ.PARAMS.ID
+        if (participant._id.toString() == req.params.id.toString()) {
+          const result = {
+            kihon: participant.kihon,
+            kihonKumite: participant.kihonKumite,
+            kata: participant.kata,
+            shobuKumite: participant.shobuKumite,
+            date: grading.dateOfEvent,
+            gradeAchieved: participant.grade === 11 ? 9 : participant.grade - 1,
+            overallScore:
+              participant.kihon +
+              participant.kata +
+              participant.kihonKumite +
+              participant.shobuKumite,
+          };
+          results.push(result);
+        }
+      });
+    });
+  }
+  if (results !== []) {
+    res.status(201).json(results);
+  } else {
+    res.status(404).json("Results could not be found");
+  }
+});
 
 const beltCalculator = async () => {
   // calculate belts required from member data to belts in stock from financial data

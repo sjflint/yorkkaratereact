@@ -108,6 +108,7 @@ const addTrainingSession = asyncHandler(async (req, res) => {
 const deleteTrainingSession = asyncHandler(async (req, res) => {
   let session = await TrainingSession.findById(req.body.classId);
   let member = await Member.findById(req.body.memberId._id);
+  const admin = await Member.findById(req.body.adminId);
   const financials = await Financial.findOne({});
 
   const today = new Date();
@@ -115,8 +116,9 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
   changeDate.setMonth(changeDate.getMonth() + 1);
 
   if (
-    session.participants.includes(req.body.memberId._id) &&
-    changeDate < today
+    (session.participants.includes(req.body.memberId._id) &&
+      changeDate < today) ||
+    admin.isAdmin
   ) {
     for (let i = 0; i < session.participants.length; i++) {
       if (session.participants[i] == req.body.memberId._id) {

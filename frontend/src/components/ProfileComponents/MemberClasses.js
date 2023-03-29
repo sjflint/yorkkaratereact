@@ -248,21 +248,21 @@ const MemberClasses = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>
+          <p>
             Your current monthly training fees are: £
             {(member.trainingFees / 100).toFixed(2)}
-          </h5>
+          </p>
           {financialsLoading ? (
             <Loader variant="warning" />
           ) : financialsError ? (
             <Message>{financialsError}</Message>
           ) : (
-            <h5>
+            <p>
               Your monthly training fees will increase by:{" "}
               {sessions && sessions.length === 0
                 ? "£0.00"
                 : `£${(financials.costOfAdditionalClass / 100).toFixed(2)}`}
-            </h5>
+            </p>
           )}
           <Row>
             {filteredSessions &&

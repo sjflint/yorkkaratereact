@@ -324,21 +324,32 @@ const TimetableScreen = () => {
         </Modal.Header>
         <Modal.Body>
           <Row>
+            <h5 className="text-center mt-2">
+              <u>Junior</u>
+            </h5>
             <BeltCard grade="beginner" beltColor="White" />
             <BeltCard grade="15th Kyu" beltColor="White-Red" />
             <BeltCard grade="14th Kyu" beltColor="White-Black" />
             <BeltCard grade="13th Kyu" beltColor="Orange" />
             <BeltCard grade="12th Kyu" beltColor="Orange-White" />
             <BeltCard grade="11th Kyu" beltColor="Orange-Yellow" />
-            <BeltCard grade="10th Kyu" beltColor="Orange-Black" />
+            <h5 className="text-center mt-4">
+              <u>Novice</u>
+            </h5>
             <BeltCard grade="9th Kyu" beltColor="Red" />
             <BeltCard grade="8th Kyu" beltColor="Red-Black" />
             <BeltCard grade="7th Kyu" beltColor="Yellow" />
+            <h5 className="text-center mt-4">
+              <u>Intermediate</u>
+            </h5>
             <BeltCard grade="6th Kyu" beltColor="Green" />
             <BeltCard grade="5th Kyu" beltColor="Purple" />
             <BeltCard grade="4th Kyu" beltColor="Purple-White" />
             <BeltCard grade="3th Kyu" beltColor="Brown" />
             <BeltCard grade="2th Kyu" beltColor="Brown-White" />
+            <h5 className="text-center mt-4">
+              <u>Advanced</u>
+            </h5>
             <BeltCard grade="1st Kyu" beltColor="Brown-Double-White" />
             <BeltCard grade="1st dan" beltColor="Black" />
           </Row>

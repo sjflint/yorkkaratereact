@@ -90,7 +90,10 @@ import {
   lessonPlanListReducer,
   lessonPlanUpdateReducer,
 } from "./reducers/lessonPlanReducer";
-import { displayGradingReducer } from "./reducers/gradingReducer";
+import {
+  displayGradingReducer,
+  listGradingResultsReducer,
+} from "./reducers/gradingReducer";
 import {
   addAttendeeReducer,
   addExtraAttendeeReducer,
@@ -132,6 +135,7 @@ const reducer = combineReducers({
   trainingVideoCreate: trainingVideoCreateReducer,
   trainingVideoUpdate: trainingVideoUpdateReducer,
   displayGrading: displayGradingReducer,
+  listGradingResults: listGradingResultsReducer,
   lessonPlanList: lessonPlanListReducer,
   displayLessonPlan: displayLessonPlanReducer,
   lessonPlanDelete: lessonPlanDeleteReducer,

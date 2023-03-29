@@ -13,6 +13,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormikControl from "../FormComponents/FormikControl";
 import "yup-phone";
+import { gradingResultsList } from "../../actions/gradingActions";
 
 const MemberDetails = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const MemberDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPassword, setShowPassword] = useState("password");
+  const [gradingModal, setGradingModal] = useState(false);
 
   const memberDetails = useSelector((state) => state.memberDetails);
   const { loading, error, member } = memberDetails;
@@ -31,6 +33,13 @@ const MemberDetails = () => {
     success: successPasswordUpdate,
   } = updatePasswordStatus;
 
+  const listGradingResults = useSelector((state) => state.listGradingResults);
+  const {
+    loading: loadingResults,
+    error: errorResults,
+    gradingResults,
+  } = listGradingResults;
+
   const updateProfileDetails = useSelector(
     (state) => state.updateProfileDetails
   );
@@ -38,6 +47,7 @@ const MemberDetails = () => {
 
   useEffect(() => {
     dispatch(getMemberDetails("profile"));
+    dispatch(gradingResultsList(member._id));
   }, [dispatch, updateProfileSuccess]);
 
   // Update details form
@@ -184,7 +194,18 @@ const MemberDetails = () => {
                 <ListGroup.Item className="bg-light text-warning">
                   <strong>Grade</strong>
                 </ListGroup.Item>
-                <ListGroup.Item>{`${grade} (${member.gradeLevel})`}</ListGroup.Item>
+                <ListGroup.Item className="d-flex justify-content-between">
+                  {`${grade} (${member.gradeLevel})`}
+                  <Button
+                    variant="light"
+                    className="btn-link px-4 text-warning"
+                    onClick={() => {
+                      setGradingModal(true);
+                    }}
+                  >
+                    View Grading results
+                  </Button>
+                </ListGroup.Item>
                 <ListGroup.Item className="bg-light text-warning">
                   <strong>Membership Level</strong>
                 </ListGroup.Item>
@@ -566,6 +587,152 @@ const MemberDetails = () => {
             )}
           </Formik>
         </Modal.Body>
+      </Modal>
+      <Modal show={gradingModal} onHide={() => setGradingModal(false)}>
+        <Modal.Header closeButton className="bg-dark">
+          <Modal.Title className="text-white">Your Grading Results</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h6 className="bg-warning p-2 text-white">
+            How are gradings examined
+          </h6>
+          <p>
+            Gradings are comprised of several elements, depending on grade.
+            These elements are:
+            <ul>
+              <li>Kihon - The execution of basic techniques in reptition</li>
+              <li>Kata - A complex sequence of kihon techniques</li>
+              <li>
+                Kihon Kumite - Execution of kihon techniques with a partner
+              </li>
+              <li>
+                Shobu Kumite - free sparring conducted according to competition
+                rules with the intention of scoring points
+              </li>
+            </ul>
+          </p>
+          <h6 className="bg-warning p-2 text-white">
+            What is the scoring criteria
+          </h6>
+          <p>
+            The assessor will award a score between 1 and 5 (1 = 'not meeting
+            standard', 3 = 'meeting standard', 5 = exceeding standard) based on
+            the following:
+            <ul>
+              <li>Conformity with the accepted standard of Shotokan Karate</li>
+              <li>
+                Zanshin - a Japanese word meaning a calm focus and awarenesss
+              </li>
+              <li>Vigorous application of technique</li>
+              <li>
+                Athletic performance, which would include such things as
+                balance/speed/control
+              </li>
+            </ul>
+          </p>
+
+          <h6 className="bg-warning p-2 text-center text-white">Results</h6>
+          <ListGroup>
+            {gradingResults && gradingResults.length !== 0 ? (
+              gradingResults.map((result, index) => {
+                return (
+                  <ListGroup.Item key={index}>
+                    <p className="bg-primary p-2 text-white">
+                      Date: {new Date(result.date).toLocaleDateString()}
+                    </p>
+                    <p>
+                      Grade Attempted:{" "}
+                      {result.gradeAchieved > 12 ? (
+                        <>
+                          {result.gradeAchieved}
+                          {result.gradeAchieved === 1
+                            ? "st"
+                            : result.gradeAchieved === 2
+                            ? "nd"
+                            : "th"}{" "}
+                          kyu
+                          <small className="text-success">
+                            score modifier for grade level +9
+                          </small>
+                        </>
+                      ) : result.gradeAchieved > 11 ? (
+                        <>
+                          {result.gradeAchieved}
+                          {result.gradeAchieved === 1
+                            ? "st"
+                            : result.gradeAchieved === 2
+                            ? "nd"
+                            : "th"}{" "}
+                          kyu
+                          <small className="text-success">
+                            score modifier for grade level +3
+                          </small>
+                        </>
+                      ) : (
+                        <>
+                          {result.gradeAchieved}
+                          {result.gradeAchieved === 1
+                            ? "st"
+                            : result.gradeAchieved === 2
+                            ? "nd"
+                            : "th"}{" "}
+                          kyu
+                        </>
+                      )}
+                    </p>
+                    <p>
+                      Result Breakdown:
+                      <ul>
+                        <li>Kihon: {result.kihon}</li>
+                        {result.gradeAchieved < 13 && (
+                          <li>Kata: {result.kata}</li>
+                        )}
+                        {result.gradeAchieved < 13 && (
+                          <li>Kihon Kumite: {result.kihonKumite}</li>
+                        )}
+                        {result.gradeAchieved < 10 && (
+                          <li> Shobu Kumite: {result.shobuKumite}</li>
+                        )}
+                      </ul>
+                    </p>
+                    <p>
+                      Overall Score:{" "}
+                      {result.overallScore < 8 ? (
+                        <div className="bg-danger text-white p-2">
+                          {result.overallScore} - FAIL{" "}
+                          <i className="fa-solid fa-xmark"></i>
+                        </div>
+                      ) : result.overallScore < 10 ? (
+                        <div className="bg-warning text-white p-2">
+                          {result.overallScore} - Conditional Pass{" "}
+                          <i className="fa-solid fa-question"></i>
+                        </div>
+                      ) : result.overallScore < 17 ? (
+                        <div className="bg-success text-white p-2">
+                          {result.overallScore} - Pass{" "}
+                          <i className="fa-solid fa-check"></i>
+                        </div>
+                      ) : (
+                        <div className="bg-distinction text-white p-2">
+                          {result.overallScore} - Pass with distinction{" "}
+                          <i className="fa-solid fa-exclamation"></i>
+                        </div>
+                      )}
+                    </p>
+                  </ListGroup.Item>
+                );
+              })
+            ) : (
+              <p className="text-center">no results to show</p>
+            )}
+          </ListGroup>
+          <small>Results are only available from the 25/03/23 onwards</small>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setGradingModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

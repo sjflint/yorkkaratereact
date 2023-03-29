@@ -16,7 +16,7 @@ import {
 router.route("/score").post(protect, adminOrInstructor, updateScore);
 
 router
-  .route("/results")
+  .route("/results/:id?")
   .post(protect, adminOrInstructor, postGradingResult)
   .get(protect, getGradingResults);
 

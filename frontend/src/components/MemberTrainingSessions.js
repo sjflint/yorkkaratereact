@@ -128,8 +128,7 @@ const MemberTrainingSessions = () => {
 
   const confirmDeleteClass = async (classId) => {
     setButtonLoader(true);
-    const id = { memberId: member, classId: classId };
-    console.log(id.memberId._id);
+    const id = { memberId: member, classId: classId, adminId: memberInfo._id };
     await dispatch(deleteMyClass(id));
     await dispatch(listMemberClasses(id.memberId._id));
 
@@ -253,11 +252,11 @@ const MemberTrainingSessions = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>
+          <p>
             Current monthly training fees are: £
             {(member.trainingFees / 100).toFixed(2)}
-          </h5>
-          <h5>
+          </p>
+          <p>
             Monthly training fees will increase by:{" "}
             {sessions && sessions.length === 0
               ? "£0.00"
@@ -270,7 +269,7 @@ const MemberTrainingSessions = () => {
                   }
                 )
               : null}
-          </h5>
+          </p>
           <Row>
             {filteredSessions &&
               filteredSessions.map((session) => (
@@ -324,8 +323,8 @@ const MemberTrainingSessions = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
-          <h5>Are you sure you wish to delete the following class:</h5>
-          <h5 variant="flush">{sessionToDelete.name}</h5>
+          <p>Are you sure you wish to delete the following class:</p>
+          <p variant="flush">{sessionToDelete.name}</p>
 
           <p>
             {sessionToDelete.location}
@@ -337,17 +336,17 @@ const MemberTrainingSessions = () => {
             This class will be removed from your list of classes and your direct
             debit adjusted accordingly
           </p>
-          <h5 className="text-center text-danger">
+          <p className="text-center text-danger">
             Please note that you can only switch/delete one class per month.
             This action cannot be undone.
-          </h5>
+          </p>
         </Modal.Body>
         <Modal.Footer className="bg-light text-primary">
           {buttonLoader ? (
             <Button variant="danger" disbaled>
-              <h5>
+              <p>
                 <Loader />
-              </h5>
+              </p>
             </Button>
           ) : (
             <>
@@ -374,17 +373,17 @@ const MemberTrainingSessions = () => {
       >
         <Modal.Header closeButton className="bg-secondary text-white">
           <Modal.Title id="switch-class">
-            <i className="fas fa-exchange-alt"></i> Switch Class
+            <i className="fas fa-exchange-alt"></i> Permanently Switch Class
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-light text-primary">
-          <h5>
-            The class below will be removed from your class list and you will
-            not be able to attend in the future:
-          </h5>
+          <p>
+            The class below will be permanently removed from your class list and
+            you will not be able to attend in the future:
+          </p>
 
           <Card className="mb-3">
-            <Card.Header className="bg-secondary">
+            <Card.Header className="bg-grey">
               {sessionToDelete.name}
             </Card.Header>
             <Card.Body className="bg-light text-primary">
@@ -394,17 +393,21 @@ const MemberTrainingSessions = () => {
               <Card.Text>{sessionToDelete.location}</Card.Text>
             </Card.Body>
           </Card>
-          <h5 className="text-center text-danger">
+          <p className="text-center text-danger">
             Please note that you can only switch/delete one class per month.
             This action cannot be undone.
-          </h5>
-          <h5>Please choose your replacement class from below:</h5>
+          </p>
+          <p className="text-center text-danger">
+            If you are looking to attend a one-off class, you do not need to
+            book. Simply turn-up for the session at the required time.
+          </p>
+          <p>Please choose your replacement class from below:</p>
           <Row>
             {filteredSessions &&
               filteredSessions.map((session) => (
                 <Col md={6} className="mb-3" key={session._id}>
                   <Card>
-                    <Card.Header className="bg-secondary">
+                    <Card.Header className="bg-grey">
                       {session.name}
                     </Card.Header>
                     <Card.Body className="bg-light text-primary">
@@ -413,16 +416,19 @@ const MemberTrainingSessions = () => {
                       </Card.Subtitle>
                       <Card.Text>{session.location}</Card.Text>
                     </Card.Body>
-                    <Card.Footer className="bg-light text-primary">
+                    <Card.Footer className="bg-grey">
                       {session.participants.length === session.capacity ? (
                         <Button disabled>Class Fully Booked</Button>
                       ) : (
                         <Button
+                          variant="warning"
+                          className="btn-link"
                           onClick={() =>
                             actionSwitchClass(sessionToDelete._id, session._id)
                           }
                         >
-                          <i className="fas fa-exchange-alt"></i> Switch Class
+                          <i className="fas fa-exchange-alt"></i> Permanently
+                          Switch Class
                         </Button>
                       )}
                     </Card.Footer>
