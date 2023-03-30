@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Container, ListGroup, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { listGrading } from "../actions/gradingActions";
 import Loader from "../components/Loader";
+import exportFromJSON from "export-from-json";
 
 const GradingExaminationScreen = ({ history, match }) => {
   const [gradeSelected, setGradeSelected] = useState(16);
@@ -135,6 +136,39 @@ const GradingExaminationScreen = ({ history, match }) => {
     }
   };
 
+  const downloadData = () => {
+    const data = [];
+    grading.participants.map((participant) => {
+      const result =
+        participant.kihon +
+        participant.kata +
+        participant.kihonKumite +
+        participant.shobuKumite;
+      if (participant.grade < 12 && result > 8) {
+        const resultsData = {
+          name: `${participant.firstName} ${participant.lastName}`,
+          dojo: "York Karate Dojo",
+          license: participant.licenseNumber,
+          gradeAttained: `${participant.grade - 1}${
+            participant.grade - 1 === 1
+              ? "st"
+              : participant.grade - 1 === 2
+              ? "nd"
+              : participant.grade - 1 === 3
+              ? "rd"
+              : "th"
+          } kyu`,
+        };
+        data.push(resultsData);
+      }
+    });
+    const fileName = `JKS Kyu grading results - ${new Date(
+      grading.dateOfEvent
+    ).toLocaleDateString()}`;
+    const exportType = exportFromJSON.types.xls;
+    exportFromJSON({ data, fileName, exportType });
+  };
+
   return (
     <div>
       <Container>
@@ -193,7 +227,6 @@ const GradingExaminationScreen = ({ history, match }) => {
                         <td>{member.grade}th kyu</td>
                       )}
 
-                      {/* data will need to be held in the participants object and http request sent each time the data is updated */}
                       <td>
                         <select
                           value={member.kihon}
@@ -325,13 +358,36 @@ const GradingExaminationScreen = ({ history, match }) => {
           </tbody>
         </Table>
 
-        {grading && loading ? (
-          <Loader />
-        ) : !resultsUpdated && !grading.resultsPosted ? (
-          <Button onClick={() => submitResults()}>Submit Results</Button>
-        ) : (
-          "Results have already been submited"
-        )}
+        <ListGroup>
+          <ListGroup.Item>
+            {grading && loading ? (
+              <Loader />
+            ) : !resultsUpdated && !grading.resultsPosted ? (
+              <Button
+                onClick={() => submitResults()}
+                className="btn-link"
+                variant="light"
+              >
+                Submit Results
+              </Button>
+            ) : (
+              "Results have been submited"
+            )}
+          </ListGroup.Item>
+          <ListGroup.Item className="d-flex align-items-center">
+            <p className="mb-0 pr-5">Download data for JKS England</p>
+            <Button
+              onClick={() => downloadData()}
+              className="mx-5 btn-link px-2"
+              variant="light"
+            >
+              <div className="d-flex align-items-center text-warning justify-content-between">
+                <i className="fa-solid fa-file-arrow-down fa-2x"></i>
+                <div className="mx-2"> Download</div>
+              </div>
+            </Button>
+          </ListGroup.Item>
+        </ListGroup>
       </Container>
     </div>
   );

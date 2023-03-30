@@ -261,7 +261,7 @@ const processPayment = async (event) => {
               });
             } else {
               let outstandingFees = member.outstandingFees;
-              const gradingFee = financials.costOfGrading * 100;
+              const gradingFee = financials.costOfGrading;
               outstandingFees = outstandingFees + gradingFee;
 
               await Member.findOneAndUpdate(

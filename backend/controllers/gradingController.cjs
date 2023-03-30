@@ -302,7 +302,6 @@ const getGradingResults = asyncHandler(async (req, res) => {
   if (events) {
     events.forEach((grading) => {
       grading.participants.forEach((participant) => {
-        // CHANGE TO REQ.PARAMS.ID
         if (participant._id.toString() == req.params.id.toString()) {
           const result = {
             kihon: participant.kihon,
