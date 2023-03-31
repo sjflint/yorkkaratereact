@@ -418,7 +418,9 @@ const ListClassesScreen = ({ history }) => {
 
                 <td>
                   <small>
-                    {trainingSession.numberBooked} / {trainingSession.capacity}{" "}
+                    {trainingSession.participants.length +
+                      trainingSession.trialParticipants.length}{" "}
+                    / {trainingSession.capacity}{" "}
                   </small>
                   <button
                     className="btn btn-sm btn-outline-secondary py-0 mt-1 w-100"

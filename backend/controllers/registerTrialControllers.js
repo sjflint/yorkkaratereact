@@ -32,7 +32,11 @@ const registerTrial = asyncHandler(async (req, res) => {
   const classSelection = req.body.classSelection;
   const trainingSession = await TrainingSession.findById(classSelection);
 
-  if (trainingSession.capacity <= trainingSession.numberBooked) {
+  if (
+    trainingSession.capacity <=
+    trainingSession.participants.length +
+      trainingSession.trialParticipants.length
+  ) {
     res.status(400);
     throw new Error("Unable to register. Class is at capacity");
   } else {
@@ -120,8 +124,7 @@ const checkTrialComplete = async () => {
       const trialParticipants = trainingSession.trialParticipants;
 
       const newTrialParticipants = trialParticipants.filter(
-        (participant) =>
-          JSON.stringify(participant) !== JSON.stringify(attendee._id)
+        (participant) => participant.toString() !== attendee._id.toString()
       );
 
       await TrainingSession.findOneAndUpdate(

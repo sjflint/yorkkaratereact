@@ -495,7 +495,12 @@ const waitingListCheck = async () => {
   const trainingSessions = await TrainingSession.find({});
 
   trainingSessions.forEach((trainingSession) => {
-    if (trainingSession.capacity - trainingSession.numberBooked > 0) {
+    if (
+      trainingSession.capacity -
+        trainingSession.participants.length -
+        trainingSession.trialParticipants.length >
+      0
+    ) {
       if (
         trainingSession.waitingList &&
         trainingSession.waitingList.length > 0

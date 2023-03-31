@@ -78,13 +78,18 @@ const TrainingSession = ({ trainingSessions, trainingDay }) => {
                 </Card.Subtitle>
                 <Card.Text>{trainingSession.location}</Card.Text>
                 <Card.Footer className="border-bottom border-warning mb-2">
+                  {/* scan through all code for numberBooked variable and remove */}
+                  {/* lock grading results screen so scores cannot be changed after submission */}
+                  {/* reword screens leading to grading results page */}
                   <div>
-                    {trainingSession.capacity - trainingSession.numberBooked >
+                    {trainingSession.capacity -
+                      trainingSession.participants.length >
                     0 ? (
                       <div>
                         Number of places available:{" "}
                         {trainingSession.capacity -
-                          trainingSession.numberBooked}
+                          trainingSession.participants.length -
+                          trainingSession.trialParticipants.length}
                       </div>
                     ) : (
                       <div>

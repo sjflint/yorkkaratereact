@@ -289,8 +289,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
           name: "Monthly training fees",
           interval: 1,
           interval_unit: "monthly",
-          // ***should not be 1st of the month but charge day********
-          // The subscription and mandate have already been cancelled. How can data be sent accross for this from the initial request @ members => updatedirectdebit. Could add to the body of the dd request and send through to the dd controller???
+          // ddMandate field must be removed during webhook cancelled dd action
           day_of_month: collectionDay ? collectionDay : null,
           links: {
             mandate: redirectFlow.links.mandate,

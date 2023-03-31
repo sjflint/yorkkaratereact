@@ -371,9 +371,17 @@ const FinanceScreen = ({ history }) => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>{trainingSession.numberBooked}</td>
                         <td>
-                          £{(trainingSession.numberBooked * 21.0).toFixed(2)}
+                          {trainingSession.participants.length +
+                            trainingSession.trialParticipants.length}
+                        </td>
+                        <td>
+                          £
+                          {(
+                            (trainingSession.participants.length +
+                              trainingSession.trialParticipants.length) *
+                            21.0
+                          ).toFixed(2)}
                           {/* Calculate avarage income per member */}
                         </td>
 
@@ -395,7 +403,8 @@ const FinanceScreen = ({ history }) => {
                         </td>
                         <td>
                           {trainingSession.capacity -
-                            trainingSession.numberBooked}
+                            trainingSession.participants.length -
+                            trainingSession.trialParticipants.length}
                         </td>
                       </tr>
                     </tbody>

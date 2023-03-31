@@ -46,7 +46,9 @@ const TrialRegistrationForm = () => {
     trainingSessions.forEach((trainingSession) => {
       if (
         trainingSession.juniorSession === true &&
-        trainingSession.capacity > trainingSession.numberBooked
+        trainingSession.capacity >
+          trainingSession.participants.length +
+            trainingSession.trialParticipants.length
       ) {
         const name = `${trainingSession.name} (${trainingSession.location})`;
         const id = trainingSession._id;
@@ -64,7 +66,9 @@ const TrialRegistrationForm = () => {
       if (
         trainingSession.juniorSession === false &&
         trainingSession.maxGradeLevel > 6 &&
-        trainingSession.capacity > trainingSession.numberBooked
+        trainingSession.capacity >
+          trainingSession.participants.length +
+            trainingSession.trialParticipants.length
       ) {
         const name = `${trainingSession.name} (${trainingSession.location})`;
         const id = trainingSession._id;
@@ -77,7 +81,9 @@ const TrialRegistrationForm = () => {
     trainingSessions.forEach((trainingSession) => {
       if (
         trainingSession.minGradeLevel < 7 &&
-        trainingSession.capacity > trainingSession.numberBooked
+        trainingSession.capacity >
+          trainingSession.participants.length +
+            trainingSession.trialParticipants.length
       ) {
         const name = `${trainingSession.name} (${trainingSession.location})`;
         const id = trainingSession._id;

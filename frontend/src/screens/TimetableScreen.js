@@ -306,7 +306,9 @@ const TimetableScreen = () => {
                 </Card.Body>
                 <Card.Footer className="border-bottom border-warning mb-2">
                   Number of places available:{" "}
-                  {session.capacity - session.numberBooked}
+                  {session.capacity -
+                    session.participants.length -
+                    session.trialParticipants.length}
                 </Card.Footer>
               </Card>
             ))}
