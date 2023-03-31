@@ -91,9 +91,11 @@ const GradingScreen = ({ match, history }) => {
               </ListGroup>
               <Button
                 className="btn-default mt-4"
-                onClick={() => setShowModal(true)}
+                onClick={() =>
+                  history.push(`/instructor/grading/${grading._id}`)
+                }
               >
-                Start Grading Examination
+                Grading Results
               </Button>
             </Col>
           </Row>
@@ -195,34 +197,6 @@ const GradingScreen = ({ match, history }) => {
         </>
       )}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton className="bg-primary">
-          <Modal.Title className="text-white">Start Grading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="bg-light text-dark text-center">
-          <img src={logo} alt="logo" />
-          Would you like to start the grading examination? <br />
-          This will launch the grading app
-        </Modal.Body>
-        <Modal.Footer className="bg-primary">
-          <button
-            className="btn btn-default btn-block"
-            onClick={() => {
-              history.push(`/instructor/grading/${grading._id}`);
-              setShowModal(false);
-            }}
-          >
-            Start
-          </button>
-          <Button
-            variant="secondary"
-            className="btn-block"
-            onClick={() => setShowModal(false)}
-          >
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
       <Modal show={beltModal} onHide={() => setBeltModal(false)}>
         <Modal.Header closeButton className="bg-primary">
           <Modal.Title className="text-white">Belts To Order</Modal.Title>

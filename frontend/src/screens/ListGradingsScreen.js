@@ -186,12 +186,11 @@ const ListGradingsScreen = ({ history }) => {
       )}
       {belts > 0 && (
         <Button
-          variant="danger"
+          variant="light"
           onClick={() => setBeltModal(true)}
-          className="d-block mx-auto mt-3"
+          className="d-block mx-auto mt-3 btn-link px-3"
         >
-          <i className="fa-solid fa-circle-exclamation"> </i> Update Belts in
-          Stock <i className="fa-solid fa-circle-exclamation"></i>
+          Update Belts in Stock
         </Button>
       )}
 

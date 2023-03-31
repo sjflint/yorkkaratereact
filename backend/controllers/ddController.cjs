@@ -161,7 +161,7 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
   await Member.findOneAndUpdate(
     { _id: member._id },
     {
-      ddMandate: "Cancelled",
+      ddMandate: undefined,
       ddsuccess: false,
     },
     { new: true }

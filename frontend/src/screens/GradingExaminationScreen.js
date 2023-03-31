@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Container, ListGroup, Table } from "react-bootstrap";
+import { Button, Container, ListGroup, Modal, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { listGrading } from "../actions/gradingActions";
@@ -11,6 +11,7 @@ const GradingExaminationScreen = ({ history, match }) => {
   const [gradeSelected, setGradeSelected] = useState(16);
   const [loading, setLoading] = useState(false);
   const [resultsUpdated, setResultsUpdated] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
   const dispatch = useDispatch();
 
   const memberLogin = useSelector((state) => state.memberLogin);
@@ -126,7 +127,7 @@ const GradingExaminationScreen = ({ history, match }) => {
       eventId: grading._id,
       confirmedResults: finalResult,
     };
-    console.log(values);
+
     const { data } = await axios.post(`/api/grading/results`, values, config);
     console.log(`Data=${data}`);
 
@@ -228,80 +229,96 @@ const GradingExaminationScreen = ({ history, match }) => {
                       )}
 
                       <td>
-                        <select
-                          value={member.kihon}
-                          onChange={(e) =>
-                            selectHandler(
-                              member._id,
-                              "kihon",
-                              e.target.value,
-                              grading._id
-                            )
-                          }
-                        >
-                          {options.map((option, index) => (
-                            <option value={option.value} key={index}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        {!resultsUpdated && !grading.resultsPosted ? (
+                          <select
+                            value={member.kihon}
+                            onChange={(e) =>
+                              selectHandler(
+                                member._id,
+                                "kihon",
+                                e.target.value,
+                                grading._id
+                              )
+                            }
+                          >
+                            {options.map((option, index) => (
+                              <option value={option.value} key={index}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          `${member.kihon} / 5`
+                        )}
                       </td>
                       <td>
-                        <select
-                          value={member.kata}
-                          onChange={(e) =>
-                            selectHandler(
-                              member._id,
-                              "kata",
-                              e.target.value,
-                              grading._id
-                            )
-                          }
-                        >
-                          {options.map((option, index) => (
-                            <option value={option.value} key={index}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        {!resultsUpdated && !grading.resultsPosted ? (
+                          <select
+                            value={member.kata}
+                            onChange={(e) =>
+                              selectHandler(
+                                member._id,
+                                "kata",
+                                e.target.value,
+                                grading._id
+                              )
+                            }
+                          >
+                            {options.map((option, index) => (
+                              <option value={option.value} key={index}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          `${member.kata} / 5`
+                        )}
                       </td>
                       <td>
-                        <select
-                          value={member.kihonKumite}
-                          onChange={(e) =>
-                            selectHandler(
-                              member._id,
-                              "kihonKumite",
-                              e.target.value,
-                              grading._id
-                            )
-                          }
-                        >
-                          {options.map((option, index) => (
-                            <option value={option.value} key={index}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        {!resultsUpdated && !grading.resultsPosted ? (
+                          <select
+                            value={member.kihonKumite}
+                            onChange={(e) =>
+                              selectHandler(
+                                member._id,
+                                "kihonKumite",
+                                e.target.value,
+                                grading._id
+                              )
+                            }
+                          >
+                            {options.map((option, index) => (
+                              <option value={option.value} key={index}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          `${member.kihonKumite} / 5`
+                        )}
                       </td>
                       <td>
-                        <select
-                          value={member.shobuKumite}
-                          onChange={(e) =>
-                            selectHandler(
-                              member._id,
-                              "shobuKumite",
-                              e.target.value,
-                              grading._id
-                            )
-                          }
-                        >
-                          {options.map((option, index) => (
-                            <option value={option.value} key={index}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        {!resultsUpdated && !grading.resultsPosted ? (
+                          <select
+                            value={member.shobuKumite}
+                            onChange={(e) =>
+                              selectHandler(
+                                member._id,
+                                "shobuKumite",
+                                e.target.value,
+                                grading._id
+                              )
+                            }
+                          >
+                            {options.map((option, index) => (
+                              <option value={option.value} key={index}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          `${member.shobuKumite} / 5`
+                        )}
                       </td>
                       <td>
                         {member.kihon &&
@@ -364,14 +381,14 @@ const GradingExaminationScreen = ({ history, match }) => {
               <Loader />
             ) : !resultsUpdated && !grading.resultsPosted ? (
               <Button
-                onClick={() => submitResults()}
+                onClick={() => setConfirmModal(true)}
                 className="btn-link"
                 variant="light"
               >
                 Submit Results
               </Button>
             ) : (
-              "Results have been submited"
+              <div className="text-center">Results have been submited</div>
             )}
           </ListGroup.Item>
           <ListGroup.Item className="d-flex align-items-center">
@@ -389,6 +406,29 @@ const GradingExaminationScreen = ({ history, match }) => {
           </ListGroup.Item>
         </ListGroup>
       </Container>
+      <Modal show={confirmModal} onHide={() => setConfirmModal(false)}>
+        <Modal.Header closeButton className="bg-danger">
+          <Modal.Title className="text-white">Submit Results</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Would you like to submit all grading results? This action cannot be
+          undone.
+        </Modal.Body>
+        <Modal.Footer className="bg-danger">
+          <Button variant="secondary" onClick={() => setConfirmModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={() => {
+              submitResults();
+              setConfirmModal(false);
+            }}
+          >
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
