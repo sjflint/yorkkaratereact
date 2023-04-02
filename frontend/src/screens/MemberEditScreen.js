@@ -200,12 +200,7 @@ const MemberEditScreen = ({ match, history }) => {
     }
 
     if (gradingDate && danGrade) {
-      values.danGradings[
-        danGrade + numberMarker + " Dan"
-      ] = `${gradingDate.substring(8, 10)}/${gradingDate.substring(
-        5,
-        7
-      )}/${gradingDate.substring(0, 4)}`;
+      values.danGradings[danGrade + numberMarker + " Dan"] = gradingDate;
       values.danGrade = danGrade;
       values.kyuGrade = 0;
     }

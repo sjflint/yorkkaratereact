@@ -279,7 +279,9 @@ const MemberClasses = () => {
                       <Card.Text>{session.location}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="bg-light">
-                      {session.participants.length === session.capacity ? (
+                      {session.participants.length +
+                        session.trialParticipants.length >=
+                      session.capacity ? (
                         <Button disabled>Class Fully Booked</Button>
                       ) : (
                         <>
@@ -414,7 +416,9 @@ const MemberClasses = () => {
                       <Card.Text>{session.location}</Card.Text>
                     </Card.Body>
                     <Card.Footer className="bg-light text-primary">
-                      {session.participants.length === session.capacity ? (
+                      {session.participants.length +
+                        session.trialParticipants.length >=
+                      session.capacity ? (
                         <Button disabled className="btn-sm">
                           Class Fully Booked
                         </Button>

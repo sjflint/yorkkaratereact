@@ -60,8 +60,15 @@ const addTrainingSession = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.body.memberId);
   const financials = await Financial.findOne({});
 
+  // Test for availability in the class
+
   if (session.participants.includes(member._id)) {
     res.json("already added to class");
+  } else if (
+    session.participants.length + session.trialParticipants.length >=
+    session.capacity
+  ) {
+    res.json("no space available in the class");
   } else if (session) {
     session.participants.push(req.body.memberId);
 

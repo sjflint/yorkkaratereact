@@ -26,7 +26,7 @@ const BlackBelt = ({ blackBelt }) => {
 
   return (
     <>
-      <Card>
+      <Card className="mb-3">
         <Card.Img variant="top" src={blackBelt.profileImg} alt="" />
         <Card.Body>
           <Card.Title className="text-center border-bottom border-warning pb-1">

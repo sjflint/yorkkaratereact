@@ -345,9 +345,9 @@ const getBlackBelts = asyncHandler(async (req, res) => {
   const sortParams = {
     danGrade: -1,
     "danGradings.1st Dan": 1,
-    "danGradings.2nd Dan": 1,
-    "danGradings.3rd Dan": 1,
-    "danGradings.Started Training": 1,
+    // "danGradings.2nd Dan": -1,
+    // "danGradings.3rd Dan": -1,
+    // "danGradings.Started Training": -1,
   };
 
   const blackBeltMembers = await Member.find(query, options).sort(sortParams);
