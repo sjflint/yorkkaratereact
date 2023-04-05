@@ -207,6 +207,17 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
   const mandate = await client.mandates.find(member.ddMandate);
   const chargeDay = mandate.next_possible_charge_date.slice(-2);
 
+  let collectionDate = new Date(subscription.upcoming_payments[0].charge_date);
+  const nearestCollectionDate = collectionDate.setMonth(
+    collectionDate.getMonth() - 1
+  );
+  if (new Date(nearestCollectionDate) > new Date()) {
+    console.log("amount not collected, set for nearest collection date");
+    collectionDate = new Date(nearestCollectionDate);
+  } else {
+    console.log("fees collected htis month, set for next collection date");
+  }
+
   // create new subscription for the new amount
   const newSubscription = await client.subscriptions.create({
     amount: newAmount,
@@ -216,7 +227,7 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
     interval: 1,
     interval_unit: "monthly",
     // day_of_month: chargeDay,
-    start_date: subscription.upcoming_payments[0].charge_date,
+    start_date: collectionDate.toISOString().slice(0, 10),
     links: {
       mandate: member.ddMandate,
     },
@@ -316,11 +327,14 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
       }
 
       if (!mandateId || mandateId === "Failed") {
+        console.log("recharging direct debit");
+        const financials = await Financial.findOne({});
+
         const payment = await client.payments.create(
           {
-            amount: member.totalPayment * 100,
+            amount: financials.joiningFee,
             currency: "GBP",
-            description: "Joining fee",
+            description: "Membership Fee",
             links: {
               mandate: redirectFlow.links.mandate,
             },
@@ -330,7 +344,7 @@ const updateDirectDebit = asyncHandler(async (req, res) => {
         );
 
         if (payment) {
-          console.log("Annual fee recharged succesfully");
+          console.log("Membership fee recharged succesfully");
         } else {
           console.log("ERROR: payment not charged");
         }
@@ -554,7 +568,7 @@ const cancelPayment = asyncHandler(async (req, res) => {
 const updateCollectionDate = async (id) => {
   const member = await Member.findById(id);
 
-  if (member && member.ddMandate && member.ddMandate !== "") {
+  if (member && member.ddMandate && member.ddMandate !== "Cancelled") {
     const subscription = await client.subscriptions.find(member.subscriptionId);
     let collectionDate = subscription.upcoming_payments[0].charge_date;
 
