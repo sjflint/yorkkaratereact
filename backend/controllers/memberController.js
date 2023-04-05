@@ -76,7 +76,9 @@ const registerMember = asyncHandler(async (req, res) => {
 
   if (memberExists) {
     res.status(400);
-    throw new Error("Member already exists");
+    throw new Error(
+      "Member already registered. Please login to your account via the login screen"
+    );
   }
 
   const financials = await Financial.findOne({});

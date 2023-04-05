@@ -14,8 +14,10 @@ const RegistrationForm = () => {
   const dispatch = useDispatch();
 
   const memberLogin = useSelector((state) => state.memberLogin);
-
   const { memberInfo } = memberLogin;
+
+  const memberRegister = useSelector((state) => state.memberRegister);
+  const { loading, error, success } = memberRegister;
 
   // Component level state
   let history = useHistory();
@@ -161,7 +163,8 @@ const RegistrationForm = () => {
     <>
       {errors && (
         <Message variant="danger">
-          Please review the form and correct errors
+          Please review the form and correct errors <br />
+          {error}
         </Message>
       )}
       {/* Can't implement Mapbox with mouse click. Should review in further updates */}
