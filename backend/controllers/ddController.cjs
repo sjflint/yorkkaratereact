@@ -568,7 +568,12 @@ const cancelPayment = asyncHandler(async (req, res) => {
 const updateCollectionDate = async (id) => {
   const member = await Member.findById(id);
 
-  if (member && member.ddMandate && member.ddMandate !== "Cancelled") {
+  if (
+    member &&
+    member.ddMandate &&
+    member.ddMandate !== "Cancelled" &&
+    member.ddMandate !== "Failed"
+  ) {
     const subscription = await client.subscriptions.find(member.subscriptionId);
     let collectionDate = subscription.upcoming_payments[0].charge_date;
 
