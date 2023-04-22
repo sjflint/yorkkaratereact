@@ -208,7 +208,7 @@ const ListClassesScreen = ({ history }) => {
     hallHire: Yup.number().required("Required"),
     dayOfWeek: Yup.string().required("Required"),
     description: Yup.string().required("Required"),
-    progressionPath: Yup.string(),
+    progressionPath: Yup.string().nullable(),
   });
 
   // Junior options
@@ -553,7 +553,7 @@ const ListClassesScreen = ({ history }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          This action will permanently delete the event from the database and
+          This action will permanently delete the class from the database and
           the details will be irretrievable. <br /> Are you sure?
         </Modal.Body>
         <Modal.Footer className="bg-dark">

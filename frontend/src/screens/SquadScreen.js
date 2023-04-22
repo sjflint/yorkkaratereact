@@ -163,6 +163,7 @@ const SquadScreen = () => {
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Date of Birth</th>
                 <th>
                   Grade
                   <br />{" "}
@@ -255,6 +256,9 @@ const SquadScreen = () => {
                         </Link>
                       </td>
                       <td>{member.email}</td>
+                      <td>
+                        {new Date(member.dateOfBirth).toLocaleDateString()}
+                      </td>
                       {member.kyuGrade > 0 ? (
                         <td>
                           {member.kyuGrade}
