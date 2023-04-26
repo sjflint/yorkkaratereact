@@ -5,13 +5,8 @@ import RegistrationForm from "../components/FormComponents/RegistrationForm";
 const RegisterScreen = () => {
   return (
     <Container className="mt-3">
-      <h1>Member Registration</h1>
+      <h1 className="text-center">Member Registration</h1>
       <RegistrationForm />
-      <Row className="py-3">
-        <Col>
-          <Link to={"/login"}>Already a member?</Link>
-        </Col>
-      </Row>
     </Container>
   );
 };
