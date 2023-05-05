@@ -29,8 +29,10 @@ const RegistrationForm = () => {
   const [showPassword, setShowPassword] = useState("password");
 
   useEffect(() => {
-    if (memberInfo) {
-      window.location.href = `https://pay.gocardless.com/flow/${memberInfo.ddRedirect}`;
+    if (memberInfo && memberInfo.ddRedirect) {
+      setTimeout(function () {
+        window.location.href = `https://pay.gocardless.com/flow/${memberInfo.ddRedirect}`;
+      }, 500);
     }
   }, [history, memberInfo]);
 
@@ -159,7 +161,7 @@ const RegistrationForm = () => {
     dispatch(register(values));
   };
   const [errors, setErrors] = useState(false);
-  if (success) {
+  if (success && memberInfo) {
     const link = `https://pay.gocardless.com/flow/${memberInfo.ddRedirect}`;
     return (
       <>

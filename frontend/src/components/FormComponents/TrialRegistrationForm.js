@@ -80,7 +80,7 @@ const TrialRegistrationForm = () => {
 
     trainingSessions.forEach((trainingSession) => {
       if (
-        trainingSession.minGradeLevel < 7 &&
+        trainingSession.maxGradeLevel < 7 &&
         trainingSession.capacity >
           trainingSession.participants.length +
             trainingSession.trialParticipants.length
