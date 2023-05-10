@@ -383,10 +383,10 @@ const getMembers = asyncHandler(async (req, res) => {
 
     // Check attendance and return for each member
     // Obtain array of last 12 squad training sessions
-    const classes = await Attendance.find({
+    let classes = await Attendance.find({
       name: "Friday - Squad: 17:30 - 19:00",
     });
-    classes.slice(-12);
+    classes = classes.slice(Math.max(classes.length - 12, 0));
 
     // Loop through each member and check their attendance against the array of the last 12 squad sessions
     members.forEach((member) => {
