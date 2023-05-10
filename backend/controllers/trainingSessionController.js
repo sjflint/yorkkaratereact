@@ -454,7 +454,7 @@ const trainingSessionCancelled = asyncHandler(async (req, res) => {
           <p>The class that has been cancelled is:</p>
           <p>${trainingSession.name}<br/>${trainingSession.location}<br/>${
         trainingSession.times
-      }<br/>On the ${new Date(req.body.date).toLocaleDateString()}
+      }<br/>On the ${new Date(req.body.date).toLocaleDateString("en-GB")}
           <p>A free session has been added to your account to be used at any other suitable training session on the timetable. There is no need to book, simply turn up for the training session you would like to attend and the instructor will add you to the register.</p>
           <p>Please accept my apology for the inconvenience</p>
         `,
