@@ -379,7 +379,7 @@ const getMembers = asyncHandler(async (req, res) => {
     res.json({ members: members });
   } else if (req.query.keyword === "squad") {
     console.log('"squad" keyword called');
-    const members = await Member.find({ squadMember: true });
+    const members = await Member.find({ squadMember: true, ddsuccess: true });
 
     // Check attendance and return for each member
     // Obtain array of last 12 squad training sessions
@@ -398,7 +398,6 @@ const getMembers = asyncHandler(async (req, res) => {
       });
       member.squadAttScore = attScore;
     });
-    // ***** DONT YET HAVE 12 SESSIONS ON RECORD. WILL NEED TO WAIT UNTIL THE 28/04/23
 
     res.json({ members: members });
   } else {
