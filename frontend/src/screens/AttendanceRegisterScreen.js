@@ -138,7 +138,7 @@ export const AttendanceRegisterScreen = ({ history, match }) => {
         // find suitable members from search list
         if (memberList && trainingSession._id === classId) {
           memberList.forEach((member) => {
-            console.log(member);
+            
             if (
               member.kyuGrade <= trainingSession.minGradeLevel &&
               member.kyuGrade >= trainingSession.maxGradeLevel &&

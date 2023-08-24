@@ -14,7 +14,8 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
   const numberOfResults = req.params.numresults;
   const member = req.params.id;
 
-  const attendanceRecord = await Attendance.find({});
+  const attendanceRecord = await Attendance.find({}).sort({ date: 1 });
+
   let result = [];
   for (let i = attendanceRecord.length - 1; i >= 0; i--) {
     attendanceRecord[i].participants.forEach((participant) => {
@@ -34,6 +35,7 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
           date: new Date(attendanceRecord[i].date).toLocaleDateString("en-GB"),
           class: `${attendanceRecord[i].name} - EXTRA CLASS`,
         };
+
         result.push(record);
       }
     });

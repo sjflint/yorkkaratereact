@@ -384,9 +384,10 @@ const getMembers = asyncHandler(async (req, res) => {
     // Check attendance and return for each member
     // Obtain array of last 12 squad training sessions
     let classes = await Attendance.find({
-      name: "Friday - Squad: 17:30 - 19:00",
-    });
-    classes = classes.slice(Math.max(classes.length - 12, 0));
+      name: /Squad/,
+    }).sort({ date: 1 });
+    console.log(classes.length);
+    classes = classes.slice(classes.length - 24);
 
     // Loop through each member and check their attendance against the array of the last 12 squad sessions
     members.forEach((member) => {
@@ -550,7 +551,7 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Add current numbe rof members to array
+// @desc Add current number of members to array
 // @route SERVER ONLY
 const addTotalMembersToArray = async () => {
   const financials = await Financial.findOne({});

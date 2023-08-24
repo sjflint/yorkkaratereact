@@ -160,7 +160,7 @@ const checkTrialComplete = async () => {
         deleteRecord(attendee);
       }
 
-      if (attendee.createdAt < date || attendee.paid === false) {
+      if (new Date(attendee.createdAt) < date || attendee.paid === false) {
         deleteRecord(attendee);
       }
     });

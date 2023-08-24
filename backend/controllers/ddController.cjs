@@ -211,11 +211,12 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
   const nearestCollectionDate = collectionDate.setMonth(
     collectionDate.getMonth() - 1
   );
-  if (new Date(nearestCollectionDate) > new Date()) {
+  const date = new Date();
+  if (new Date(nearestCollectionDate) > date.setDate(date.getDate() + 4)) {
     console.log("amount not collected, set for nearest collection date");
     collectionDate = new Date(nearestCollectionDate);
   } else {
-    console.log("fees collected htis month, set for next collection date");
+    console.log("fees collected this month, set for next collection date");
   }
 
   // create new subscription for the new amount
