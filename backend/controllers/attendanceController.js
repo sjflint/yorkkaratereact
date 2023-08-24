@@ -44,7 +44,6 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
   result.sort((a, b) => {
     return new Date(b.date) - new Date(a.date);
   });
-  console.log(result);
 
   if (result.length > 0) {
     res.status(201).json(result.slice(0, numberOfResults * -1));
