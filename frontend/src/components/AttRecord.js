@@ -53,7 +53,7 @@ const AttRecord = ({ id }) => {
               return (
                 <>
                   <ListGroup.Item key={index} className="bg-grey">
-                    Date: {classItem.date}
+                    Date: {new Date(classItem.date).toLocaleDateString("en-GB")}
                   </ListGroup.Item>
                   <ListGroup.Item>{classItem.class}</ListGroup.Item>
                 </>

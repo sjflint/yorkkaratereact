@@ -21,7 +21,7 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
     attendanceRecord[i].participants.forEach((participant) => {
       if (participant === member) {
         const record = {
-          date: new Date(attendanceRecord[i].date).toLocaleDateString("en-GB"),
+          date: new Date(attendanceRecord[i].date),
           class: attendanceRecord[i].name,
         };
         result.push(record);
@@ -32,7 +32,7 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
 
       if (id === member) {
         const record = {
-          date: new Date(attendanceRecord[i].date).toLocaleDateString("en-GB"),
+          date: new Date(attendanceRecord[i].date),
           class: `${attendanceRecord[i].name} - EXTRA CLASS`,
         };
 
@@ -40,6 +40,11 @@ const getmemberAttendanceRecords = asyncHandler(async (req, res) => {
       }
     });
   }
+
+  result.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
+  console.log(result);
 
   if (result.length > 0) {
     res.status(201).json(result.slice(0, numberOfResults * -1));

@@ -132,7 +132,7 @@ const genericEmail = asyncHandler(async (emailDetails) => {
       const secondArray = recipients.slice(recipients.length / 2);
       sendEmail(firstArray);
       sendEmail(secondArray);
-    } else if (recipients.length > 200 && recipients.length < 300) {
+    } else if (recipients.length >= 200 && recipients.length < 300) {
       //if over 200 and less than 300
       // divide into 3
       const firstArray = recipients.slice(0, recipients.length / 3);
@@ -143,10 +143,11 @@ const genericEmail = asyncHandler(async (emailDetails) => {
       const thirdArray = recipients.slice(
         recipients.length - recipients.length / 3
       );
+
       sendEmail(firstArray);
       sendEmail(secondArray);
       sendEmail(thirdArray);
-    } else if (recipients.length > 300 && recipients.length < 400) {
+    } else if (recipients.length >= 300 && recipients.length < 400) {
       //if over 300 and less than 400
       // divide into 4
       const firstArray = recipients.slice(0, recipients.length / 4);

@@ -29,8 +29,6 @@ const sendEmail = asyncHandler(async (req, res) => {
       members.forEach((member) =>
         recipients.push(member.email, member.secondaryEmail)
       );
-      console.log(recipients.length);
-      console.log(recipients);
 
       genericEmail(emailDetails);
       return res.status(201).json("email sent");

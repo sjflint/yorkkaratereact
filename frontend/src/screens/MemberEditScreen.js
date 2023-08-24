@@ -200,12 +200,12 @@ const MemberEditScreen = ({ match, history }) => {
     }
 
     if (gradingDate && danGrade) {
-      values.danGradings[danGrade + numberMarker + " Dan"] = gradingDate;
+      values.danGradings[danGrade + numberMarker + " Dan"] = new Date(
+        gradingDate
+      );
       values.danGrade = danGrade;
       values.kyuGrade = 0;
     }
-
-    console.log(values.medicalDetails);
 
     if (!values.medicalDetails || values.medicalDetails === "-") {
       values.medicalStatus = "false";

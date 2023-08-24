@@ -373,9 +373,9 @@ const beltCalculator = async () => {
         ? "Fully Stocked"
         : beltRequired[11] - beltStock[11] + 2,
     Red:
-      beltRequired[9] - beltStock[9] + 2 < 1
+      beltRequired[9] + beltRequired[10] - beltStock[9] + 2 < 1
         ? "Fully Stocked"
-        : beltRequired[9] - beltStock[9] + 2,
+        : beltRequired[9] + beltRequired[10] - beltStock[9] + 2,
     "Red Black":
       beltRequired[8] - beltStock[8] + 2 < 1
         ? "Fully Stocked"
