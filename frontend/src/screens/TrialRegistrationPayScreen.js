@@ -9,6 +9,11 @@ import Message from "../components/Message";
 import { getTrial, payTrial } from "../actions/trialRegistrationActions";
 import { listTrainingSessions } from "../actions/trainingSessionActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  TRIAL_GET_RESET,
+  TRIAL_REGISTER_RESET,
+} from "../constants/trialRegistrationConstants";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const TrialRegistrationPayScreen = ({ match }) => {
   const trialClassId = match.params.id;
@@ -17,6 +22,7 @@ const TrialRegistrationPayScreen = ({ match }) => {
   const [paySuccess, setPaySuccess] = useState(false);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const financialList = useSelector((state) => state.financialList);
   const {
@@ -61,7 +67,9 @@ const TrialRegistrationPayScreen = ({ match }) => {
           setSdkReady(true);
         }
     }
-  }, [dispatch, applicant, trialClassId, sdkReady]);
+
+    paySuccess && resetForm();
+  }, [dispatch, applicant, trialClassId, sdkReady, paySuccess]);
 
   const successPaymentHandler = async () => {
     await dispatch(payTrial(trialClassId));
@@ -69,6 +77,15 @@ const TrialRegistrationPayScreen = ({ match }) => {
     setPaySuccess(true);
     console.log("payment success");
   };
+
+  const resetForm = () => {
+    setTimeout(() => {
+      dispatch({ type: TRIAL_GET_RESET });
+      dispatch({ type: TRIAL_REGISTER_RESET });
+      history.push("/faq");
+    }, "5000");
+  };
+
   let classDetails = "";
   if (applicant) {
     trainingSessions.forEach((trainingSession) => {

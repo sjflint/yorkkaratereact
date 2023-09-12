@@ -11,6 +11,8 @@ import {
   TRIAL_LIST_REQUEST,
   TRIAL_LIST_FAIL,
   TRIAL_LIST_SUCCESS,
+  TRIAL_GET_RESET,
+  TRIAL_REGISTER_RESET,
 } from "../constants/trialRegistrationConstants";
 
 export const trialRegisterReducer = (state = {}, action) => {
@@ -21,6 +23,8 @@ export const trialRegisterReducer = (state = {}, action) => {
       return { loading: false, applicant: action.payload };
     case TRIAL_REGISTER_FAIL:
       return { loading: false, error: action.payload };
+    case TRIAL_REGISTER_RESET:
+      return {};
     default:
       return state;
   }
@@ -34,6 +38,8 @@ export const trialGetReducer = (state = {}, action) => {
       return { loading: false, applicant: action.payload };
     case TRIAL_GET_FAIL:
       return { loading: false, error: action.payload };
+    case TRIAL_GET_RESET:
+      return {};
     default:
       return state;
   }
