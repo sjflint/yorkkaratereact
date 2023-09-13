@@ -80,7 +80,8 @@ const TrainingSession = ({ trainingSessions, trainingDay }) => {
                 <Card.Footer className="border-bottom border-warning mb-2">
                   <div>
                     {trainingSession.capacity -
-                      trainingSession.participants.length >
+                      trainingSession.participants.length -
+                      trainingSession.trialParticipants.length >
                     0 ? (
                       <div>
                         Number of places available:{" "}
