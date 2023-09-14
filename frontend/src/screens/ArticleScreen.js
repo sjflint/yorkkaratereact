@@ -78,7 +78,11 @@ const ArticleScreen = ({ match, history }) => {
                   <ListGroup.Item>
                     <p>{article.leader}</p>
 
-                    <p style={{ whiteSpace: "pre-line" }}>{article.body}</p>
+                    <p
+                      style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
+                    >
+                      {article.body}
+                    </p>
                   </ListGroup.Item>
                 </ListGroup>
               </>

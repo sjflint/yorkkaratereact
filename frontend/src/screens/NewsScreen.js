@@ -38,14 +38,15 @@ const NewsScreen = ({ match }) => {
                 <Article article={article} />
               </div>
             ))}
-
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <ArticlePaginate
-                pages={pages}
-                page={page}
-                className="d-flex justify-content-center"
-              />
-            </div>
+            {pages && (
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <ArticlePaginate
+                  pages={pages}
+                  page={page}
+                  className="d-flex justify-content-center"
+                />
+              </div>
+            )}
           </>
         )}
       </Container>

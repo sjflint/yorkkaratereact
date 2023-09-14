@@ -337,8 +337,8 @@ const MemberVideos = () => {
             <BeltCard grade="6th Kyu" beltColor="Green" />
             <BeltCard grade="5th Kyu" beltColor="Purple" />
             <BeltCard grade="4th Kyu" beltColor="Purple-White" />
-            <BeltCard grade="3th Kyu" beltColor="Brown" />
-            <BeltCard grade="2th Kyu" beltColor="Brown-White" />
+            <BeltCard grade="3rd Kyu" beltColor="Brown" />
+            <BeltCard grade="2nd Kyu" beltColor="Brown-White" />
             <h5 className="text-center mt-4">
               <u>Advanced</u>
             </h5>
