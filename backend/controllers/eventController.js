@@ -12,7 +12,7 @@ dotenv.config();
 const getEvents = asyncHandler(async (req, res) => {
   const events = await Event.find({}).sort({ dateOfEvent: 1 });
 
-  const toPast = Number(req.params.toPast) || 0;
+  const toPast = Number(req.params.toPast) || 1;
 
   let today = new Date();
 
