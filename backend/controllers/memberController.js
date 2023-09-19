@@ -664,6 +664,44 @@ const updateAttRecord = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc check members are licensed
+// route SERVER ONLY
+const memberLicenseCheck = asyncHandler(async (req, res) => {
+  const members = await Member.find({
+    ddsuccess: true,
+    licenseNumber: { $exists: 0 },
+  });
+
+  let memberEmails = [];
+  if (members) {
+    members.forEach((member) => {
+      memberEmails.push(member.email);
+      memberEmails.push(member.secondaryEmail);
+    });
+  }
+
+  genericEmail({
+    recipientEmail: memberEmails,
+    subject: "JKS England License",
+    message: `<h4>Missing JKS England License Number</h4>
+    <p>Our records indicate that we do not have your JKS England license number.</p>
+    <p>This could be because you haven't updated your profile with your number or perhaps you haven't applied for your license yet.</p>
+    <p>Please use the link below to login to your account and either add your license number, when prompted, or follow the instructions to apply for a license.</p>
+    <h5>Why do I need a JKS England License?</h5>
+    <p>The license is required for the following reasons:</p>
+    <ul>
+      <li>Member Insurance. This will cover you/your parents for public liability including damage to property or injury to another individual whilst training in karate</li>
+      <li>Gradings. In order to obtain a JKS England grade, you must be a member of JKS England</li>
+      <li>Competitions. As well as being licensed with JKS England, you will also be a member of the English Karate Federation (EKF) and by association, the World Karate Federation (WKF). This is necessary to compete in any WKF sanctioned event or JKS England event.</li>
+    </ul>
+    <p>Please don't hesitate to get in touch if you have any questions (info@yorkkarate.net)</p>
+    `,
+    link: `${process.env.DOMAIN_LINK}/profile`,
+    linkText: "Login",
+    attachments: [],
+  });
+});
+
 export {
   authMember,
   getMemberProfile,
@@ -684,4 +722,5 @@ export {
   getPublicWelfareList,
   getMemberWelfareList,
   updateAttRecord,
+  memberLicenseCheck,
 };

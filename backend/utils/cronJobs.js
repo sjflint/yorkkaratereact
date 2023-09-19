@@ -6,7 +6,10 @@ import {
 } from "../controllers/orderControllers.js";
 import { checkTrialComplete } from "../controllers/registerTrialControllers.js";
 import { emailEnquiryAdmin } from "../emailTemplates/enquiryAdmin.js";
-import { addTotalMembersToArray } from "../controllers/memberController.js";
+import {
+  addTotalMembersToArray,
+  memberLicenseCheck,
+} from "../controllers/memberController.js";
 import { waitingListCheck } from "../controllers/trainingSessionController.js";
 
 export const cronJobs = () => {
@@ -18,6 +21,8 @@ export const cronJobs = () => {
       newsLetterEmail();
       console.log("request to send newsletter");
       addTotalMembersToArray();
+      // check for any members without license numbers
+      memberLicenseCheck();
     },
     { timezone: "Europe/London" }
   );
