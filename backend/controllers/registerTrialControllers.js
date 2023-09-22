@@ -124,7 +124,7 @@ const checkTrialComplete = async () => {
       const trialParticipants = trainingSession.trialParticipants;
 
       const newTrialParticipants = trialParticipants.filter(
-        (participant) => participant.toString() !== attendee._id.toString()
+        (participant) => participant.toString() != attendee._id.toString()
       );
 
       await TrainingSession.findOneAndUpdate(
