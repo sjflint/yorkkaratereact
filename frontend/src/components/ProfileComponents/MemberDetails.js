@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Col, ListGroup, Modal, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  ListGroup,
+  Modal,
+  Row,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
 import {
   getMemberDetails,
   updatePassword,
@@ -153,6 +161,12 @@ const MemberDetails = () => {
     }
   };
 
+  const Link = ({ id, children, title }) => (
+    <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
+      <a href="#">{children}</a>
+    </OverlayTrigger>
+  );
+
   return (
     <>
       {loading ? (
@@ -165,36 +179,30 @@ const MemberDetails = () => {
           <h2 className="mt-2 border-bottom border-warning text-warning text-center">
             Welcome {member.firstName}!
           </h2>
-          <p>
-            This is your virtual dojo. Here you will find all of your details,
-            training videos, orders and courses that you can register for. You
-            can book classes, amend bookings, change your payment details and
-            much more.
-          </p>
 
-          <ListGroup variant="flush">
+          <ListGroup variant="flush" className="p-2 bg-primary">
             <Row>
               <Col sm={7} className="mb-3">
-                <ListGroup.Item className="bg-light text-warning">
-                  <strong>Name</strong>
-                </ListGroup.Item>
                 <ListGroup.Item>
+                  <strong className="text-warning">Name:</strong>{" "}
                   {`${member.firstName} ${member.lastName}`}
                 </ListGroup.Item>
-                <ListGroup.Item className="bg-light text-warning">
-                  <strong>Email</strong>
-                </ListGroup.Item>
-                <ListGroup.Item>{`${member.email}`}</ListGroup.Item>
-                <ListGroup.Item className="bg-light text-warning">
-                  <strong>Phone</strong>
-                </ListGroup.Item>
-                <ListGroup.Item>{`0${member.phone}`}</ListGroup.Item>
 
-                <ListGroup.Item className="bg-light text-warning">
-                  <strong>Grade</strong>
+                <ListGroup.Item>
+                  <strong className="text-warning">Email:</strong>{" "}
+                  {`${member.email}`}
                 </ListGroup.Item>
-                <ListGroup.Item className="d-flex justify-content-between">
+
+                <ListGroup.Item>
+                  <strong className="text-warning">Phone:</strong>{" "}
+                  {`0${member.phone}`}
+                </ListGroup.Item>
+
+                <ListGroup.Item>
+                  <strong className="text-warning">Grade:</strong>{" "}
                   {`${grade} (${member.gradeLevel})`}
+                </ListGroup.Item>
+                <ListGroup.Item className="text-center">
                   <Button
                     variant="light"
                     className="btn-link px-4 text-warning"
@@ -206,22 +214,29 @@ const MemberDetails = () => {
                     View Grading results
                   </Button>
                 </ListGroup.Item>
-                <ListGroup.Item className="bg-light text-warning">
-                  <strong>Membership Level</strong>
-                </ListGroup.Item>
                 <ListGroup.Item>
+                  <strong className="text-warning">Membership Level:</strong>{" "}
                   {(member.trainingFees / 100).toLocaleString("en-GB", {
                     style: "currency",
                     currency: "GBP",
                   })}
                 </ListGroup.Item>
-                <ListGroup.Item className="bg-light text-warning">
-                  <strong>Free Class Credits</strong>
-                </ListGroup.Item>
                 <ListGroup.Item>
-                  {member.freeClasses > 0
-                    ? `${member.freeClasses} free class credits`
-                    : "No free class credits"}
+                  <strong className="text-warning">Free Class Credits:</strong>
+                  <br />
+                  <p className="bg-primary text-warning text-center p-2 mb-1">
+                    {member.freeClasses > 0
+                      ? `${member.freeClasses} credit(s)`
+                      : `No free class credits. Account will be credited again on ${new Date(
+                          member.classCreditRefund
+                        ).toLocaleDateString()}`}
+                  </p>
+                  <Link
+                    title="Free class credits can be used to attend an extra training session outside of the sessions you are booked in for, without being charged."
+                    id="t-1"
+                  >
+                    What are free class credits?
+                  </Link>{" "}
                 </ListGroup.Item>
               </Col>
 

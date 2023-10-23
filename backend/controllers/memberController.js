@@ -664,6 +664,27 @@ const updateAttRecord = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc check class credits
+// route SERVER ONLY
+const checkClassCredits = asyncHandler(async (req, res) => {
+  const todaysDate = new Date().setHours(0, 0, 0, 0);
+  const members = await Member.find({
+    ddsuccess: true,
+  });
+  if (members) {
+    members.forEach((member) => {
+      if (
+        new Date(member.classCreditRefund).setHours(0, 0, 0, 0) == todaysDate
+      ) {
+        console.log("class credit added");
+        member.freeClasses++;
+        member.classCreditRefund = null;
+        member.save();
+      }
+    });
+  }
+});
+
 // @desc check members are licensed
 // route SERVER ONLY
 const memberLicenseCheck = asyncHandler(async (req, res) => {
@@ -723,4 +744,5 @@ export {
   getMemberWelfareList,
   updateAttRecord,
   memberLicenseCheck,
+  checkClassCredits,
 };

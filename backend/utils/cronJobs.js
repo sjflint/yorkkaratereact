@@ -8,42 +8,45 @@ import { checkTrialComplete } from "../controllers/registerTrialControllers.js";
 import { emailEnquiryAdmin } from "../emailTemplates/enquiryAdmin.js";
 import {
   addTotalMembersToArray,
+  checkClassCredits,
   memberLicenseCheck,
 } from "../controllers/memberController.js";
 import { waitingListCheck } from "../controllers/trainingSessionController.js";
 
 export const cronJobs = () => {
-  // Newsletter sent every Monday @ 7am
+  // every Monday @ 7am
+  // Newsletter sent
   // add current number of members to totalMembers Array
+  // check for any members without license numbers
   cron.schedule(
     "1 1 7 * * 1",
     () => {
       newsLetterEmail();
-      console.log("request to send newsletter");
       addTotalMembersToArray();
-      // check for any members without license numbers
       memberLicenseCheck();
     },
     { timezone: "Europe/London" }
   );
 
-  // Invalid orders deleted every day @ 3am
+  // every day @ 3am
+  // Invalid orders deleted
+  // check for class credit refunds
   cron.schedule(
     "1 1 3 * * *",
     () => {
       deleteOrders();
-      console.log("request to delete orders");
+      checkClassCredits();
     },
     { timezone: "Europe/London" }
   );
 
   // Action at 8am every morning
+  // email with all paid orders, marked not ready to collect.
+  // email with open enquiries
+  // check waiting lists and email if places available
   cron.schedule("0 8 * * *", () => {
-    // email with all paid orders, marked not ready to collect.
     emailShopAdmins();
-    // email with open enquiries
     emailEnquiryAdmin();
-    // check waiting lists and email if places available
     waitingListCheck();
   });
 

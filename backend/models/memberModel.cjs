@@ -57,10 +57,11 @@ const memberSchema = mongoose.Schema(
     weight: { type: Number },
     bio: { type: String, default: "" },
     numberOfSessionsRequired: { type: Number },
-    freeClasses: { type: Number, default: 0 },
+    freeClasses: { type: Number, default: 1 },
     trainingFees: { type: Number },
     squadAttScore: { type: Number },
     competitionPayment: { type: Array },
+    classCreditRefund: { type: Date },
   },
   { versionKey: false },
   {

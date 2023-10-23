@@ -539,7 +539,7 @@ const cancelPayment = asyncHandler(async (req, res) => {
       { _id: member._id },
       {
         extraClassAdded: new Date(2000, 0),
-        $inc: { attendanceRecord: -1 },
+        $inc: { attendanceRecord: -1, freeClasses: 1 },
       },
       { new: true }
     );
