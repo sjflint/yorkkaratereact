@@ -201,6 +201,7 @@ const postGradingResult = asyncHandler(async (req, res) => {
   // <8 === fail, <10 === condiitonal pass, >=10 === pass, >=17 === pass with distinction
   confirmedResults.forEach(async (record) => {
     const { memberId, result } = record;
+
     const member = await Member.findById(memberId);
     const dob = new Date(member.dateOfBirth);
     const diff_ms = Date.now() - dob.getTime();
@@ -212,7 +213,9 @@ const postGradingResult = asyncHandler(async (req, res) => {
       $push: { gradingResults: { _id: memberId, result: result } },
     });
 
-    if (result < 8) {
+    if (result == null) {
+      // Take no action as scored in error and then removed. This is some awesome coding isn't it Simon!!!! Great job!!!
+    } else if (result < 8) {
       // failed
       console.log("grading failed");
       member.attendanceRecord = 0;
@@ -321,7 +324,7 @@ const getGradingResults = asyncHandler(async (req, res) => {
       });
     });
   }
-  if (results !== []) {
+  if (results != []) {
     res.status(201).json(results);
   } else {
     res.status(404).json("Results could not be found");

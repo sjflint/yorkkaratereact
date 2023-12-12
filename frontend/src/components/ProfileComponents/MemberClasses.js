@@ -212,17 +212,19 @@ const MemberClasses = () => {
         <i className="fas fa-plus"></i> Add New Class
       </div>
       {canSwitch === false && (
-        <p className="text-warning text-center mt-4">
-          Unable to switch or delete classes again until:
-          <br />
-          {`${String(changeDate).substring(7, 10)}
+        <div className="mt-4">
+          <small>
+            Please note: You are unable to switch or delete classes again until:
+            <br />
+            {`${String(changeDate).substring(7, 10)}
       ${String(changeDate).substring(4, 8)} ${String(changeDate).substring(
-            10,
-            15
-          )}`}
-        </p>
+              10,
+              15
+            )}`}
+          </small>
+        </div>
       )}
-      <div className="py-4 border-bottom border-warning">
+      <div className="py-4 border-bottom border-warning text-center">
         <div
           onClick={() => {
             dispatch({ type: ATTENDANCE_MEMBER_LIST_RESET });

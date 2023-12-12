@@ -200,9 +200,7 @@ const MemberEditScreen = ({ match, history }) => {
     }
 
     if (gradingDate && danGrade) {
-      values.danGradings[danGrade + numberMarker + " Dan"] = new Date(
-        gradingDate
-      );
+      values.danGradeToUpdate = `${danGrade}${numberMarker} Dan`;
       values.danGrade = danGrade;
       values.kyuGrade = 0;
     }
@@ -223,7 +221,6 @@ const MemberEditScreen = ({ match, history }) => {
         kumite: true,
       };
     }
-
     await dispatch(editMember(values));
 
     setTimeout(() => history.goBack(), 1000);

@@ -520,6 +520,20 @@ const getPublicMemberById = asyncHandler(async (req, res) => {
 const updateMemberProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
+  const keys = Object.keys(values.danGradings);
+
+  keys.forEach((key) => {
+    console.log(values.danGradings[key]);
+    const date = new Date(values.danGradings[key]);
+    console.log(date);
+    values.danGradings[key] = date;
+  });
+
+  const todaysDate = new Date();
+  values.danGradings[values.danGradeToUpdate] = todaysDate;
+
+  console.log(values);
+
   const member = await Member.findById(req.params.id);
 
   if (member) {

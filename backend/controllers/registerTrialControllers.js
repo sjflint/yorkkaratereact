@@ -147,7 +147,7 @@ const checkTrialComplete = async () => {
           recipientEmail: attendee.email,
           recipientName: attendee.firstName,
           subject: "Thank you for attending the trial yesterday",
-          message: `<h4>Thank you for attending the trial session yetserday</h4>
+          message: `<h4>Thank you for attending the trial session yesterday</h4>
         <p>I hope that you, or your child, is keen to continue their karate journey and learn more.</p>
         <h5>What next?</h5>
         <p>Please register by completing our quick and easy online application form. Use the link below to jump straight to where you need to be:</p>
