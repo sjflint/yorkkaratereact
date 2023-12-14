@@ -6,9 +6,11 @@ import {
   deleteEvent,
   updateEvent,
   createEvent,
+  deleteParticipant,
 } from "../controllers/eventController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
+router.route("/delete").put(protect, admin, deleteParticipant);
 router.route("/find/:toPast?").get(getEvents).post(protect, admin, createEvent);
 router
   .route("/:id")

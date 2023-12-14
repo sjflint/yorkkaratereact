@@ -125,4 +125,30 @@ const updateEvent = asyncHandler(async (req, res) => {
   }
 });
 
-export { getEvents, getEventById, deleteEvent, createEvent, updateEvent };
+// @desc delete participant
+// @route DELETE /api/events/:id/delete
+// @access Private/Admin
+const deleteParticipant = asyncHandler(async (req, res) => {
+  const event = await Event.findById({ _id: req.body.eventId });
+  if (event) {
+    const newParticipants = event.participants.filter(
+      (participant) => participant._id != req.body.id
+    );
+    event.participants = newParticipants;
+    event.save();
+    console.log("deleted from grading");
+    res.status(201).json("Participant removed sucessfully");
+  } else {
+    res.status(404);
+    throw new Error("Event not found");
+  }
+});
+
+export {
+  getEvents,
+  getEventById,
+  deleteEvent,
+  createEvent,
+  updateEvent,
+  deleteParticipant,
+};

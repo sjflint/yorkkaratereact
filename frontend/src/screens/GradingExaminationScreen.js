@@ -36,6 +36,8 @@ const GradingExaminationScreen = ({ history, match }) => {
     );
   }
 
+  // adjust to sliders and set defaults (something like if(!value => score = 3))
+
   const options = [
     { label: "Please select score", value: "" },
 

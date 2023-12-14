@@ -12,11 +12,13 @@ import {
 } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import logo from "../img/logo2021a.png";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const GradingScreen = ({ match, history }) => {
-  const [showModal, setShowModal] = useState(false);
+  const [show, setShow] = useState(false);
+  const [deleteId, setDeleteId] = useState();
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [beltModal, setBeltModal] = useState(false);
 
   const dispatch = useDispatch();
@@ -55,8 +57,34 @@ const GradingScreen = ({ match, history }) => {
     keys = Object.keys(grading.beltsToOrder);
   }
 
+  const deleteHandler = async () => {
+    console.log(deleteId);
+    const idToDelete = {
+      id: `${deleteId}`,
+      eventId: grading._id,
+    };
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${memberInfo.token}`,
+        },
+      };
+      await axios.put("/api/events/delete", idToDelete, config).then(() => {
+        setDeleteSuccess(true);
+        dispatch(listGrading(match.params.id));
+        setShow(false);
+        window.scrollTo(0, 0);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container fluid="lg" className="mt-3">
+      {deleteSuccess && (
+        <Message variant="success">Member removed from grading</Message>
+      )}
       {loadingGrading && <Loader variant="warning" />}
       {error && <Message variant="danger">{error}</Message>}
       {grading && (
@@ -102,8 +130,8 @@ const GradingScreen = ({ match, history }) => {
           <h5 className="my-3 border-bottom border-warning text-center">
             Participants
           </h5>
-          <Table striped bordered hover>
-            <thead>
+          <Table striped bordered hover responsive>
+            <thead className="bg-primary text-light">
               <tr className="text-center">
                 <th>Name</th>
                 <th>Current Grade</th>
@@ -111,6 +139,7 @@ const GradingScreen = ({ match, history }) => {
                 <th>Age (as of today)</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -149,6 +178,18 @@ const GradingScreen = ({ match, history }) => {
                         <a
                           href={`tel:0${member.phone}`}
                         >{`0${member.phone}`}</a>
+                      </td>
+                      <td>
+                        <Button
+                          variant="danger"
+                          className="btn-sm"
+                          onClick={() => {
+                            setShow(true);
+                            setDeleteId(member._id);
+                          }}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -216,6 +257,28 @@ const GradingScreen = ({ match, history }) => {
             onClick={() => setBeltModal(false)}
           >
             Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>Permanently Delete Member?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          This action will remove the member from the grading examination. This
+          action is not reversable.
+          <hr />
+          PLEASE NOTE: This action will not issue a refund to the member. This
+          should be handled seperately.
+          <br /> Are you sure?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={deleteHandler}>
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
