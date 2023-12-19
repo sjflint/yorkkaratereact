@@ -222,9 +222,11 @@ const beltCalculator = async () => {
   // calculate belts required from member data to belts in stock from financial data
   const members = await Member.find({ ddsuccess: true });
 
-  const financials = await Financial.find({});
+  const financials = await Financial.findOne({});
 
-  const beltStock = financials[0].belts;
+  const beltStock = financials.belts;
+
+  await Financial.findOneAndUpdate({}, { belts: beltStock }, { new: true });
 
   let arrayOfGrades = [];
   let beltRequired = {};
@@ -302,6 +304,8 @@ const beltCalculator = async () => {
 
   return beltsToOrder;
 };
+
+beltCalculator();
 
 export {
   getFinancialDetails,

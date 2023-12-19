@@ -184,15 +184,14 @@ const ListGradingsScreen = ({ history }) => {
           </small>
         </>
       )}
-      {belts > 0 && (
-        <Button
-          variant="light"
-          onClick={() => setBeltModal(true)}
-          className="d-block mx-auto mt-3 btn-link px-3"
-        >
-          Update Belts in Stock
-        </Button>
-      )}
+
+      <Button
+        variant="light"
+        onClick={() => setBeltModal(true)}
+        className="d-block mx-auto mt-3 btn-link px-3"
+      >
+        Update Belts in Stock
+      </Button>
 
       <Modal show={beltModal} onHide={() => setBeltModal(false)}>
         <Modal.Header closeButton className="bg-primary">
@@ -211,7 +210,7 @@ const ListGradingsScreen = ({ history }) => {
                   : key === "12"
                   ? "Orange Belt / White Stripe"
                   : key === "11"
-                  ? "Ornage Belt / Yellow Stripe"
+                  ? "Orange Belt / Yellow Stripe"
                   : key === "9"
                   ? "Red"
                   : key === "8"
