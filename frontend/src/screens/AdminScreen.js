@@ -163,6 +163,12 @@ const AdminScreen = ({ history }) => {
                   <Col xs={6} sm={3} md={3} className="mb-2">
                     <Link to="/admin/financialsummary">
                       <Card>
+                        {financials &&
+                          financials.subscriptionErrors.length > 0 && (
+                            <div className="notification d-flex align-items-center justify-content-center">
+                              !
+                            </div>
+                          )}
                         <Card.Img
                           variant="top"
                           src={financialImg}

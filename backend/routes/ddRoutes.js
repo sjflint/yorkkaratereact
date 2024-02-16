@@ -7,6 +7,7 @@ import {
   updateDirectDebit,
   createPayment,
   cancelPayment,
+  runSubReport,
 } from "../controllers/ddController.cjs";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -16,5 +17,6 @@ router.route("/updatesubscription").post(protect, updateSubscription);
 router.route("/updatedirectdebit").post(updateDirectDebit);
 router.route("/createpayment").post(protect, createPayment);
 router.route("/cancelpayment").post(protect, cancelPayment);
+router.route("/runsubreport").get(runSubReport);
 
 export default router;

@@ -18,6 +18,7 @@ import {
   deleteMonthlyCost,
 } from "../actions/financialActions";
 import LineChart from "../components/ChartComponents/LineChart";
+import axios from "axios";
 
 const FinanceScreen = ({ history }) => {
   const [showFees, setShowFees] = useState(false);
@@ -34,6 +35,8 @@ const FinanceScreen = ({ history }) => {
   const [costId, setCostId] = useState("");
   const [memberChartData, setMemberChartData] = useState();
   const [financialChartData, setFinancialChartData] = useState();
+  const [reportLoading, setReportLoading] = useState(false);
+  const [report, setReport] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -232,6 +235,21 @@ const FinanceScreen = ({ history }) => {
     });
   }
 
+  const runSubReport = async () => {
+    setReportLoading(true);
+
+    try {
+      axios.get("/ddroutes/runsubreport").then((res) => {
+        if (res.data === "Checks Complete") {
+          setReportLoading(false);
+          dispatch(listFinancials());
+        }
+      });
+    } catch (error) {
+      setReport("Error running report");
+    }
+  };
+
   return (
     <Container fluid="lg" className="mt-3">
       <div className="d-flex justify-content-between mb-2">
@@ -421,7 +439,11 @@ const FinanceScreen = ({ history }) => {
               {financialsLoading || financialUpdateLoading ? (
                 <div className="text-center text-warning">
                   <Loader variant="warning" />
-                  <small>Please don't navigate or refresh page</small>
+                  <small className="text-center">
+                    Fetching member subscription details
+                    <br />
+                    Please don't navigate or refresh page
+                  </small>
                 </div>
               ) : financialUpdateError ? (
                 <Message variant="warning">{financialUpdateError}</Message>
@@ -612,6 +634,60 @@ const FinanceScreen = ({ history }) => {
               )}
             </Card.Body>
           </Card>
+          {financials && financials.subscriptionErrors.length > 0 && (
+            <Card className="mb-5">
+              <Card.Header className="text-danger">
+                <i className="fa-solid fa-triangle-exclamation text-danger"></i>{" "}
+                Subscription Errors{" "}
+                <i className="fa-solid fa-triangle-exclamation text-danger"></i>
+              </Card.Header>
+              <Card.Body>
+                <ListGroup variant="flush">
+                  {financials && (
+                    <>
+                      {financials.subscriptionErrors.map((error) => {
+                        return (
+                          <ListGroup.Item key={error.memberId}>
+                            <ul>
+                              <Link
+                                to={`/admin/members/${error.memberId}/edit`}
+                              >
+                                <li style={{ listStyle: "none" }}>
+                                  {error.firstName} {error.lastName}
+                                </li>
+                              </Link>
+                              <li style={{ listStyle: "none" }}>
+                                Number of Classes: {error.NumberOfClasses}
+                              </li>
+                              <li style={{ listStyle: "none" }}>
+                                {" "}
+                                Amount: {error.subscriptionAmount}
+                              </li>
+                            </ul>
+                          </ListGroup.Item>
+                        );
+                      })}
+                      {reportLoading ? (
+                        <>
+                          <Loader variant="warning" />
+                          <small className="text-warning text-center">
+                            Running report - Please wait...
+                          </small>
+                        </>
+                      ) : (
+                        <>
+                          {report && <Message>Error running report</Message>}
+                          <Button onClick={() => runSubReport()}>
+                            Run Subscription Report
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  )}
+                </ListGroup>
+              </Card.Body>
+            </Card>
+          )}
           <Card className="mb-5">
             {monthlyCosts && (
               <>

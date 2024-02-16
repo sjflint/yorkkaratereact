@@ -46,6 +46,9 @@ const MemberTrainingSessions = () => {
     error: financialsError,
   } = financialList;
 
+  const addClassList = useSelector((state) => state.addClassList);
+  const { error: addClassError } = addClassList;
+
   // Check for delete/switch eligibility
   let changeDate;
   if (member) {
@@ -64,7 +67,7 @@ const MemberTrainingSessions = () => {
   // Filter classes to only what is relevant
   let filteredSessions = trainingSessions;
 
-  if (sessions !== []) {
+  if (sessions) {
     sessions.forEach((session) => {
       filteredSessions = filteredSessions.filter((trainingSession) => {
         if (trainingSession._id === session._id) {
@@ -161,6 +164,11 @@ const MemberTrainingSessions = () => {
         <Loader variant="warning" />
       ) : classListError ? (
         <Message variant="danger">{classListError}</Message>
+      ) : addClassError ? (
+        <Message variant="danger">
+          Class could not be added at this time. Please try again later or
+          contact admin on info@yorkkarate.net
+        </Message>
       ) : sessions.length === 0 ? (
         <p className="text-warning">No Classes booked</p>
       ) : (

@@ -194,52 +194,38 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
 // @access server only (private)
 const updateSubscription = asyncHandler(async (paymentDetails) => {
   const member = await Member.findById(paymentDetails._id);
+  const trainingSessions = await TrainingSessions.find({});
+  const financials = await Financial.findOne({});
 
   let subscriptionId = member.subscriptionId;
 
-  let subscription = await client.subscriptions.find(subscriptionId);
-  console.log(`Previous amount: ${subscription.amount}`);
-  console.log("Updating...");
-  const newAmount = subscription.amount + paymentDetails.changeAmount;
+  // let subscription = await client.subscriptions.find(subscriptionId);
+  let numberOfClasses = 0 + paymentDetails.changeAmount;
+  trainingSessions.forEach((trainingSession) => {
+    trainingSession.participants.includes(member._id) && numberOfClasses++;
+  });
+
+  const newAmount =
+    financials.baseLevelTrainingFees +
+    numberOfClasses * financials.costOfAdditionalClass;
 
   console.log(`New amount: ${newAmount}`);
 
-  const mandate = await client.mandates.find(member.ddMandate);
-  const chargeDay = mandate.next_possible_charge_date.slice(-2);
+  // How to manage payments that may have already been collected:
+  // -Check the status of the most recent payment for the subscription
+  // IF (payment is pending_submission) - it can be cancelled, along with the subscription, and a new one set up immediately
+  // ELSE (A new subscription should be created for the new amount and on the same collection day as previous subscription)
 
-  let collectionDate = new Date(subscription.upcoming_payments[0].charge_date);
-  const nearestCollectionDate = collectionDate.setMonth(
-    collectionDate.getMonth() - 1
-  );
-  const date = new Date();
-  if (new Date(nearestCollectionDate) > date.setDate(date.getDate() + 4)) {
-    console.log("amount not collected, set for nearest collection date");
-    collectionDate = new Date(nearestCollectionDate);
-  } else {
-    console.log("fees collected this month, set for next collection date");
+  // Find status of the most recent payment for the subscription
+  const payments = await client.payments.list({ subscription: subscriptionId });
+  const lastPayment = payments.payments[0];
+  let dayOfMonth = lastPayment.charge_date.slice(-2);
+  if (dayOfMonth[0] === "0") {
+    dayOfMonth = dayOfMonth[1];
   }
+  console.log(dayOfMonth);
 
-  // create new subscription for the new amount
-  const newSubscription = await client.subscriptions.create({
-    amount: newAmount,
-    currency: "GBP",
-    name: "Monthly training fees",
-    // *** should not be 1st of month but current collection day
-    interval: 1,
-    interval_unit: "monthly",
-    // day_of_month: chargeDay,
-    start_date: collectionDate.toISOString().slice(0, 10),
-    links: {
-      mandate: member.ddMandate,
-    },
-  });
-
-  if (newSubscription) {
-    // Cancel existing subscription
-    const cancelSubscription = await client.subscriptions.cancel(
-      member.subscriptionId
-    );
-    console.log(`Cancelled Sub status: ${cancelSubscription.status}`);
+  const updateDatabase = async (newSubscription) => {
     await Member.findOneAndUpdate(
       { _id: member._id },
       {
@@ -249,11 +235,101 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
       { new: true }
     );
     console.log("training fees total updated");
+  };
+
+  if (lastPayment.status === "pending_submission") {
+    try {
+      await client.payments.cancel(lastPayment.id);
+      console.log("payment cancelled");
+      try {
+        await client.subscriptions.cancel(member.subscriptionId);
+        console.log("subscription cancelled");
+        const newSubscription = await client.subscriptions.create({
+          amount: newAmount,
+          currency: "GBP",
+          name: "Monthly training fees",
+          interval: 1,
+          interval_unit: "monthly",
+          links: {
+            mandate: member.ddMandate,
+          },
+        });
+        updateDatabase(newSubscription);
+      } catch (error) {
+        genericEmail({
+          recipientEmail: `info@yorkkarate.net`,
+          recipientName: "admin",
+          subject: "Error with direct debit",
+          message: `<h4>Admin,</h4>
+                      <p>We have a problem with the following account. Please review their direct debit situation:</p>
+                      <p>${member.firstName} ${member.lastName}<br/>DD reference${member.ddMandate}
+                    `,
+          link: `${process.env.DOMAIN_LINK}/admin/members/${member._id}`,
+          linkText: "View member account",
+          attachments: [],
+        });
+        throw new Error(
+          "Payment cancelled but subscription could not be cancelled or database failed to update"
+        );
+      }
+    } catch (error) {
+      throw new Error("Payment pending submission but could not be cancelled");
+    }
+  } else {
+    try {
+      await client.subscriptions.cancel(member.subscriptionId);
+      console.log("subscription cancelled");
+      const newSubscription = await client.subscriptions.create({
+        amount: newAmount,
+        currency: "GBP",
+        name: "Monthly training fees",
+        interval: 1,
+        interval_unit: "monthly",
+        day_of_month: Number(dayOfMonth),
+        links: {
+          mandate: member.ddMandate,
+        },
+      });
+      updateDatabase(newSubscription);
+    } catch (error) {
+      throw new Error(
+        "Subscription could not be cancelled or database failed to update"
+      );
+    }
   }
+
+  // let collectionDate = new Date(subscription.upcoming_payments[0].charge_date);
+  // const dayOfCollection = collectionDate.toString().slice(8, 10);
+  // console.log(dayOfCollection);
+  // const nearestCollectionDate = collectionDate.setMonth(
+  //   collectionDate.getMonth() - 1
+  // );
+  // const date = new Date();
+  // if (new Date(nearestCollectionDate) > date.setDate(date.getDate() + 4)) {
+  //   console.log("amount not collected, set for nearest collection date");
+  //   collectionDate = new Date(nearestCollectionDate);
+  // } else {
+  //   console.log("fees collected this month, set for next collection date");
+  // }
+
+  // // create new subscription for the new amount
+  // const newSubscription = await client.subscriptions.create({
+  //   amount: newAmount,
+  //   currency: "GBP",
+  //   name: "Monthly training fees",
+  //   // *** should not be 1st of month but current collection day
+  //   interval: 1,
+  //   interval_unit: "monthly",
+  //   // day_of_month: chargeDay,
+  //   start_date: collectionDate.toISOString().slice(0, 10),
+  //   links: {
+  //     mandate: member.ddMandate,
+  //   },
+  // });
 
   return {
     status: "Successfully updated",
-    MonthlyTrainingFees: newSubscription.amount,
+    MonthlyTrainingFees: newAmount,
   };
 });
 
@@ -597,6 +673,95 @@ const updateCollectionDate = async (id) => {
   }
 };
 
+const checkSubAmount = async () => {
+  console.log("checking subs");
+  const members = await Member.find({ ddsuccess: true });
+  const trainingSessions = await TrainingSessions.find({});
+  const financials = await Financial.findOne({});
+  const additionalClass = financials.costOfAdditionalClass;
+  const trainingFee = financials.baseLevelTrainingFees;
+
+  let subAmounts = [];
+
+  for (let i = 0; i < members.length; i++) {
+    let numberOfClasses = 0;
+    trainingSessions.forEach((trainingSession) => {
+      trainingSession.participants.includes(members[i]._id) &&
+        numberOfClasses++;
+    });
+
+    const pushToArray = (subscriptionAmount) => {
+      subAmounts.push({
+        memberId: members[i]._id,
+        firstName: members[i].firstName,
+        lastName: members[i].lastName,
+        NumberOfClasses: numberOfClasses,
+        subscriptionAmount: subscriptionAmount,
+      });
+    };
+
+    try {
+      const subscription = await client.subscriptions.find(
+        members[i].subscriptionId
+      );
+
+      if (subscription.amount) {
+        if (numberOfClasses == 1 && subscription.amount != trainingFee) {
+          pushToArray(subscription.amount);
+        } else if (
+          numberOfClasses == 2 &&
+          subscription.amount != trainingFee + additionalClass
+        ) {
+          pushToArray(subscription.amount);
+        } else if (
+          numberOfClasses == 3 &&
+          subscription.amount != trainingFee + additionalClass * 2
+        ) {
+          pushToArray(subscription.amount);
+        } else if (
+          numberOfClasses == 4 &&
+          subscription.amount != trainingFee + additionalClass * 3
+        ) {
+          pushToArray(subscription.amount);
+        } else if (
+          numberOfClasses == 5 &&
+          subscription.amount != trainingFee + additionalClass * 4
+        ) {
+          pushToArray(subscription.amount);
+        } else if (
+          numberOfClasses == 6 &&
+          subscription.amount != trainingFee + additionalClass * 5
+        ) {
+          pushToArray(subscription.amount);
+        }
+      }
+    } catch (error) {
+      if (numberOfClasses != 0) {
+        pushToArray("Error - Unable to find subscription");
+      }
+    }
+  }
+
+  financials.subscriptionErrors = subAmounts;
+  financials.save();
+  console.log("checks complete");
+  return "check complete";
+
+  // Additionally, when members change their class bookings, the system should count classes to establish amount to pay and enter this into database, not simply add/subtract amounts
+  // investigate why subscription amounts are not being updated when class bookings change (relevant for price increase function to work)
+};
+
+const runSubReport = asyncHandler(async (req, res) => {
+  console.log("running runsubreports");
+  try {
+    await checkSubAmount();
+
+    res.status(200).json("Checks Complete");
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
 module.exports = {
   ddSetup,
   cancelDirectDebit,
@@ -606,4 +771,6 @@ module.exports = {
   serverCreatedPayment,
   cancelPayment,
   updateCollectionDate,
+  checkSubAmount,
+  runSubReport,
 };

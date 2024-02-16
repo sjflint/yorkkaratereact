@@ -10,6 +10,7 @@ const financialSchema = mongoose.Schema({
   totalMembers: { type: Array },
   belts: { type: Object },
   beltsToOrder: { type: Object },
+  subscriptionErrors: { type: Array },
 });
 
 const Financial = (module.exports = mongoose.model(

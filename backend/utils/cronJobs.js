@@ -12,6 +12,7 @@ import {
   memberLicenseCheck,
 } from "../controllers/memberController.js";
 import { waitingListCheck } from "../controllers/trainingSessionController.js";
+import { checkSubAmount } from "../controllers/ddController.cjs";
 
 export const cronJobs = () => {
   // every Monday @ 7am
@@ -36,6 +37,7 @@ export const cronJobs = () => {
     () => {
       deleteOrders();
       checkClassCredits();
+      checkSubAmount();
     },
     { timezone: "Europe/London" }
   );

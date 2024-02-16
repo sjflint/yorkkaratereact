@@ -12,6 +12,7 @@ import Attendance from "../models/attendanceModel.cjs";
 import dotenv from "dotenv";
 import { updateCollectionDate } from "./ddController.cjs";
 import MonthlyCosts from "../models/monthlyCosts.js";
+import TrainingSession from "../models/trainingSessionModel.cjs";
 
 dotenv.config();
 

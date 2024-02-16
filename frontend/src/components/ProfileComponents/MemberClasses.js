@@ -48,6 +48,9 @@ const MemberClasses = () => {
     error: financialsError,
   } = financialList;
 
+  const addClassList = useSelector((state) => state.addClassList);
+  const { error: addClassError } = addClassList;
+
   // Check for delete/switch eligibility
   let changeDate;
   if (member) {
@@ -159,6 +162,11 @@ const MemberClasses = () => {
         <Loader variant="warning" />
       ) : classListError ? (
         <Message variant="danger">{classListError}</Message>
+      ) : addClassError ? (
+        <Message variant="danger">
+          Class could not be added at this time. Please try again later or
+          contact admin on info@yorkkarate.net
+        </Message>
       ) : sessions.length === 0 ? (
         <h5 className="text-warning">No Classes booked</h5>
       ) : (

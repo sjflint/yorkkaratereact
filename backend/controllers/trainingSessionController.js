@@ -61,7 +61,6 @@ const addTrainingSession = asyncHandler(async (req, res) => {
   const financials = await Financial.findOne({});
 
   // Test for availability in the class
-
   if (session.participants.includes(member._id)) {
     res.json("already added to class");
   } else if (
@@ -70,8 +69,22 @@ const addTrainingSession = asyncHandler(async (req, res) => {
   ) {
     res.json("no space available in the class");
   } else if (session) {
-    session.participants.push(req.body.memberId);
+    if (req.body.classList.length !== 0) {
+      const paymentDetails = {
+        _id: member._id,
+        changeAmount: 0,
+      };
+      console.log(paymentDetails);
+      try {
+        await updateSubscription(paymentDetails);
+      } catch (error) {
+        console.log(error);
+        res.status(500);
+        throw new Error(error);
+      }
+    }
 
+    session.participants.push(req.body.memberId);
     await TrainingSession.findOneAndUpdate(
       { _id: session._id },
       {
@@ -81,22 +94,14 @@ const addTrainingSession = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    if (req.body.classList.length !== 0) {
-      const paymentDetails = {
-        _id: member._id,
-        changeAmount: financials.costOfAdditionalClass,
-      };
-      console.log(paymentDetails);
-      await updateSubscription(paymentDetails);
-    }
     genericEmail({
       recipientEmail: `${member.email}, ${member.secondaryEmail}`,
       recipientName: member.firstName,
       subject: "New class added",
-      message: `<h4>${member.firstName}, we have upgraded your membership to include an extra class per week</h4>
-              <p>We have added the following class to your training schedule:</p>
-              <p>${session.name}<br/>${session.location}<br/>${session.times}
-            `,
+      message: `<h4>${member.firstName},</h4>
+                  <p>We have added the following class to your training schedule:</p>
+                  <p>${session.name}<br/>${session.location}<br/>${session.times}
+                `,
       link: `${process.env.DOMAIN_LINK}/profile?key=third`,
       linkText: "View your training sessions",
       attachments: [],
@@ -127,6 +132,20 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
       changeDate < today) ||
     admin.isAdmin
   ) {
+    if (member.trainingFees > financials.baseLevelTrainingFees) {
+      const paymentDetails = {
+        _id: member._id,
+        changeAmount: -2,
+      };
+      console.log(`payment details${paymentDetails}`);
+      try {
+        await updateSubscription(paymentDetails);
+        console.log("subscription updated");
+      } catch (error) {
+        res.status(500);
+        throw new Error("Subscription could not be updated");
+      }
+    }
     for (let i = 0; i < session.participants.length; i++) {
       if (session.participants[i] == req.body.memberId._id) {
         session.participants.splice(i, 1);
@@ -139,14 +158,6 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
           },
           { new: true }
         );
-        if (member.trainingFees !== financials.baseLevelTrainingFees) {
-          const paymentDetails = {
-            _id: member._id,
-            changeAmount: financials.costOfAdditionalClass * -1,
-          };
-          console.log(`payment details${paymentDetails}`);
-          await updateSubscription(paymentDetails);
-        }
       }
     }
     const lastClassChange = new Date();
