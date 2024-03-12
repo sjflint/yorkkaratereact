@@ -217,13 +217,23 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
   // ELSE (A new subscription should be created for the new amount and on the same collection day as previous subscription)
 
   // Find status of the most recent payment for the subscription
+
   const payments = await client.payments.list({ subscription: subscriptionId });
-  const lastPayment = payments.payments[0];
-  let dayOfMonth = lastPayment.charge_date.slice(-2);
-  if (dayOfMonth[0] === "0") {
-    dayOfMonth = dayOfMonth[1];
+
+  let lastPayment;
+  let dayOfMonth;
+
+  if (payments.payments.length != 0) {
+    lastPayment = payments.payments[0];
+    dayOfMonth = lastPayment.charge_date.slice(-2);
+    if (dayOfMonth[0] === "0") {
+      dayOfMonth = dayOfMonth[1];
+    }
+  } else {
+    lastPayment = "no payments made";
+    const subscription = await client.subscriptions.find(subscriptionId);
+    dayOfMonth = subscription.day_of_month;
   }
-  console.log(dayOfMonth);
 
   const updateDatabase = async (newSubscription) => {
     await Member.findOneAndUpdate(
@@ -237,7 +247,10 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
     console.log("training fees total updated");
   };
 
-  if (lastPayment.status === "pending_submission") {
+  if (
+    lastPayment != "no payments made" &&
+    lastPayment.status === "pending_submission"
+  ) {
     try {
       await client.payments.cancel(lastPayment.id);
       console.log("payment cancelled");

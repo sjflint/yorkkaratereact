@@ -146,6 +146,7 @@ const MemberDetails = () => {
   const saveHandler = async (values) => {
     const memberId = member._id;
     values.memberId = memberId;
+    values.email = values.email.toLowerCase();
     dispatch(updateProfile(values));
     setShowModal(false);
     await dispatch(getMemberDetails("profile"));

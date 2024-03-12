@@ -137,7 +137,7 @@ const deleteTrainingSession = asyncHandler(async (req, res) => {
         _id: member._id,
         changeAmount: -2,
       };
-      console.log(`payment details${paymentDetails}`);
+      console.log(`payment details${paymentDetails._id}`);
       try {
         await updateSubscription(paymentDetails);
         console.log("subscription updated");
