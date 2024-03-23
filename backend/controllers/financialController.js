@@ -59,98 +59,90 @@ const updateFinancialDetails = asyncHandler(async (req, res) => {
     belts,
   } = req.body;
 
-  baseLevelTrainingFees = Number(baseLevelTrainingFees * 100);
-  joiningFee = Number(joiningFee * 100);
-  costOfAdditionalClass = Number(costOfAdditionalClass * 100);
-  costOfExtraFee = Number(costOfExtraFee * 100);
-  costOfGrading = Number(costOfGrading * 100);
-  costOfTrainingCourse = Number(costOfGrading * 100);
+  const newBaseLevelTrainingFees = Number(baseLevelTrainingFees * 100);
+  const newJoiningFee = Number(joiningFee * 100);
+  const newCostOfAdditionalClass = Number(costOfAdditionalClass * 100);
+  const newCostOfExtraFee = Number(costOfExtraFee * 100);
+  const newCostOfGrading = Number(costOfGrading * 100);
+  const newCostOfTrainingCourse = Number(costOfTrainingCourse * 100);
 
-  const financials = await Financial.findOne({});
+  let financials = await Financial.findOne({});
 
+  financials.baseLevelTrainingFees = newBaseLevelTrainingFees;
+  financials.costOfAdditionalClass = newCostOfAdditionalClass;
+  financials.costOfGrading = newCostOfGrading;
+  financials.joiningFee = newJoiningFee;
+  financials.costOfExtraFee = newCostOfExtraFee;
+  financials.costOfTrainingCourse = newCostOfTrainingCourse;
+
+  await financials.save();
+
+  financials = await Financial.findOne({});
+
+  // // Update member subscriptions
   const membersList = await Member.find({
     ddsuccess: true,
-    ddMandate: { $ne: "" },
+    ddMandate: { $ne: "Cancelled" },
   });
 
+  console.log(membersList.length);
+  console.log(financials);
   if (financials) {
-    if (financials.costOfAdditionalClass !== costOfAdditionalClass) {
-      // if cost of additional class increases, update all members direct debits
+    if (
+      financials.baseLevelTrainingFees !== baseLevelTrainingFees ||
+      financials.costOfAdditionalClass !== costOfAdditionalClass
+    ) {
+      const numberOfUpdatesProcessed = 0;
       for (const member of membersList) {
-        const additionalPayment =
-          member.trainingFees - financials.baseLevelTrainingFees;
-        console.log(`additionalPayment = ${additionalPayment}`);
-        const numberOfClasses =
-          additionalPayment / financials.costOfAdditionalClass;
-        console.log(`number of class = ${numberOfClasses}`);
-        const changeAmount =
-          costOfAdditionalClass - financials.costOfAdditionalClass;
-        console.log(
-          `changeAmount = New cost of additonal class(${costOfAdditionalClass}) - old cost of additinal class ${financials.costOfAdditionalClass}`
-        );
-
-        const paymentDetails = {
-          _id: member._id,
-          changeAmount: numberOfClasses * changeAmount,
-        };
-        await updateSubscription(paymentDetails);
+        try {
+          const paymentDetails = {
+            _id: member._id,
+            // this would need to be -1 for everyone so that only the additional classes, not including the 1st class, are added. If anyone has no classes booked
+            changeAmount: -1,
+          };
+          await updateSubscription(paymentDetails);
+          numberOfUpdatesProcessed++;
+        } catch (error) {
+          console.log(
+            `${member.firstName} ${member.lastName} could not be updated to the new pricing structure`
+          );
+        }
       }
-      financials.costOfAdditionalClass = costOfAdditionalClass;
+      console.log(`Number of updates processed: ${numberOfUpdatesProcessed}`);
     }
 
-    if (financials.baseLevelTrainingFees !== baseLevelTrainingFees) {
-      // if baselevel training fees have changed, update all members direct debits
-      for (const member of membersList) {
-        const paymentDetails = {
-          _id: member._id,
-          changeAmount:
-            baseLevelTrainingFees - financials.baseLevelTrainingFees,
-        };
-        await updateSubscription(paymentDetails);
-      }
-      financials.baseLevelTrainingFees = baseLevelTrainingFees;
-    }
+    //   // combine emails
+    //   // send email to notify members of the change
+    //   let recipients = [];
+    //   membersList.forEach((member) =>
+    //     recipients.push(member.email, member.secondaryEmail)
+    //   );
 
-    financials.costOfGrading = costOfGrading;
-    financials.joiningFee = joiningFee;
-    financials.costOfExtraFee = costOfExtraFee;
-    financials.costOfTrainingCourse = costOfTrainingCourse;
-    financials.belts = belts;
-
-    await financials.save();
-
-    // combine emails
-    // send email to notify members of the change
-    let recipients = [];
-    membersList.forEach((member) =>
-      recipients.push(member.email, member.secondaryEmail)
-    );
-
-    genericEmail({
-      recipientEmail: recipients,
-      subject: "Update to club fees",
-      message: `<h4>To all club members, we have updated some of our fees.</h4>
-    <p>We would like to let you know that with immediate effect, the following fees are in place:</p>
-    <ul>
-      <li>Base Level Training Fees (to train once a week): £${
-        baseLevelTrainingFees / 100
-      } p/m</li>
-      <li>The cost of increasing your training by one extra class a week: £${
-        costOfAdditionalClass / 100
-      }</li>
-      <li>The cost of attending a one-off, extra class: £${
-        costOfExtraFee / 100
-      }</li>
-      <li>The cost of attending a grading examination: £${
-        costOfGrading / 100
-      }</li>
-    </ul>
-    <p>There is nothing you need to do. Any price changes will automatically be applied to your direct debit.</p>
-    `,
-      link: `${process.env.DOMAIN_LINK}/profile`,
-      linkText: "View Your account and fees",
-      attachments: [],
-    });
+    //   genericEmail({
+    //     recipientEmail: recipients,
+    //     subject: "Update to club fees",
+    //     message: `<h4>To all club members, we have updated some of our fees.</h4>
+    //   <p>We would like to let you know that with immediate effect, the following fees are in place:</p>
+    //   <ul>
+    //     <li>Base Level Training Fees (to train once a week): £${
+    //       baseLevelTrainingFees / 100
+    //     } p/m</li>
+    //     <li>The cost of increasing your training by one extra class a week: £${
+    //       costOfAdditionalClass / 100
+    //     }</li>
+    //     <li>The cost of attending a one-off, extra class: £${
+    //       costOfExtraFee / 100
+    //     }</li>
+    //     <li>The cost of attending a grading examination: £${
+    //       costOfGrading / 100
+    //     }</li>
+    //   </ul>
+    //   <p>There is nothing you need to do. Any price changes will automatically be applied to your direct debit.</p>
+    //   `,
+    //     link: `${process.env.DOMAIN_LINK}/profile`,
+    //     linkText: "View Your account and fees",
+    //     attachments: [],
+    //   });
 
     res.status(201).json("financials updated");
   } else {

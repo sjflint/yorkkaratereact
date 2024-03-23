@@ -198,25 +198,22 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
   const financials = await Financial.findOne({});
 
   let subscriptionId = member.subscriptionId;
-
-  // let subscription = await client.subscriptions.find(subscriptionId);
   let numberOfClasses = 0 + paymentDetails.changeAmount;
+
   trainingSessions.forEach((trainingSession) => {
     trainingSession.participants.includes(member._id) && numberOfClasses++;
   });
+
+  // Edge case where the numberOfClasses is equal to -1. This would reduce the base fees by the additional cost charge. Should not equal -1 here.
+  if (numberOfClasses == -1) {
+    numberOfClasses = 0;
+  }
 
   const newAmount =
     financials.baseLevelTrainingFees +
     numberOfClasses * financials.costOfAdditionalClass;
 
   console.log(`New amount: ${newAmount}`);
-
-  // How to manage payments that may have already been collected:
-  // -Check the status of the most recent payment for the subscription
-  // IF (payment is pending_submission) - it can be cancelled, along with the subscription, and a new one set up immediately
-  // ELSE (A new subscription should be created for the new amount and on the same collection day as previous subscription)
-
-  // Find status of the most recent payment for the subscription
 
   const payments = await client.payments.list({ subscription: subscriptionId });
 
@@ -245,6 +242,7 @@ const updateSubscription = asyncHandler(async (paymentDetails) => {
       { new: true }
     );
     console.log("training fees total updated");
+    return;
   };
 
   if (
