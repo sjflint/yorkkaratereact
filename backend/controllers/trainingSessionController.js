@@ -62,11 +62,13 @@ const addTrainingSession = asyncHandler(async (req, res) => {
 
   // Test for availability in the class
   if (session.participants.includes(member._id)) {
+    console.log("already added to class");
     res.json("already added to class");
   } else if (
     session.participants.length + session.trialParticipants.length >=
     session.capacity
   ) {
+    console.log("no spaces available in the class");
     res.json("no space available in the class");
   } else if (session) {
     if (req.body.classList.length !== 0) {

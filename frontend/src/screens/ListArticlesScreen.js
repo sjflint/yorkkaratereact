@@ -240,6 +240,9 @@ const ListArticlesScreen = ({ history, match }) => {
                     <img
                       src={`${article.carouselImages[0].original}`}
                       alt="article"
+                      width="100%"
+                      height="100"
+                      style={{ width: "100%", objectFit: "contain" }}
                     />
                   </td>
                   <td

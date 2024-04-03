@@ -184,12 +184,12 @@ router.post("/image", imageUpload.single("image"), async (req, res) => {
   const uploadImage = async () => {
     const buffer = await sharp(req.file.buffer)
       .rotate()
-      .resize({
-        height: imgHeight,
-        width: imgWidth,
-        fit: "contain",
-        background: { r: 242, g: 242, b: 242, alpha: 1 },
-      })
+      // .resize({
+      //   height: imgHeight,
+      //   width: imgWidth,
+      //   fit: "contain",
+      //   background: { r: 242, g: 242, b: 242, alpha: 1 },
+      // })
       .withMetadata()
       .toBuffer();
 

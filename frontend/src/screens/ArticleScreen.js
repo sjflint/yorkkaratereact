@@ -48,7 +48,12 @@ const ArticleScreen = ({ match, history }) => {
                   <h3 className="p-2">{article.title}</h3>
                   <ListGroup.Item className="bg-light">
                     <Row className="align-items-center">
-                      <Col xs={3} sm={2} className="p-0">
+                      <Col
+                        xs={3}
+                        sm={2}
+                        className="p-0"
+                        style={{ maxHeight: "10vph" }}
+                      >
                         <Image
                           src={`${article.authorImg}`}
                           alt={article.author}

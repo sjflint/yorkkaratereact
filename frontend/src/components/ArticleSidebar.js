@@ -11,6 +11,9 @@ const ArticleSidebar = ({ article }) => {
           src={`${article.carouselImages[0].original}`}
           alt="article"
           className="mb-2"
+          width="100%"
+          height="300"
+          style={{ width: "100%", objectFit: "contain" }}
         />
       </Link>
       <Link to={`/article/${article._id}`} className="text-decoration-none">

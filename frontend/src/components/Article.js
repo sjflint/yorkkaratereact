@@ -7,7 +7,15 @@ const Article = ({ article }) => {
     <Row className="p-2 rounded h-100 bg-grey">
       <Col md="5" className="p-0 align-self-center">
         <Link to={`/article/${article._id}`}>
-          <img src={`${article.carouselImages[0].original}`} alt="article" />
+          <div>
+            <img
+              src={`${article.carouselImages[0].original}`}
+              alt="article"
+              width="100%"
+              height="300"
+              style={{ width: "100%", objectFit: "contain" }}
+            />
+          </div>
         </Link>
       </Col>
       <Col md="7">
