@@ -41,4 +41,12 @@ const getEnquirys = asyncHandler(async (req, res) => {
   res.send(enquiries);
 });
 
-export { postEnquiry, getEnquirys };
+const deleteEnquiry = asyncHandler(async (req, res) => {
+  const enquiry = await Enquiry.findOne({ _id: req.params.id });
+  console.log(enquiry);
+  enquiry.responded = true;
+  enquiry.save();
+  res.send("enquiry deleted");
+});
+
+export { postEnquiry, getEnquirys, deleteEnquiry };

@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listEnquiries } from "../actions/enquiryActions";
+import axios from "axios";
 
 const EmailMembersScreen = ({ history }) => {
   const [file, setFile] = useState();
@@ -140,6 +141,16 @@ const EmailMembersScreen = ({ history }) => {
       values.recipientGroup = "enquiry";
     }
     dispatch(emailSend(values));
+  };
+
+  const deleteEnquiry = async (_id) => {
+    await axios.delete(`/api/enquiry/${_id}`).then((res) => {
+      const result = res.data;
+      console.log(result);
+      if (result == "enquiry deleted") {
+        dispatch(listEnquiries());
+      }
+    });
   };
 
   return (
@@ -404,7 +415,7 @@ const EmailMembersScreen = ({ history }) => {
 
                 <Row>
                   <Col md={3}></Col>
-                  <Col md={6}>
+                  <Col md={6} className="text-center">
                     {emailLoading ? (
                       <Loader variant="warning" />
                     ) : emailError ? (
@@ -417,6 +428,14 @@ const EmailMembersScreen = ({ history }) => {
                         Send email
                       </Button>
                     )}
+                    <Button
+                      variant="link btn-block w-50 py-0 mt-5 bg-danger text-white px-auto"
+                      onClick={() => {
+                        deleteEnquiry(enquiries[index]._id);
+                      }}
+                    >
+                      Delete Email
+                    </Button>
                   </Col>
                   <Col md={3}></Col>
                 </Row>
