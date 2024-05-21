@@ -221,6 +221,10 @@ const MemberEditScreen = ({ match, history }) => {
         kumite: true,
       };
     }
+    if (gradingDate) {
+      values.danGradingDate = gradingDate;
+    }
+    console.log(values);
     await dispatch(editMember(values));
 
     setTimeout(() => history.goBack(), 1000);

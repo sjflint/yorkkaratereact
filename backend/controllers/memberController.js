@@ -226,6 +226,8 @@ const getMemberPaymentDetails = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
+  console.log(values);
+
   const member = await Member.findById(values.memberId);
 
   if (member && values.licenseNumber) {
@@ -521,6 +523,8 @@ const getPublicMemberById = asyncHandler(async (req, res) => {
 const updateMemberProfile = asyncHandler(async (req, res) => {
   const { values } = req.body;
 
+  console.log(values);
+
   const keys = Object.keys(values.danGradings);
 
   keys.forEach((key) => {
@@ -531,9 +535,12 @@ const updateMemberProfile = asyncHandler(async (req, res) => {
   });
 
   const todaysDate = new Date();
-  values.danGradings[values.danGradeToUpdate] = todaysDate;
 
-  console.log(values);
+  if (values.danGradingDate) {
+    values.danGradings[values.danGradeToUpdate] = new Date(
+      values.danGradingDate
+    );
+  }
 
   const member = await Member.findById(req.params.id);
 
