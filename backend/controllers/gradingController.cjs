@@ -420,7 +420,7 @@ beltCalculator();
 // switchclass function
 const switchClasses = async (member) => {
   const trainingSessions = await TrainingSession.find({});
-  trainingSessions.forEach(async (trainingSession) => {
+  for (const trainingSession of trainingSessions) {
     if (
       trainingSession.participants.includes(member.toString()) &&
       trainingSession.progressionPath
@@ -444,7 +444,7 @@ const switchClasses = async (member) => {
         { new: true }
       );
     }
-  });
+  }
   // send email about class switch
   console.log("class switch complete");
 };

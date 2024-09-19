@@ -137,11 +137,13 @@ const checkTrialComplete = async () => {
       );
     }
     await TrialClass.deleteOne({ _id: attendee._id });
+
+    return true;
   };
 
   const trialAttendees = await TrialClass.find({});
   if (trialAttendees) {
-    trialAttendees.forEach(async (attendee) => {
+    for (const attendee of trialAttendees) {
       if (attendee.completed === true) {
         genericEmail({
           recipientEmail: attendee.email,
@@ -157,13 +159,13 @@ const checkTrialComplete = async () => {
           attachments: [],
         });
 
-        deleteRecord(attendee);
+        await deleteRecord(attendee);
       }
 
       if (new Date(attendee.createdAt) < date || attendee.paid === false) {
-        deleteRecord(attendee);
+        await deleteRecord(attendee);
       }
-    });
+    }
   }
 };
 

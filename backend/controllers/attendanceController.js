@@ -76,8 +76,7 @@ const getAttendanceRecord = asyncHandler(async (req, res) => {
         new Date(req.body.date).toDateString() < new Date().toDateString()
           ? new Date(req.body.date).toDateString()
           : new Date().toDateString();
-      // if creating the record after the day of the class, this will default to here and so will create a record for today's date.
-      // We need to test if the date is before today, and if so, you that date instead.
+
       const attendance = new Attendance({
         date: date,
         name: className,

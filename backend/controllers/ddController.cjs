@@ -137,7 +137,7 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
   console.log(`Status: ${mandate.status}`);
 
   const classList = await TrainingSessions.find({});
-  classList.forEach(async (indClass) => {
+  for (const indClass of classList) {
     for (let i = 0; i < indClass.participants.length; i++) {
       if (indClass.participants[i].toString() === req.body._id.toString()) {
         indClass.participants.splice(i, 1);
@@ -154,7 +154,7 @@ const cancelDirectDebit = asyncHandler(async (req, res) => {
         );
       }
     }
-  });
+  }
 
   // Update database
 
@@ -717,31 +717,39 @@ const checkSubAmount = async () => {
       );
 
       if (subscription.amount) {
-        if (numberOfClasses == 1 && subscription.amount != trainingFee) {
-          pushToArray(subscription.amount);
-        } else if (
-          numberOfClasses == 2 &&
-          subscription.amount != trainingFee + additionalClass
+        if (
+          (numberOfClasses == 1 && subscription.amount != trainingFee) ||
+          subscription.status == "cancelled"
         ) {
           pushToArray(subscription.amount);
         } else if (
-          numberOfClasses == 3 &&
-          subscription.amount != trainingFee + additionalClass * 2
+          (numberOfClasses == 2 &&
+            subscription.amount != trainingFee + additionalClass) ||
+          subscription.status == "cancelled"
         ) {
           pushToArray(subscription.amount);
         } else if (
-          numberOfClasses == 4 &&
-          subscription.amount != trainingFee + additionalClass * 3
+          (numberOfClasses == 3 &&
+            subscription.amount != trainingFee + additionalClass * 2) ||
+          subscription.status == "cancelled"
         ) {
           pushToArray(subscription.amount);
         } else if (
-          numberOfClasses == 5 &&
-          subscription.amount != trainingFee + additionalClass * 4
+          (numberOfClasses == 4 &&
+            subscription.amount != trainingFee + additionalClass * 3) ||
+          subscription.status == "cancelled"
         ) {
           pushToArray(subscription.amount);
         } else if (
-          numberOfClasses == 6 &&
-          subscription.amount != trainingFee + additionalClass * 5
+          (numberOfClasses == 5 &&
+            subscription.amount != trainingFee + additionalClass * 4) ||
+          subscription.status == "cancelled"
+        ) {
+          pushToArray(subscription.amount);
+        } else if (
+          (numberOfClasses == 6 &&
+            subscription.amount != trainingFee + additionalClass * 5) ||
+          subscription.status == "cancelled"
         ) {
           pushToArray(subscription.amount);
         }
