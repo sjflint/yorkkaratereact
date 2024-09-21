@@ -194,12 +194,10 @@ const postGradingResult = asyncHandler(async (req, res) => {
   const confirmedResults = req.body.confirmedResults;
   const eventId = req.body.eventId;
 
-  console.log(confirmedResults);
-
   // member ID
   // Grading event ID
   // <8 === fail, <10 === condiitonal pass, >=10 === pass, >=17 === pass with distinction
-  confirmedResults.forEach(async (record) => {
+  for (record of confirmedResults) {
     const { memberId, result } = record;
 
     const member = await Member.findById(memberId);
@@ -272,7 +270,7 @@ const postGradingResult = asyncHandler(async (req, res) => {
         member.save();
       }
     }
-  });
+  }
   await Event.findOneAndUpdate(eventId, { resultsPosted: true });
   res.status(201).json("results logged");
 });
