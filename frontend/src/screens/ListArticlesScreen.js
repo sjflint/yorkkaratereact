@@ -156,7 +156,7 @@ const ListArticlesScreen = ({ history, match }) => {
   ];
 
   const validationSchema = Yup.object({
-    body: Yup.string().min(1000).required("Required"),
+    body: Yup.string().min(100).required("Required"),
     image: Yup.string(),
     title: Yup.string().required("Required"),
     leader: Yup.string().max(150).required("Required"),

@@ -745,6 +745,29 @@ const memberLicenseCheck = asyncHandler(async (req, res) => {
   });
 });
 
+const totalSquadAtt = async () => {
+  const members = await Member.find({ squadMember: true, ddsuccess: true });
+
+  let classes = await Attendance.find({
+    name: /Squad/,
+  }).sort({ date: 1 });
+  classes = classes.slice(classes.length - 96);
+  // gives attendance at squad training for the past year
+  // provide average attendance for squad member of the course of the year
+  // TODO: show in front end admin section somewhere
+
+  members.forEach((member) => {
+    let attScore = 0;
+    classes.forEach((squadClass) => {
+      if (squadClass.participants.includes(member._id)) {
+        attScore++;
+      }
+    });
+    console.log(member.firstName);
+    console.log(`${(attScore / 48) * 100}%`);
+  });
+};
+
 export {
   authMember,
   getMemberProfile,
