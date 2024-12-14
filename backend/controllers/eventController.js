@@ -74,7 +74,7 @@ const createEvent = asyncHandler(async (req, res) => {
 
   const createdEvent = await event.save();
 
-  const dateOfEvent = new Date(event.dateOfEvent).toLocaleDateString();
+  const dateOfEvent = new Date(event.dateOfEvent).toLocaleDateString("en-GB");
 
   // send email to all members
   const members = await Member.find({ ddsuccess: true });

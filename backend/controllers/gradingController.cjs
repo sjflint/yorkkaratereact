@@ -229,8 +229,8 @@ const postGradingResult = asyncHandler(async (req, res) => {
       if (member.kyuGrade === 6) {
         switchClasses(member._id);
       }
-      const belts = financials.belts;
-      belts[member.kyuGrade]--;
+      let belts = financials.belts;
+      belts = belts[member.kyuGrade]--;
       await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
 
       if (member.kyuGrade > 10 && age > 8) {
@@ -260,8 +260,8 @@ const postGradingResult = asyncHandler(async (req, res) => {
       }
       member.attendanceRecord = 0;
       await member.save();
-      const belts = financials.belts;
-      belts[member.kyuGrade]--;
+      let belts = financials.belts;
+      belts = belts[member.kyuGrade]--;
       await Financial.findOneAndUpdate({}, { belts: belts }, { new: true });
       if (member.kyuGrade > 10 && age > 8) {
         member.kyuGrade = 10;
