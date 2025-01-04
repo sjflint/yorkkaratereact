@@ -18,6 +18,9 @@ import {
   TRAINING_VIDEO_LIST_BYGRADE_REQUEST,
   TRAINING_VIDEO_LIST_BYGRADE_SUCCESS,
   TRAINING_VIDEO_LIST_BYGRADE_FAIL,
+  TRAINING_VIDEO_LIST_ALL_REQUEST,
+  TRAINING_VIDEO_LIST_ALL_SUCCESS,
+  TRAINING_VIDEO_LIST_ALL_FAIL,
 } from "../constants/trainingVideoConstants";
 
 export const listTrainingVideos =
@@ -37,6 +40,29 @@ export const listTrainingVideos =
     } catch (error) {
       dispatch({
         type: TRAINING_VIDEO_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const listAllTrainingVideos =
+  (pageNumber = "", keyword = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: TRAINING_VIDEO_LIST_ALL_REQUEST });
+
+      const { data } = await axios.get(`/api/trainingvideos/all`);
+
+      dispatch({
+        type: TRAINING_VIDEO_LIST_ALL_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: TRAINING_VIDEO_LIST_ALL_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

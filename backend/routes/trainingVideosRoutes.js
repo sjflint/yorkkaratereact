@@ -7,6 +7,7 @@ import {
   deleteTrainingVideo,
   updateTrainingVideo,
   getTrainingVideosByGrade,
+  getAllTrainingVideos,
 } from "../controllers/trainingVideoController.js";
 import { protect, instructor } from "../middleware/authMiddleware.js";
 
@@ -14,6 +15,7 @@ router
   .route("/")
   .get(getTrainingVideos)
   .post(protect, instructor, createTrainingVideo);
+router.route("/all").get(getAllTrainingVideos);
 router
   .route("/:id")
   .get(getTrainingVideoById)

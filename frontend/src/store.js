@@ -15,6 +15,7 @@ import {
   trainingVideoCreateReducer,
   trainingVideoUpdateReducer,
   trainingVideoListByGradeReducer,
+  trainingVideoListAllReducer,
 } from "./reducers/trainingVideoReducers";
 import {
   memberLoginReducer,
@@ -129,6 +130,7 @@ const reducer = combineReducers({
   articleUpdate: articleUpdateReducer,
   displayArticle: displayArticleReducer,
   trainingVideoList: trainingVideoListReducer,
+  trainingVideoListAll: trainingVideoListAllReducer,
   trainingVideoListByGrade: trainingVideoListByGradeReducer,
   displayTrainingVideo: displayTrainingVideoReducer,
   trainingVideoDelete: trainingVideoDeleteReducer,

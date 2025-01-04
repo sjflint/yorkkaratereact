@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import TrainingVideo from "../models/trainingVideosModel.js";
 
-// @desc Fetch all videos
+// @desc Fetch all videos (paginated)
 // @route GET /api/trainingVideos
 // @access Public
 const getTrainingVideos = asyncHandler(async (req, res) => {
@@ -43,6 +43,19 @@ const getTrainingVideos = asyncHandler(async (req, res) => {
   } else {
     const trainingVideos = await TrainingVideo.find({ ...keyword });
     res.json({ trainingVideos });
+  }
+});
+
+// @desc Fetch all videos (unpaginated)
+// @route GET /api/trainingvideos/all
+// @access Public
+const getAllTrainingVideos = asyncHandler(async (req, res) => {
+  const trainingVideos = await TrainingVideo.find({});
+  if (trainingVideos) {
+    res.json(trainingVideos);
+  } else {
+    res.json(404);
+    throw Error("Videos not found");
   }
 });
 
@@ -134,6 +147,7 @@ const updateTrainingVideo = asyncHandler(async (req, res) => {
 
 export {
   getTrainingVideos,
+  getAllTrainingVideos,
   getTrainingVideoById,
   deleteTrainingVideo,
   updateTrainingVideo,

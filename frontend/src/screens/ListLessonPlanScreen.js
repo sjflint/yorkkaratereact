@@ -11,7 +11,7 @@ import { LESSON_PLAN_CREATE_RESET } from "../constants/lessonPlanConstants";
 import * as Yup from "yup";
 import FormikControl from "../components/FormComponents/FormikControl";
 import { Formik, Form } from "formik";
-import { listTrainingVideos } from "../actions/TrainingVideoActions";
+import { listAllTrainingVideos } from "../actions/TrainingVideoActions";
 import {
   Button,
   Col,
@@ -75,8 +75,10 @@ const ListLessonPlanScreen = ({ history }) => {
     success: successCreate,
   } = lessonPlanCreate;
 
-  const trainingVideoList = useSelector((state) => state.trainingVideoList);
-  const { trainingVideos } = trainingVideoList;
+  const trainingVideoListAll = useSelector(
+    (state) => state.trainingVideoListAll
+  );
+  const { trainingVideos } = trainingVideoListAll;
 
   useEffect(() => {
     dispatch({ type: LESSON_PLAN_CREATE_RESET });
@@ -86,7 +88,7 @@ const ListLessonPlanScreen = ({ history }) => {
       history.push("/profile");
     } else {
       dispatch(listLessonPlans());
-      dispatch(listTrainingVideos());
+      dispatch(listAllTrainingVideos());
     }
   }, [
     dispatch,
@@ -179,10 +181,11 @@ const ListLessonPlanScreen = ({ history }) => {
   const kataDropdownOptions = filteredKataVideos;
 
   // filter videos by grade and category, based on class level input from user
-  let syllabusVideos = trainingVideos.trainingVideos;
+  let syllabusVideos = trainingVideos;
   let arrayOfSyllabusVideos = [];
-  if (trainingVideos.trainingVideos) {
-    console.log(trainingVideos);
+
+  if (trainingVideos) {
+    console.log("got videos");
     let gradeLevelVideos = [];
     if (syllabusLevel.length !== 0) {
       syllabusLevel.split(",").map((grade) => {
@@ -345,7 +348,7 @@ const ListLessonPlanScreen = ({ history }) => {
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
         <Modal.Header closeButton className="bg-danger">
           <Modal.Title className="text-white">
-            Permanently Delete Lesson PLan?
+            Permanently Delete Lesson Plan?
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -390,8 +393,10 @@ const ListLessonPlanScreen = ({ history }) => {
                       setSyllabusLevel(e.target.value);
                     }}
                   >
-                    {dropdownSyllabusLevelOptions.map((option) => (
-                      <option value={option.value}>{option.key}</option>
+                    {dropdownSyllabusLevelOptions.map((option, index) => (
+                      <option value={option.value} key={index}>
+                        {option.key}
+                      </option>
                     ))}
                   </FormControl>
                 </div>
