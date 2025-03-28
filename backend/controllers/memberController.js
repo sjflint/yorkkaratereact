@@ -187,6 +187,10 @@ const getMemberProfile = asyncHandler(async (req, res) => {
       member.gradeLevel = "Novice";
       member.numberOfSessionsRequired = 16;
     }
+    if (age > 8 && grade > 10) {
+      member.gradeLevel = "Junior";
+      member.numberOfSessionsRequired = 10;
+    }
     if (age > 8 && grade < 2) {
       member.gradeLevel = "Advanced";
     }
