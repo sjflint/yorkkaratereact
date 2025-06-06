@@ -386,7 +386,10 @@ const getMembers = asyncHandler(async (req, res) => {
     res.json({ members: members });
   } else if (req.query.keyword === "squad") {
     console.log('"squad" keyword called');
-    const members = await Member.find({ squadMember: true, ddsuccess: true });
+    const members = await Member.find({
+      squadMember: true,
+      ddsuccess: true,
+    }).sort({ firstName: 1 });
 
     // Check attendance and return for each member
     // Obtain array of last 12 squad training sessions
