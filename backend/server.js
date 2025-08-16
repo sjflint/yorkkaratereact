@@ -21,11 +21,13 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import financialRoutes from "./routes/financialRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
 import trialRoutes from "./routes/trialRoutes.js";
+import messageUserRoutes from "./routes/messageUserRoutes.js";
 import { goCardlessWebhook } from "./utils/goCardlessWebhook.cjs";
 import cors from "cors";
 import mongoose from "mongoose";
 import { getFileStream } from "./utils/s3.js";
 import { cronJobs } from "./utils/cronJobs.js";
+import cookieParser from "cookie-parser";
 
 // log finder
 // ["log", "warn"].forEach(function (method) {
@@ -48,6 +50,7 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors()); //Delete this before production!!!
 
 mongoose.set("useFindAndModify", false);
@@ -73,6 +76,7 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/financial", financialRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/trialregistration", trialRoutes);
+app.use("/api/messageuser", messageUserRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

@@ -44,8 +44,10 @@ const enquiryEmail = asyncHandler(async (emailDetails) => {
             <h3>Thank you for contacting York Karate Dojo</h3>
             <p style="text-align: left">
               Dear ${formatName(nameArray[0])},<br /><br />
-              Thank you for contacting York Karate Dojo. We will endeavour to
-              respond to you within the next couple of days.
+              Thank you for contacting York Karate.
+            </p>
+            <p>
+              Please note that the club is currently closed for the summer break. The club will reopen on the 1st September 2025. We will endevour to reply to your enquiry as soon as possible.
             </p>
             <p>
               If you are looking to book a trial session, you can do this through
